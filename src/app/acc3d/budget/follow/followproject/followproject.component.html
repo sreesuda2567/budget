@@ -1,0 +1,652 @@
+<div class="card border-light mx-4 mt-4">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-10">
+        <h5 class="card-title">การติดตามสถานะโครงการ</h5>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="shadow alert alert-info" role="alert">
+      <div class="row">
+        <div class="col">
+          <!-- BASIC TABLE -->
+          <div class="panel">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-md-9 text-secondary" style="font-size: 10pt"> คณะ /หน่วยงาน: </div>
+                <div class="col-md-3 text-secondary" style="font-size: 10pt">ปีงบประมาณ: </div>
+              </div>
+              <div class="row">
+                <div class="col-md-9">
+                  <select name="f_code" id="f_code" class="form-select" (change)="fetchdatalistcr()"
+                    (change)="fetchdatalist()" [(ngModel)]="dataAdd.FACULTY_CODE">
+                    <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+                    <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">{{year.PLYEARBUDGET_CODE}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 text-secondary" style="font-size: 10pt">แหล่งเงิน: </div>
+              <div class="col-md-3 text-secondary" style="font-size: 10pt">ภาค: </div>
+              <div class="col-md-3 text-secondary" style="font-size: 10pt">ประเภทโครงการ :: </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <select name="in_come" id="in_come" class="form-select" (change)="fetchdatalistcr()"
+                  [(ngModel)]="dataAdd.PLINCOME_CODE">
+                  <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}</option>
+
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.CRPART_ID">
+                  <option value="" >ทั้งหมด</option>
+                  <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpart">{{crp.CRPART_TNAME}}</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE">
+                  <option [value]="0">ทุกประเภท</option>
+                  <option [value]="1">โครงการทั่วไป</option>
+                  <option [value]="2">โครงการวิจัย</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalist()"><i
+                    class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                <input type="hidden" class="form-control" name="c_citizen" id="c_citizen"
+                  [(ngModel)]="dataFAdd.citizen">
+                <input type="hidden" class="form-control" name="c_satatus" id="c_satatus"
+                  [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
+                <input type="hidden" class="form-control" name="c_fcode" id="c_fcode"
+                  [(ngModel)]="dataAdd.UFACULTY_CODE">
+                <input type="hidden" class="form-control" name="c_ccode" id="c_code" [(ngModel)]="dataAdd.UCAMPUS_CODE">
+                <input type="hidden" class="form-control" name="c_opt" id="c_opt" [(ngModel)]="dataAdd.opt">
+              </div>
+            </div>
+            <div class="row justify-content-center center-screen" *ngIf="loading">
+              <div class="spinner-border " role="status" id="loading"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="shadow alert alert-secondary" role="alert">
+      <div class="row">
+        <div class="col-md-2">
+          <button *ngIf="rownum" type="button" class="btn btn-success" (click)="exportexcel()">
+          <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export Excel</button></div>
+        <div align="right" class="col-md-1">
+        </div>
+        <div class="col-md-6"></div>
+        <div class="col-md-3">
+          <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+        </div>
+      </div>
+    </div>
+    <table id="excel-table" class="table btn-font3" width="100%"
+      class="shadow-lg table table-bordered  table-striped table-hover tableFixHead">
+      <thead>
+        <tr class="bg-primary text-white">
+          <th>
+            <div align="center">ที่</div>
+          </th>
+          <th>
+            <div align="center">ชื่อโครงการ</div>
+          </th>
+          <th>
+            <div align="center">ระยะเวลา</div>
+          </th>
+          <th>
+            <div align="center">จัดสรร</div>
+          </th>
+          <th>
+            <div align="center">หลังโอน</div>
+          </th>
+          <th>
+            <div align="center">จ่ายจริง</div>
+          </th>
+          <th>
+            <div align="center">สถานะ</div>
+          </th>
+          <th>
+            <div align="center">รายงาน /แก้ไข</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+        <tr style="background-color:rgb(131, 187, 243);">
+          <td colspan="8">โครงการทั่วไป</td>
+        </tr>
+        <tr *ngFor="let p of datalist|filter:searchTerm; let i = index">
+          <td width="5%" align="center">{{i+1}}</td>
+          <td>{{p.PLPROJECT_NAME}}</td>
+          <td width="8%">{{p.PLPROJECT_SDATE}}</td>
+          <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}} </td>
+          <td align="center">{{p.PLPROJECT_MONEYT| number : '1.2-2'}}</td>
+          <td align="center">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+          <td align="center"
+            [ngStyle]="{'background-color':p.PLPROJECT_RSTATUS=='0' ? '#FF9D9D':p.PLPROJECT_RSTATUS=='1' ? '#FFFF91':p.PLPROJECT_RSTATUS=='2' ? '#99DD99':p.PLPROJECT_RSTATUS=='3' ? '#FFAA71':p.PLPROJECT_RSTATUS=='4' ? '#B5B5DB':p.PLPROJECT_RSTATUS=='5' ? '#999999':p.PLPROJECT_RSTATUS=='6' ? '#3586FF':'#f59adb'}">
+            {{p.PLPROJECTPSTATUS_NAME}}
+            <br>
+            {{p.PLPROJECTSTDT_DATE}}
+          </td>
+          <td width="8%" align="center">
+            <a role="button" class="btn btn-warning text-white" data-bs-toggle="modal"
+              data-bs-target="#exampleModalSearch" (click)="editdata(p.PLPROJECT_CODE,1)"><i class="fa fa-search"></i>
+            </a>&nbsp;
+            <a *ngIf="dataAdd.PRIVILEGE_RSTATUS =='A' || dataAdd.PRIVILEGE_RSTATUS =='1' || dataAdd.PRIVILEGE_RSTATUS =='5'
+                    || dataAdd.PRIVILEGE_RSTATUS =='D'|| dataAdd.PRIVILEGE_RSTATUS =='H' || dataAdd.PRIVILEGE_RSTATUS =='G' || dataAdd.PRIVILEGE_RSTATUS =='B'"
+              role="button" class="btn btn-primary text-white" data-bs-toggle="modal"
+              data-bs-target="#exampleModalUpdate" (click)="editdata(p.PLPROJECT_CODE,1)"><i class="fa fa-edit"></i>
+            </a>
+          </td>
+
+        </tr>
+        <tr style="background-color:rgb(225, 248, 163);">
+          <td colspan="8">โครงการวิจัย</td>
+        </tr>
+        <tr *ngFor="let p of datalistresearch ; let i = index">
+          <td width="5%" align="center">{{i+1}}</td>
+          <td>{{p.PLPROJECT_NAME}}</td>
+          <td width="8%">{{p.PLPROJECT_SDATE}}</td>
+          <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}} </td>
+          <td align="right">{{p.PLPROJECT_MONEYT| number : '1.2-2'}}</td>
+          <td align="right">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+          <td align="center"
+            [ngStyle]="{'background-color':p.PLPROJECT_RSTATUS=='0' ? '#FF9D9D':p.PLPROJECT_RSTATUS=='1' ? '#FFFF91':p.PLPROJECT_RSTATUS=='2' ? '#99DD99':p.PLPROJECT_RSTATUS=='3' ? '#FFAA71':p.PLPROJECT_RSTATUS=='4' ? '#B5B5DB':p.PLPROJECT_RSTATUS=='5' ? '#999999':p.PLPROJECT_RSTATUS=='6' ? '#3586FF':'#f59adb'}">
+            {{p.PLPROJECTPSTATUS_NAME}}
+            <br>
+            {{p.PLPROJECTSTDT_DATE}}
+          </td>
+          <td width="8%" align="center">
+            <a role="button" class="btn btn-warning text-white" data-bs-toggle="modal"
+              data-bs-target="#exampleModalSearch" (click)="editdata(p.PLPROJECT_CODE,2)"><i class="fa fa-search"></i>
+            </a>&nbsp;
+            <a *ngIf="dataAdd.PRIVILEGE_RSTATUS =='A' || dataAdd.PRIVILEGE_RSTATUS =='1' || dataAdd.PRIVILEGE_RSTATUS =='5'
+                    || dataAdd.PRIVILEGE_RSTATUS =='11'|| dataAdd.PRIVILEGE_RSTATUS =='14' || dataAdd.PRIVILEGE_RSTATUS =='16'|| dataAdd.PRIVILEGE_RSTATUS =='17'"
+              role="button" class="btn btn-primary text-white" data-bs-toggle="modal"
+              data-bs-target="#exampleModalUpdate" (click)="editdata(p.PLPROJECT_CODE,2)"><i class="fa fa-edit"></i>
+            </a>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- The Modal -->
+  <div class="modal fade" id="exampleModalSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header bg-primary">
+          <h5 class="modal-title text-white" id="exampleModalLabel">รายละเอียดโครงการ</h5>
+          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <table *ngFor="let p of datalists;let i = index" width="100%" border="0" cellspacing="0" cellpadding="0"
+            class="table table-bordered table-hover">
+            <tbody>
+              <tr>
+                <td colspan="2" align="center" class="bg-info text-danger">
+                  
+                 
+                  <div class="row">
+                    <div class="col-md-11" > {{dataFAdd.PLPROJECT_NAME}} </div>
+                    <div class="col-md-1"> 
+                      <a role="button" title="แนบสำเนาคำสั่งจ้าง" class="btn btn-danger text-white"
+                                                    href="https://budget.rmutsv.ac.th/follow/show_plan.php?id={{dataAdd.id }}" target="_blank"><i class="fa-solid fa-print"></i></a>
+                      </div>
+                  </div>
+                
+                </td>
+              </tr>
+              <tr *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'">
+                <td colspan="2" align="center">
+                  <div [(innerHTML)]="dataFAdd.PLPROJECT_CODE"></div>
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-warning" colspan="2" width="30%" align="center" valign="top">
+                  <strong>รายละเอียดโครงการ</strong>
+                </td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ชื่อโครงการ ::</strong></td>
+                <td height="20" valign="top" class="cs3">{{p.PLPROJECT_NAME}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>แหล่งงบประมาณ ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">{{p.PLINCOME_NAME}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>หมวดรายจ่าย ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">{{p.PLMONEYPAY_NAME}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>หมวดรายจ่ายย่อย ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">{{p.PLSUBMONEYPAY_NAME}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ผลผลิต ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">{{p.PLGPRODUCT_SHORTNAME}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>งบประมาณที่ได้รับจัดสรร
+                    ::</strong>
+                </td>
+                <td height="20" valign="top" class="cs3">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>งบประมาณหลังโอนเปลี่ยนแปลง ::</strong>
+                </td>
+                <td height="20" valign="top" class="cs3">{{p.PLPROJECT_MONEYT| number : '1.2-2'}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ผู้รับผิดชอบโครงการ ::</strong>
+                </td>
+                <td height="20" valign="top" class="cs3">{{p.PLTRACPROSIECT_NAME}} โทร :: {{p.PLTRACPROSIECT_TEL}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ระยะเวลาดำเนินการตามแผน:: </strong>
+                </td>
+                <td height="20" align="left" valign="top" class="cs3">{{p.PLPROJECT_SDATE}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ผลการเบิกจ่าย 3D ::</strong></td>
+                <td colspan="2" width="55%" height="20" align="left" valign="top" class="cs3">
+                  <table width="90%" class="table table-bordered">
+                    <tr class="style761">
+                      <td  align="center" bgcolor="#999999"><strong>เลข3D</strong></td>
+                      <td align="center" bgcolor="#999999"><strong>เงินขอเบิก</strong></td>
+                      <td  align="center" bgcolor="#999999"><strong>ผูกพัน</strong></td>
+                      <td align="center" bgcolor="#999999"><strong>จ่ายจริง</strong></td>
+                      <td  align="center" bgcolor="#999999"><strong>คงเหลือ</strong></td>
+                    </tr>
+                    <tr *ngFor="let ex of datalistex;">
+                      <td align="center">{{ex.FNEXPENSES_STEP}}</td>
+                      <td align="center">{{ex.FNEXPENSES_OMONEY| number : '1.2-2'}}</td>
+                      <td align="center">{{ex.FNEXPENSES_CMONEY| number : '1.2-2'}}</td>
+                      <td align="right">{{ex.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+                      <td align="right">{{ex.FNEXPENSES_AMONEY-ex.FNEXPENSES_CMONEY-ex.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" align="right"><strong>รวมทั้งหมด</strong></td>
+                      <td align="right" >{{dataAdd.moneydetail}}</td>
+                      <td align="right" >{{dataAdd.moneydetailre}}</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-warning" colspan="2" width="30%" align="center" valign="top">
+                  <strong>ผลการดำเนินโครงการ</strong>
+                </td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>วันที่เริ่มต้นดำเนินโครงการ ::</strong>
+                </td>
+                <td height="20" align="left" valign="top" class="cs3">{{p.PLTRACPROSIECT_SDATE1}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>วันที่สิ้นสุดโครงการ
+                    ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">{{p.PLTRACPROSIECT_EDATE1}}</td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>งบประมาณที่เบิกจ่ายจริง ::</strong>
+                </td>
+                <td height="20" align="left" valign="top" class="cs3" [(innerHTML)]="dataAdd.moneydetail"></td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>งบประมาณคงเหลือ ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3" [(innerHTML)]="dataAdd.moneydetailre">
+                </td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ร้อยละความพึงพอใจของผู้เข้าร่วม
+                    ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">{{p.PLTRACPROSIECT_PERCENT}}</td>
+              </tr>
+
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>จำนวนผู้เข้าร่วมโครงการ
+                    ::</strong>
+                </td>
+                <td align="left" valign="top" class="cs4">
+                  <table width="100%" class="table table-bordered">
+                    <tr bgcolor="#999999">
+                      <td colspan="3" align="center"><strong><span
+                            class="style1">จำนวนผู้เข้าร่วมโครงการ&nbsp;</span></strong></td>
+                    </tr>
+                    <tr bgcolor="#999999">
+                      <td width="41%">&nbsp;</td>
+                      <td width="29%" align="center"><strong><span class="style1">แผน</span></strong></td>
+                      <td width="30%" align="center"><strong><span class="style1">ผล</span></strong></td>
+                    </tr>
+                    <tr>
+                      <td><strong><span class="style1">บุคลากร</span></strong></td>
+                      <td align="center">{{p.PLPROJECT_PERSONP}}</td>
+                      <td align="center">{{p.PLTRACPROSIECT_PERSONP}}</td>
+                    </tr>
+                    <tr>
+                      <td><strong><span class="style1">นักศึกษา</span></strong></td>
+                      <td align="center">{{p.PLPROJECT_PERSONS}}</td>
+                      <td align="center">{{p.PLTRACPROSIECT_PERSONS}}</td>
+                    </tr>
+                    <tr>
+                      <td><strong><span class="style1">บุคลากรภายนอก</span></strong></td>
+                      <td align="center">{{p.PLPROJECT_PERSONO}}</td>
+                      <td align="center">{{p.PLTRACPROSIECT_PERSONO}}</td>
+                    </tr>
+                    <tr>
+                      <td align="center"><strong><span class="style1">รวม</span></strong></td>
+                      <td align="center">{{p.PERSONOT}}</td>
+                      <td align="center">{{p.PERSONOTR}}</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ผลการดำเนินงานตามตัวชี้วัด
+                    ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <table width="100%" border="1" class="table table-bordered">
+                    <tr class="style761">
+                      <td width="62%" align="center" bgcolor="#999999"><strong>ตัวชี้วัด</strong></td>
+                      <td width="13%" align="center" bgcolor="#999999"><strong>แผน</strong></td>
+                      <td width="20%" align="center" bgcolor="#999999"><strong>ผล</strong></td>
+                    </tr>
+                    <tr class="style761">
+                      <td colspan="3" align="left"><strong>ตัวชี้วัดกลาง</strong></td>
+                    </tr>
+                    <tr *ngFor="let td of datalisttd;">
+                      <td>{{td.PLPROJECTD_NAME}}</td>
+                      <td align="center">{{td.PLPROJECTD_VALUE}}</td>
+                      <td align="center">{{td.PLPROJECTD_RESULT}}</td>
+                    </tr>
+                    <td colspan="3" align="left"><strong>ตัวชี้วัดโครงการ</strong></td>
+                    <tr *ngFor="let tdp of datalisttdp;">
+                      <td>{{tdp.PLPROJECTD_NAME}}</td>
+                      <td align="center">{{tdp.PLPROJECTD_NAME}}</td>
+                      <td align="center">{{tdp.PLPROJECTD_NAME}}</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"><strong>สถานะดำเนินงาน
+                    ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <table width="100%" border="1" class="table table-bordered">
+                    <tr class="style761">
+                      <td  align="center" bgcolor="#999999"><strong>รายการ</strong></td>
+                      <td  align="center" bgcolor="#999999"><strong>วันที่</strong></td>
+                      <td  align="center" bgcolor="#999999"><strong>ชื่อผู้ทำรายการ</strong></td>
+                    </tr>
+                    <tr *ngFor="let td of datalisttdpl; let i = index">
+                      <td>{{i+1}}.{{td.PLPROJECTSTATUS_NAME}}</td>
+                      <td >{{td.PLPROJECTSTDT_DATE}}</td>
+                      <td >{{td.STF_FNAME}}</td>
+                    </tr>
+                    
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal -->
+  <div class="modal fade" id="exampleModalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header bg-primary">
+          <h5 class="modal-title text-white" id="exampleModalLabel">การติดตามสถานะโครงการทั่วไป</h5>
+          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" class="form-control" name="c_citizen" id="c_citizen"
+            [(ngModel)]="dataFAdd.PLPROJECT_CODE">
+          <table *ngFor="let p of datalists;let i = index" width="100%" border="1" cellspacing="0" cellpadding="0"
+            class="table table-bordered">
+            <tbody>
+              <tr>
+                <td colspan="2" align="center" class="bg-info text-danger">
+                  <div [(innerHTML)]="dataFAdd.PLPROJECT_NAME"></div>
+                </td>
+              </tr>
+              <tr>
+                <td class="bg-warning" colspan="2" width="30%" align="center" valign="top">
+                  <strong>การดำเนินโครงการ</strong>
+                </td>
+              </tr>
+              <tr>
+                <td width="30%" align="right" valign="top" class="cs4"></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <table width="100%" border="0">
+                    <tr>
+                      <td width="2%" align="right" valign="top">
+                        <input class="form-check-input filled-in" (click)="showinput(0)" name="PLPROJECT_PSTATUS"
+                          id="PLPROJECT_PSTATUS" type="radio" value="0" [(ngModel)]="dataFAdd.PLPROJECT_PSTATUS">
+                      </td>
+                      <td colspan="8">สามารถรายงานผลได้หลังดำเนินการ</td>
+                    </tr>
+                    <tr>
+                      <td align="right" valign="top">
+                        <input class="form-check-input filled-in" (click)="showinput(1)" name="PLPROJECT_PSTATUS"
+                          id="PLPROJECT_PSTATUS" type="radio" value="1" [(ngModel)]="dataFAdd.PLPROJECT_PSTATUS">
+                      </td>
+                      <td width="27%">ไม่สามารถรายงานผลได้หลังดำเนินโครงการ</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr *ngIf="statusreportp">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>วันที่สามารถรายงานผลได้ ::</strong>
+                </td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <div class="col-md-4">
+                    <input placeholder="วันที่สามารถรายงานผลได้" type="text" class="form-control" bsDatepicker
+                      #dp="bsDatepicker" [(ngModel)]="dataFAdd.PLPROJECT_RDATE">
+                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                      class="fa fa-calendar text-primary"></i>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="statusreportp">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ระบุสาเหตุ ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <textarea name="PLPROJECT_RDETAIL" id="PLPROJECT_RDETAIL" cols="45" rows="3" class="form-control"
+                    [(ngModel)]="dataFAdd.PLPROJECT_RDETAIL"></textarea>
+                </td>
+              </tr>
+              <tr *ngIf="statusreport">
+                <td class="bg-warning" colspan="2" width="30%" align="center" valign="top">
+                  <strong>ผลการดำเนินโครงการ</strong>
+                </td>
+              </tr>
+              <tr *ngIf="statusreport">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>วันที่ดำเนินโครงการ ::</strong>
+                </td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <div class="col-md-4">
+                    <input placeholder="วันที่ดำเนินโครงการ" type="text" class="form-control" bsDatepicker
+                      #dp="bsDatepicker" [(ngModel)]="dataFAdd.PLTRACPROSIECT_SDATE" readonly >
+                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                      class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                    </i>
+                  </div>
+                </td>
+
+              </tr>
+              <tr *ngIf="statusreport">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>วันที่สิ้นสุดการดำเนินโครงการ
+                    ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <div class="col-md-4">
+                    <input placeholder="วันที่สิ้นสุดการดำเนินโครงการ" type="text" class="form-control" bsDatepicker
+                      #dp2="bsDatepicker" [(ngModel)]="dataFAdd.PLTRACPROSIECT_EDATE" readonly>
+                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                      class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp2.toggle()">
+                    </i>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="statusreport">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ร้อยละความพึงพอใจของผู้เข้าร่วม
+                    ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <div class="col-md-4">
+                    <input placeholder="ร้อยละความพึงพอใจของผู้เข้าร่วม" type="text" class="form-control"
+                      (keypress)="CheckNum($event)" [(ngModel)]="dataFAdd.PLTRACPROSIECT_PERCENT">
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="statusreport">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ชื่อเจ้าของโครงการ ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <input placeholder="ชื่อเจ้าของโครงการ" type="text" class="form-control"
+                    [(ngModel)]="dataFAdd.PLTRACPROSIECT_NAME">
+                </td>
+              </tr>
+              <tr *ngIf="statusreport">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>เบอร์โทรติดต่อ ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <input placeholder="เบอร์โทรติดต่อ" type="text" class="form-control"
+                    [(ngModel)]="dataFAdd.PLTRACPROSIECT_TEL">
+                </td>
+              </tr>
+              <tr *ngIf="statusreport">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>จำนวนผู้เข้าร่วมโครงการ ::</strong>
+                </td>
+                <td align="left" valign="top" class="cs4">
+                  <table width="100%" class="table table-bordered">
+                    <tr bgcolor="#999999">
+                      <td colspan="3" align="center"><strong><span
+                            class="style1">จำนวนผู้เข้าร่วมโครงการ&nbsp;</span></strong></td>
+                    </tr>
+                    <tr bgcolor="#999999">
+                      <td width="41%">&nbsp;</td>
+                      <td width="29%" align="center"><strong><span class="style1">แผน</span></strong></td>
+                      <td width="30%" align="center"><strong><span class="style1">ผล</span></strong></td>
+                    </tr>
+                    <tr>
+                      <td><strong><span class="style1">บุคลากร</span></strong></td>
+                      <td align="center">{{p.PLPROJECT_PERSONP}}</td>
+                      <td align="center">
+                        <input placeholder="บุคลากร" type="text" class="form-control" (keypress)="CheckNum($event)"
+                          [(ngModel)]="dataFAdd.PLTRACPROSIECT_PERSONP">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong><span class="style1">นักศึกษา</span></strong></td>
+                      <td align="center">{{p.PLPROJECT_PERSONS}}</td>
+                      <td align="center">
+                        <input placeholder="นักศึกษา" type="text" class="form-control" (keypress)="CheckNum($event)"
+                          [(ngModel)]="dataFAdd.PLTRACPROSIECT_PERSONS">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong><span class="style1">บุคลากรภายนอก</span></strong></td>
+                      <td align="center">{{p.PLPROJECT_PERSONO}}</td>
+                      <td align="center">
+                        <input placeholder="บุคลากรภายนอก" type="text" class="form-control"
+                          (keypress)="CheckNum($event)" [(ngModel)]="dataFAdd.PLTRACPROSIECT_PERSONO">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center"><strong><span class="style1">รวม</span></strong></td>
+                      <td align="center">{{p.PERSONOT}}</td>
+                      <td align="center">{{p.PERSONOTR}}</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr *ngIf="statusreport">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>ผลการดำเนินงานตามตัวชี้วัด
+                    ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <table width="100%" border="1" class="table table-bordered">
+                    <tr class="style761">
+                      <td width="62%" align="center" bgcolor="#999999"><strong>ตัวชี้วัด</strong></td>
+                      <td width="13%" align="center" bgcolor="#999999"><strong>แผน</strong></td>
+                      <td width="20%" align="center" bgcolor="#999999"><strong>ผล</strong></td>
+                    </tr>
+                    <tr class="style761">
+                      <td colspan="3" align="left"><strong>ตัวชี้วัดกลาง</strong></td>
+                    </tr>
+                    <tr *ngFor="let td of datalisttd;let i = index;">
+                      <td>{{td.PLPROJECTD_NAME}}</td>
+                      <td align="center">{{td.PLPROJECTD_VALUE}}</td>
+                      <td align="center">
+                        <input type="text" name="OMONEY" class="form-control" placeholder="ตัวชี้วัดกลาง"
+                          [(ngModel)]="dataFAdd.PLPROJECTDRESULTC[i]">
+                        <input type="hidden" name="PLPROJECTDCODE" class="form-control" placeholder="ตัวชี้วัดกลาง"
+                          [(ngModel)]="dataFAdd.PLPROJECTDCODE[i]">
+                      </td>
+                    </tr>
+                    <td colspan="3" align="left"><strong>ตัวชี้วัดโครงการ</strong></td>
+                    <tr *ngFor="let tdp of datalisttdp;let i = index;">
+                      <td>{{tdp.PLPROJECTD_NAME}}</td>
+                      <td align="center">{{tdp.PLPROJECTD_NAME}}</td>
+                      <td align="center">
+                        <input type="text" name="PLPROJECTDRESULTP" class="form-control" placeholder="ตัวชี้วัดกลาง"
+                          [(ngModel)]="dataFAdd.PLPROJECTDRESULTP[i]">
+                        <input type="hidden" name="PLPROJECTDPCODE" class="form-control" placeholder="ตัวชี้วัดกลาง"
+                          [(ngModel)]="dataFAdd.PLPROJECTDPCODE[i]">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr *ngIf="statusreport">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>หมายเหตุ ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <input placeholder="หมายเหตุ" type="text" class="form-control"
+                    [(ngModel)]="dataFAdd.PLTRACPROSIECT_DETAIL">
+                </td>
+              </tr>
+              <tr *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' && statusreport !=''">
+                <td width="30%" align="right" valign="top" class="cs4"><strong>สถานะโครงการ ::</strong></td>
+                <td height="20" align="left" valign="top" class="cs3">
+                  <select name="PLPROJECT_RSTATUS" id="PLPROJECT_RSTATUS" class="form-select"
+                    [(ngModel)]="dataFAdd.PLPROJECT_RSTATUS">
+                    <option value="">----โปรดเลือก-----</option>
+                    <option [value]="0">ยังไม่ดำเนินการ</option>
+                    <option [value]="1">ขออนุมัติดำเนินโครงการ</option>
+                    <option [value]="3">โครงการทั้งปี</option>
+                    <option [value]="2">ดำเนินการเสร็จเรียบร้อย</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+        <div class="modal-footer">
+          <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+          <button type="button" class="btn btn-primary" (click)="updatedata()">บันทึกข้อมูล</button>
+        </div>
+      </div>
+    </div>
+  </div>

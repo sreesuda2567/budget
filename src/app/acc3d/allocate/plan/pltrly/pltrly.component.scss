@@ -1,0 +1,91 @@
+
+.icon-app {
+    margin-left: 0px !important;
+    text-align: center;
+  }
+  
+  .icon-box {
+    border: 3px solid rgb(236, 146, 28);
+    width:120px;
+    height: 100px;
+    padding-top: 6px;
+    background: white;
+  
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+  
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    border-radius: 10px;
+  }
+  .icon-box a {
+    display: inline-block;
+   // text-decoration: none;
+  }
+  .icon-box:hover {
+    background: #fdb913;
+    color: #fff;
+  }
+  /*.icon_bt {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }*/
+  p.a-half {
+    cursor: pointer;
+  }
+  
+  @media (min-width: 1px) and (max-width: 650px) {
+    .display_sm_hide {
+        display:none;
+    }
+  }
+  
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+    font-size:75px;
+    margin-top: 3px;
+  }
+  
+  .txt-font {
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 18px;
+    text-align: center;
+  }
+  .txt-font2 {
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 20px;
+    text-align: center;
+  }
+  .btn-font3 {
+    margin-top: 5px;
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 16px;
+  
+  }
+  .outer{
+    //margin:0 auto;
+    display: table;
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, 5%);
+    //top: 0;
+  //  margin-top: 100px;
+    height: 50%;
+    width:50%;
+    position:fixed; /* หรือจะใช้ absolute ถ้าต้องการให้มันไม่เลื่อนตามหน้าจอ*/
+    overflow-y: scroll;
+    scrollbar-color: rebeccapurple green;
+    scrollbar-width: thin;
+    z-index: 100; /* ถ้ายังไม่อยู่บนสุดก็เพิ่มค่านี้ */         
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  }
+  
+   
+  .tableFixHead          { overflow: auto;  }
+  .tableFixHead thead  { position: sticky; top: 60px; z-index: 1; }

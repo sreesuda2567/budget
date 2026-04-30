@@ -1,0 +1,196 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">สาขา/สำนักงาน</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                    (click)="showinput()" (click)="setshowbti()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มรายการใหม่</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                                <div align="right" class="col-md-1">
+                                    <select (change)="onTableSizeChange($event)" class="form-select">
+                                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                            {{ size }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-4">
+                                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()">
+                                      <option value="" >ทั้งหมด</option>
+                                      <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME1}}
+                                      </option>
+                                    </select>
+                              </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table width="100%" id="example"
+                            class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th><div align="center">ที่</div></th>
+                                    <th><div align="center">รหัส</div></th>
+                                    <th *ngIf="dataAdd.FACULTY_CODE==''"><div align="center">คณะ/หน่วยงาน</div></th>
+                                    <th><div align="center">ชื่อสาขา/สำนักงาน (ไทย)</div></th>
+                                    <th><div align="center">ชื่อสาขา/สำนักงาน  (อังกฤษ)</div></th>
+                                    <th><div align="center">สถานะ</div></th>
+                                    <th><div align="center">จัดการข้อมูล</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      } ; let i = index">
+                                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                                    <td *ngIf="dataAdd.FACULTY_CODE==''" >{{p.FACULTY_TNAME1}}</td>
+                                    <td width="10%">{{p.DEPARTMENT_CODE}}</td>
+                                    <td>{{p.DEPARTMENT_TNAME}} </td>
+                                    <td>{{p.DEPARTMENT_ENAME}} </td>
+                                    <td width="8%">{{p.SASTATUS_NAME}} </td>
+                                    <td width="8%">
+                                        <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                                            (click)="deleteData(p.DEPARTMENT_CODE)"><i class="fa fa-trash"></i>
+                                        </a>&nbsp;
+                                        <a role="button" title="แก้ไข" data-bs-toggle="modal"
+                                            data-bs-target="#modalEdit" class="btn btn-warning text-white"
+                                            (click)="editdata(p.DEPARTMENT_CODE,p.DEPARTMENT_TNAME)"><i
+                                                class="fa fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-left">
+                            <pagination-controls previousLabel="Prev" nextLabel="Next"
+                                (pageChange)="onTableDataChange($event)">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+<div class="modal fade" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">รหัสสาขา/สำนักงาน</label>
+                        <input type="text" name="DEPARTMENT_CODE" class="form-control" id="DEPARTMENT_CODE"
+                            placeholder="รหัสสาขา/สำนักงาน" [(ngModel)]="dataAdd.DEPARTMENT_CODE">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-2">
+                        <label for="name">คำนามหน่วยงาน</label>
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PREFIXOFFICE_CODE" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="type.PREFIXOFFICE_CODE" *ngFor="let type of dataPrefix">{{type.PREFIXOFFICE_TNAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="name">ชื่อสาขา/สำนักงาน(ไทย)</label>
+                        <input type="text" name="DEPARTMENT_TNAME" class="form-control" id="DEPARTMENT_TNAME"
+                            placeholder="ชื่อวิทยาเขต(ไทย)" [(ngModel)]="dataAdd.DEPARTMENT_TNAME">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ชื่อสาขา/สำนักงาน(อังกฤษ)</label>
+                        <input type="text" name="DEPARTMENT_ENAME" class="form-control" id="DEPARTMENT_ENAME"
+                            placeholder="เลขที่" [(ngModel)]="dataAdd.DEPARTMENT_ENAME">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">โทร</label>
+                        <input type="text" name="DEPARTMENT_PHONE" class="form-control" id="DEPARTMENT_PHONE"
+                            placeholder="โทร" [(ngModel)]="dataAdd.DEPARTMENT_PHONE">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">แฟ็กซ์</label>
+                        <input type="text" name="DEPARTMENT_FAX" class="form-control" id="DEPARTMENT_FAX"
+                            placeholder="แฟ็กซ์" [(ngModel)]="dataAdd.DEPARTMENT_FAX">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">อีเมลล์</label>
+                        <input type="text" name="DEPARTMENT_EMAIL" class="form-control" id="DEPARTMENT_EMAIL"
+                            placeholder="อีเมลล์" [(ngModel)]="dataAdd.DEPARTMENT_EMAIL">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">สถานะ</label>
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.DEPARTMENT_ASTATUS" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="type.SASTATUS_CODE" *ngFor="let type of datastatus">{{type.SASTATUS_NAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

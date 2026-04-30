@@ -1,0 +1,173 @@
+<div class="card border-light mx-4 mt-4">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-10">
+        <h5 class="card-title">ขอใช้งบกลาง</h5>
+      </div>
+      <div class="col-md-2" align="right">
+        <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEditlist"
+          (click)="showinput()" (click)="setshowbti()">
+          <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <!-- BASIC TABLE -->
+        <div class="panel">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-md-9 text-secondary" style="font-size: 10pt"> คณะ /หน่วยงาน: </div>
+              <div class="col-md-3 text-secondary" style="font-size: 10pt">ปีงบประมาณ: </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9">
+                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
+                  (change)="fetchdatalist()">
+                  <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+                  <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">{{year.PLYEARBUDGET_CODE}}
+                  </option>
+                </select>
+                <input type="hidden" class="form-control" name="c_citizen" id="c_citizen" [(ngModel)]="dataAdd.citizen">
+                <input type="hidden" class="form-control" name="c_citizen" id="c_citizen"
+                  [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
+              </div>
+            </div>
+            <div class="row justify-content-center center-screen" *ngIf="loading">
+              <div class="spinner-border " role="status" id="loading"></div>
+            </div>
+            <br>
+            <div class="shadow alert alert-info" role="alert">
+              <div class="row">
+                <div class="col-md-1" align="right">แสดงข้อมูล</div>
+                <div align="right" class="col-md-1">
+                  <select (change)="onTableSizeChange($event)" class="form-select">
+                    <option *ngFor="let size of tableSizes" [ngValue]="size">
+                      {{ size }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-7"></div>
+                <div class="col-md-3">
+                  <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+                </div>
+              </div>
+            </div>
+
+            <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+              <thead>
+                <tr class="bg-primary text-white">
+                  <th><div align="center">ที่</div></th>
+                  <th><div align="center">ชื่อเรื่อง</div></th>
+                  <th><div align="center">หมวดรายจ่ายย่อย</div></th>
+                  <th><div align="center">ขอเบิก</div></th>
+                  <th><div align="center">อนุมัติ</div></th>
+                  <th><div align="center">วันที่อนุมัติ</div></th>
+                  <th><div align="center">จัดการข้อมูล</div></th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+            itemsPerPage: tableSize,
+            currentPage: page,
+            totalItems: count
+            } ; let i = index">
+                  <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                  <td>{{p.PLMIDDLEBUDGET_NAME}}</td>
+                  <td>{{p.PLSUBMONEYPAY_NAME}}</td>
+                  <td align="right">{{p.PLMIDDLEBUDGET_MONEY| number : '1.2-2'}}</td>
+                  <td align="right">{{p.PLMIDDLEBUDGET_AMONEY| number : '1.2-2'}}</td>
+                  <td>{{p.PLMIDDLEBUDGET_ADATE1}}</td>
+                  <td width="8%">
+                    <a *ngIf="p.PLMIDDLEBUDGET_MONEY==0 || this.dataAdd.PRIVILEGE_RSTATUS=='A'" role="button"
+                      title="ลบข้อมูล" class="btn btn-danger text-white" (click)="deleteData(p.PLMIDDLEBUDGET_CODE)"><i
+                        class="fa fa-trash"></i> </a>&nbsp;
+                    <a *ngIf="p.PLMIDDLEBUDGET_MONEY==0 || this.dataAdd.PRIVILEGE_RSTATUS=='A'" role="button"
+                      title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlist"
+                      class="btn btn-warning text-white" (click)="editdata(p.PLMIDDLEBUDGET_CODE)"><i
+                        class="fa fa-edit"></i></a>&nbsp;
+                  </td>
+
+                </tr>
+
+                <tr *ngIf="!rownum">
+                  <td colspan="7">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="d-flex justify-content-left">
+              <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+
+<div class="modal fade" id="modalEditlist"  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalToggleLabel">รายละเอียดการขอใช้งบกลาง</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <label class="text-secondary" style="font-size: 10pt"> หมวดรายจ่ายย่อย </label>
+            <input name="PLMIDDLEBUDGET_CODE" type="hidden" id="PLMIDDLEBUDGET_CODE"
+              [(ngModel)]="dataAdd.PLMIDDLEBUDGET_CODE" />
+            <select name="PLMIDDLEBUDGET_CODE" id="PLMIDDLEBUDGET_CODE" class="form-select"
+              [(ngModel)]="dataAdd.PLTRBUDGET_CODE">
+              <option [value]="mid.PLTRBUDGET_CODE" *ngFor="let mid of dataMiddle">
+                {{mid.PLSUBMONEYPAY_NAME}} จัดสรร: {{mid.PLTRBUDGET_MONEY| number : '1.2-2'}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label class="text-secondary" style="font-size: 10pt"> เลขที่หนังสือ </label>
+            <input name="PLMIDDLEBUDGET_BOOK" id="PLMIDDLEBUDGET_BOOK" type="text" class="form-control"
+              placeholder="เลขที่หนังสือ " [(ngModel)]="dataAdd.PLMIDDLEBUDGET_BOOK">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label class="text-secondary" style="font-size: 10pt"> ชื่อเรื่อง </label>
+            <input name="PLMIDDLEBUDGET_NAME" id="PLMIDDLEBUDGET_NAME" type="text" class="form-control"
+              placeholder="ชื่อเรื่อง " [(ngModel)]="dataAdd.PLMIDDLEBUDGET_NAME">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label class="text-secondary" style="font-size: 10pt"> จำนวนเงินขอใช้ </label>
+            <input name="PLMIDDLEBUDGET_MONEY" id="PLMIDDLEBUDGET_MONEY" type="text" class="form-control"
+              (keypress)="CheckNum($event)" placeholder="จำนวนเงินขอใช้ " [(ngModel)]="dataAdd.PLMIDDLEBUDGET_MONEY">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <label class="text-secondary" style="font-size: 10pt"> หมายเหตุ </label>
+            <input name="PLMIDDLEBUDGET_NOTE" id="PLMIDDLEBUDGET_NOTE" type="text" class="form-control"
+              placeholder="หมายเหตุ " [(ngModel)]="dataAdd.PLMIDDLEBUDGET_NOTE">
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+        <button *ngIf="rowpbi" type="button" class="btn btn-primary" (click)="insertdata()">บันทึกข้อมูล</button>
+        <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+      </div>
+    </div>
+  </div>
+</div>

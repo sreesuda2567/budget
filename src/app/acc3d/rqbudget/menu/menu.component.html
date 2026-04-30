@@ -1,0 +1,90 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><i
+        class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ระบบคำของบประมาณ</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="../"><i
+              class="fa-solid fa-home me-1"></i>หน้าหลัก</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-clipboard-list me-1 text-info"></i>ทะเบียนรายการ
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="regis_asset"><i
+                  class="fa-solid fa-computer me-2 text-primary"></i>ครุภัณฑ์</a></li>
+            <li><a class="dropdown-item" routerLink="regis_building"><i
+                  class="fa-solid fa-building me-2 text-success"></i>สิงก่อสร้าง</a></li>
+            <li><a class="dropdown-item" routerLink="regis_project"><i
+                  class="fa-solid fa-diagram-project me-2 text-warning"></i>โครงการ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-hand-holding-dollar me-1 text-success"></i>คำของบประมาณ
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="rqasset"><i
+                  class="fa-solid fa-computer me-2 text-primary"></i>ครุภัณฑ์</a></li>
+            <li><a class="dropdown-item" routerLink="rqbuilding"><i
+                  class="fa-solid fa-building me-2 text-success"></i>สิ่งก่อสร้าง</a></li>
+            <li><a class="dropdown-item" routerLink="rqproject"><i
+                  class="fa-solid fa-diagram-project me-2 text-warning"></i>โครงการ</a></li>
+          </ul>
+        </li>
+        <li *ngIf="datastatus=='A' || datastatus=='1' || datastatusf=='1'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-paper-plane me-1 text-primary"></i>นำส่งข้อมูล
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="smasset"><i
+                  class="fa-solid fa-computer me-2 text-primary"></i>ครุภัณฑ์</a></li>
+            <li><a class="dropdown-item" routerLink="smbuilding"><i
+                  class="fa-solid fa-building me-2 text-success"></i>สิ่งก่อสร้าง</a></li>
+            <li><a class="dropdown-item" routerLink="smproject"><i
+                  class="fa-solid fa-diagram-project me-2 text-warning"></i>โครงการ</a></li>
+          </ul>
+        </li>
+        <li *ngIf="datastatus=='A' || datastatus=='1'" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-clipboard-check me-1 text-warning"></i>พิจารณารายการ
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="appasset"><i
+                  class="fa-solid fa-computer me-2 text-primary"></i>ครุภัณฑ์</a></li>
+            <li><a class="dropdown-item" routerLink="appbuilding"><i
+                  class="fa-solid fa-building me-2 text-success"></i>สิ่งก่อสร้าง</a></li>
+            <li><a class="dropdown-item" routerLink="appproject"><i
+                  class="fa-solid fa-diagram-project me-2 text-warning"></i>โครงการ</a></li>
+
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-chart-column me-1 text-success"></i>รายงาน
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="reportrqasset"><i
+                  class="fa-solid fa-computer me-2 text-primary"></i>ครุภัณฑ์</a></li>
+            <li><a class="dropdown-item" routerLink="reportrqbuilding"><i
+                  class="fa-solid fa-building me-2 text-success"></i>สิ่งก่อสร้าง</a></li>
+            <li><a class="dropdown-item" routerLink="reportrqproject"><i
+                  class="fa-solid fa-diagram-project me-2 text-warning"></i>โครงการ</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

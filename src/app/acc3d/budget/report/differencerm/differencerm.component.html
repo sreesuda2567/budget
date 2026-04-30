@@ -1,0 +1,228 @@
+<div class="card mx-4 mt-4">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-10">
+        <h5 class="card-title">รายงานผลต่างการเบิกจ่าย 3D กับ รม4.</h5>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-9 text-secondary" style="font-size: 10pt"> คณะ/หน่วยงาน: </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select" (change)="fetchcrpart()"
+          [(ngModel)]="dataAdd.FACULTY_CODE">
+          <option [value]="cam.FACULTY_CODE" *ngFor="let cam of dataFac">{{cam.FACULTY_TNAME}}</option>
+
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 text-secondary" style="font-size: 10pt"> ภาคเงิน: </div>
+      <div class="col-md-3 text-secondary" style="font-size: 10pt"> ปีงบประมาณ: </div>
+      <div class="col-md-3 text-secondary" style="font-size: 10pt"> เดือน: </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select" [(ngModel)]="dataAdd.CRPART_ID">
+          <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpart">{{crp.CRPART_TNAME}}</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+          <option [value]="inc.PLYEARBUDGET_CODE" *ngFor="let inc of dataYear">{{inc.PLYEARBUDGET_NAME}}</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="MONTH" id="MONTH" class="form-select" [(ngModel)]="dataAdd.MONTH">
+          <option value="">กรุณาเลือกเดือน</option>
+          <option value="1">มกราคม</option>
+          <option value="2">กุมภาพันธ์</option>
+          <option value="3">มีนาคม</option>
+          <option value="4">เมษายน</option>
+          <option value="5">พฤษภาคม</option>
+          <option value="6">มิถุนายน</option>
+          <option value="7">กรกฎาคม</option>
+          <option value="8">สิงหาคม</option>
+          <option value="9">กันยายน</option>
+          <option value="10">ตุลาคม</option>
+          <option value="11">พฤศจิกายน</option>
+          <option value="12">ธันวาคม</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalist()"><i
+            class="fa fa-search"></i>&nbsp;ค้นหาข้อมูล</button>
+      </div>
+    </div>
+    <hr>
+    <div class="row justify-content-center center-screen" *ngIf="loading">
+      <div class="spinner-border " role="status" id="loading"></div>
+    </div>
+    <div class="row" *ngIf="show">
+      <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()">Export Excel</button>
+      </div>
+      <div class="col-md-7"></div>
+      <div class="col-md-3">
+        <!--  <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">-->
+        <div class="input-group">
+          <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"
+            id="example-search-input" [(ngModel)]="searchTerm">
+          <span class="input-group-append">
+            <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+              type="button">
+              <i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row card outer " *ngIf="clickshow">
+      <div class="col-md-12">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div [(innerHTML)]="dataAdd.htmlStringd"></div>
+                </div>
+                <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()">Export
+                    Excel</button></div>
+                <div class="col-md-3">
+                  <div class="input-group">
+                    <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"
+                      id="example-search-input" [(ngModel)]="searchTerm">
+                    <span class="input-group-append">
+                      <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                        type="button">
+                        <i class="fa fa-search"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-1" align="right">
+
+                  <button type="button" class="btn-close" (click)="fetchclose()" aria-label="Close"></button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body scroller">
+              <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
+                <div class="spinner-border " role="status" id="loading"></div>
+              </div>
+              <input type="hidden" class="form-control" name="p_income" id="p_income"
+                [(ngModel)]="dataAdd.PLINCOME_CODE">
+              <input type="hidden" class="form-control" name="p_pl" id="p_pl" [(ngModel)]="dataAdd.PLMONEYPAY_CODE">
+              <input type="hidden" class="form-control" name="p_pro" id="p_pro" [(ngModel)]="dataAdd.PLPRODUCT_CODE">
+              <input type="hidden" class="form-control" name="p_sum" id="p_sum"
+                [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE">
+
+              <table id="excel-table" class="table card-table table-bordered table-striped table-vcenter tableFixHead">
+                <thead>
+                  <tr>
+                    <th [ngStyle]="{'background-color':'#999999'}">ลำดับ</th>
+                    <th [ngStyle]="{'background-color':'#999999'}">คณะ/หน่วยงาน</th>
+                    <th [ngStyle]="{'background-color':'#999999'}">ชื่อโครงการ/ชื่อเรื่อง</th>
+                    <th [ngStyle]="{'background-color':'#999999'}">วันที่จ่ายจริง</th>
+                    <th [ngStyle]="{'background-color':'#999999'}">เลขฎีกา</th>
+                    <th [ngStyle]="{'background-color':'#999999'}">เลข3ดี</th>
+                    <th [ngStyle]="{'background-color':'#999999'}">ขอเบิก</th>
+                    <th [ngStyle]="{'background-color':'#999999'}">อนุมัติ</th>
+                    <th [ngStyle]="{'background-color':'#999999'}">จ่ายจริง</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of datalistdetailmoney|filter:searchTerm; let i = index">
+                    <td>{{i+1}}</td>
+                    <td>{{p.FACULTY_TNAME}}</td>
+                    <td>{{p.FNEXPENSES_TITLE}}</td>
+                    <td width="7%">{{p.FNEXPENSES_ADATE1}}</td>
+                    <td>{{p.FNEXPENSES_DEKA}}</td>
+                    <td>{{p.FNEXPENSES_STEP}}</td>
+                    <td align="right">{{p.FNEXPENSES_OMONEY| number : '1.2-2'}}</td>
+                    <td align="right">{{p.FNEXPENSES_AMONEY| number : '1.2-2'}}</td>
+                    <td align="right">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" align="center"><strong>รวมทั้งหมด</strong></td>
+                    <td align="right" [(innerHTML)]="dataAdd.moneydetailo"></td>
+                    <td align="right" [(innerHTML)]="dataAdd.moneydetaila"></td>
+                    <td align="right" [(innerHTML)]="dataAdd.moneydetail"></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="row">
+                <div class="col-md-11">
+
+                </div>
+                <div class="col-md-1"><button type="button" class="btn btn-secondary"
+                    (click)="fetchclose()">ปิด</button> </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <input type="hidden" class="form-control" name="p_income" id="p_income" [(ngModel)]="dataAdd.CHECK3D_RM_DATE">
+    <table id="excel-table" class="table card-table table-bordered table-vcenter tableFixHead">
+      <thead>
+        <tr>
+          <th class="bg-info" style="text-align: center;" colspan="5" [(innerHTML)]="dataAdd.NAME"></th>
+        </tr>
+        <tr>
+          <th class="bg-info" style="text-align: center;" colspan="5" [(innerHTML)]="dataAdd.FACNAME"></th>
+        </tr>
+        <tr class="bg-primary">
+          <th>รายการ</th>
+          <th>จัดสรร</th>
+          <th>ผลเบิกจ่าย รม.4</th>
+          <th>ผลเบิกจ่าย บัญชี 3 มิติ</th>
+          <th>ผลต่าง</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of datalist|filter:searchTermd;let i = index">
+          <td [ngStyle]="{'background-color':'#00CCFF'}" *ngIf="p.PLGPRODUCT_SHORTNAME" colspan="5">
+            <strong>{{p.PLGPRODUCT_SHORTNAME}}</strong></td>
+          <td [ngStyle]="{'background-color':'#77E3FF'}" *ngIf="p.PLMONEYPAY_NAME" colspan="5">
+            <strong>{{p.PLMONEYPAY_NAME}}</strong></td>
+          <td
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME">{{p.PLSUBMONEYPAY_NAME}}</td>
+          <td
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">{{p.CHECK3D_GF_MONEYAL| number : '1.2-2'}}</td>
+          <td
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">{{p.CHECK3D_GF_MONEYGF| number : '1.2-2'}}</td>
+          <td class="text-primary"
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">
+            <span
+              (click)="fetchdataexpen('reportexpen',p.PLMONEYPAY_CODE,p.PLSUBMONEYPAY_CODE,p.PLPRODUCT_CODE,p.PLSUBMONEYPAY_LEVEL,'รายการเบิกจ่าย'+p.PLMONEYPAY_NAME+'('+p.PLGPRODUCT_SHORTNAME+')',p.CRPART_ID)"
+              style="cursor:pointer"> {{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</span>
+          </td>
+          <td
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">{{p.FNEXPENSES_RMONEYT| number : '1.2-2'}}</td>
+        </tr>
+        <tr [ngStyle]="{'background-color':'#eee'}">
+          <td align="right">รวมทั้งหมด</td>
+          <td align="right" [(innerHTML)]="dataAdd.moneybl1"></td>
+          <td align="right" [(innerHTML)]="dataAdd.moneybl2"></td>
+          <td align="right" [(innerHTML)]="dataAdd.moneybl3"></td>
+          <td align="right" [(innerHTML)]="dataAdd.moneybl4"></td>
+        </tr>
+        <tr [ngStyle]="{'background-color':'#eee'}">
+          <td colspan="4" align="right">เปอร์เซ็นต์ผลต่าง3dกับ รม4.</td>
+          <td align="right" [(innerHTML)]="dataAdd.moneybl5"></td>
+        </tr>
+      </tbody>
+    </table>
+</div>    

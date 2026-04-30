@@ -1,0 +1,201 @@
+<div class="container">
+  <br>
+  <p class="txt-font2">งบประมาณการเงินและเบิกจ่าย ระบบบัญชี 3 มิติ</p>
+  <div class="row justify-content-center mt-3">
+
+    <div class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d/investment">
+        <i class="fa-solid fa-user-pen"></i>
+        <div><b>ระบบวางแผน</b><br>
+          <b>งบประมาณ</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d/rqbudget">
+        <i class="fa-solid fa-comments-dollar"></i>
+        <div><b>ระบบคำขอ</b><br>
+          <b>งบประมาณ</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="datastatuspl>0" class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d/allocate">
+        <i class="fa-solid fa-money-bill-transfer"></i>
+        <div><b>ระบบจัดสรร</b><br>
+          <b>งบประมาณ</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="datastatusfn>0" class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d/budget">
+        <i class="fa-solid fa-people-arrows"></i>
+        <div><b>ระบบติดตาม</b><br>
+          <b>ผลประจำปี</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="datastatusbl>0" class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d/buildingdesign">
+        <i class="fa-solid fa-pen-ruler"></i>
+        <div><b>บริหารงานออกแบบ</b><br>
+          <b>และพัฒนาอาคาร</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="datastatuswe>0" class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d/welfare">
+        <i class="fa-solid fa-hospital-user"></i>
+        <div><b>ระบบสวัสดิการ</b><br>
+          <b>รักษาพยาบาล/การศึกษา</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="datastatusau>0" class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d/unitcost">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        <div><b>ระบบจัดการ</b><br>
+          <b>งานบัญชี</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="datastatusappm>0" class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d/appmoney">
+        <i class="fa-solid fa-money-check-dollar"></i>
+        <div><b>ระบบ</b><br>
+          <b>ขออนุมัติเงิน</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="datastatusams>0" class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" (click)="golinkams()">
+        <i class="fas fa-truck-loading fa-flip-horizontal text-primary"></i>
+        <div><b>ระบบบริหาร</b><br>
+          <b>จัดการครุภัณฑ์</b><br>
+          <b>&nbsp;</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- column *ngIf="datastatusas>0"
+    <div class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a routerLink="/acc3d/investment">
+            <i class="fa-solid fa-building-user"></i>
+          </a>
+        </div>
+        <p class="btn-font">ระบบวางแผนงบประมาณ</p>
+      </div>
+    </div>
+    
+    <div class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a routerLink="/acc3d/rqbudget">
+            <i class="fa-solid fa-comments-dollar"></i>
+          </a>
+        </div>
+        <p class="btn-font">ระบบคำของบประมาณ</p>
+      </div>
+    </div>
+   
+    <div *ngIf="datastatuspl>0" class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a routerLink="/acc3d/allocate">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+          </a>
+        </div>
+        <p class="btn-font">ระบบจัดสรรงบประมาณ</p>
+      </div>
+    </div>
+
+   
+    <div *ngIf="datastatusfn>0" class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a routerLink="/acc3d/budget">
+            <i class="fa-solid fa-people-arrows"></i>
+          </a>
+        </div>
+        <p class="btn-font">ระบบติดตามผลประจำปี</p>
+      </div>
+    </div>
+  
+    <div *ngIf="datastatusbl>0" class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a routerLink="/acc3d/buildingdesign">
+            <i class="fa-solid fa-pen-ruler"></i>
+          </a>
+        </div>
+        <p class="btn-font">บริหารงานออกแบบและพัฒนาอาคาร</p>
+      </div>
+    </div>
+   
+    <div *ngIf="datastatuswe>0" class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a routerLink="/acc3d/welfare">
+            <i class="fa-solid fa-hospital-user"></i>
+          </a>
+        </div>
+        <p class="btn-font">ระบบสวัสดิการ</p>
+      </div>
+    </div>
+   
+    <div *ngIf="datastatusau>0" class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a routerLink="/acc3d/unitcost">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </a>
+        </div>
+        <p class="btn-font">ระบบจัดการงานบัญชี</p>
+      </div>
+    </div>
+    
+    <div *ngIf="datastatusappm>0" class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a routerLink="/acc3d/appmoney">
+            <i class="fa-solid fa-money-check-dollar"></i>
+          </a>
+        </div>
+        <p class="btn-font">ขออนุมัติเงิน</p>
+      </div>
+    </div>
+
+   
+    <div *ngIf="datastatusams>0" class="col col-sm-2 col-md-2 col-lg-1 col-xl-1">
+      <div class="icon-app">
+        <div class="icon-box ">
+          <a (click)="golinkams()">
+            <i class="fas fa-truck-loading fa-flip-horizontal text-primary"></i>
+          </a>
+        </div>
+        <p class="btn-font">บริหารจัดการครุภัณฑ์</p>
+      </div>
+    </div>-->
+
+
+  </div>
+
+</div>

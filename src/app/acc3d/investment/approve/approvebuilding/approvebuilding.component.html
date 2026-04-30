@@ -1,0 +1,855 @@
+<div class="card border-light mx-4 mt-4">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-10">
+        <h5 class="card-title">พิจารณารายการสิ่งก่อสร้าง</h5>
+      </div>
+      
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <!-- BASIC TABLE -->
+        <div class="panel">
+          <div class="panel-heading">
+            <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+              <div class="col-md-5 text-secondary" style="font-size: 10pt"> คณะ /หน่วยงาน: </div>
+              <div class="col-md-3 text-secondary" style="font-size: 10pt">แผนปีงบประมาณ: </div>
+                <div class="col-md-2 text-secondary" style="font-size: 10pt">บรรจุลงในแผนประจำปี: </div>
+            </div>
+            <div class="row">
+              <div class="col-md-5">
+                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()">
+                  <option value="">ทั้งหมด</option>
+                  <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                  <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE"
+                    (change)="onChangeyear()" (change)="fetchdatalist()">
+                    <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataMyear">{{year.PLYEARBUDGET_NAME}}
+                    </option>
+                  </select>
+                </div>
+              <div class="col-md-2">
+                <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRYEARASSET_CODE" (change)="fetchdatalist()">
+                  <option value="">----ทุกปีงบประมาณ----</option>
+                  <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">{{year.PLYEARBUDGET_NAME}}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-2" >
+                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalSpec"
+                  (click)="fetchdatalistapp()">
+                  <i class="fa fa-plus-circle"></i> พิจารณารายการ</a>
+              </div>
+            </div>
+          </div>
+          </div>
+         
+          
+          <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+          </div>
+          <div class="shadow alert alert-secondary" role="alert">
+            <div class="row">
+              <div align="right" class="col-md-1">แสดงข้อมูล</div>
+              <div align="right" class="col-md-1">
+                <select (change)="onTableSizeChange($event)" class="form-select">
+                  <option *ngFor="let size of tableSizes" [ngValue]="size">
+                    {{ size }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6"></div>
+              <div class="col-md-4">
+                <div class="input-group">
+                  <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"  id="example-search-input" [(ngModel)]="searchTerm">
+                  <span class="input-group-append">
+                      <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5" type="button">
+                          <i class="fa fa-search"></i>
+                      </button>
+                  </span>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover">
+            <thead>
+              <tr class="bg-primary text-white">
+                <th><div align="center">ที่</div></th>
+                <th *ngIf="dataAdd.FACULTY_CODE==''"><div align="center">คณะ/หน่วยงาน</div></th>
+                <th *ngIf="dataAdd.PLINCOME_CODE ==''"><div align="center">แหล่งเงิน</div></th>
+                <th><div align="center">รายการสิ่งก่อสร้าง</div></th>
+                <th><div align="center">ผลผลิต</div></th>
+                <th><div align="center">จำนวนเงิน</div></th>
+                <th *ngIf="dataAdd.PRYEARASSET_CODE ==''"><div align="center">ปีงบประมาณ</div></th>
+                <th><div align="center">สถานะ</div></th>
+                <th><div align="center">รายงาน</div></th>
+                <th><div align="center">จัดการข้อมูล</div></th>
+                  
+              </tr>
+            </thead>
+            <tbody>
+              <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+              <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                  itemsPerPage: tableSize,
+                  currentPage: page,
+                  totalItems: count
+                  } ; let i = index">
+                <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                <td *ngIf="dataAdd.FACULTY_CODE==''">{{p.FFACULTY_TNAME}}</td>
+                <td *ngIf="dataAdd.PLINCOME_CODE==''">{{p.PLINCOME_NAME}}</td>
+                <td>{{p.PRREGISBUILDING_NAME}}
+                  
+                  <span *ngIf="p.PRASSET_NOTE" class="text-danger">
+                    <br>
+                    ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})</span>
+                 <span *ngIf="p.PRREGISBUILDING_CODE !=p.PRREGISBUILDING_CODEA && p.PRREGISBUILDING_CODEA!=null"  class="text-danger">
+                      <br>
+                      เปลี่ยนแปลง:{{p.PRREGISBUILDING_NAMEC}}
+                    </span>   
+                </td>
+                <td align="center">{{p.PLGPRODUCT_SHORTNAME}}</td>
+                <td align="right">{{p.PRBUILDING_MONEY| number : '1.2-2'}}
+                  <span *ngIf="p.PRBUILDING_MONEY !=p.PRBUILDING_MONEYA && p.PRBUILDING_MONEYA!=null"  class="text-danger">
+                      <br>
+                      เปลี่ยนแปลง:{{p.PRBUILDING_MONEYA| number : '1.2-2'}}
+                    </span>
+                </td>
+                <td *ngIf="dataAdd.PRYEARASSET_CODE ==''" align="center">{{p.PRYEARASSET_CODE}}</td>
+                <td align="center">{{p.PRSTATUS_NAME}}</td>
+                <td width="15%">
+                  <span *ngIf="p.PRBUILDING_SLINK"> <a role="button" title="แนบไฟล์แบบเสนอรายการสิ่งก่อสร้าง" class="btn btn-success text-white"
+                   (click)="previewPdf(p.PRBUILDING_SLINK)" >แบบเสนอ</a>&nbsp;</span>
+                  <span  *ngIf="p.PRBUILDING_PRICE"> <a role="button" title="รายงาน" class="btn btn-success text-white"
+                    (click)="previewPdf(p.PRBUILDING_PRICE)"
+                    >ราคากลาง</a>&nbsp; </span>
+                    <span  *ngIf="p.PRBUILDING_PAT">
+                      <a  role="button" title="รายงาน" class="btn btn-success text-white"
+                    (click)="previewPdf(p.PRBUILDING_PAT)"
+                    >แบบรูป</a>&nbsp;</span>
+                    <a role="button" title="รายงาน" class="btn btn-success text-white"
+                     (click)="previewPdf('https://hr.rmutsv.ac.th/html2pdf/reportbuilding.php?PRBUILDING_CODE=' + p.PRBUILDING_CODE + '&type=0')"
+                    ><i class="fas fa-file-alt"></i></a>
+                    
+                </td>
+                <td width="6%">
+                  <span *ngIf="p.PRBUILDING_RSTATUS=='0'">&nbsp;</span>
+                  <a role="button" title="แก้ไข" data-bs-toggle="modal"
+                    data-bs-target="#modalEditlistexpen" class="btn btn-warning text-white"
+                    (click)="editdataapp(p.PRBUILDING_CODE)"><i class="fa fa-edit"></i></a>
+                  <span *ngIf="p.PRBUILDING_RSTATUS=='0'">&nbsp;</span>
+                </td>
+              </tr>
+
+              <tr *ngIf="!rownum">
+                <td colspan="10">ไม่มีข้อมูล{{rownum}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="d-flex justify-content-left">
+            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalSpec" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">พิจารณารายการสิ่งก่อสร้าง</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+      <!-- <div class="alert alert-info" role="alert">
+          <div class="row">
+            <div class="col-md-9">
+              <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FFACULTY_CODE"
+                (change)="fetchdatalistapp()">
+                <option value="">ทั้งหมด</option>
+                <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.FPRYEARASSET_CODE"
+                (change)="fetchdatalistapp()">
+                <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                  {{year.PLYEARBUDGET_NAME}}</option>
+              </select>
+            </div>
+          </div>
+        </div>--> 
+        <div class="row justify-content-center center-screen" *ngIf="loadingapp">
+          <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <div class="overflow-auto">
+          <div class="row card outer " *ngIf="clickshow">
+            <br>
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-md-11">
+                      <div [(innerHTML)]="dataAdd.htmlStringd"></div>
+                    </div>
+                    <div class="col-md-1" align="right">
+                      <button type="button" class="btn-close" (click)="fetchclose()" aria-label="Close"></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body ">
+                  <input type="hidden" class="form-control" name="PRASSET_CODE" id="PRASSET_CODE"
+                    [(ngModel)]="dataAdd.PRASSETAPP_CODE">
+                  <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-6">
+                      <label for="name">สถานะการอนมุัติ</label>
+                      <select name="PRSTATUS_CODE" id="PRSTATUS_CODE" class="form-select"
+                        [(ngModel)]="dataAdd.PRSTATUS_CODE">
+                        <option [value]="status.PRSTATUS_CODE" *ngFor="let status of datastatus">
+                          {{status.PRSTATUS_NAME}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-5"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-6">
+                    <label for="name">สถานะ</label>
+                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRASSET_PSTATUS">
+                      <option [value]="0">อยู่ในแผน</option>
+                      <option [value]="1">ไม่อยู่ในแผน</option>
+                    </select>
+                    </div>
+                    <div class="form-group col-md-5"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                      <label for="name">หมายเหตุ</label>
+                      <textarea id="PRASSETFAC_NOTE" name="PRASSETFAC_NOTE" [(ngModel)]="dataAdd.PRASSETFAC_NOTE"
+                        rows="4" cols="50" class="form-control"></textarea>
+                    </div>
+
+                  </div>
+
+                  <br>
+                  <div class="row">
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3"><button type="button" class="btn btn-primary"
+                        (click)="insertappfac()">บันทึกรายการ</button> </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-secondary" role="alert">
+            <div class="row">
+              <div class="col-md-8"></div>
+              <div class="col-md-4">
+                <div class="input-group">
+                  <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"  id="example-search-input" [(ngModel)]="searchTermd">
+                  <span class="input-group-append">
+                      <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5" type="button">
+                          <i class="fa fa-search"></i>
+                      </button>
+                  </span>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="overflow-auto"> 
+          <table width="100%" id="example" class="table table-bordered  table-striped table-hover btn-font3">
+            <thead>
+              <tr class="bg-primary text-white">
+                <th>ที่</th>
+                <th *ngIf="dataAdd.FACULTY_CODE==''"><div align="center">คณะ/หน่วยงาน</div></th>
+                <th>ชื่อสิ่งก่อสร้าง</th>
+                <th>แหล่งเงิน</th>
+                <th>ภาค</th>
+                <th>ผลผลิต</th>
+                <th>จำนวนเงิน</th>
+                <th>รายงาน</th>
+                <th>การพิจารณา</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+              <tr *ngFor="let p of datalistapp|filter:searchTermd ; let i = index">
+                <td width="5%" align="center">{{i+1}}</td>
+                <td *ngIf="dataAdd.FACULTY_CODE==''">{{p.FFACULTY_TNAME}}</td>
+                <td>{{p.PRREGISBUILDING_NAME}}</td>
+                <td>{{p.PLINCOME_NAME}}</td>
+                <td>{{p.CRPART_TNAME}}</td>
+                <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
+                <td width="15%" align="right">{{p.PRBUILDING_MONEY| number : '1.2-2'}}</td>
+                <td width="15%">
+                    <a role="button" title="รายงาน" class="btn btn-success text-white"
+                  (click)="previewPdf(p.PRBUILDING_PAT)"  >แบบรูป</a>&nbsp;
+                    <a role="button" title="รายงาน" class="btn btn-success text-white"
+                    (click)="previewPdf(p.PRBUILDING_PRICE)"
+                    >ราคากลาง</a>&nbsp;  
+                    <span *ngIf="p.PRBUILDING_SLINK"> <a role="button" title="แนบไฟล์แบบเสนอรายการสิ่งก่อสร้าง" class="btn btn-success text-white"
+                      (click)="previewPdf(p.PRBUILDING_SLINK)" >แบบเสนอ</a>&nbsp;</span>
+                    <a role="button" title="รายงาน" class="btn btn-success text-white"
+                    (click)="previewPdf('https://hr.rmutsv.ac.th/html2pdf/reportbuilding.php?PRBUILDING_CODE=' + p.PRBUILDING_CODE + '&type=0')"
+                    ><i class="fas fa-file-alt"></i></a>
+                </td>
+                <td width="5%">
+                  <a role="button" title="แก้ไข" (click)="showapp(p.PRBUILDING_CODE,p.PRREGISBUILDING_NAME)"
+                     class="btn btn-warning text-white"><i
+                      class="fa fa-edit"></i></a>&nbsp;
+                </td>
+
+              </tr>
+
+              <tr *ngIf="!rownum">
+                <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalEditlistexpen" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true"
+  aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalToggleLabel">แก้ไขรายการสิ่งก่อสร้าง </h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row justify-content-center center-screen" *ngIf="loadingapp">
+          <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <div class="card-body ">
+          <div class="row">
+            <div class="col-md-12">
+              <label for="name"><strong>ชื่อรายการสิ่งก่อสร้าง </strong></label>
+
+              <select name="u_code" id="u_code" class="form-select" [(ngModel)]="dataAdd.PRREGISASSET_CODEA">
+                <option [value]="p.PRREGISBUILDING_CODE" *ngFor="let p of datalistregister">{{p.PRREGISBUILDING_NAME}}
+                  ตำบล{{p.SUB_DISTRICT_NAME_TH}} อำเภอ{{p.DISTRICT_NAME_TH}}
+                  จังหวัด{{p.PROVINCE_TNAME}}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-3">
+               <label for="name"><strong>ปีงบประมาณ</strong></label>
+              <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRYEARASSET_CODEA">
+                <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                  {{year.PLYEARBUDGET_NAME}}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-1">
+              <label for="name"><strong>จำนวน</strong></label>
+              <input type="text" name="p_number" id="p_number" class="form-control" placeholder="จำนวน"
+                [(ngModel)]="dataAdd.PRASSET_NUMBER" >
+            </div>
+            
+            <div class="col-md-2">
+              <label for="name"><strong>ราคาต่อหน่วย</strong></label>
+              <input type="text" name="p_money" id="p_money" class="form-control" (keypress)="CheckNum($event)"
+                placeholder="ราคาต่อหน่วย" [(ngModel)]="dataAdd.PRASSET_MONEY" >
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+        <button type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 
+<div class="modal fade" id="modalEditlistexpen" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+tabindex="-1">
+<div class="modal-dialog modal-fullscreen">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalToggleLabel">รายละเอียดสิ่งก่อสร้าง</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#money" type="button"
+            role="tab" aria-controls="home" aria-selected="true">
+            ส่วนที่ 1 แหล่งงบประมาณ/ผลผลิต/โครงการ
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button   class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#details" type="button"
+            role="tab" aria-controls="profile" aria-selected="false">
+            ส่วนที่ 2 รายละเอียดสิ่งก่อสร้าง
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="money" role="tabpanel" aria-labelledby="home-tab">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header bg-info">
+                    แหล่งงบประมาณ/ผลผลิต/โครงการ
+                  </div>
+                  <div class="card-body">
+                <label for="name"><strong>แหล่งเงิน/ภาค</strong> </label>
+              <div class="row">
+                <div class="col-md-4 text-secondary" style="font-size: 10pt">แหล่งเงิน: </div>
+                <div class="col-md-4 text-secondary" style="font-size: 10pt">ภาค: </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <select name="in_come" id="in_come" class="form-select" [(ngModel)]="dataAdd.RPLINCOME_CODE"
+                     (change)="onChangecrpartrister()" >
+                    <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.RCRPART_ID">
+
+                    <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpartregis">{{crp.CRPART_TNAME}}</option>
+                  </select>
+                </div>
+              </div>
+                <label for="name"><strong>ผลผลิต/โครงการ</strong> </label>
+                <table width="100%" border="0">
+                  <tr *ngFor="let product of dataProduct;let i = index">
+                    <td width="2%" align="left" valign="top">
+                      <input class="form-check-input filled-in" name="p_radio" id="radio" type="radio"
+                        value="{{product.PLGPRODUCT_CODE}}" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
+                    </td>
+                    <td>{{product.PLGPRODUCT_NAME}}
+                      <div class="row" *ngIf="product.PLGPRODUCT_CODE==133">
+                        <div class="col-md-12"><input class="form-check-input filled-in" name="p_radio1" id="radio1"
+                            type="radio" value="2M1C" [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE">
+                          โครงการผลิตกำลังคนด้านขนส่งทางน้ำ</div>
+                        <div class="col-md-12">
+                          <input class="form-check-input filled-in" name="p_radio1" id="radio1" type="radio"
+                            value="2M1D" [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE">
+                          โครงการจัดตั้งศูนย์วิจัยและฝึกอบรมระบบขนส่งทางรางศรีวิชัย
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="product.PLGPRODUCT_CODE==143">
+                        <div class="col-md-12"><input type="text" name="p_name" id="p_name" class="form-control" placeholder="โครงการ"
+                          [(ngModel)]="dataAdd.PRBUILDING_PDEVELOP"></div>
+                      </div>
+                      <div class="row" *ngIf="product.PLGPRODUCT_CODE==144">
+                        <div class="col-md-12"><input type="text" name="p_name" id="p_name" class="form-control" placeholder="โครงการ"
+                          [(ngModel)]="dataAdd.PRBUILDING_PEXCELL"></div>
+                      </div>
+                      <div class="row" *ngIf="product.PLGPRODUCT_CODE==145">
+                        <div class="col-md-12"><input type="text" name="p_name" id="p_name" class="form-control" placeholder="ระบุ"
+                          [(ngModel)]="dataAdd.PRBUILDING_ANOTHER"></div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>  
+        <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
+          <div class="card-body">
+            <div class="card">
+              <div class="card-header bg-info">
+                รายละเอียดสิ่งก่อสร้าง
+              </div>
+              <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+                <label for="name"><strong>1. ชื่อรายการสิ่งก่อสร้าง </strong></label>
+                
+                  <textarea id="p_name" name="p_name" rows="2" cols="50" class="form-control" [(ngModel)]="dataAdd.PRBUILDING_NAME" disabled></textarea>
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="col-md-1">
+                <label for="name"><strong>จำนวน</strong></label>
+                <input type="text" name="p_number" id="p_number" class="form-control" placeholder="จำนวน"
+                  [(ngModel)]="dataAdd.PRBUILDING_NUMBER">
+              </div>
+              <div class="col-md-2">
+                <label for="name"><strong>หน่วยนับ</strong></label>
+                <select name="u_code" id="u_code" class="form-select" [(ngModel)]="dataAdd.GCUNIT_CODE" disabled="">
+                  <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="name"><strong>ราคาต่อหน่วย</strong></label>
+                <input type="text" name="p_money" id="p_money" class="form-control" (keypress)="CheckNum($event)"
+                  (keyup)="keymon()" placeholder="ราคาต่อหน่วย" [(ngModel)]="dataAdd.PRBUILDING_MONEY">
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label for="name"><strong>2. ประเภทสิ่งก่อสร้าง</strong></label>
+                <div class="row">
+                  <div class="col-md-12">
+                    <table width="100%" border="0">
+                      <tr>
+                        <td width="2%" align="right" valign="top"><input (click)="cleartextbox()"
+                            class="form-check-input filled-in" name="p_radiopr" id="radiopr" type="radio" value="01"
+                            [(ngModel)]="dataAdd.PRBUILDING_TYPE" disabled> </td>
+                        <td colspan="8">สิ่งก่อสร้าง 1 ปี หรือรายการปรับปรุง ต่อเติม ซ่อมแซม</td>
+                      </tr>
+                      <tr>
+                        <td align="right" valign="top"><input class="form-check-input filled-in" name="p_radiopr"
+                            id="radiopr" type="radio" value="03" [(ngModel)]="dataAdd.PRBUILDING_TYPE" disabled></td>
+                        <td width="27%">สิ่งก่อสร้างผูกพันใหม่ ระยะเวลาของโครงการ
+                        </td>
+                        <td width="12%">
+                          <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRBUILDING_YEAR"
+                            (change)="showbuid()">
+                            <option [value]="">กรุณาเลือก</option>
+                            <option [value]="2">2</option>
+                            <option [value]="3">3</option>
+                          </select>
+                        </td>
+                        <td width="7%">ปี เริ่มต้นปี</td>
+                        <td width="14%">
+                          <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRBUILDING_SYEAR"
+                            (change)="showbuid()">
+                            <option [value]="">กรุณาเลือก</option>
+                            <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYearp">
+                              {{year.PLYEARBUDGET_CODE}}</option>
+                          </select>
+                        </td>
+                        <td width="6%">สิ้นสุดปี</td>
+                        <td width="14%">
+                          <select name="y_code" id="y_code" class="form-select"
+                            [(ngModel)]="dataAdd.PRBUILDING_EYEAR">
+                            <option [value]="">กรุณาเลือก</option>
+                            <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYearp">
+                              {{year.PLYEARBUDGET_CODE}}</option>
+                          </select>
+                        </td>
+                        <td width="21%" colspan="2">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-12">
+                    <table width="100%" border="0" id="table1">
+                      <tr>
+                        <td colspan="6">
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;รายละเอียดการตั้งงบประมาณ(เฉพาะรายการสิ่งก่อสร้างผูกพันใหม่)
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>งบประมาณทั้งสิ้น</strong>
+                        </td>
+                        <td><input type="text" name="PROBJECT_CODE6" class="form-control"
+                            [(ngModel)]="dataAdd.PRBUILDING_MONEYT" style="text-align:right;" disabled></td>
+                        <td colspan="3">บาท</td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เงินงบประมาณ</td>
+                        <td><input type="text" name="PROBJECT_CODE6" class="form-control"
+                            [(ngModel)]="dataAdd.PRBUILDING_MONEYD" style="text-align:right;" disabled></td>
+                        <td colspan="3">บาท</td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เงินนอกงบประมาณ</td>
+                        <td><input type="text" name="PROBJECT_CODE7" class="form-control" placeholder=""
+                            [(ngModel)]="dataAdd.PRBUILDING_MONEYP" style="text-align:right;" disabled></td>
+                        <td colspan="3">บาท</td>
+                      </tr>
+                      <tr>
+                        <td align="center">ปี</td>
+                        <td>
+                          <select name="y_code" id="y_code" class="form-select"
+                            [(ngModel)]="dataAdd.PRBUILDING_SYEAR1" disabled>
+                            <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYearp">
+                              {{year.PLYEARBUDGET_CODE}}</option>
+                          </select>
+                        </td>
+                        <td width="25%">ตั้งงบประมาณ(20% ของงบประมาณ)</td>
+                        <td align="right">เป็นเงิน</td>
+                        <td><input type="text" name="PROBJECT_CODE2" class="form-control" placeholder=""
+                            [(ngModel)]="dataAdd.PRBUILDING_MONEY1" style="text-align:right;" disabled></td>
+                        <td>บาท</td>
+                      </tr>
+                      <tr>
+                        <td align="center">ปี</td>
+                        <td>
+                          <select name="y_code" id="y_code" class="form-select"
+                            [(ngModel)]="dataAdd.PRBUILDING_SYEAR2" disabled>
+                            <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYearp">
+                              {{year.PLYEARBUDGET_CODE}}</option>
+                          </select>
+                        </td>
+                        <td width="25%">ผูกพันงบประมาณ</td>
+                        <td align="right">เป็นเงิน</td>
+                        <td><input type="text" name="PROBJECT_CODE8" class="form-control" placeholder=""
+                            [(ngModel)]="dataAdd.PRBUILDING_MONEY2" style="text-align:right;" disabled>
+                        </td>
+                        <td>บาท</td>
+                      </tr>
+                      <tr>
+                        <td width="8%" align="center">ปี</td>
+                        <td width="12%">
+                          <select name="y_code" id="y_code" class="form-select"
+                            [(ngModel)]="dataAdd.PRBUILDING_SYEAR3" disabled>
+                            <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYearp">
+                              {{year.PLYEARBUDGET_CODE}}</option>
+                          </select>
+                        </td>
+                        <td width="25%">ผูกพันงบประมาณ</td>
+                        <td width="6%" align="right">เป็นเงิน</td>
+                        <td width="14%"><input type="text" name="PROBJECT_CODE9" class="form-control" placeholder=""
+                            style="text-align:right;" [(ngModel)]="dataAdd.PRBUILDING_MONEY3" disabled></td>
+                        <td width="48%">บาท</td>
+                      </tr>
+                    </table>
+
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <label for="name"><strong>3. เหตุผลความจำเป็น (ความยาวอย่างน้อยครึ่งหน้ากระดาษ)
+                      </strong></label>
+                    <angular-editor [(ngModel)]="dataAdd.PRBUILDING_REASON" [config]="config"></angular-editor>
+                  </div>
+                </div>
+
+                <label for="name"><strong>4. วัตถุประสงค์ </strong></label>
+                <div class="row">
+                  <div class="col-md-12">
+                    <angular-editor [(ngModel)]="dataAdd.PRBUILDING_OBJECT" [config]="config"></angular-editor>
+                  </div>
+                </div>
+                <label for="name"><strong>5. ประโยชน์ใช้สอย </strong></label>
+                <div class="row">
+                  <div class="col-md-12">
+                    <angular-editor [(ngModel)]="dataAdd.PRBUILDING_USE" [config]="config"></angular-editor>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label for="name"><strong>6. ข้อมูลพื้นฐานอาคาร </strong></label>
+                  <table width="100%" border="0">
+                    <tr>
+                      <td width="13%" align="right">ลักษณะอาคาร</td>
+                      <td width="14%"><input type="text" name="p_look" id="p_look" class="form-control"
+                          [(ngModel)]="dataAdd.PRBUILDING_LOOK"></td>
+                      <td width="18%" align="right">ความสูง</td>
+                      <td><input type="text" name="p_height" id="p_height" class="form-control"
+                          (keypress)="CheckNum($event)" [(ngModel)]="dataAdd.PRBUILDING_HEIGHT"></td>
+                      <td>ชั้น</td>
+                    </tr>
+                    <tr>
+                      <td align="right">พื้นที่</td>
+                      <td><input type="text" name="p_area" id="p_area" class="form-control"
+                          (keypress)="CheckNum($event)" [(ngModel)]="dataAdd.PRBUILDING_AREA"></td>
+                      <td align="right">ตร.ม.ราคาประเมินต่อตารางเมตร</td>
+                      <td width="14%"><input type="text" name="p_aprice" id="p_aprice" class="form-control"
+                          (keypress)="CheckNum($event)" [(ngModel)]="dataAdd.PRBUILDING_APRICE"></td>
+                      <td width="41%">บาท</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label for="name"><strong> 7. ความพร้อมในการดำเนินงาน </strong> </label> <br>
+                  <label for="name"><strong>7.1 วิธีการจัดทำแบบรูปรายการ/ประมาณการราคา/งวดงาน </strong></label>
+                  <table width="100%" border="0">
+                    <tr>
+                      <td width="4%" align="right" valign="top"><input class="form-check-input filled-in"
+                          name="p_radiomet" id="radiomet1" type="radio" value="1"
+                          [(ngModel)]="dataAdd.PRBUILDING_METHOD"> </td>
+                      <td>ดำเนินการเอง</td>
+                    </tr>
+                    <tr>
+                      <td align="right" valign="top"><input class="form-check-input filled-in" name="p_radiomet"
+                          id="radiomet1" type="radio" value="2" [(ngModel)]="dataAdd.PRBUILDING_METHOD"></td>
+                      <td width="96%">จัดจ้าง
+                        <input type="hidden" class="form-control" name="p_method" id="p_method"
+                          [(ngModel)]="dataAdd.PRBUILDING_METHOD">
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label for="name"><strong>7.2 แบบรูปรายการ </strong></label>
+                  <table width="100%" border="0">
+                    <tr>
+                      <td width="4%" align="right" valign="top"><input class="form-check-input filled-in"
+                          name="p_radiopat" id="radiopat1" type="radio" value="1"
+                          [(ngModel)]="dataAdd.PRBUILDING_PATTERN"></td>
+                      <td colspan="5">มี</td>
+                    </tr>
+                    <tr>
+                      <td align="right" valign="top"><input class="form-check-input filled-in" name="p_radiopat"
+                          id="radiopat1" type="radio" value="2" [(ngModel)]="dataAdd.PRBUILDING_PATTERN"></td>
+                      <td width="25%">ไม่มี
+                        หรือคาดว่าจะทำแบบรูปแล้วเสร็จ เดือน</td>
+                      <td width="13%">
+                        <select class="form-select" [(ngModel)]="dataAdd.PRBUILDING_PMONTH">
+                          <option [value]="">เลือก</option>
+                          <option [value]="i+1" *ngFor="let month of tablemonth; let i = index">
+                            {{ month }}
+                          </option>
+                        </select>
+                      </td>
+                      <td width="2%">ปี</td>
+                      <td width="13%">
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRBUILDING_PYEAR">
+                          <option [value]="">เลือก</option>
+                          <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                            {{year.PLYEARBUDGET_CODE}}</option>
+                        </select>
+                      </td>
+                      <td width="42%">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td align="right" valign="top">&nbsp;</td>
+                      <td>และขณะนี้มีอยู่ในขั้นตอน</td>
+                      <td colspan="3"><input type="text" name="p_ps" id="p_ps" class="form-control"
+                          [(ngModel)]="dataAdd.PRBUILDING_PSTEP"></td>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label for="name"><strong>7.3 ราคาประมาณการ(ฺBOQ) </strong></label>
+                  <table width="100%" border="0">
+                    <tr>
+                      <td width="4%" align="right" valign="top"><input class="form-check-input filled-in"
+                          name="p_radiosit" id="radioesit1" type="radio" value="1"
+                          [(ngModel)]="dataAdd.PRBUILDING_ESTIMATE"></td>
+                      <td>มี ระบุวงเงิน</td>
+                      <td><input type="text" name="p_epr" id="p_epr" class="form-control"
+                          (keypress)="CheckNum($event)" [(ngModel)]="dataAdd.PRBUILDING_EPRICE"></td>
+                      <td colspan="3">บาท</td>
+                    </tr>
+                    <tr>
+                      <td align="right" valign="top"><input class="form-check-input filled-in" name="p_radiosit"
+                          id="radioesit1" type="radio" value="2" [(ngModel)]="dataAdd.PRBUILDING_ESTIMATE"></td>
+                      <td width="31%">ไม่มี
+                        หรือคาดว่าจะทำราคาประมาณการแล้วเสร็จ เดือน
+                      </td>
+                      <td width="15%">
+                        <select class="form-select" [(ngModel)]="dataAdd.PRBUILDING_EMONTH">
+                          <option [value]="i+1" *ngFor="let month of tablemonth; let i = index">
+                            {{ month }}
+                          </option>
+                        </select>
+                      </td>
+                      <td width="2%">ปี</td>
+                      <td width="19%">
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRBUILDING_EAYEAR">
+                          <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYearp">
+                            {{year.PLYEARBUDGET_CODE}}</option>
+                        </select>
+                      </td>
+                      <td width="28%">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td align="right" valign="top">&nbsp;</td>
+                      <td>และขณะนี้มีอยู่ในขั้นตอน</td>
+                      <td colspan="3"><input type="text" name="p_es" id="p_es" class="form-control"
+                          [(ngModel)]="dataAdd.PRBUILDING_ESTEP"></td>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-12">
+                  <label for="name"><strong> 8. แผนการใช้จ่ายงบประมาณ (ระบุจำนวนเงิน) </strong></label>
+                  <table width="100%" border="0">
+                    <tr>
+                      <td>ลงนามสัญญา โปรดระบุ งบประมาณ</td>
+                      <td><input type="text" name="p_smo" id="p_smo" class="form-control"
+                          [(ngModel)]="dataAdd.PRBUILDING_SMONEY" disabled=""></td>
+                      <td>บาท เดือน</td>
+                      <td>
+                        <select class="form-select" [(ngModel)]="dataAdd.PRBUILDING_SMONTH">
+                          <option [value]="i+1" *ngFor="let month of tablemonth; let i = index">
+                            {{ month }}
+                          </option>
+                        </select>
+                      </td>
+                      <td>ปี</td>
+                      <td>
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRBUILDING_SAYEAR">
+                          <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYearp">
+                            {{year.PLYEARBUDGET_CODE}}</option>
+                        </select>
+                      </td>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+      <button  type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+    </div>
+  </div>
+</div>
+</div>-->
+<!-- PDF Preview Side Panel -->
+<div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
+<div class="pdf-preview-panel" [class.open]="previewPdfUrl">
+    <div class="pdf-preview-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+        <div>
+            <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+                <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+            </a>
+            <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+                <i class="fa fa-times me-1"></i> ปิด
+            </button>
+        </div>
+    </div>
+    <div class="pdf-preview-body">
+        <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
+    </div>
+</div>

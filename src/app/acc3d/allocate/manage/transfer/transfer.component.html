@@ -1,0 +1,486 @@
+<div class="card border-light  mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">โอนย้ายเงิน </h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                    (click)="setshowbti()" (click)="showinput()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                    <label><strong>หน่วยเบิกจ่าย </strong></label>
+                    <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS" id="PRIVILEGE_RSTATUS"
+                        [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
+                    <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CAMPUS_CODE"
+                        (change)="onChangeCam()"  (change)="fetchdatalist()">
+                        <option value="">ทุกวิทยาเขต
+                        </option>
+                        <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">{{cam.CAMPUS_TNAME}}</option>
+                    </select>
+                </div>
+                <div class="col-md-6 text-secondary" style="font-size: 10pt">
+                    <label> <strong>คณะ /หน่วยงาน</strong></label>
+                    <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"  (change)="fetchdatalist()">
+                        <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS!='1'">
+                            ทุกคณะ/หน่วยงาน</option>
+                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                    </select>
+                </div>
+                <div class="col-md-2 " style="font-size: 10pt">
+                    <label><strong>ปีงบประมาณ</strong></label>
+                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE"  (change)="fetchdatalist()">
+                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear" >
+                            {{year.PLYEARBUDGET_CODE}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="shadow alert alert-secondary" role="alert">
+
+            <div class="row">
+                <div class="col-md-1" align="right">แสดงข้อมูล</div>
+                <div class="col-md-1">
+                    <select (change)="onTableSizeChange($event)" class="form-select">
+                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                            {{ size }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"
+                            id="example-search-input" [(ngModel)]="searchTerm" (keyup)="fetchdatalist()">
+                        <span class="input-group-append">
+                            <button
+                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover tableFixHead btn-font3">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">คณะหน่วยงานที่ขอโอน</div>
+                    </th>
+                    <th>
+                        <div align="center">คณะหน่วยงานที่รับโอน</div>
+                    </th>
+                    <th>
+                        <div align="center">หมวดรายจ่าย</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">ผู้ทำรายการ</div>
+                    </th>
+                    <th>
+                        <div align="center">จัดการข้อมูล</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      } ; let i = index">
+                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                    <td>{{p.FACULTY_TNAME1}}</td>
+                    <td>{{p.FACULTY_TNAME2}}</td>
+                    <td>{{p.PLSUBMONEYPAY_NAME}}</td>
+                    <td align="center">{{p.PLTRBUDGETD_DATE1}}</td>
+                    <td align="right">{{p.PLTRBUDGETD_MONEY| number : '1.2-2'}}</td>
+                    <td>{{p.STF_FNAME}}</td>
+                    <td >
+                        <a role="button" class="btn btn-primary text-white" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalSearch" (click)="editdata(p.PLTRBUDGETD_CODE)"><i
+                                class="fa fa-search"></i> </a>&nbsp;
+                    <a *ngIf="p.PLTRBUDGETD_LINK"  role="button" title="รายงาน" class="btn btn-success text-white" href="{{p.PLTRBUDGETD_LINK}}"
+                            target="_blank"><i class="fas fa-file-alt"></i></a>&nbsp;
+                        <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                            (click)="deleteData(p.PLTRBUDGETD_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
+                        <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                            class="btn btn-warning text-white" (click)="editdata(p.PLTRBUDGETD_CODE)"><i
+                                class="fa fa-edit"></i></a>&nbsp;
+                    </td>
+
+                </tr>
+
+                <tr *ngIf="!rownum">
+                    <td colspan="5">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-left">
+            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">การโอนย้ายเงิน</h5>
+                <button type="button" class="btn-close bg-primary" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" class="form-control" name="PLTRBUDGETD_CODE" id="PLTRBUDGETD_CODE"
+                    [(ngModel)]="dataAdd.PLTRBUDGETD_CODE">
+                    <div class="row">
+                    <div class="form-group col-md-12" style="font-size: 10pt">
+                        <label for="name"><strong>เลขหนังสือ</strong></label>
+                        <input type="text" name="PLTRBUDGETD_DETAIL" class="form-control" id="PLTRBUDGETD_DETAIL"
+                            placeholder="เลขหนังสือ" [(ngModel)]="dataAdd.PLTRBUDGETD_DETAIL">
+                    </div>
+                    <div class="form-group col-md-12" style="font-size: 10pt">
+                        <label for="name"><strong>เชื่อมโยง/Link:</strong></label>
+                        <input type="text" name="PLTRBUDGETD_LINK" class="form-control" id="PLTRBUDGETD_LINK"
+                            placeholder="เชื่อมโยง/Link:" [(ngModel)]="dataAdd.PLTRBUDGETD_LINK">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                หน่วยงานที่โอน
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12 " style="font-size: 10pt">
+                                        <label> <strong>คณะ /หน่วยงาน</strong></label>
+                                        <select name="FACULTY_CODE1" id="FACULTY_CODE1" class="form-select"
+                                            [(ngModel)]="dataAdd.FACULTY_CODE1" (change)="onChangeIncome1()">
+                                            <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                                {{fac.FACULTY_TNAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 " style="font-size: 10pt">
+                                        <label> <strong>แหล่งเงิน</strong></label>
+                                        <select name="PLINCOME_CODE1" id="PLINCOME_CODE1" class="form-select"
+                                            [(ngModel)]="dataAdd.PLINCOME_CODE1" (change)="onChangeCrpart1()">
+                                            <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">
+                                                {{inc.PLINCOME_NAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 " style="font-size: 10pt">
+                                        <label> <strong>ภาค</strong></label>
+                                        <select name="CRPART_ID1" id="CRPART_ID1" class="form-select"
+                                            [(ngModel)]="dataAdd.CRPART_ID1" (change)="onChangePlmoney1()" >
+                                            <option [value]="cr.CRPART_ID" *ngFor="let cr of dataCrpart">
+                                                {{cr.CRPART_TNAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 " style="font-size: 10pt">
+                                        <label> <strong>หมวดรายจ่าย</strong></label>
+                                        <select name="PLMONEYPAY_CODE1" id="PLMONEYPAY_CODE1" class="form-select"
+                                            [(ngModel)]="dataAdd.PLMONEYPAY_CODE1" (change)="onChangeSubplmoney1()">
+                                            <option [value]="fac.PLMONEYPAY_CODE" *ngFor="let fac of dataPlmoneypay">
+                                                {{fac.PLMONEYPAY_NAME}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 " style="font-size: 10pt">
+                                        <label> <strong>ผลผลิต</strong></label>
+                                        <select name="PLGPRODUCT_CODE1" id="PLGPRODUCT_CODE1" class="form-select"
+                                            [(ngModel)]="dataAdd.PLGPRODUCT_CODE1">
+                                            <option [value]="pl.PLGPRODUCT_CODE" *ngFor="let pl of dataPlproduct">
+                                                {{pl.PLGPRODUCT_SHORTNAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 " style="font-size: 10pt">
+                                        <label> <strong>หมวดรายจ่ายย่อย</strong></label>
+                                        <select name="PLSUBMONEYPAY_CODE1" id="PLSUBMONEYPAY_CODE1" class="form-select"
+                                            [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE1" >
+                                            <option [value]="fac.PLSUBMONEYPAY_CODE"
+                                                *ngFor="let fac of dataSubplmoneypay">
+                                                {{fac.PLSUBMONEYPAY_NAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 " style="font-size: 10pt">
+                                        <label> <strong>รายการ/ชื่อโครงการ</strong></label>
+                                        <div class="col-md-3 text-secondary">
+                                            <input name="PLPROJECT_CODE1" type="hidden" id="PLPROJECT_CODE1" [(ngModel)]="dataAdd.PLPROJECT_CODE1" />
+                                            <div class="ng-autocomplete">
+                                              <ng-autocomplete style="font-size: 10pt" [(ngModel)]="dataAdd.PLPROJECT_NAME1" [data]="datacomplete"
+                                                [searchKeyword]="keyword" placeholder="รายการ/ชื่อโครงการ"
+                                                (selected)='selectEvent1($event)' (inputChanged)='onChangeSearch1($event)'
+                                                [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                                              </ng-autocomplete>
+                                              <ng-template #itemTemplate let-item>
+                                                <a [innerHTML]="item.name"></a>
+                                              </ng-template>
+                                              <ng-template #notFoundTemplate let-notFound>
+                                                <div [innerHTML]="notFound"></div>
+                                              </ng-template>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <div *ngIf="dataAdd.PLPROJECT_TYPE" class="col-md-12 " style="font-size: 10pt">
+                                        <label> <strong>สถานะการโอน</strong></label>
+                                        <select name="PLPROJECT_STATUS" id="PLPROJECT_STATUS" class="form-select"
+                                            [(ngModel)]="dataAdd.PLPROJECT_STATUS" >
+                                            <option value="1">โอนทั้งหมดเพิ่มโครงการหน่วยรับโอน</option>
+                                            <option value="0">โอนบางส่วนหน่วยรับโอนมีโครงการ</option>
+                                            <option value="2">โอนบางส่วนเพิ่มโครงการหน่วยรับโอน</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                หน่วยงานที่รับ
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12 " style="font-size: 10pt">
+                                        <label> <strong>สถานะการจัดสรร</strong></label>
+                                        <select name="TYPEPLTR" id="TYPEPLTR" class="form-select"
+                                            [(ngModel)]="dataAdd.TYPEPLTR" (change)="onChangeIncome2()" 
+                                            (change)="onChangeCrpart2()" (change)="onChangeSubplmoney2()">
+                                            <option value="1" >มีเงินจัดสรร</option>
+                                            <option value="2" >ไม่มีเงินจัดสรร</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-12 " style="font-size: 10pt">
+                                        <label> <strong>คณะ /หน่วยงาน</strong></label>
+                                        <select name="FACULTY_CODE2" id="FACULTY_CODE2" class="form-select"
+                                            [(ngModel)]="dataAdd.FACULTY_CODE2" (change)="onChangeIncome2()">
+                                            <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFacpl">
+                                                {{fac.FACULTY_TNAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 " style="font-size: 10pt">
+                                        <label> <strong>แหล่งเงิน</strong></label>
+                                        <select name="PLINCOME_CODE2" id="PLINCOME_CODE2" class="form-select"
+                                            [(ngModel)]="dataAdd.PLINCOME_CODE2" (change)="onChangeCrpart2()">
+                                            <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome2">
+                                                {{inc.PLINCOME_NAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 " style="font-size: 10pt">
+                                        <label> <strong>ภาค</strong></label>
+                                        <select name="CRPART_ID2" id="CRPART_ID2" class="form-select"
+                                            [(ngModel)]="dataAdd.CRPART_ID2" (change)="onChangePlmoney2()" >
+                                            <option [value]="cr.CRPART_ID" *ngFor="let cr of dataCrpart2">
+                                                {{cr.CRPART_TNAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 " style="font-size: 10pt">
+                                        <label> <strong>หมวดรายจ่าย</strong></label>
+                                        <select name="PLMONEYPAY_CODE2" id="PLMONEYPAY_CODE2" class="form-select"
+                                            [(ngModel)]="dataAdd.PLMONEYPAY_CODE2" (change)="onChangeSubplmoney2()">
+                                            <option [value]="fac.PLMONEYPAY_CODE" *ngFor="let fac of dataPlmoneypay2">
+                                                {{fac.PLMONEYPAY_NAME}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 " style="font-size: 10pt">
+                                        <label> <strong>ผลผลิต</strong></label>
+                                        <select name="PLGPRODUCT_CODE2" id="PLGPRODUCT_CODE2" class="form-select"
+                                            [(ngModel)]="dataAdd.PLGPRODUCT_CODE2">
+                                            <option [value]="pl.PLGPRODUCT_CODE" *ngFor="let pl of dataPlproduct">
+                                                {{pl.PLGPRODUCT_SHORTNAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 " style="font-size: 10pt">
+                                        <label> <strong>หมวดรายจ่ายย่อย</strong></label>
+                                        <select name="PLSUBMONEYPAY_CODE2" id="PLSUBMONEYPAY_CODE2" class="form-select"
+                                            [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE2" >
+                                            <option [value]="fac.PLSUBMONEYPAY_CODE"
+                                                *ngFor="let fac of dataSubplmoneypay2">
+                                                {{fac.PLSUBMONEYPAY_NAME}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 " style="font-size: 10pt">
+                                        <label> <strong>รายการ/ชื่อโครงการ</strong></label>
+                                        <div class="col-md-3 text-secondary">
+                                            <input name="PLPROJECT_CODE2" type="hidden" id="PLPROJECT_CODE2" [(ngModel)]="dataAdd.PLPROJECT_CODE2" />
+                                            <div class="ng-autocomplete">
+                                              <ng-autocomplete [(ngModel)]="dataAdd.PLPROJECT_NAME2" [data]="datacomplete"
+                                                [searchKeyword]="keyword" placeholder="รายการ/ชื่อโครงการ"
+                                                (selected)='selectEvent2($event)' (inputChanged)='onChangeSearch2($event)'
+                                                [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                                              </ng-autocomplete>
+                                              <ng-template #itemTemplate let-item>
+                                                <a [innerHTML]="item.name"></a>
+                                              </ng-template>
+                                              <ng-template #notFoundTemplate let-notFound>
+                                                <div [innerHTML]="notFound"></div>
+                                              </ng-template>
+                                            </div>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group col-md-12" style="font-size: 10pt">
+                    <label for="name"><strong>จำนวนงบประมาณที่ขอโอน</strong></label>
+                    <input type="text" name="PLTRBUDGETD_MONEY" class="form-control" id="PLTRBUDGETD_MONEY"
+                        placeholder="จำนวนงบประมาณที่ขอโอน" [(ngModel)]="dataAdd.PLTRBUDGETD_MONEY">
+                </div>
+                <div class="form-group col-md-12" style="font-size: 10pt">
+                    <label for="name"><strong>หมายเหตุ</strong></label>
+                    <input type="text" name="PLTRBUDGETD_NOTE" class="form-control" id="PLTRBUDGETD_NOTE"
+                        placeholder="หมายเหตุ" [(ngModel)]="dataAdd.PLTRBUDGETD_NOTE">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="exampleModalSearch" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header bg-primary">
+          <h5 class="modal-title text-white" id="exampleModalLabel">รายละเอียดการโอนย้าย</h5>
+          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    
+                    <table *ngFor="let p of datalists;let i = index" width="100%" border="0" cellspacing="0" cellpadding="0"
+                    class="table table-bordered table-hover">
+                    <tbody>
+                      <tr>
+                        <td class="bg-warning" colspan="2" width="30%" align="center" valign="top">
+                          <strong>หน่วยงานที่โอน</strong>
+                          <span *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'">{{p.PLTRBUDGETD_CODE}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>คณะ/หน่วยงาน ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.FACULTY_TNAME1}}</td>
+                      </tr>
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>แหล่งเงิน ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.PLINCOME_NAME1}} ภาค{{p.CRPART_TNAME1}}</td>
+                      </tr>
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>ปีงบประมาณ ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{dataAdd.PLYEARBUDGET_CODE}}</td>
+                      </tr> 
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>ผลผลิต ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.PLGPRODUCT_SHORTNAME1}}</td>
+                      </tr> 
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>หมวดรายจ่าย ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.PLMONEYPAY_NAME1}}</td>
+                      </tr>  
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>หมวดรายจ่ายย่อย ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.PLSUBMONEYPAY_NAME1}}</td>
+                      </tr>
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>รายการ/ชื่อโครงการ ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{dataAdd.PLPROJECT_NAME1}}</td>
+                      </tr>
+                    </tbody>
+                  </table>   
+                </div>
+                <div class="form-group col-md-6">
+                    <table *ngFor="let p of datalists;let i = index" width="100%" border="0" cellspacing="0" cellpadding="0"
+                    class="table table-bordered table-hover">
+                    <tbody>
+                      <tr>
+                        <td class="bg-warning" colspan="2" width="30%" align="center" valign="top">
+                          <strong>หน่วยงานที่รับโอน</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>คณะ/หน่วยงาน ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.FACULTY_TNAME2}}</td>
+                      </tr>
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>แหล่งเงิน ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.PLINCOME_NAME2}} ภาค{{p.CRPART_TNAME2}}</td>
+                      </tr>
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>ปีงบประมาณ ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{dataAdd.PLYEARBUDGET_CODE}}</td>
+                      </tr> 
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>ผลผลิต ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.PLGPRODUCT_SHORTNAME2}}</td>
+                      </tr> 
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>หมวดรายจ่าย ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.PLMONEYPAY_NAME1}}</td>
+                      </tr>  
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>หมวดรายจ่ายย่อย ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{p.PLSUBMONEYPAY_NAME2}}</td>
+                      </tr>
+                      <tr>
+                        <td width="30%" align="right" valign="top" class="cs4"><strong>รายการ/ชื่อโครงการ ::</strong></td>
+                        <td height="20" valign="top" class="cs3">{{dataAdd.PLPROJECT_NAME2}}</td>
+                      </tr>
+                    </tbody>
+                  </table> 
+                </div>
+                <div class="form-group col-md-1"></div>
+                <div class="form-group col-md-11">
+                    <strong>เลขหนังสือ ::</strong>{{dataAdd.PLTRBUDGETD_DETAIL}}
+                </div>
+                <div class="form-group col-md-1"></div>
+                <div class="form-group col-md-11">
+                    <strong>จำนวนเงิน ::</strong>{{dataAdd.PLTRBUDGETD_MONEY}}
+                </div>
+                <div class="form-group col-md-1"></div>
+                <div class="form-group col-md-11">
+                    <strong>หมายเหตุ ::</strong>{{dataAdd.PLTRBUDGETD_NOTE}}
+                </div>     
+            </div> 
+          
+  
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+        </div>
+      </div>
+    </div>
+  </div>

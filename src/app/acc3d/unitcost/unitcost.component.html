@@ -1,0 +1,101 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><i
+        class="fa-solid fa-calculator me-2 text-primary"></i>ระบบบริหารจัดการงานบัญชี</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="../"><i
+              class="fa-solid fa-home me-1"></i>หน้าหลัก</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-gear me-1 text-secondary"></i>จัดการข้อมูล
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="approveacc"><i
+                  class="fa-solid fa-clipboard-check me-2 text-success"></i>อนุมัติรายการบัญชีแยกประเภท</a></li>
+            <li><a class="dropdown-item" routerLink="fpaymentdate"><i
+                  class="fa-solid fa-calendar-day me-2 text-primary"></i>ลงวันที่จ่าย</a></li>
+            <li><a class="dropdown-item" routerLink="depositdate"><i
+                  class="fa-solid fa-calendar-plus me-2 text-info"></i>ลงวันที่เงินเข้า</a></li>
+            <li><a class="dropdown-item" routerLink="paymentdirec"><i
+                  class="fa-solid fa-store me-2 text-warning"></i>ลงวันที่จ่ายตรงผู้ขาย</a></li>
+            <li><a class="dropdown-item" routerLink="apppaydate"><i
+                  class="fa-solid fa-check-double me-2 text-success"></i>อนุมัติวันที่จ่าย</a></li>
+            <li><a class="dropdown-item" routerLink="fregiscontrol"><i
+                  class="fa-solid fa-book me-2 text-secondary"></i>ลงทะเบียนคุม</a></li>
+            <li><a class="dropdown-item" routerLink="plexpenses"><i
+                  class="fa-solid fa-file-invoice-dollar me-2 text-danger"></i>ลงรายการจ่ายโครงการวิจัย/เงินรับฝาก/เงินอื่น</a>
+            </li>
+            <li *ngIf="ustatus=='A' || ustatus=='1'"><a class="dropdown-item" routerLink="paymentdate"><i
+                  class="fa-solid fa-calendar-check me-2 text-primary"></i>ลงวันที่จ่าย (สงขลา)</a></li>
+            <li *ngIf="ustatus=='A' || ustatus=='1'"><a class="dropdown-item" routerLink="regiscontrol"><i
+                  class="fa-solid fa-book-bookmark me-2 text-info"></i>ลงทะเบียนคุม (สงขลา)</a></li>
+            <li><a class="dropdown-item" routerLink="accupdate"><i
+                  class="fa-solid fa-pen-to-square me-2 text-warning"></i>ปรับปรุงบัญชี</a></li>
+            <li><a class="dropdown-item" routerLink="allocateacc"><i
+                  class="fa-solid fa-hand-holding-dollar me-2 text-success"></i>จัดสรรเงินรับฝาก/เงินอื่น</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-chart-pie me-1 text-info"></i>รายงานผลการเบิกจ่าย
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="budget_submoneyacc"><i
+                  class="fa-solid fa-layer-group me-2 text-primary"></i>รายงานแยกตามหมวดรายจ่าย</a></li>
+            <li><a class="dropdown-item" routerLink="budget_ledger"><i
+                  class="fa-solid fa-scale-balanced me-2 text-success"></i>รายงานงบทดลอง</a></li>
+            <li><a class="dropdown-item" routerLink="budget_petition"><i
+                  class="fa-solid fa-file-lines me-2 text-warning"></i>รายงานสรุปค่าใช้จ่าย</a></li>
+            <li><a class="dropdown-item" routerLink="budget_rm4"><i
+                  class="fa-solid fa-file-invoice me-2 text-info"></i>รายงาน รม.4</a></li>
+            <li><a class="dropdown-item" routerLink="budget_rm1"><i
+                  class="fa-solid fa-file-contract me-2 text-secondary"></i>รายงาน รม.1</a></li>
+            <li><a class="dropdown-item" routerLink="dailyincome"><i
+                  class="fa-solid fa-coins me-2 text-danger"></i>รายงานรายรับ รม.4</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-money-bill-trend-up me-1 text-success"></i>ต้นทุนต่อหน่วย
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="activity"><i
+                  class="fa-solid fa-list-check me-2 text-primary"></i>แสดงค่าใช้จ่ายแต่ละกิจกรรม</a></li>
+            <li><a class="dropdown-item" routerLink="uexpenses"><i
+                  class="fa-solid fa-building-columns me-2 text-info"></i>แสดงค่าใช้จ่ายของหน่วยงาน</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-clock me-1 text-warning"></i>รายงานประจำวัน
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="reportdayapp"><i
+                  class="fa-solid fa-magnifying-glass me-2 text-primary"></i>ตรวจสอบรายงานประจำวัน</a></li>
+            <li><a class="dropdown-item" routerLink="reportdaycheck"><i
+                  class="fa-solid fa-file-circle-check me-2 text-success"></i>ตรวจสอบเอกสาร</a></li>
+            <li><a class="dropdown-item" routerLink="reportdaycorrect"><i
+                  class="fa-solid fa-circle-check me-2 text-info"></i>เอกสารตรวจสอบแล้ว</a></li>
+          </ul>
+        </li>
+
+      </ul>
+      <!--    <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>รายงานบัญชีแยกประเภท
+        </form>-->
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

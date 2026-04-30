@@ -1,0 +1,226 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">วิทยาเขต</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                    (click)="showinput()" (click)="setshowbti()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มรายการใหม่</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                                <div align="right" class="col-md-1">
+                                    <select (change)="onTableSizeChange($event)" class="form-select">
+                                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                            {{ size }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6"></div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table width="100%" id="example"
+                            class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th><div align="center">ที่</div></th>
+                                    <th><div align="center">รหัส</div></th>
+                                    <th><div align="center">ชื่อวิทยาเขต(ไทย)</div></th>
+                                    <th><div align="center">ชื่อวิทยาเขต(อังกฤษ)</div></th>
+                                    <th><div align="center">จัดการข้อมูล</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      } ; let i = index">
+                                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                                    <td width="10%">{{p.UNIVERSITY_CODE}}</td>
+                                    <td>{{p.CAMPUS_TNAME}} </td>
+                                    <td>{{p.CAMPUS_ENAME}} </td>
+                                    <td width="10%" align="center">
+                                        <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                                            (click)="deleteData(p.CAMPUS_CODE)"><i class="fa fa-trash"></i>
+                                        </a>&nbsp;
+                                        <a role="button" title="แก้ไข" data-bs-toggle="modal"
+                                            data-bs-target="#modalEdit" class="btn btn-warning text-white"
+                                            (click)="editdata(p.CAMPUS_CODE,p.CAMPUS_TNAME)"><i
+                                                class="fa fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-left">
+                            <pagination-controls previousLabel="Prev" nextLabel="Next"
+                                (pageChange)="onTableDataChange($event)">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+<div class="modal fade" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">รหัสวิทยาเขต</label>
+                        <input type="text" name="CAMPUS_CODE" class="form-control" id="CAMPUS_CODE"
+                            placeholder="รหัสวิทยาเขต" [(ngModel)]="dataAdd.CAMPUS_CODE">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ชื่อมหาวิทยาลัย</label>
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.UNIVERSITY_CODE" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="pro.UNIVERSITY_CODE" *ngFor="let pro of datauniversity">{{pro.UNIVERSITY_TNAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ชื่อวิทยาเขต(ไทย)</label>
+                        <input type="text" name="CAMPUS_TNAME" class="form-control" id="CAMPUS_TNAME"
+                            placeholder="ชื่อวิทยาเขต(ไทย)" [(ngModel)]="dataAdd.CAMPUS_TNAME">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ชื่อวิทยาเขต(อังกฤษ)</label>
+                        <input type="text" name="CAMPUS_ENAME" class="form-control" id="CAMPUS_ENAME"
+                            placeholder="เลขที่" [(ngModel)]="dataAdd.CAMPUS_ENAME">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">เลขที่</label>
+                        <input type="text" name="CAMPUS_HADDR" class="form-control" id="CAMPUS_HADDR"
+                            placeholder="เลขที่" [(ngModel)]="dataAdd.CAMPUS_HADDR">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">หมู่</label>
+                        <input type="text" name="CAMPUS_MOO" class="form-control" id="CAMPUS_MOO"
+                            placeholder="หมู่" [(ngModel)]="dataAdd.CAMPUS_MOO">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ถนน</label>
+                        <input type="text" name="CAMPUS_STREET" class="form-control" id="CAMPUS_STREET"
+                            placeholder="ถนน" [(ngModel)]="dataAdd.CAMPUS_STREET">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ตำบล</label>
+                        <input type="text" name="CAMPUS_DISTRICT" class="form-control" id="CAMPUS_DISTRICT"
+                            placeholder="ตำบล" [(ngModel)]="dataAdd.CAMPUS_DISTRICT">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">อำเภอ</label>
+                        <input type="text" name="CAMPUS_CITY" class="form-control" id="CAMPUS_CITY"
+                            placeholder="อำเภอ" [(ngModel)]="dataAdd.CAMPUS_CITY">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-8">
+                        <label for="name">จังหวัด</label>
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PROVINCE_ID" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="pro.PROVINCE_ID" *ngFor="let pro of dataProvince">{{pro.PROVINCE_TNAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="name">รหัสไปรษณีย์</label>
+                        <input type="text" name="CAMPUS_ZIPCODE" class="form-control" id="CAMPUS_ZIPCODE"
+                            placeholder="อำเภอ" [(ngModel)]="dataAdd.CAMPUS_ZIPCODE">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">โทร</label>
+                        <input type="text" name="CAMPUS_PHONE" class="form-control" id="CAMPUS_PHONE"
+                            placeholder="โทร" [(ngModel)]="dataAdd.CAMPUS_PHONE">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">แฟ็กซ์</label>
+                        <input type="text" name="CAMPUS_FAX" class="form-control" id="CAMPUS_FAX"
+                            placeholder="แฟ็กซ์" [(ngModel)]="dataAdd.CAMPUS_FAX">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">อีเมลล์</label>
+                        <input type="text" name="CAMPUS_EMAIL" class="form-control" id="CAMPUS_EMAIL"
+                            placeholder="อีเมลล์" [(ngModel)]="dataAdd.CAMPUS_EMAIL">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

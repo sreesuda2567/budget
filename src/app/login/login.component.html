@@ -1,0 +1,57 @@
+<section >
+  <!--
+  <div id="loader"  *ngIf="loading" ></div>
+-->
+  <div class="spinner-border " role="status" id="loading"  *ngIf="loading"></div>
+
+  <div class="container-fluid h-custom">
+    <div class="row d-flex align-items-center justify-content-center h-100 ">
+      <div class="card shadow-lg col-10 col-md-4 col-lg-4 col-xl-4 offset-xl-1 mt-5 mx-5">
+
+        <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+          <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+            <p class="lead fw-normal mb-0 "> <b> Sign in</b></p>
+          </div>
+          <div class="divider d-flex align-items-center my-4"> </div>
+
+          <!-- username input -->
+          <div class="form-outline mx-5 mb-4">
+            <input type="text" id="form2Example3" class="form-control form-control-lg" name="username"
+              [(ngModel)]="form.username" required #username="ngModel" placeholder="Username" />
+            <label class="form-label" for="form2Example3">[ชื่อผู้ใช้ E-passport ไม่ต้องพิมพ์ @rmutsv.ac.th]</label>
+            <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
+              Username is required!
+            </div>
+          </div>
+
+          <!-- Password input -->
+          <div class="form-outline mx-5 mb-3">
+            <input type="password" class="form-control form-control-lg" name="password" [(ngModel)]="form.password"
+              required minlength="6" #password="ngModel" placeholder="Password" />
+            <label class="form-label" for="form3Example4">Password</label>
+            <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
+              <div *ngIf="password.errors.required">Password is required</div>
+              <div *ngIf="password.errors.minlength">
+                Password must be at least 6 characters
+              </div>
+            </div>
+          </div>
+
+          <div class="mx-5 d-grid gap-2 text-center text-lg-start ">
+            <button class="btn btn-primary btn-block mb-5" style="padding-left: 2.5rem; padding-right: 2.5rem;"><span
+                *ngIf="loading" class="spinner-border spinner-border-sm mr-2"></span> Login</button>
+             <!--<p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="#!" class="link-danger">Register</a></p>-->
+          </div>
+          <div class="form-group">
+            <div class="alert alert-danger text-center" role="alert" *ngIf="f.submitted && isLoginFailed">
+              {{ errorMessage }}
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</section>

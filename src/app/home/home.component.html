@@ -1,0 +1,49 @@
+<div class="container">
+
+  <div class="row justify-content-center center-screen" *ngIf="loading">
+    <div class="spinner-border " role="status" id="loading"></div>
+  </div>
+
+  <div class="row justify-content-center mt-3" *ngIf="!loading">
+    <br>
+    <p class="txt-font2 text-center">iService</p>
+    
+    
+    <div *ngIf="datastatuseis>0" class="col-6 col-xs-6 col-sm-6 col-lg-2 mb-2">
+      <div class="card" (click)="golinkeis()">
+        <i  class="fa-solid fa-user-tie "></i>
+          <div ><b>ระบบสารสนเทศ</b><br>
+            <b>สำหรับผู้บริหาร</b><br>
+            <b>(EiS)</b>
+          </div>
+      </div>
+    </div>
+    <div class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" (click)="golinkpis()">
+        <i  class="fa-solid fa-user-pen"></i>
+          <div ><b>ระบบสารสนเทศ</b><br>
+            <b>สำหรับบุคลากร</b><br>
+            <b>(PiS)</b>
+          </div>
+      </div>
+    </div>
+    <div class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" routerLink="/acc3d">
+        <i  class="fa-solid fa-share-nodes" ></i>
+          <div ><b>ระบบ</b><br>
+            <b>บัญชี 3 มิติ</b><br>
+            <b>(ACC3D)</b>
+          </div>
+      </div>
+    </div>
+    
+    <div class="col-6 col-xs-6 col-sm-6 col-lg-2  mb-2">
+      <div class="card" (click)="golinkruts()">
+        <i  class="fa-solid fa-user-clock "></i>
+          <div ><b>ระบบลงเวลา</b><br>
+            <b></b><br>
+            <b>(RUTS PLATFORM)</b>
+          </div>
+      </div>
+    </div>
+  </div>

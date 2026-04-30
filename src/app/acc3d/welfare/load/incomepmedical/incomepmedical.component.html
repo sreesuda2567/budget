@@ -1,0 +1,197 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">หนังสือเข้าการรักษาพยาบาล</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <div *ngIf="rownum" class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-md-9">
+
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"
+                            id="example-search-input" [(ngModel)]="searchTerm">
+                        <span class="input-group-append">
+                            <button
+                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="excel-table" class="table btn-font3" width="150%"
+            class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="bg-info">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่ทำรายการ</div>
+                    </th>
+                    <th>
+                        <div align="center">คณะ/หน่วยงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อ-สกุล</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อตำแหน่ง</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภทบุคลากร</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">สถานะใบเสร็จ</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr class="btn-font2" *ngFor="let p of datalist|filter:searchTerm; let i = index">
+                    <td width="5%" align="center">{{+i+1}}</td>
+                    <td>{{p.FEREIM_DATE}}</td>
+                    <td>{{p.FACULTY_TNAME}}</td>
+                    <td>{{p.STF_FNAME}}</td>
+                    <td>{{p.FPOSITION_WORK}}</td>
+                    <td>{{p.STAFFTYPE_NAME}}</td>
+                    <td align="right">{{p.FEREIM_WMONEY| number : '1.2-2'}} </td>
+                    <td>{{p.FNRESTATUS_NAME}}</td>
+                    <td align="right">
+
+                        <span *ngIf="p.link">
+                            <a role="button" title="รายงาน" class="btn btn-success text-white" href="{{p.link}}"
+                                target="_blank"><i class="fas fa-file-alt"></i></a>
+                            &nbsp; </span>
+                        <button type="submit" title="สถานะใบเสร็จ" class="btn btn-danger" id="submitupdate"
+                            data-bs-toggle="modal" data-bs-target="#modalEditreceipt"
+                            (click)="editdata(p.FEREIM_CODE,p.USERNAME_CISCO,p.STF_FNAME,p.FEREIM_WMONEY)"><i
+                                class="fa-solid fa-file-invoice"></i>&nbsp;สถานะใบเสร็จ</button>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="exampleModalLabel">รายละเอียดการเบิกค่ารักษาพยาบาล ปีงบประมาณ
+                    {{dataAdd.PLYEARBUDGET_CODE}} {{dataAdd.FEREIM_NAME}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
+                    <div class="spinner-border " role="status" id="loadingdetail"></div>
+                </div>
+                <table width="100%" border="1" cellpadding="0" cellspacing="0"
+                    class="table table-bordered table-striped">
+                    <thead>
+                        <tr style="background-color:rgb(131, 187, 243);">
+                            <td width="3%"><strong>ลำดับ</strong></td>
+                            <td align="center"><strong>เบิกสำหรับ</strong></td>
+                            <td align="center"><strong>ชื่อ-สกุล</strong></td>
+                            <td align="center"><strong>ป่วยเป็นโรค</strong></td>
+                            <td align="center"><strong>ฎีกา</strong></td>
+                            <td align="center"><strong>วันที่จ่าย</strong></td>
+                            <td align="center"><strong>จำนวนเงิน</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of datalistdetail; let i = index ">
+                            <td *ngIf="item.FERELE_NAME" width="5%" align="center">{{i+1}}</td>
+                            <td *ngIf="item.FERELE_NAME">{{item.FERELE_NAME}}</td>
+                            <td *ngIf="item.FERELE_NAME">{{item.FEREIMDT_NAME}}</td>
+                            <td *ngIf="item.FERELE_NAME">{{item.FEREIM_DISS}}</td>
+                            <td *ngIf="item.FERELE_NAME">{{item.FEPSTATE_NDEKA}}</td>
+                            <td *ngIf="item.FERELE_NAME">{{item.FEPSTATE_SAVE}}</td>
+                            <td *ngIf="item.FERELE_NAME" align="right">{{item.FEREIMDT_WMONEY| number : '1.2-2'}}</td>
+
+                            <td colspan="6" style="background-color:rgb(251, 134, 61);" *ngIf="item.FEREIMDT_TOTAL"
+                                align="right">รวมทั้งหมด</td>
+                            <td style="background-color:rgb(251, 134, 61);" *ngIf="item.FEREIMDT_TOTAL" align="right">
+                                {{item.FEREIMDT_TOTAL| number : '1.2-2'}}</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalEditreceipt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h1 class="modal-title fs-5 text-white" id="staticBackdropLabel">สถานะใบเสร็จ</h1>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div  class="row">
+                    <div class="form-group col-md-12">
+                        <div class="row" *ngFor="let type of datareceipt">
+                            <div class="form-group col-md-12">
+                                <input class="form-check-input filled-in" name="p_radio2" id="radio2" type="radio"
+                                    value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE">
+                                {{type.FNRESTATUS_NAME}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="name">หมายเหตุ</label>
+                        <textarea id="FNEXACCTD_NOTE" name="FNEXACCTD_NOTE" [(ngModel)]="dataAdd.FNEXACCTD_NOTE"
+                            rows="4" cols="50" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button  type="button" class="btn btn-danger" (click)="sendemail()">ส่งอีเมล</button>
+                <button  type="button" class="btn btn-primary" (click)="updatereceipt()">บันทึก</button>
+                
+
+            </div>
+        </div>
+    </div>
+</div>

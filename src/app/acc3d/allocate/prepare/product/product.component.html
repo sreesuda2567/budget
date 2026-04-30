@@ -1,0 +1,75 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">ผลผลิตประจำปี</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-md-7"></div>
+                <div class="col-md-2">
+                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE" (change)="fetchdatalist()">
+                      <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">{{year.PLYEARBUDGET_NAME}}
+                      </option>
+                    </select>
+              </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input class="form-control border-end-0 border" type="search"
+                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                            [(ngModel)]="searchTerm">
+                        <span class="input-group-append">
+                            <button
+                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                        <table width="100%" id="example"
+                        class=" table table-bordered  table-striped table-hover tableFixHead  btn-font3">
+                        <thead>
+                          <tr class="bg-primary text-white">
+                            <th><div  align="center">รหัสผลผลิต</div></th>
+                            <th><div  align="center">ชื่อผลผลิต(ย่อ)</div></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr style="cursor:pointer" (click)="insertdata(p.PLGPRODUCT_CODE,p.PLGPRODUCT_SHORTNAME)"  class="btn-font3" *ngFor="let p of datalist2|filter:searchTerm;let i = index">
+                            <td align="center">{{p.PLGPRODUCT_CODE}}</td>
+                            <td align="left">{{p.PLGPRODUCT_SHORTNAME}}</td>
+                          </tr>
+                          
+                        </tbody>
+                      </table>   
+            </div>
+
+            <div class="col-md-6">
+                            <table width="100%" id="example"
+                            class=" table table-bordered  table-striped table-hover tableFixHead btn-font3">
+                            <thead>
+                              <tr class="bg-primary text-white">
+                                <th><div  align="center">รหัสผลผลิต</div></th>
+                                <th><div  align="center">ชื่อผลผลิต(ย่อ)</div></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style="cursor:pointer" (click)="deleteData(p.PLPRODUCT_CODE)" class="btn-font3" *ngFor="let p of datalist|filter:searchTerm;let i = index">
+                                <td align="center">{{p.PLPRODUCT_CODE}}</td>
+                                <td align="left">{{p.PLGPRODUCT_SHORTNAME}}</td>
+                              </tr>
+                              
+                            </tbody>
+                          </table>  
+            </div>
+         </div>   
+    </div>
+</div>        

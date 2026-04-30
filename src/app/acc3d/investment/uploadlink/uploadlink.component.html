@@ -1,0 +1,61 @@
+<div class="card mx-4 mt-4">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-10">
+          <h5 class="card-title">ลิงค์สำหรับอัปโหลดไฟล์</h5>
+        </div>
+        <div class="col-md-2" align="right">
+          
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <!-- BASIC TABLE -->
+            <div class="panel">
+              <div class="panel-heading">
+                <div class="row">
+                  <div class="col-md-12 text-secondary" style="font-size: 10pt"> คณะ /หน่วยงาน: </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()">
+                      <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center center-screen" *ngIf="loading">
+                <div class="spinner-border " role="status" id="loading"></div>
+              </div>
+              <br>  
+                <table width="100%" id="example" class="table table-bordered  table-striped table-hover btn-font3">
+                  <thead>
+                    <tr class="bg-primary text-white">
+                      <th>ที่</th>
+                      <th>รายการ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+    
+                    <tr *ngFor="let p of datalist; let i = index">
+                      <td width="5%" align="center">{{i+1}}</td>
+                      <td>
+                        <a  title="รายงาน" href="{{p.link}}"target="_blank">
+                        {{p.NAME}}</a>
+                    </td>
+  
+                    </tr>
+    
+                    <tr *ngIf="!rownum">
+                      <td colspan="5">ไม่มีข้อมูล{{rownum}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

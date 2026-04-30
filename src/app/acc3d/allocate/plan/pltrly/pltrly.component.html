@@ -1,0 +1,125 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">เตรียมข้อมูลหมวดรายจ่าย</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-3">
+                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLMONEYPAY_CODE" (change)="fetchdatalist()">
+                        <option value="" >ทั้งหมด</option>
+                        <option [value]="mo.PLMONEYPAY_CODE" *ngFor="let mo of dataplmoney">{{mo.PLMONEYPAY_NAME}}
+                        </option>
+                      </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE" (change)="fetchdatalist()">
+                      <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">{{year.PLYEARBUDGET_NAME}}
+                      </option>
+                    </select>
+              </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input class="form-control border-end-0 border" type="search"
+                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                            [(ngModel)]="searchTerm">
+                        <span class="input-group-append">
+                            <button
+                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                        <table width="100%" id="example"
+                        class=" table table-bordered table-hover tableFixHead btn-font3">
+                        <thead>
+                          <tr class="bg-primary text-white">
+                            <th><div  align="center">รหัส</div></th>
+                            <th><div  align="center">ชื่อหมวดรายจ่าย</div></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr style="cursor:pointer" (click)="insertdata(p.PLSUBMONEYPAY_CODE,p.PLSUBMONEYPAY_NAME)"  class="btn-font3" *ngFor="let p of datalist2|filter:searchTerm;let i = index"
+                          [ngStyle]="{'background-color':p.PLSUBMONEYPAY_LEVEL=='1' ? '#d2faf9':p.PLSUBMONEYPAY_LEVEL=='2' ? '#fff2f9':p.PLSUBMONEYPAY_LEVEL=='3' ? '#faf7e6':p.PLSUBMONEYPAY_LEVEL=='4' ? '#e8fae6':''}">
+                            <td align="center">{{p.PLSUBMONEYPAY_CODE}}</td>
+                            <td align="left">{{p.PLSUBMONEYPAY_NAME}}</td>
+                          </tr>
+                          
+                        </tbody>
+                      </table>   
+            </div>
+
+            <div class="col-md-7">
+                            <table width="100%" id="example"
+                            class=" table table-bordered   table-hover tableFixHead btn-font3">
+                            <thead>
+                              <tr class="bg-primary text-white">
+                                <th><div  align="center">รหัสหมวดรายจ่าย</div></th>
+                                <th><div  align="center">ชื่อหมวดรายจ่าย</div></th>
+                                <th><div  align="center">ลำดับ</div></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style="cursor:pointer" data-bs-toggle="modal"
+                              data-bs-target="#modalEdit" (click)="editdata(p.PLTRLY_CODE,p.PLSUBMONEYPAY_NAME)" class="btn-font3" *ngFor="let p of datalist|filter:searchTerm;let i = index"
+                              [ngStyle]="{'background-color':p.PLSUBMONEYPAY_LEVEL=='1' ? '#d2faf9':p.PLSUBMONEYPAY_LEVEL=='2' ? '#fff2f9':p.PLSUBMONEYPAY_LEVEL=='3' ? '#faf7e6':p.PLSUBMONEYPAY_LEVEL=='4' ? '#e8fae6':''}">
+                                <td align="center">{{p.PLTRLY_CODE}}</td>
+                                <td align="left">{{p.PLSUBMONEYPAY_NAME}}</td>
+                                <td align="left">{{p.PLTRLY_ORDER}}</td>
+                              </tr>
+                              
+                            </tbody>
+                          </table>  
+            </div>
+         </div>   
+    </div>
+</div>        
+<!-- Modal -->
+
+<div class="modal fade" id="modalEdit" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <input type="hidden" class="form-control" name="PLTRLY_CODE" id="PLTRLY_CODE" [(ngModel)]="dataAdd.PLTRLY_CODE">
+                        <label for="name">ชื่อหมวดรายจ่าย</label>
+                        {{dataAdd.PLSUBMONEYPAY_NAME}}
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ลำดับ</label>
+                        <input type="text" name="PLINCOME_NAME" class="form-control" id="PLINCOME_NAME"
+                        placeholder="ชื่อแหล่งเงิน" [(ngModel)]="dataAdd.PLTRLY_ORDER">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button  type="button" class="btn btn-danger"
+                    (click)="deleteData()">ลบข้อมูล</button>
+                <button  type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>

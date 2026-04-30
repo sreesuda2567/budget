@@ -1,0 +1,196 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-md-9">
+          <h5 class="card-title">พิจารณารายการครุภัณฑ์(โครงการ)</h5>
+        </div>
+        <div class="col-md-3" align="right">
+  
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <!-- BASIC TABLE -->
+          <div class="panel">
+            <div class="panel-heading">
+              <div class="shadow alert alert-info" role="alert">
+              <div class="row">
+                <div class="col-md-9">
+                  <label for="name"><strong>คณะ /หน่วยงาน</strong> </label>
+                  <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
+                    (change)="fetchdatalistapp()">
+                    <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label for="name"><strong>ปีงบประมาณ</strong> </label>
+                  <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRYEARASSET_CODE"
+                    (change)="fetchdatalistapp()">
+                    <option value="">ทั้งหมด</option>
+                    <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">{{year.PLYEARBUDGET_NAME}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            </div>
+  
+            <div class="row justify-content-center center-screen" *ngIf="loading">
+              <div class="spinner-border " role="status" id="loading"></div>
+            </div>
+            <div class="shadow alert alert-secondary" role="alert">
+              <div class="row">
+  
+                <div align="right" class="col-md-1">
+                </div>
+                <div class="col-md-7"></div>
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"  id="example-search-input" [(ngModel)]="searchTerm">
+                    <span class="input-group-append">
+                        <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="overflow-auto">  
+              <table width="100%" id="example" class="table shadow-lg  table-bordered  table-striped table-hover btn-font3">
+                <thead>
+                  <tr class="bg-primary text-white">
+                    <th>ที่</th>
+                    <th *ngIf="dataAdd.fcode==''"><div align="center">คณะ/หน่วยงาน</div></th>
+                    <th><div align="center">ชื่อครุภัณฑ์</div></th>
+                    <th><div align="center">สาขา/งาน</div></th>
+                    <th><div align="center">ปี</div></th>
+                    <th><div align="center">แหล่งเงิน</div></th>
+                    <th><div align="center">ภาค</div></th>
+                    <th><div align="center">ผลผลิต</div></th>
+                    <th><div align="center">จำนวนเงิน</div></th>
+                    <th><div align="center">สถานะ</div></th>
+                    <th><div align="center">เอกสารประกอบ</div></th>
+                    <th><div align="center">การพิจารณา</div></th>
+                    <!-- <th>เลือก</th>-->
+  
+                  </tr>
+                </thead>
+                <tbody>
+                  <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+                  <tr *ngFor="let p of datalistapp|filter:searchTerm ; let i = index">
+                    <td width="5%" align="center">{{i+1}}</td>
+                    <td>{{p.PRREGISASSET_NAME}}
+                      <br>
+                      <i class="text-secondary">[{{p.STF_FNAME}}]</i>
+                      <div *ngIf="p.PRASSET_NOTE" class="text-danger">
+                        <br>
+                        ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})</div>
+                    </td>
+                    <td>{{p.DEPARTMENT_TNAME}}</td>
+                    <td>{{p.PRYEARASSET_CODE}}</td>
+                    <td>{{p.PLINCOME_NAME}}</td>
+                    <td>{{p.CRPART_TNAME}}</td>
+                    <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
+                    <td align="right">{{p.PRASSET_MONEY*p.PRASSET_NUMBER| number : '1.2-2'}}
+                    </td>
+                    <td align="center">{{p.PRSTATUS_NAME}}</td>
+                    <td width="15%">
+                      <span *ngIf="p.PRASSET_SLINK2"> <a role="button" title="รายงาน" class="btn btn-success text-white"
+                          href="{{p.PRASSET_SLINK2}}" target="_blank">ICT</a>&nbsp;</span>
+                          <span *ngIf="p.PRASSET_SLINK3"> <a role="button" title="แนบไฟล์แบบเสนอรายการครุภัณฑ์" class="btn btn-success text-white"
+                            href="{{p.PRASSET_SLINK3}}" target="_blank">แบบเสนอ</a>&nbsp;</span>
+                      <span *ngIf="p.PRASSET_SLINK4"> <a role="button" title="แบบรายละเอียดคุณลักษณะเฉพาะครุภัณฑ์(Spec)" class="btn btn-success text-white"
+                              href="{{p.PRASSET_SLINK4}}" target="_blank">Spec</a>&nbsp;</span>      
+                      <a *ngIf="p.PRASSET_SLINK1" role="button" title="ใบเสนอราคา" class="btn btn-success text-white"
+                        href="{{p.PRASSET_SLINK1}}" target="_blank">QN</a>&nbsp;
+                      <a *ngIf="p.PLINCOME_NAME" role="button" title="รายงาน" class="btn btn-success text-white"
+                        href="https://hr.rmutsv.ac.th/html2pdf/reportpasset.php?PRASSET_CODE={{p.PRASSET_CODE}}&type=0"
+                        target="_blank"><i class="fas fa-file-alt"></i></a>
+                    </td>
+                    <td width="5%"> <a *ngIf="p.PRASSET_RSTATUS=='2' || p.PRIVILEGE_RSTATUS=='3'" role="button" title="อนุมัติ" class="btn btn-warning text-white"
+                        data-bs-toggle="modal" data-bs-target="#modalapprove"
+                        (click)="showapp(p.PRASSET_CODE,p.PRREGISASSET_NAME,p.USERNAME_CISCO)"><i class="fa fa-edit">พิจารณา</i></a>
+  
+                        <a *ngIf="p.PRASSET_RSTATUS=='7' && p.PRASSET_SSTATUS=='0'" role="button" title="อนุมัติ" class="btn btn-primary text-white"
+                        (click)="returnedit(p.PRASSET_CODE,p.PRREGISASSET_NAME)"><i class="fa fa-reply"> ส่งคืน</i></a></td>
+                    <!--  <td width="5%" align="center">
+                      <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
+                        [(ngModel)]="dataAdd.check[i]">
+                      <input name="PRASSET_CODEA" type="hidden" id="PRASSET_CODEA" size="10"
+                        [(ngModel)]="dataAdd.PRASSET_CODEA[i]" />
+                    </td>-->
+  
+                  </tr>
+                  
+                <tr *ngIf="!rownum">
+                  <td colspan="11">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+                </tbody>
+              </table> 
+            </div>         
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+  
+    <div class="modal fade" id="modalapprove" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header bg-primary">
+            <h5 class="modal-title text-white" id="exampleModalToggleLabel">พิจารณารายการครุภัณฑ์</h5>
+            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row justify-content-center center-screen" *ngIf="loadingapp">
+              <div class="spinner-border " role="status" id="loading"></div>
+            </div>
+            <div class="card-body scroller">
+              <input type="hidden" class="form-control" name="PRASSET_CODE" id="PRASSET_CODE"
+                [(ngModel)]="dataAdd.PRASSET_CODE">
+                <input type="hidden" class="form-control" name="USERNAME_CISCO" id="USERNAME_CISCO"
+                [(ngModel)]="dataAdd.USERNAME_CISCO">
+                <div class="row">
+                  <div class="form-group col-md-1"></div>
+                  <div class="form-group col-md-11 txt-font text-danger">{{dataAdd.htmlStringd}}</div>
+                </div>
+              <div class="row">
+                <div class="form-group col-md-1"></div>
+                <div class="form-group col-md-6">
+                  <label for="name">สถานะ</label>
+                  <select name="PRSTATUS_CODE" id="PRSTATUS_CODE" class="form-select" [(ngModel)]="dataAdd.PRSTATUS_CODE">
+                    <option [value]="status.PRSTATUS_CODE" *ngFor="let status of datastatus">
+                      {{status.PRSTATUS_NAME}}</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-5"></div>
+                <div class="form-group col-md-1"></div>
+                <div class="form-group col-md-10">
+                  <label for="name">หมายเหตุ</label>
+                  <textarea id="PRASSETFAC_NOTE" name="PRASSETFAC_NOTE" [(ngModel)]="dataAdd.PRASSETFAC_NOTE" rows="4"
+                    cols="50" class="form-control"></textarea>
+                </div>
+  
+              </div>
+  
+              <br>
+              <div class="row">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-2"> </div>
+              </div>
+  
+            </div>
+          </div>
+        
+        <div class="modal-footer">
+          <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+          <button type="button" class="btn btn-primary"
+                    (click)="insertappfac()">บันทึกข้อมูล</button>
+        </div>
+      </div>
+    </div>
+  </div>

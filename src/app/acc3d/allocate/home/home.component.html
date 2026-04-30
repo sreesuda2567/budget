@@ -1,0 +1,90 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><i
+        class="fa-solid fa-money-bill-transfer me-2 text-primary"></i>ระบบจัดสรรงบประมาณ</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="../"><i
+              class="fa-solid fa-home me-1"></i>หน้าหลัก</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-database me-1 text-info"></i>เตรียมข้อมูล
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="yearbudget"><i
+                  class="fa-solid fa-calendar me-2 text-primary"></i>ปีงบประมาณ</a></li>
+            <li><a class="dropdown-item" routerLink="pincome"><i
+                  class="fa-solid fa-wallet me-2 text-success"></i>แหล่งเงิน</a></li>
+            <li><a class="dropdown-item" routerLink="grproduct"><i
+                  class="fa-solid fa-industry me-2 text-secondary"></i>ผลผลิตของรัฐ</a></li>
+            <li><a class="dropdown-item" routerLink="moneytype"><i
+                  class="fa-solid fa-coins me-2 text-warning"></i>หมวดเงิน</a></li>
+            <li><a class="dropdown-item" routerLink="plmoneypay"><i
+                  class="fa-solid fa-money-check me-2 text-info"></i>หมวดรายจ่าย</a></li>
+            <li><a class="dropdown-item" routerLink="plsubmoneypay"><i
+                  class="fa-solid fa-money-check-dollar me-2 text-danger"></i>หมวดรายจ่ายย่อย</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-hand-holding-dollar me-1 text-success"></i>จัดสรรงบประมาณ
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="product"><i
+                  class="fa-solid fa-boxes-stacked me-2 text-primary"></i>ผลผลิตประจำปี</a></li>
+            <li><a class="dropdown-item" routerLink="pltrly"><i
+                  class="fa-solid fa-list-check me-2 text-info"></i>เตรียมข้อมูลหมวดรายจ่าย</a></li>
+            <li><a class="dropdown-item" routerLink="allocate"><i
+                  class="fa-solid fa-sack-dollar me-2 text-success"></i>จัดสรรงบประมาณ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-gear me-1 text-secondary"></i>จัดการข้อมูล
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="transfer"><i
+                  class="fa-solid fa-right-left me-2 text-primary"></i>โอนย้าย</a></li>
+            <li><a class="dropdown-item" routerLink="project"><i
+                  class="fa-solid fa-diagram-project me-2 text-warning"></i>เพิ่มโครงการ</a></li>
+            <li><a class="dropdown-item" routerLink="asset"><i
+                  class="fa-solid fa-computer me-2 text-info"></i>เพิ่มครุภัณฑ์/สิ่งก่อสร้าง/อื่นๆ</a></li>
+            <li><a class="dropdown-item" routerLink="approve_middle"><i
+                  class="fa-solid fa-piggy-bank me-2 text-success"></i>ขอใช้งบกลาง</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-chart-column me-1 text-success"></i>รายงาน
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="income"><i
+                  class="fa-solid fa-money-bills me-2 text-primary"></i>เงินที่ได้รับจัดสรร</a></li>
+            <li><a class="dropdown-item" routerLink="incometf"><i
+                  class="fa-solid fa-money-bill-transfer me-2 text-info"></i>เงินจัดสรรหลังโอนย้าย</a></li>
+            <li><a class="dropdown-item" routerLink="report_asset"><i
+                  class="fa-solid fa-computer me-2 text-warning"></i>รายงานการดำเนินงานครุภัณฑ์/สิ่งก่อสร้าง</a></li>
+            <li><a class="dropdown-item" routerLink="report_project"><i
+                  class="fa-solid fa-diagram-project me-2 text-success"></i>รายงานการดำเนินงานโครงการ</a></li>
+            <li><a class="dropdown-item" routerLink="report_cincome"><i
+                  class="fa-solid fa-chart-line me-2 text-secondary"></i>รายงานรายได้สะสม</a></li>
+            <li><a class="dropdown-item" routerLink="report_fexpenses"><i
+                  class="fa-solid fa-building-columns me-2 text-danger"></i>รายงานผลการการเบิกจ่ายแยกตามหน่วยงาน</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

@@ -1,0 +1,321 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">สมาชิกในครอบครัว(ข้าราชการเกษียณ)</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a *ngIf="rownum" class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
+                    (click)="showinput()" (click)="setshowbti()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div class="col-md-3 text-secondary" style="font-size: 10pt">
+                                    <label> หน่วยเบิกจ่าย: </label>
+                                    <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
+                                        id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdataCam()">
+                                        <option value=""
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS =='1'">
+                                            ทุกวิทยาเขต
+                                        </option>
+                                        <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">
+                                            {{cam.CAMPUS_TNAME}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                                    <label> คณะ /หน่วยงาน: </label>
+                                    <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" (change)=" fetchdataretire()">
+                                      <option value="" >
+                                        ทุกคณะ/หน่วยงาน</option>
+                                      <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                                    </select>
+                                  </div>
+                                
+                                <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                                    <label> บุคลากร: </label>
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.CITIZEN_ID1">
+                                        <option [value]="item.CITIZEN_ID" *ngFor="let item of dataStafftype">
+                                            {{item.STF_FNAME}}
+                                        </option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-1 ">
+                                    <label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary" id="submitinsert"
+                                        (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <div *ngIf="rownum" class="shadow alert alert-secondary" role="alert">
+            <div class="row">
+                <div class="col-md-9">
+                    <button type="button" class="btn btn-success" (click)="exportexcel()">
+                         <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export
+                    Excel</button>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"
+                            id="example-search-input" [(ngModel)]="searchTerm">
+                        <span class="input-group-append">
+                            <button
+                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table width="100%" id="example"
+                            class="shadow table table-bordered  table-striped table-hover ">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th>
+                                        <div align="center">ที่</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">ชื่อ - สกุล</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">รหัสบัตรประชาชน</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">ความสัมพันธ์</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">จัดการข้อมูล</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalist|filter:searchTerm; let i = index">
+                                    <td width="5%" align="center">{{i+1}}</td>
+                                    <td>{{p.FEPIO_NAME}}</td>
+                                    <td align="center">{{p.FEPIO_CITIZEN}}</td>
+                                    <td align="center">{{p.FERELE_NAME}}</td>
+                                    <td align="center">
+                                        <a *ngIf="p.FEPIO_RSTATUS=='0'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                                            (click)="deleteData(p.FEPIO_CODE)"><i class="fa fa-trash"></i>
+                                        </a>&nbsp;
+                                        <a role="button" title="แก้ไข" data-bs-toggle="modal"
+                                            data-bs-target="#modalrqvehicle" class="btn btn-warning text-white"
+                                            (click)="editdata(p.FEPIO_CODE)"><i class="fa fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="5">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalrqvehicle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">รายละเอียดสมาชิกในครอบครัว</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <input type="hidden" class="form-control" name="FEPIO_CODE" id="FEPIO_CODE"
+              [(ngModel)]="dataAdd.FEPIO_CODE">
+                        <label for="name">ความสัมพันธ์</label>
+                        <select name="FERELE_CODE" id="FERELE_CODE" class="form-select"
+                            [(ngModel)]="dataAdd.FERELE_CODE" (change)="showtype()">
+                            <option [value]="fer.FERELE_CODE" *ngFor="let fer of dataFer">{{fer.FERELE_NAME}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="name">ชื่อ-สกุล</label>
+                        <input type="text" name="FEPIO_NAME" class="form-control" id="FEPIO_NAME"
+                            placeholder="ชื่อ-สกุล" [(ngModel)]="dataAdd.FEPIO_NAME">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name">เลขที่บัตรประชาชน</label>
+                        <input type="text" name="FEPIO_CITIZEN" class="form-control" id="FEPIO_CITIZEN"
+                            placeholder="เลขที่บัตรประชาชน" [(ngModel)]="dataAdd.FEPIO_CITIZEN">
+                    </div>
+                </div><span *ngIf="dataAdd.row1">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="name">สถานะภาพ</label>
+                        <select name="FEPIO_MSTATUS" id="FEPIO_MSTATUS" class="form-select"
+                            [(ngModel)]="dataAdd.FEPIO_MSTATUS">
+                            <option [value]="fer.STAFF_STATUS_CODE" *ngFor="let fer of dataStatus">
+                                {{fer.STAFF_STATUS_NAME}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">อาชีพ</label>
+                        <select name="OCCUP_ID" id="OCCUP_ID" class="form-select" [(ngModel)]="dataAdd.OCCUP_ID">
+                            <option [value]="fer.OCCUP_ID" *ngFor="let fer of dataOcc">{{fer.OCCUP_NAME}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">ตำแหน่ง</label>
+                        <input type="text" name="FEPIO_POSITION" class="form-control" id="FEPIO_POSITION"
+                            placeholder="ตำแหน่ง" [(ngModel)]="dataAdd.FEPIO_POSITION">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">สถานที่ทำงาน</label>
+                        <input type="text" name="FEPIO_WORKPLACE" class="form-control" id="FEPIO_WORKPLACE"
+                            placeholder="สถานที่ทำงาน" [(ngModel)]="dataAdd.FEPIO_WORKPLACE">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">โทรศัพท์มือถือ</label>
+                        <input type="text" name="FEPIO_TEL" class="form-control" id="FEPIO_TEL"
+                            placeholder="โทรศัพท์มือถือ" [(ngModel)]="dataAdd.FEPIO_TEL">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">บ้านเลขที่</label>
+                        <input type="text" name="FEPIO_TEL" class="form-control" id="FEPIO_HOMENO"
+                            placeholder="บ้านเลขที่" [(ngModel)]="dataAdd.FEPIO_HOMENO">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">หมู่</label>
+                        <input type="text" name="FEPIO_MOO" class="form-control" id="FEPIO_MOO" placeholder="หมู่"
+                            [(ngModel)]="dataAdd.FEPIO_MOO">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">ซอย/ถนน</label>
+                        <input type="text" name="FEPIO_STREET" class="form-control" id="FEPIO_STREET"
+                            placeholder="ซอย/ถนน" [(ngModel)]="dataAdd.FEPIO_STREET">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">ตำบล</label>
+                        <input type="text" name="FEPIO_DISTRICT" class="form-control" id="FEPIO_DISTRICT"
+                            placeholder="ตำบล" [(ngModel)]="dataAdd.FEPIO_DISTRICT">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="name">อำเภอ</label>
+                        <input type="text" name="FEPIO_CITY" class="form-control" id="FEPIO_CITY" placeholder="อำเภอ"
+                            [(ngModel)]="dataAdd.FEPIO_CITY">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="name">จังหวัด</label>
+                        <select name="PROVINCE_ID" id="PROVINCE_ID" class="form-select"
+                            [(ngModel)]="dataAdd.PROVINCE_ID">
+                            <option [value]="fer.PROVINCE_ID" *ngFor="let fer of dataPro">{{fer.PROVINCE_TNAME}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="name">รหัสไปรษณีย์</label>
+                        <input type="text" name="FEPIO_ZIPCODE" class="form-control" id="FEPIO_ZIPCODE"
+                            placeholder="รหัสไปรษณีย์" [(ngModel)]="dataAdd.FEPIO_ZIPCODE">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="name">สถานะ</label>
+                        <select name="FEPIO_ASTATUS" id="FEPIO_ASTATUS" class="form-select"
+                            [(ngModel)]="dataAdd.FEPIO_ASTATUS">
+                            <option value="1">ยังมีชีวิตอยู่</option>
+                            <option value="0">ถึงแก่กรรม</option>
+                        </select>
+                    </div>
+                </div>
+                </span>
+                <span *ngIf="dataAdd.row2">
+                    <hr>
+                    <label for="name" class="text-danger">กรณีเป็นบุตร</label>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="name">วัน/เดือน/ปีเกิด </label>
+                            <input type="text" name="p_bname" id="p_bname" bsDatepicker #dp="bsDatepicker"
+                                class="form-control" placeholder="วัน/เดือน/ปีเกิด "
+                                [(ngModel)]="dataAdd.FEPIO_BDCHL" readonly>
+                            <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                            </i>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="name">บุตรลำดับที่ของบิดา</label>
+                            <input type="text" name="FEPIO_NCHL" class="form-control" id="FEPIO_NCHL"
+                                placeholder="บุตรลำดับที่ของบิดา" [(ngModel)]="dataAdd.FEPIO_NCHL"  (keypress)="CheckNum($event)">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="name">บุตรลำดับที่ของมารดา</label>
+                            <input type="text" name="FEPIO_NCHL2" class="form-control" id="FEPIO_NCHL2"
+                                placeholder="บุตรลำดับที่ของมารดา" [(ngModel)]="dataAdd.FEPIO_NCHL2"  (keypress)="CheckNum($event)">
+                        </div>
+                    </div>
+                    <hr>
+                    <label for="name" class="text-danger">กรณีเป็นบุตรแทนที่บุตรซึ่งถึงแก่กรรมแล้ว</label>
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label for="name">แทนที่บุตรลำดับที่</label>
+                            <input type="text" name="FEPIO_RCNO" class="form-control" id="FEPIO_RCNO"
+                                placeholder="แทนที่บุตรลำดับที่" [(ngModel)]="dataAdd.FEPIO_RCNO"  (keypress)="CheckNum($event)">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="name">ชื่อ-สกุล</label>
+                            <input type="text" name="FEPIO_RCNAME" class="form-control" id="FEPIO_RCNAME"
+                                placeholder="ชื่อ-สกุล" [(ngModel)]="dataAdd.FEPIO_RCNAME">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="name">วัน/เดือน/ปีเกิด</label>
+                            <input type="text" name="FEPIO_RCBD" id="FEPIO_RCBD" bsDatepicker #dp2="bsDatepicker"
+                                class="form-control" placeholder="วัน/เดือน/ปีเกิด " [(ngModel)]="dataAdd.FEPIO_RCBD"
+                                readonly>
+                            <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp2.toggle()">
+                            </i>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="name">ถึงแก่กรรมเมื่อ </label>
+                            <input type="text" name="FEPIO_RCDD" id="FEPIO_RCDD" bsDatepicker #dp3="bsDatepicker"
+                                class="form-control" placeholder="ถึงแก่กรรมเมื่อ " [(ngModel)]="dataAdd.FEPIO_RCDD"
+                                readonly>
+                            <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp3  .toggle()">
+                            </i>
+                        </div>
+
+                    </div>
+                </span>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
+

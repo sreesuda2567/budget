@@ -1,0 +1,396 @@
+import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { ApiPdoService } from '../../../../_services/api-pui.service';
+import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { first, map, startWith } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as XLSX from 'xlsx-js-style';
+import Swal from 'sweetalert2';
+@Component({
+  selector: 'app-savemoney',
+  templateUrl: './savemoney.component.html',
+  styleUrls: ['./savemoney.component.scss']
+})
+export class SavemoneyComponent implements OnInit {
+  title = 'angular-app';
+  fileName = 'report.xlsx';
+  userList = [{}]
+
+  datarstatus: any;
+  dataFac: any;
+  dataIncome: any;
+  dataCrpart: any;
+  dataYear: any;
+  dataPlmoneypay: any;
+  dataSubplmoneypay: any;
+  datalist: any;
+  datalistdetail: any;
+  loading: any;
+  loadingold: any;
+  dataESection: any;
+  dataEIncome: any;
+  dataECrpart: any;
+  dataEYear: any;
+  dataPlproduct: any;
+  rownum: any;
+  dataAdd: any = {check: [], FNEXPENSES_CODE: []};
+  searchTerm: any;
+  searchTermold: any;
+  datalistold: any;
+  datalists: any;
+  url = "/acc3d/budget/manage/savemoney.php";
+  url1 = "/acc3d/budget/userpermission.php";
+  page = 1;
+  count = 0;
+  tableSize = 20;
+  tableSizes = [20, 40, 100, 200, 400, 1000];
+  constructor(
+    private tokenStorage: TokenStorageService,
+    private apiService: ApiPdoService,
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private eRef: ElementRef,
+    private formBuilder: FormBuilder
+  ) { }
+
+  ngOnInit(): void {
+
+    this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
+    this.dataAdd.number = 0;
+    this.dataAdd.searchTermold = null;
+    this.fetchdata();
+  }
+  fetchdata() {
+    //ดึงคณะตามสังกัด
+    var varN = {
+      "opt": "viewufac",
+      "citizen": this.tokenStorage.getUser().citizen
+    }
+    this.apiService
+      .getdata(varN, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAdd.UFACULTY_CODE = data[0].FACULTY_CODE;
+        this.dataAdd.UCAMPUS_CODE = data[0].CAMPUS_CODE;
+
+      });
+    var varP = {
+      "opt": "viewp",
+      "citizen": this.tokenStorage.getUser().citizen
+    }
+    //ดึงรายการคณะตามสิทธิ์
+    this.apiService.getdata(varP, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.datarstatus = data;
+        var varNf = {
+          "opt": "viewfac",
+          "citizen": this.tokenStorage.getUser().citizen,
+          "PRIVILEGERSTATUS": data[0].PRIVILEGE_RSTATUS
+        }
+        this.apiService
+          .getdata(varNf, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.dataFac = data;
+            // console.log(data[0].FACULTY_CODE);
+            this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
+
+          });
+      });
+    //รายการประเภทเงิน
+    var Table = {
+      "opt": "viewTable",
+      "Table": "PLINCOME where PLINCOME_ASTATUS=1"
+    }
+    this.apiService
+      .getdata(Table, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataIncome = data;
+        this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+        // console.log(data[0].PLINCOME_CODE);
+      });
+
+    //รายการปี
+    var Tabley = {
+      "opt": "viewyear"
+    }
+    this.apiService
+      .getdata(Tabley, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataYear = data;
+        this.dataAdd.PLYEARBUDGET_CODE = data[1].PLYEARBUDGET_CODE;
+        //รายการงบ
+        var Tablep = {
+          "opt": "viewPLMONEYPAY",
+          "PLYEARBUDGET_CODE": data[0].PLYEARBUDGET_CODE
+        }
+        this.apiService
+          .getdata(Tablep, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.dataPlmoneypay = data;
+            this.dataAdd.PLMONEYPAY_CODE = '';
+          });
+        //รายการภาค
+        var Table2 = {
+          "opt": "viewCRPART",
+          "PLYEARBUDGET_CODE": data[0].PLYEARBUDGET_CODE,
+          "FACULTY_CODE": "",
+          "PLINCOME_CODE": ""
+        }
+        this.apiService
+          .getdata(Table2, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.dataCrpart = data;
+            this.dataAdd.CRPART_ID = data[0].CRPART_ID;
+          });
+
+
+      });
+
+
+    // console.log(this.dataAdd);
+  }
+
+  //ภาคเงิน
+  fetchdatalistcr() {
+    this.dataAdd.opt = "viewCRPART";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataCrpart = data;
+        this.dataAdd.CRPART_ID = data[0].CRPART_ID;
+      });
+  }
+  fetchdatalist() {
+    this.loading = true;
+    this.datalist = null;
+    this.dataAdd.opt = 'readAll';
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == '1') {
+        this.datalist = data.data;
+        this.loading = null;
+        this.rownum = 1;
+        }else{
+          this.rownum = null;
+          this.loading = null;
+          this.datalist = data.data;
+          this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+        }
+      })
+  }
+  fetchdatalistold() {
+    this.loadingold = true;
+    this.datalistold = null;
+    this.dataAdd.opt = 'readold';
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == '1') {
+        this.datalistold = data.data;
+        this.loadingold = null;
+        for (let i = 0; i < this.datalistold.length; i++) {
+          this.dataAdd.FNEXPENSES_CODE[i] = this.datalistold[i].FNEXPENSES_CODE;
+          this.dataAdd.check[i] = false;
+        }
+        }else{
+          this.loadingold = null;
+          this.datalistold = data.data;
+          this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+        }
+      })
+  }
+  //แก้ไขข้อมูล
+  updatedata() {
+    this.dataAdd.opt = "update";
+    this.apiService
+     .getupdate(this.dataAdd, this.url)
+     .pipe(first())
+     .subscribe((data: any) => {
+       //console.log(data.status);       
+       if (data.status == 1) {
+         this.fetchdatalist();
+         //this.fetchdatalist();
+         this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
+         document.getElementById("ModalClose")?.click();
+       }
+     });
+    }
+  // ฟังก์ชันสำหรับการลบข้อมูล
+  deleteData(id: any) {
+    Swal.fire({
+      title: 'ต้องการลบข้อมูล?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.value) {
+        Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+        this.datalistdetail = null;
+        this.dataAdd.id = id;
+        this.dataAdd.opt = "delete";
+        this.apiService
+          .getdata(this.dataAdd, this.url)
+          .pipe(first())
+          .subscribe((data: any) => {
+            if (data.status == 1) {
+              this.fetchdatalist();
+              // console.log(data.status);
+            }
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+      }
+    });
+
+  }
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  onTableDataChange(event: any) {
+    this.page = event;
+    this.fetchdatalist();
+  }
+
+
+  onTableSizeChange(event: any): void {
+    this.tableSize = event.target.value;
+    this.page = 1;
+    this.fetchdatalist();
+  }
+  // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+  editdata(id: any) {
+    var Tablen = {
+      "opt": "readone",
+      "id": id
+    }
+    //console.log(Tablen);
+    this.apiService
+      .getdata(Tablen, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == 1) {
+          //สาขา
+         
+          this.datalists = data.data;
+          this.showdataplid(data.data[0].PLPROJECT_CODE); 
+
+        }
+
+      });
+
+  }
+    showdataplid(val: any) {
+    var varP = {
+      "opt": "viewIDPLASSET",
+      "id": val
+    }
+    //console.log(varP);
+    this.dataAdd.htmlStringd = null;
+    this.apiService
+      .getdata(varP, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+       // this.dataEpl = data;
+        this.dataAdd.htmlStringd = data[0].name;
+        //console.log(data[0]);
+      });
+  }
+  exportexcel(): void {
+     const element = document.getElementById('excel-table');
+     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+     const range = XLSX.utils.decode_range(ws['!ref']!);
+ 
+     // ปรับความกว้างคอลัมน์
+     const colWidths = [];
+     for (let C = range.s.c; C <= range.e.c; ++C) {
+       let max_width = 10;
+       for (let R = range.s.r; R <= range.e.r; ++R) {
+         const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
+         if (cell && cell.v != null) {
+           const length = String(cell.v).toString().length;
+           if (length > max_width) max_width = length;
+         }
+       }
+       colWidths.push({ wch: max_width + 2 });
+     }
+     // ✅ บังคับคอลัมน์แรก (C === 0) ให้กว้างประมาณ 5%
+     colWidths[0] = { wch: 5 };
+     ws['!cols'] = colWidths;
+ 
+     const numberCols = [ 4, 5,6];
+ 
+     for (let R = range.s.r; R <= range.e.r; ++R) {
+       const isBoldRow = (R === 0 );
+       const isLastRow = R === range.e.r;
+ 
+       for (let C = range.s.c; C <= range.e.c; ++C) {
+         const cell_ref = XLSX.utils.encode_cell({ c: C, r: R });
+         const cell = ws[cell_ref];
+         if (!cell) continue;
+ 
+         const isNumber = numberCols.includes(C) && typeof cell.v === 'number';
+ 
+         let horizontalAlign: "left" | "center" | "right" = "left";
+         if (R === 0) {
+           horizontalAlign = "center";
+         } else if (C === 0) {
+           horizontalAlign = "center";
+         } else if (numberCols.includes(C)) {
+           horizontalAlign = "right";
+         }
+ 
+         const baseStyle: any = {
+           alignment: {
+             horizontal: horizontalAlign,
+             vertical: "center",
+             wrapText: true,
+           },
+           border: {
+             top: { style: "thin", color: { rgb: "000000" } },
+             bottom: { style: "thin", color: { rgb: "000000" } },
+             left: { style: "thin", color: { rgb: "000000" } },
+             right: { style: "thin", color: { rgb: "000000" } },
+           },
+         };
+ 
+         // ✅ ใส่ font ตัวหนา
+         if (isBoldRow) {
+           baseStyle.font = {
+             bold: true,
+             color: { rgb: '000000' },
+           };
+         }
+ 
+         // ✅ ใส่สีหัวตาราง (แถว 2)
+         if (R === 0) {
+           baseStyle.fill = {
+             patternType: "solid",
+             fgColor: { rgb: "5084f2" },
+           };
+         }
+ 
+         // ✅ ใส่ format ตัวเลข
+         if (isNumber) {
+           baseStyle.numFmt = '#,##0.00';
+         }
+ 
+         cell.s = baseStyle;
+       }
+     }
+ 
+     const wb: XLSX.WorkBook = XLSX.utils.book_new();
+     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+     XLSX.writeFile(wb, this.fileName || 'รายงาน.xlsx');
+   }
+}

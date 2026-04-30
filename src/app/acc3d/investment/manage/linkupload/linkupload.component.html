@@ -1,0 +1,161 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">เพิ่มลิงค์การอัปโหลดไฟล์</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#modalEdit" 
+                (click)="showinput()" (click)=" setshowbti()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มรายการใหม่</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                          </div>
+                          <div class="alert alert-info" role="alert">
+                            <div class="row">
+                              <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                              <div align="right" class="col-md-1">
+                                <select (change)="onTableSizeChange($event)" class="form-select">
+                                  <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                    {{ size }}
+                                  </option>
+                                </select>
+                              </div>
+                              <div class="col-md-6"></div>
+                              <div class="col-md-4">
+                                <div class="input-group">
+                                  <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"  id="example-search-input" [(ngModel)]="searchTerm">
+                                  <span class="input-group-append">
+                                      <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5" type="button">
+                                          <i class="fa fa-search"></i>
+                                      </button>
+                                  </span>
+                                  </div>
+                              </div>
+                            </div>
+                          </div> 
+                        <table width="100%" id="example"
+                            class="table table-bordered  table-striped table-hover btn-font3">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th>ที่</th>
+                                    <th>คณะ/หน่วยงาน</th>
+                                    <th>link ครุภัณฑ์</th>
+                                    <th>link สิ่งก่อสร้าง</th>
+                                    <th>link โครงการ</th>
+                                    <th>สถานะ</th>
+                                    <th>จัดการข้อมูล</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      } ; let i = index">
+                                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                                    <td >{{p.FACULTY_TNAME1}}</td>
+                                    <td width="5%">
+                                      <a role="button" title="รายงาน" class="btn btn-success text-white"
+                            href="{{p.PRLINK_ANAME}}"
+                            target="_blank">Link</a>
+                                    </td>
+                                    <td width="5%">
+                                      <a role="button" title="รายงาน" class="btn btn-success text-white"
+                            href="{{p.PRLINK_BNAME}}"
+                            target="_blank">Link</a>
+                                    </td>
+                                    <td width="5%">
+                                      <a role="button" title="รายงาน" class="btn btn-success text-white"
+                            href="{{p.PRLINK_PNAME}}"
+                            target="_blank">Link</a>
+                                    </td>
+                                    <td width="5%" align="center">{{p.SASTATUS_NAME}}</td>
+                                    <td width="5%">
+                                        <span>&nbsp;</span>
+                                        <a role="button" title="แก้ไข" data-bs-toggle="modal"
+                                            data-bs-target="#modalEdit" class="btn btn-warning text-white"
+                                            (click)="editdata(p.PRLINK_CODE)"><i class="fa fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="7">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-left">
+                            <pagination-controls previousLabel="Prev" nextLabel="Next"
+                                (pageChange)="onTableDataChange($event)">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  <!-- Modal -->
+
+  <div class="modal fade" id="modalEdit" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+    tabindex="-1">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel">รายละเอียด link การอัปโหลดไฟล์</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <input type="hidden" name="PRLINK_CODE" id="PRLINK_CODE" class="form-control"
+                            [(ngModel)]="dataAdd.PRLINK_CODE" >
+                    <label for="name">คณะ/หน่วยงาน</label>
+                    <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
+                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                      </select>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="name">link ครุภัณฑ์</label>
+                    <input type="text" name="PRLINK_ANAME" id="PRLINK_ANAME" class="form-control"
+                            [(ngModel)]="dataAdd.PRLINK_ANAME" >
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="name">link สิ่งก่อสร้าง</label>
+                    <input type="text" name="PRLINK_BNAME" id="PRLINK_BNAME" class="form-control"
+                            [(ngModel)]="dataAdd.PRLINK_BNAME" >
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="name">link โครงการ</label>
+                    <input type="text" name="PRLINK_PNAME" id="PRLINK_PNAME" class="form-control"
+                            [(ngModel)]="dataAdd.PRLINK_PNAME" >
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="name">สถานะ</label>
+                    <select class="form-select" [(ngModel)]="dataAdd.PRLINK_RSTATUS">
+                        <option [value]="1" >ใช้งาน</option>
+                        <option [value]="0" >ไม่ใช้งาน</option>
+                      </select>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+          <button *ngIf="rowpbi" type="button" class="btn btn-primary" (click)="insertdata()">บันทึกข้อมูล</button>
+          <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+        </div>
+      </div>
+    </div>
+  </div>
+            

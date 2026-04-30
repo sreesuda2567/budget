@@ -1,0 +1,136 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">ประเภทหน่วยงาน</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                    (click)="showinput()" (click)="setshowbti()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มรายการใหม่</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                                <div align="right" class="col-md-1">
+                                    <select (change)="onTableSizeChange($event)" class="form-select">
+                                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                            {{ size }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6"></div>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table width="100%" id="example"
+                            class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th><div align="center">ที่</div></th>
+                                    <th><div align="center">รหัส</div></th>
+                                    <th><div align="center">ชื่อประเภทหน่วยงาน</div></th>
+                                    <th><div align="center">จัดการข้อมูล</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      } ; let i = index">
+                                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                                    <td width="10%">{{p.TYPEFACULTY_CODE}}</td>
+                                    <td>{{p.TYPEFACULTY_NAME}} </td>
+                                    <td width="10%" align="center">
+                                        <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                                            (click)="deleteData(p.TYPEFACULTY_CODE)"><i class="fa fa-trash"></i>
+                                        </a>&nbsp;
+                                        <a role="button" title="แก้ไข" data-bs-toggle="modal"
+                                            data-bs-target="#modalEdit" class="btn btn-warning text-white"
+                                            (click)="editdata(p.TYPEFACULTY_CODE,p.TYPEFACULTY_NAME)"><i
+                                                class="fa fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-left">
+                            <pagination-controls previousLabel="Prev" nextLabel="Next"
+                                (pageChange)="onTableDataChange($event)">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+<div class="modal fade" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">รหัสประเภทหน่วยงาน</label>
+                        <input type="text" name="TYPEFACULTY_CODE" class="form-control" id="TYPEFACULTY_CODE"
+                            placeholder="รหัสคำนามหน่วยงาน" [(ngModel)]="dataAdd.TYPEFACULTY_CODE">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ชื่อประเภทหน่วยงาน</label>
+                        <input type="text" name="TYPEFACULTY_NAME" class="form-control" id="TYPEFACULTY_NAME"
+                            placeholder="ชื่อคำนามหน่วยงาน" [(ngModel)]="dataAdd.TYPEFACULTY_NAME">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

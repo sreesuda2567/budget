@@ -1,0 +1,1298 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">อนุมัติผลการจัดทำรูปแบบรายการ</h5>
+            </div>
+            <div class="col-md-2" align="right">
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div class="col-md-6 text-secondary">
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODEM" (change)="fetchdatalist()">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataMyear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div align="right" class="col-md-1">
+                                    <button type="button"  class="btn btn-primary" (click)="insertdataapp()"><i class="fa fa-arrow-right"></i> อนุมัติผล</button>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <table id="excel-table" class="table btn-font3" width="150%"
+            class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">คณะ/หน่วยงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อโครงการ</div>
+                    </th>
+                    <th>
+                        <div align="center">แหล่งเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">สถานะ</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                    <th><div align="center">เลือก<input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
+                        [(ngModel)]="dataAdd.checkall" (click)="checkall()"></div></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr class="btn-font2" *ngFor="let p of datalist|filter:searchTerm ; let i = index">
+                    <td width="5%" align="center">{{+i+1}}</td>
+                    <td>{{p.FACULTY_TNAME}}</td>
+                    <td>{{p.BDOPERATION_NAME}}</td>
+                    <td>{{p.PLINCOME_NAME}}</td>
+                    <td align="right">{{p.BDOPERATION_MONEY| number : '1.2-2'}}</td>
+                    <td align="center">{{p.BDSTATUS_NAME}}</td>
+                    <td align="center">
+                        <a role="button" title="รายงาน" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
+                            class="btn btn-primary text-white" (click)="editdata(p.BDOPERATION_CODE)"><i
+                                class="fa fa-search"></i></a>
+                    </td>
+                    <td width="5%" align="center"> 
+                        <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
+                          [(ngModel)]="dataAdd.check[i]">
+                        <input name="PRASSET_CODEA" type="hidden" id="PRASSET_CODEA" size="10"
+                          [(ngModel)]="dataAdd.BDOPERATION_CODEC[i]" />
+                          
+                      </td>
+                </tr>
+                <tr *ngIf="!rownum">
+                    <td colspan="7">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalrqvehicle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">การออกแบบและพัฒนาอาคารสถานที่</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input name="BDOPERATION_CODE" type="hidden" id="BDOPERATION_CODE"
+                    [(ngModel)]="dataAdd.BDOPERATION_CODE" />
+                <ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#basic"
+                            type="button" role="tab" aria-controls="home" aria-selected="true">
+                            ข้อมูลพื้นฐาน
+                        </button>
+                    </li>
+                    <li (click)="onChangetype(1)" *ngIf="dataAdd.BDTYPE_CODE !='2'" class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#format"
+                            type="button" role="tab" aria-controls="list" aria-selected="false">
+                            การจัดทำรูปแบบรายการ
+                        </button>
+                    </li>
+                    <li (click)="onChangetype(2)" *ngIf="dataAdd.BDTYPE_CODE !='2'" class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="structure-tab" data-bs-toggle="tab"
+                            data-bs-target="#estimatestructure" type="button" role="tab" aria-controls="structure"
+                            aria-selected="false">
+                            การจัดทำประมาณการราคาโครงสร้าง
+                        </button>
+                    </li>
+                    <li (click)="onChangetype(3)" *ngIf="dataAdd.BDTYPE_CODE !='2'" class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="electricity-tab" data-bs-toggle="tab"
+                            data-bs-target="#estimateelectricity" type="button" role="tab" aria-controls="electricity"
+                            aria-selected="false">
+                            การจัดทำประมาณการราคาไฟฟ้า
+                        </button>
+                    </li>
+                    <li (click)="onChangetype(4)" *ngIf="dataAdd.BDTYPE_CODE !='2'" class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="signed-tab" data-bs-toggle="tab" data-bs-target="#offer"
+                            type="button" role="tab" aria-controls="signed" aria-selected="false">
+                            เสนอลงนาม
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="signed-tab" data-bs-toggle="tab" data-bs-target="#director"
+                            type="button" role="tab" aria-controls="signed" aria-selected="false">
+                            คณะกรรมการ
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="name" class="txt-font3">คณะ/หน่วยงาน</label>
+                                                <br>
+                                                <label for="name" class="text-danger"> {{dataAdd.FACULTY_TNAME}}</label>
+
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="name" class="txt-font3">ชื่อโครงการ</label>
+                                                <br>
+                                                <label for="name" class="text-danger">
+                                                    {{dataAdd.BDOPERATION_NAME}}</label>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="name" class="txt-font3">กรอบงบประมาณ</label>
+                                                <br>
+                                                <label for="name" class="text-danger">
+                                                    {{dataAdd.PRBUILDING_MONEY}}</label>
+
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name"
+                                                    class="txt-font3">เลขที่หนังสืออนมุัติให้จัดทำแบบ</label>
+                                                <br>
+                                                <label for="name" class="text-danger">
+                                                    {{dataAdd.PLBUILDING_BOOK}}</label>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="name" class="txt-font3">วันที่อนุมัติให้จัดทำแบบ</label>
+                                                <br>
+                                                <label for="name" class="text-danger">
+                                                    {{dataAdd.BDOPERATION_ADATE}}</label>
+
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="name" class="txt-font3">วิธีดำเนินการโครงการ</label>
+                                                <br>
+                                                <label for="name" class="text-danger"> {{dataAdd.BDTYPE_NAME}}</label>
+                                            </div>
+
+                                            <div class="form-group col-md-2"></div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name" class="txt-font3">สถาปนิก</label>
+                                                <br>
+                                                <label for="name" class="text-danger">
+                                                    {{dataAdd.BDOPERATION_NAMEA1}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name" class="txt-font3">วิศวกรโยธา</label>
+                                                <br>
+                                                <label for="name" class="text-danger">
+                                                    {{dataAdd.BDOPERATION_NAMECE1}}</label>
+
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name" class="txt-font3">วิศวกรไฟฟ้า</label>
+                                                <br>
+                                                <label for="name" class="text-danger">
+                                                    {{dataAdd.BDOPERATION_NAMEL1}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">แผนการดำเนินโครงการ</label>
+                                                <br>
+                                                <label for="name" class="text-danger"
+                                                    *ngIf="dataAdd.sdate==''">แสดงข้อมูลอัตโนมัติ</label>
+                                                <label for="name" class="text-danger"
+                                                    *ngIf="dataAdd.sdate">{{dataAdd.sdate}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">แผนแล้วเสร็จ</label>
+                                                <br>
+                                                <label for="name" class="text-danger"
+                                                    *ngIf="dataAdd.edate==''">แสดงข้อมูลอัตโนมัติ</label>
+                                                <label for="name" class="text-danger"
+                                                    *ngIf="dataAdd.edate">{{dataAdd.edate}}</label>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="dataAdd.BDTYPE_CODE=='2'" class="form-group col-md-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    แผนการจัดทำแบบรูปรายการและประมาณการราคา
+                                                </div>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="name"><strong>ประเมินราคาก่อสร้าง
+                                                                </strong></label>
+                                                            <br>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.sdateshow[0]}}</label>
+
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.edateshow[0]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.tdateshow[0]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label for="name"><strong>แต่งตั้งคณะกรรมการร่าง
+                                                                        TOR</strong></label>
+                                                                <br>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.sdateshow[1]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.edateshow[1]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.tdateshow[1]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label for="name"><strong>แต่งตั้งคณะกรรมการจ้างออกแบบ
+                                                                    </strong></label>
+                                                                <br>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.sdateshow[2]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.edateshow[2]}}</label>
+                                                                
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.tdateshow[2]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label
+                                                                    for="name"><strong>พิจารณาผลการประกวดแบบ</strong></label>
+                                                                <br>
+                                                            </div>
+
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.sdateshow[3]}}</label>
+                                                                
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.edateshow[3]}}</label>
+                                                                
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.tdateshow[3]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label
+                                                                    for="name"><strong>ระยะเวลาจัดทำแบบรูปรายการและประมาณราคา</strong></label>
+                                                                <br>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.sdateshow[4]}}</label>
+                                                                
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.edateshow[4]}}</label>
+                                                                
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.tdateshow[4]}}</label>
+                                                            </div>
+
+                                                            <div class="form-group col-md-12">
+                                                                <label for="name"><strong>ประชุมพิจารณาแบบรูปรายการ
+                                                                        และประมาณการราคา </strong></label>
+                                                                <br>
+                                                            </div>
+
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.sdateshow[5]}}</label>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.edateshow[5]}}</label>
+                                                                
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ
+                                                                </label>
+                                                                <br>
+                                                                <label for="name" class="text-danger">
+                                                                    {{dataAdd.tdateshow[5]}}</label>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="format" role="tabpanel" aria-labelledby="list-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="name">1. วันที่เริ่มจัดทำแบบรูปรายการ</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_SDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">2. ระยะเวลาจัดทำแบบรูปรายการ</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_NDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">3. วันที่จัดทำแบบรูปรายการแล้วเสร็จ</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_EDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">4. ขั้นตอนการจัดทำแบบรูปแบบรายการ</label>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.1 สำรวจพื้นที่ </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น</label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.2 ประชุมหาความต้องการ</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[1]}}</div>
+
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.3 ออกแบบ (จัดทำแบบร่าง)</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.4 ประชุมสรุปความต้องการ</label>
+                                                        <br>
+                                                    </div>
+
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[3]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[3]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[3]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[3]}}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">&nbsp;4.5 เขียนแบบ</label>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;&nbsp;สถาปัตย์</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;&nbsp;{{dataAdd.sdateshow[4]}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[4]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[4]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[4]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;&nbsp;โครงสร้าง
+                                                        </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;&nbsp;{{dataAdd.sdateshow[5]}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[5]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[5]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[5]}}</div>
+                                                    </div>
+
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;&nbsp;ไฟฟ้า
+                                                        </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;&nbsp;{{dataAdd.sdateshow[6]}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[6]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[6]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[6]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;&nbsp;สุขาภิบาล
+                                                        </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;&nbsp;{{dataAdd.sdateshow[7]}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[7]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[7]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[7]}}</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">5. ประชุมคณะกรรมการแบบรูปรายการ</label>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.sdateshow[8]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.edateshow[8]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">จำนวนวัน</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.ndateshow[8]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.tdateshow[8]}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade " id="estimatestructure" role="tabpanel" aria-labelledby="structure-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="name">1. วันที่เริ่มจัดทำประมาณราคา</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_SDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">2. ระยะเวลาจัดทำประมาณประมาณการราคา (จำนวนวัน
+                                                    อัตโนมัติ)</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_NDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">3. วันที่จัดทำประมาณการราคา</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_EDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">4. ขั้นตอนการจัดทำประมาณการราคา</label>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.1 ถอดปริมาณวัสดุ </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น</label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนิงาน</label>
+                                                        <br>
+                                                        <div class="text-danger"></div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.2 สืบราคา</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[1]}}</div>
+
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.3 แบ่งงวด</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[2]}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="name">5. ประชุมคณะกรรมการแบบรูปรายการ</label>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.sdateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.edateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">จำนวนวัน</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.ndateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.tdateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">6. ราคากลาง</label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.BDSTRUCTURE_MONEY}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="estimateelectricity" role="tabpanel"
+                        aria-labelledby="electricity-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="name">1. วันที่เริ่มจัดทำประมาณราคา</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_SDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">2. ระยะเวลาจัดทำประมาณประมาณการราคา (จำนวนวัน
+                                                    อัตโนมัติ)</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_NDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">3. วันที่จัดทำประมาณการราคา</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_EDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">4. ขั้นตอนการจัดทำประมาณการราคา</label>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.1 ถอดปริมาณวัสดุ </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น</label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนิงาน</label>
+                                                        <br>
+                                                        <div class="text-danger"></div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.2 สืบราคา</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[1]}}</div>
+
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.3 แบ่งงวด</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[2]}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="name">5. ประชุมคณะกรรมการแบบรูปรายการ</label>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.sdateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.edateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">จำนวนวัน</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.ndateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.tdateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">6. ราคากลาง</label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.BDSTRUCTURE_MONEY}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="offer" role="tabpanel" aria-labelledby="signed-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">1 เสนอลงนามแบบรูปรายการและประมาณการราคา
+                                                        </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น</label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[0]}}</div>
+                                                    </div>
+
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">2. จัดส่งแบบและราคาคืนเจ้าของรายการ</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[1]}}</div>
+
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[1]}}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="director" role="tabpanel" aria-labelledby="signed-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name"
+                                                            class="txt-font3">คณะกรรมการพิจารณาผลการประกวดราคา</label>
+                                                        <br>
+                                                        <label for="name" class="text-danger">
+                                                            {{dataAdd.CITIZEN_IDTEN1}}</label>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name"
+                                                            class="txt-font3">คณะกรรมการตรวจรับพัสดุในงานก่อสร้าง</label>
+                                                        <br>
+                                                        <label for="name" class="text-danger">
+                                                            {{dataAdd.CITIZEN_IDINS1}}</label>
+
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name" class="txt-font3">ผู้ควบคุมงาน</label>
+                                                        <br>
+                                                        <label for="name" class="text-danger">
+                                                            {{dataAdd.CITIZEN_IDSUP1}}</label>
+
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name"
+                                                            class="txt-font3">คณะกรรมการกำหนดราคากลางงานก่อสร้าง</label>
+                                                        <br>
+                                                        <label for="name" class="text-danger">
+                                                            {{dataAdd.CITIZEN_IDSET1}}</label>
+
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name"
+                                                            class="txt-font3">คณะกรรมการกำหนดรายละเอียดคุณลักษณะเฉพาะของแบบรูปรายการ</label>
+                                                        <br>
+                                                        <label for="name" class="text-danger">
+                                                            {{dataAdd.CITIZEN_IDDET1}}</label>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>

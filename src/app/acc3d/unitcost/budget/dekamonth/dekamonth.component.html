@@ -1,0 +1,385 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">รายงานสรุปค่าใช้จ่าย</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col">
+                    <!-- BASIC TABLE -->
+                    <div class="panel">
+                        <div class="panel-heading">
+
+                            <div class="row">
+                                <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                                    <label> หน่วยเบิกจ่าย: </label>
+                                    <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
+                                        id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdataCam()">
+                                        <option value=""
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">
+                                            ทุกวิทยาเขต</option>
+                                        <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">
+                                            {{cam.CAMPUS_TNAME}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8 text-secondary" style="font-size: 10pt">
+                                    <label> คณะ /หน่วยงาน: </label>
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.FACULTY_CODE">
+                                        <option value=""
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">
+                                            ทุกคณะ/หน่วยงาน</option>
+                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                            {{fac.FACULTY_TNAME}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 text-secondary" style="font-size: 10pt"> แหล่งเงิน:</div>
+                                <div class="col-md-2 text-secondary" style="font-size: 10pt"> ภาค:</div>
+                                <div class="col-md-2 text-secondary" style="font-size: 10pt">ผลผลิต:</div>
+                                <div class="col-md-2 text-secondary" style="font-size: 10pt"> ปีงบประมาณ:</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 ">
+                                    <select name="in_come" id="in_come" class="form-select" (change)="fetchdatalistcr()"
+                                        [(ngModel)]="dataAdd.PLINCOME_CODE">
+                                        <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS">ทุกแหล่งเงิน</option>
+                                        <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">
+                                            {{inc.PLINCOME_NAME}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="cr_code" id="cr_code" class="form-select"
+                                        [(ngModel)]="dataAdd.CRPART_ID">
+                                        <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS">ทุกภาค</option>
+                                        <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpart">
+                                            {{crp.CRPART_TNAME}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 ">
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLPRODUCT_CODE">
+                                        <option value=""
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">
+                                            ทุกผลผลิต
+                                        </option>
+                                        <option [value]="pro.PLPRODUCT_CODE" *ngFor="let pro of dataPro">
+                                            {{pro.PLGPRODUCT_SHORTNAME}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 ">
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 text-secondary" style="font-size: 10pt">จากวันที่:</div>
+                                <div class="col-md-2 text-secondary" style="font-size: 10pt">ถึงวันที่:</div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-2">
+                                    <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker
+                                        #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
+                                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                                    </i>
+                                </div>
+                                <div class="col-md-2">
+                                    <input placeholder="ถึงวันที่" type="text" class="form-control" bsDatepicker
+                                        #dp2="bsDatepicker" [(ngModel)]="dataAdd.DATENOWT" readonly>
+                                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                                        class="fa-solid fa-calendar-days cursor-p text-primary"
+                                        (click)="dp2.toggle()"></i>
+                                </div>
+                                <div class="col-md-2 ">
+                                    <button type="submit" class="btn btn-primary" id="submitinsert"
+                                        (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <div *ngIf="numrow" class="row">
+            <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()"> <i
+                        class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export
+                    Excel</button></div>
+            <div class="col-md-7"></div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+            </div>
+        </div>
+        <div style="width:100%; height:700px; overflow:auto;">
+            <table *ngIf="numrow" id="excel-table" width="100%" border="1" cellspacing="0" cellpadding="0"
+                class="table card-table table-bordered table-striped table-vcenter tableFixHead btn-font3">
+                <thead>
+                    <tr bgcolor="#9BC5EE">
+                        <td colspan="23" align="right"><strong>วันที่:{{dataAdd.DATENOW}}</strong></td>
+                    </tr>
+                    <tr bgcolor="#9BC5EE">
+                        <td colspan="23" align="center"><strong>รายงานสรุปค่าใช้จ่ายประจำเดือน
+                                {{dataAdd.CAMPUS_NAME}}</strong></td>
+                    </tr>
+                    <tr bgcolor="#9BC5EE">
+                        <td colspan="23" align="center"><strong>{{dataAdd.PLINCOME_NAME}}</strong></td>
+                    </tr>
+                    <tr bgcolor="#9BC5EE">
+                        <td width="4%" rowspan="3">
+                            <div align="center"><strong>&#3607;&#3637;&#3656;</strong></div>
+                        </td>
+                        <td width="7%" rowspan="3" align="center"><strong>เลขที่ฎีกา</strong></td>
+                        <td width="7%" rowspan="3" align="center"><strong>รหัสบัญชีแยกประเภท</strong></td>
+                        <td width="8%" rowspan="3">
+                            <div align="center"><strong>ชื่อรายการบัญชีแยกประเภท</strong></div>
+                        </td>
+                        <td width="11%" rowspan="3">
+                            <div align="center"><strong>คณะ/หน่วยงาน</strong></div>
+                        </td>
+                        <td width="7%" rowspan="3">
+                            <div align="center"><strong>จำนวนเงิน</strong></div>
+                        </td>
+                        <td width="7%" rowspan="3" align="center"><strong>เลขเอกสาร</strong></td>
+                        <td width="7%" rowspan="3" align="center"><strong>แหล่งเงิน</strong></td>
+                        <td width="7%" rowspan="3" align="center"><strong>หมวดรายจ่าย</strong></td>
+                        <td width="7%" rowspan="3" align="center"><strong>ชื่อโครงการ/ชื่อเรื่อง</strong></td>
+                        <td *ngIf="dataAdd.PLPRODUCT_CODE==''" width="7%" rowspan="3" align="center">
+                            <strong>ผลผลิต</strong>
+                        </td>
+                        <td height="17" colspan="12" align="center"><strong>{{dataAdd.PLGPRODUCT_SHORTNAME}}</strong>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#9BC5EE">
+                        <td height="15" colspan="1" align="center"><strong>งบบุคลากร</strong></td>
+                        <td colspan="2" align="center"><strong>งบดำเนินงาน</strong></td>
+                        <td colspan="2" align="center"><strong>งบลงทุน</strong></td>
+                        <td colspan="6" align="center"><strong>งบอุดหนุน</strong></td>
+                        <td colspan="1" align="center"><strong>งบกลาง</strong></td>
+                    </tr>
+                    <tr bgcolor="#9BC5EE">
+                        <td>
+                            <div align="center"><strong>จ่าย</strong></div>
+                        </td>
+                        <td align="center"><strong>ตอบแทน</strong></td>
+                        <td align="center"><strong>ใช้สอย</strong></td>
+                        <td>
+                            <div align="center"><strong>ครุภัณฑ์</strong></div>
+                        </td>
+                        <td>
+                            <div align="center"><strong>สิ่งก่อสร้าง</strong></div>
+                        </td>
+                        <td>
+                            <div align="center"><strong>ตอบแทน</strong></div>
+                        </td>
+                        <td>
+                            <div align="center"><strong>ใช้สอย</strong></div>
+                        </td>
+                        <td>
+                            <div align="center"><strong>วัสดุ</strong></div>
+                        </td>
+                        <td>
+                            <div align="center"><strong>สาธารณูปโภค</strong></div>
+                        </td>
+                        <td>
+                            <div align="center"><strong>ค่าใช้จ่ายบุคลากร</strong></div>
+                        </td>
+                        <td>
+                            <div align="center"><strong>โครงการ ฯลฯ</strong></div>
+                        </td>
+                        <td>
+                            <div align="center"><strong>งบกลาง</strong></div>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let p of datalistde|filter:searchTerm; let i = index">
+                        <td *ngIf="p.FRACC_TNAME" width="1%" align="center">{{i+1}}</td>
+                        <td *ngIf="p.FRACC_TNAME">{{p.FNEXPENSES_DEKA}}</td>
+                        <td *ngIf="p.FRACC_TNAME">{{p.FRACC_CODE}}</td>
+                        <td *ngIf="p.FRACC_TNAME">{{p.FRACC_TNAME}}</td>
+                        <td *ngIf="p.FRACC_TNAME">{{p.FACULTY_TNAME}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME">{{p.FNEXACC_NUMBER}}</td>
+                        <td *ngIf="p.FRACC_TNAME">{{p.PLINCOME_NAME}}</td>
+                        <td *ngIf="p.FRACC_TNAME">{{p.PLSUBMONEYPAY_NAME}}</td>
+                        <td *ngIf="p.FRACC_TNAME">{{p.FNEXPENSES_TITLE}}</td>
+                        <td *ngIf="dataAdd.PLPRODUCT_CODE==''">{{p.PLGPRODUCT_SHORTNAME}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY1| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY2| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY3| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY4| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY5| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY6| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY7| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY8| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY9| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY10| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY11| number : '1.2-2'}}</td>
+                        <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY12| number : '1.2-2'}}</td>
+                        <td style="background-color:rgb(251, 134, 61);" align="right" colspan="8" *ngIf="p.NAME">
+                            {{p.NAME}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY1| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY2| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY3| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY4| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY5| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY6| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY7| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY8| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY9| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY10| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY11| number
+                            : '1.2-2'}}</td>
+                        <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY12| number
+                            : '1.2-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="exampleModalLabel">รายงานสรุปค่าใช้จ่าย</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center center-screen" *ngIf="loading">
+                    <div class="spinner-border " role="status" id="loading"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()">Export
+                            Excel</button></div>
+                    <div class="col-md-5"></div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+                    </div>
+                </div>
+                <table id="excel-table" width="100%" border="1" cellspacing="0" cellpadding="0"
+                    class="table card-table table-bordered table-striped table-vcenter tableFixHead">
+                    <thead>
+                        <tr bgcolor="#9BC5EE">
+                            <td colspan="14" align="right"><strong>วันที่:{{dataAdd.DATENOW}}</strong></td>
+                        </tr>
+                        <tr bgcolor="#9BC5EE">
+                            <td colspan="14" align="center"><strong>รายงานสรุปค่าใช้จ่ายประจำเดือน
+                                    {{dataAdd.CAMPUS_NAME}}</strong></td>
+                        </tr>
+                        <tr bgcolor="#9BC5EE">
+                            <td colspan="14" align="center"><strong>{{dataAdd.PLINCOME_NAME}}</strong></td>
+                        </tr>
+                        <tr bgcolor="#9BC5EE">
+                            <td width="4%" rowspan="3">
+                                <div align="center"><strong>&#3607;&#3637;&#3656;</strong></div>
+                            </td>
+                            <td width="7%" rowspan="3" align="center"><strong>เลขที่ฎีกา</strong></td>
+                            <td width="7%" rowspan="3" align="center"><strong>รหัสบัญชีแยกประเภท</strong></td>
+                            <td width="8%" rowspan="3">
+                                <div align="center"><strong>ชื่อรายการบัญชีแยกประเภท</strong></div>
+                            </td>
+                            <td width="11%" rowspan="3">
+                                <div align="center"><strong>คณะ/หน่วยงาน</strong></div>
+                            </td>
+                            <td width="7%" rowspan="3">
+                                <div align="center"><strong>จำนวนเงิน</strong></div>
+                            </td>
+                            <td width="7%" rowspan="3" align="center"><strong>หมวดรายจ่าย</strong></td>
+                            <td width="7%" rowspan="3" align="center"><strong>ชื่อโครงการ/ชื่อเรื่อง</strong></td>
+                            <td *ngIf="dataAdd.PLPRODUCT_CODE==''" width="7%" rowspan="3" align="center">
+                                <strong>ผลผลิต</strong>
+                            </td>
+                            <td height="15" colspan="10" align="center">
+                                <strong>{{dataAdd.PLGPRODUCT_SHORTNAME}}</strong>
+                            </td>
+                        </tr>
+                        <tr bgcolor="#9BC5EE">
+                            <td height="15" colspan="1" align="center"><strong>งบบุคลากร</strong></td>
+                            <td colspan="3" align="center"><strong>ค่าตอบแทน ใช้สอย วัสดุ</strong></td>
+                            <td colspan="1" align="center"><strong>งบอุดหนุน</strong></td>
+                        </tr>
+                        <tr bgcolor="#9BC5EE">
+                            <td>
+                                <div align="center"><strong>จ่าย</strong></div>
+                            </td>
+                            <td align="center"><strong>ค่าตอบแทน</strong></td>
+                            <td align="center"><strong>ค่าใช้สอย</strong></td>
+                            <td align="center"><strong>รวมจ่าย</strong></td>
+                            <td>
+                                <div align="center"><strong>จ่าย</strong></div>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let p of datalistde|filter:searchTerm; let i = index">
+                            <td *ngIf="p.FRACC_TNAME" width="1%" align="center">{{i+1}}</td>
+                            <td *ngIf="p.FRACC_TNAME">{{p.FNEXPENSES_DEKA}}</td>
+                            <td *ngIf="p.FRACC_TNAME">{{p.FRACC_CODE}}</td>
+                            <td *ngIf="p.FRACC_TNAME">{{p.FRACC_TNAME}}</td>
+                            <td *ngIf="p.FRACC_TNAME">{{p.FACULTY_TNAME}}</td>
+                            <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY| number : '1.2-2'}}</td>
+                            <td *ngIf="p.FRACC_TNAME">{{p.PLSUBMONEYPAY_NAME}}</td>
+                            <td *ngIf="p.FRACC_TNAME">{{p.FNEXPENSES_TITLE}}</td>
+                            <td *ngIf="dataAdd.PLPRODUCT_CODE==''">{{p.PLGPRODUCT_SHORTNAME}}</td>
+                            <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY1| number : '1.2-2'}}</td>
+                            <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY2| number : '1.2-2'}}</td>
+                            <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY3| number : '1.2-2'}}</td>
+                            <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY4| number : '1.2-2'}}</td>
+                            <td *ngIf="p.FRACC_TNAME" align="right">{{p.MONEY5| number : '1.2-2'}}</td>
+
+                            <td style="background-color:rgb(251, 134, 61);" align="right" colspan="8" *ngIf="p.NAME">
+                                {{p.NAME}}</td>
+                            <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY1|
+                                number : '1.2-2'}}</td>
+                            <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY2|
+                                number : '1.2-2'}}</td>
+                            <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY3|
+                                number : '1.2-2'}}</td>
+                            <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY4|
+                                number : '1.2-2'}}</td>
+                            <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY5|
+                                number : '1.2-2'}}</td>
+
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>

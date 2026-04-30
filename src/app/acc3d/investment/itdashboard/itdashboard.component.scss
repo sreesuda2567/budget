@@ -1,0 +1,245 @@
+/* === Dashboard Layout === */
+.dashboard-header {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 12px;
+}
+
+.dashboard-title {
+    font-family: 'Prompt', sans-serif;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.year-select {
+    max-width: 140px;
+}
+
+/* === Summary Cards === */
+.summary-card {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: #fff;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid #ccc;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.card-icon {
+    font-size: 36px;
+    margin-right: 16px;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-label {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.card-value {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #2c3e50;
+}
+
+.card-unit {
+    font-size: 11px;
+    color: #999;
+}
+
+/* Card color themes - Investment/Budget */
+.card-asset {
+    border-left-color: #e74c3c;
+
+    .card-icon {
+        color: #e74c3c;
+    }
+
+    .card-label {
+        color: #e74c3c;
+    }
+}
+
+.card-assetp {
+    border-left-color: #f39c12;
+
+    .card-icon {
+        color: #f39c12;
+    }
+
+    .card-label {
+        color: #f39c12;
+    }
+}
+
+.card-building {
+    border-left-color: #27ae60;
+
+    .card-icon {
+        color: #27ae60;
+    }
+
+    .card-label {
+        color: #27ae60;
+    }
+}
+
+.card-project {
+    border-left-color: #2980b9;
+
+    .card-icon {
+        color: #2980b9;
+    }
+
+    .card-label {
+        color: #2980b9;
+    }
+}
+
+/* === Chart Section === */
+.chart-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.chart-card-header {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 20px;
+    border: none;
+}
+
+.asset-chart-header {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.building-chart-header {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+.project-chart-header {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+}
+
+.chart-card .card-body {
+    padding: 16px;
+    position: relative;
+    height: 350px;
+}
+
+/* === Table Section === */
+.table-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table-card-header {
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 16px;
+    border: none;
+    color: #fff;
+}
+
+.asset-header {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.building-header {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+.project-header {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+}
+
+.table-header-asset th {
+    background-color: #fde8e8;
+    color: #c0392b;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+}
+
+.table-header-building th {
+    background-color: #e8f8ef;
+    color: #27ae60;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+}
+
+.table-header-project th {
+    background-color: #e8f0fe;
+    color: #2980b9;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+}
+
+.table-row td {
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.table-card .card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 8px 16px;
+}
+
+/* === Loading === */
+.center-screen {
+    color: #0176f3;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
+    z-index: 100;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .summary-card {
+        padding: 14px 16px;
+    }
+
+    .card-value {
+        font-size: 16px;
+    }
+
+    .card-icon {
+        font-size: 28px;
+    }
+
+    .chart-card .card-body {
+        height: 280px;
+    }
+}
+
+@media (max-width: 576px) {
+    .chart-card .card-body {
+        height: 220px;
+    }
+}

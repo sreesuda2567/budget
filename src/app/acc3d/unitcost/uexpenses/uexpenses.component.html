@@ -1,0 +1,399 @@
+<div class="card mx-4 mt-4">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-10">
+        <h5 class="card-title">รายงานรายละเอียดแสดงค่าใช้จ่ายของหน่วยงาน</h5>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col">
+        <!-- BASIC TABLE -->
+        <div class="panel">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                <label> หน่วยเบิกจ่าย: </label>
+                <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS" id="PRIVILEGE_RSTATUS"
+                  [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
+                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CAMPUS_CODE"
+                  (change)="fetchdataCam()">
+                  <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">ทุกวิทยาเขต
+                  </option>
+                  <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">{{cam.CAMPUS_TNAME}}</option>
+                </select>
+              </div>
+              <div class="col-md-8 text-secondary" style="font-size: 10pt">
+                <label> คณะ /หน่วยงาน: </label>
+                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
+                  <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">
+                    ทุกคณะ/หน่วยงาน</option>
+                  <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 text-secondary" style="font-size: 10pt"> ปีงบประมาณ:</div>
+              <div class="col-md-3 text-secondary" style="font-size: 10pt"> ผลผลิต:</div>
+              <div class="col-md-2 text-secondary" style="font-size: 10pt">จากวันที่:</div>
+              <div class="col-md-2 text-secondary" style="font-size: 10pt">ถึงวันที่:</div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 ">
+                <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE"
+                  (change)="fetchdataproduct()">
+                  <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">{{year.PLYEARBUDGET_CODE}}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-3 ">
+                <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLPRODUCT_CODE">
+                  <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">ทุกผลผลิต
+                  </option>
+                  <option [value]="pro.PLPRODUCT_CODE" *ngFor="let pro of dataPro">{{pro.PLGPRODUCT_SHORTNAME}}</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker #dp="bsDatepicker"
+                  [(ngModel)]="dataAdd.DATENOWS">
+                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                  class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                </i>
+              </div>
+              <div class="col-md-2">
+                <input placeholder="ถึงวันที่" type="text" class="form-control" bsDatepicker #dp2="bsDatepicker"
+                  [(ngModel)]="dataAdd.DATENOWT">
+                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                  class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp2.toggle()">
+                </i>
+              </div>
+              <div class="col-md-2 ">
+                <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                  data-bs-target="#exampleModal" (click)="fetchdatalist()"><i
+                    class="fa fa-search"></i>&nbsp;ค้นหา</button>
+              </div>
+            </div>
+            <br>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">รายงานรายละเอียดแสดงค่าใช้จ่ายของหน่วยงาน</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+          <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <div *ngIf="numrow" class="col-md-2"><button type="button" class="btn btn-success"
+            (click)="exportexcel()">Export Excel</button></div>
+        <div class="overflow-auto">
+          <div class="row card outer " *ngIf="clickshow">
+            <div class="col-md-12">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div [(innerHTML)]="dataAdd.htmlStringd"></div>
+                      </div>
+                      <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()">Export
+                          Excel</button></div>
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"
+                            id="example-search-input" [(ngModel)]="searchTerm">
+                          <span class="input-group-append">
+                            <button
+                              class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                              type="button">
+                              <i class="fa fa-search"></i>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="col-md-1" align="right">
+
+                        <button type="button" class="btn-close" (click)="fetchclose()" aria-label="Close"></button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body scroller">
+                    <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
+                      <div class="spinner-border " role="status" id="loading"></div>
+                    </div>
+                    <input type="hidden" class="form-control" name="p_income" id="p_income"
+                      [(ngModel)]="dataAdd.PLINCOME_CODE">
+                    <input type="hidden" class="form-control" name="p_pl" id="p_pl"
+                      [(ngModel)]="dataAdd.PLMONEYPAY_CODE">
+                    <input type="hidden" class="form-control" name="p_pro" id="p_pro"
+                      [(ngModel)]="dataAdd.PLPRODUCT_CODE1">
+                    <input type="hidden" class="form-control" name="p_sum" id="p_sum"
+                      [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE">
+
+                    <table id="excel-table"
+                      class="table card-table table-bordered table-striped table-vcenter tableFixHead">
+                      <thead>
+                        <tr>
+                          <th [ngStyle]="{'background-color':'#999999'}">ลำดับ</th>
+                          <th [ngStyle]="{'background-color':'#999999'}">ชื่อโครงการ/ชื่อเรื่อง</th>
+                          <th [ngStyle]="{'background-color':'#999999'}">เลขบัญชีแยกประเภท</th>
+                          <th [ngStyle]="{'background-color':'#999999'}">ชื่อรายการบัญชีแยกประเภท</th>
+                          <th [ngStyle]="{'background-color':'#999999'}">วันที่จ่ายจริง</th>
+                          <th [ngStyle]="{'background-color':'#999999'}">เลขฎีกา</th>
+                          <th [ngStyle]="{'background-color':'#999999'}">เลข3ดี</th>
+                          <th [ngStyle]="{'background-color':'#999999'}">จ่ายจริง</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let p of datalistdetailmoney|filter:searchTerm; let i = index">
+                          <td>{{(page*tableSize)-tableSize+i+1}}</td>
+                          <td>{{p.FNEXPENSES_TITLE}}</td>
+                          <td>{{p.FRACC_CODE}}</td>
+                          <td>{{p.FRACC_TNAME}}</td>
+                          <td width="10%">{{p.FNEXPENSES_ADATE1}}</td>
+                          <td>{{p.FNEXACC_DEKA}}</td>
+                          <td>{{p.FNEXPENSES_STEP}}</td>
+                          <td align="right">{{p.FNEXACC_MONEY| number : '1.2-2'}}</td>
+                        </tr>
+                        <tr>
+                          <td colspan="7" align="right"><strong>รวมทั้งหมด</strong></td>
+                          <td align="right" [(innerHTML)]="dataAdd.moneydetailo"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div class="row">
+                      <div class="col-md-11">
+
+                      </div>
+                      <div class="col-md-1"><button type="button" class="btn btn-secondary"
+                          (click)="fetchclose()">ปิด</button> </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <table *ngIf="numrow" id="excel-table" width="100%"
+        class="table table-bordered  table-striped table-hover tableFixHead txt-font3">
+          <thead>
+            <tr style="background-color:rgb(131, 187, 243);">
+              <td colspan="26" align="center"><strong>รายงานแสดงค่าใช้จ่ายของหน่วยงาน</strong></td>
+            </tr>
+            <tr style="background-color:rgb(131, 187, 243);">
+              <td rowspan="2">คณะ/หน่วยงาน </td>
+              <td align="center" colspan="3" *ngFor="let p of datalist; ">{{p.FRACCUNIT_NAME}}</td>
+              <td align="center" colspan="3">รวมทั้งหมด</td>
+              <td rowspan="2">รวมทั้งหมด</td>
+            </tr>
+            <tr style="background-color:rgb(131, 187, 243);">
+              <td align="center" *ngFor="let p of tableco; ">{{p}}</td>
+              <td align="center" *ngFor="let p of tableco; ">{{p}}</td>
+              <td align="center" *ngFor="let p of tableco; ">{{p}}</td>
+              <td align="center" *ngFor="let p of tableco; ">{{p}}</td>
+              <td align="center" *ngFor="let p of tableco; ">{{p}}</td>
+              <td align="center" *ngFor="let p of tableco; ">{{p}}</td>
+              <td align="center" *ngFor="let p of tableco; ">{{p}}</td>
+              <td align="center" *ngFor="let p of tableco; ">{{p}}</td>
+            </tr>
+          </thead>
+            <tbody>
+            <tr *ngFor="let item of datalistde; ">
+              <td colspan="26" style="background-color:rgb(141, 245, 247);" *ngIf="item.TYPEFACULTY_NAME">
+                {{item.TYPEFACULTY_NAME}}
+              </td>
+              <td *ngIf="item.FACULTY_TNAME">
+                &nbsp;&nbsp;{{item.FACULTY_TNAME}}{{item.TYPEFACULTY_CODE}}
+                <div *ngIf="item.CRPART_TNAME" class="text-danger">
+                  ({{item.CRPART_TNAME}})
+                </div>
+              </td>
+              <td *ngIf="item.PLGPRODUCT_NAME"
+                [ngStyle]="{'background-color':item.level=='1' ? '#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                &nbsp;&nbsp;{{item.PLGPRODUCT_NAME}}</td>
+              <td align="right" *ngIf="item.A10>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A10>0 && item.PLPRODUCT_CODE !=''"
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'01',item.FACULTY_TNAME+'(งปม.)',1)"
+                  style="cursor:pointer">{{item.A10| number : '1.2-2'}}</span>
+                <span *ngIf="item.A10==0 || item.PLPRODUCT_CODE==''">{{item.A10| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A20>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A20>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'01',item.FACULTY_TNAME+'(นอกงปม.)',2)"
+                  style="cursor:pointer">{{item.A20| number : '1.2-2'}}</span>
+                <span *ngIf="item.A20==0 || item.PLPRODUCT_CODE==''">{{item.A20| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A30>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A30>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'01',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A30| number : '1.2-2'}}</span>
+                <span *ngIf="item.A30==0 || item.PLPRODUCT_CODE==''">{{item.A30| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A11>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A11>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'02',item.FACULTY_TNAME+'(งปม.)',1)"
+                  style="cursor:pointer">{{item.A11| number : '1.2-2'}}</span>
+                <span *ngIf="item.A11==0 || item.PLPRODUCT_CODE==''">{{item.A11| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A21>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A21>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'02',item.FACULTY_TNAME+'(นอกงปม.)',2)"
+                  style="cursor:pointer">{{item.A21| number : '1.2-2'}}</span>
+                <span *ngIf="item.A21==0 || item.PLPRODUCT_CODE==''">{{item.A21| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A31>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A31>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'02',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A31| number : '1.2-2'}}</span>
+                <span *ngIf="item.A31==0 || item.PLPRODUCT_CODE==''">{{item.A31| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A12>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A12>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'03',item.FACULTY_TNAME+'(งปม.)',1)"
+                  style="cursor:pointer">{{item.A12| number : '1.2-2'}}</span>
+                <span *ngIf="item.A12==0 || item.PLPRODUCT_CODE==''">{{item.A12| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A22>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A22>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'03',item.FACULTY_TNAME+'(นอกงปม.)',2)"
+                  style="cursor:pointer">{{item.A22| number : '1.2-2'}}</span>
+                <span *ngIf="item.A22==0 || item.PLPRODUCT_CODE==''">{{item.A22| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A32>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A32>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'03',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A32| number : '1.2-2'}}</span>
+                <span *ngIf="item.A32==0 || item.PLPRODUCT_CODE==''">{{item.A32| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A13>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A13>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'04',item.FACULTY_TNAME+'(งปม.)',1)"
+                  style="cursor:pointer">{{item.A13| number : '1.2-2'}}</span>
+                <span *ngIf="item.A13==0 || item.PLPRODUCT_CODE==''">{{item.A13| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A23>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A23>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'04',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A23| number : '1.2-2'}}</span>
+                <span *ngIf="item.A23==0 || item.PLPRODUCT_CODE==''">{{item.A23| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A33>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A33>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'04',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A33| number : '1.2-2'}}</span>
+                <span *ngIf="item.A33==0 || item.PLPRODUCT_CODE==''">{{item.A33| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A14>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A14>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'05',item.FACULTY_TNAME+'(งปม.)',1)"
+                  style="cursor:pointer">{{item.A14| number : '1.2-2'}}</span>
+                <span *ngIf="item.A14==0 || item.PLPRODUCT_CODE==''">{{item.A14| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A24>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A24>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'05',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A24| number : '1.2-2'}}</span>
+                <span *ngIf="item.A24==0 || item.PLPRODUCT_CODE==''">{{item.A24| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A34>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A34>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'05',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A34| number : '1.2-2'}}</span>
+                <span *ngIf="item.A34==0 || item.PLPRODUCT_CODE==''">{{item.A34| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A15>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A15>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'06',item.FACULTY_TNAME+'(งปม.)',1)"
+                  style="cursor:pointer">{{item.A15| number : '1.2-2'}}</span>
+                <span *ngIf="item.A15==0 || item.PLPRODUCT_CODE==''">{{item.A15| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A25>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A25>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'06',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A25| number : '1.2-2'}}</span>
+                <span *ngIf="item.A25==0 || item.PLPRODUCT_CODE==''">{{item.A25| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A35>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A35>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'06',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A35| number : '1.2-2'}}</span>
+                <span *ngIf="item.A35==0 || item.PLPRODUCT_CODE==''">{{item.A35| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A16>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A16>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'07',item.FACULTY_TNAME+'(งปม.)',1)"
+                  style="cursor:pointer">{{item.A16| number : '1.2-2'}}</span>
+                <span *ngIf="item.A16==0 || item.PLPRODUCT_CODE==''">{{item.A16| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A26>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A26>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'07',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A26| number : '1.2-2'}}</span>
+                <span *ngIf="item.A26==0 || item.PLPRODUCT_CODE==''">{{item.A26| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.A36>=0"
+                [ngStyle]="{'background-color':item.level=='1' ?'#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                <span class="text-primary" *ngIf="item.A36>0 && item.PLPRODUCT_CODE !='' "
+                  (click)="fetchdataexpen('reportexpen',item.CRPART_ID,item.FACULTY_CODE,'07',item.FACULTY_TNAME+'(งบกลาง.)',3)"
+                  style="cursor:pointer">{{item.A36| number : '1.2-2'}}</span>
+                <span *ngIf="item.A36==0 || item.PLPRODUCT_CODE==''">{{item.A36| number : '1.2-2'}}</span>
+              </td>
+              <td align="right" *ngIf="item.m1>=0"
+                [ngStyle]="{'background-color':item.level=='1' ? '#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                {{item.m1| number : '1.2-2'}}</td>
+              <td align="right" *ngIf="item.m2>=0"
+                [ngStyle]="{'background-color':item.level=='1' ? '#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                {{item.m2| number : '1.2-2'}}</td>
+              <td align="right" *ngIf="item.m3>=0"
+                [ngStyle]="{'background-color':item.level=='1' ? '#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                {{item.m3| number : '1.2-2'}}</td>
+              <td align="right" *ngIf="item.m4>=0"
+                [ngStyle]="{'background-color':item.level=='1' ? '#B5B5DB':item.level=='2' ? '#FFAA71':''}">
+                {{item.m4| number : '1.2-2'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+
+      </div>
+    </div>
+  </div>
+</div>

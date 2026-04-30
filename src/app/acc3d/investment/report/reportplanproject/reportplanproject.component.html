@@ -1,0 +1,197 @@
+<div class="card mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">แผนความต้องการรายการโครงการทั่วไป/โครงการวิจัย</h5>
+            </div>
+            <div class="col-md-2" align="right">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label" style="font-size: 10pt">คณะ/หน่วยงาน</label>
+                                <select name="f_code" id="f_code" class="form-select"
+                                    [(ngModel)]="dataAdd.FACULTY_CODE">
+                                    <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">ทั้งหมด</option>
+                                    <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" style="font-size: 10pt">ตั้งแต่ปีงบประมาณ</label>
+                                <select name="y_code" id="y_code" class="form-select"
+                                    [(ngModel)]="dataAdd.SPRYEARASSET_CODE">
+                                    <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                        {{year.PLYEARBUDGET_NAME}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" style="font-size: 10pt">ถึงปีงบประมาณ</label>
+                                <select name="y_code" id="y_code" class="form-select"
+                                    [(ngModel)]="dataAdd.EPRYEARASSET_CODE">
+                                    <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                        {{year.PLYEARBUDGET_NAME}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label" style="font-size: 10pt">แหล่งเงิน</label>
+                            <select name="in_come" id="in_come" class="form-select" [(ngModel)]="dataAdd.PLINCOME_CODE"
+                                (change)="fetchdatalistcr()">
+                                <option value="">ทั้งหมด</option>
+                                <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" style="font-size: 10pt">ภาค</label>
+                            <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.CRPART_ID">
+                                <option value="">ทั้งหมด</option>
+                                <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpart">{{crp.CRPART_TNAME}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" style="font-size: 10pt">ผลผลิต</label>
+                            <select name="pln" id="pln" class="form-select" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
+                                <option value="">ทั้งหมด</option>
+                                <option [value]="pl.PLGPRODUCT_CODE" *ngFor="let pl of dataPlproduct">
+                                    {{pl.PLGPRODUCT_NAME}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" style="font-size: 10pt">สถานะ</label>
+                            <select name="cr_code" id="cr_code" class="form-select"
+                                [(ngModel)]="dataAdd.PRASSET_RSTATUS">
+                                <option value="">ทั้งหมด</option>
+                                <option [value]="crp.PRSTATUS_CODE" *ngFor="let crp of dataPstatus">
+                                    {{crp.PRSTATUS_NAME}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label" style="font-size: 10pt">ประเภท</label>
+                            <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE" (change)="fetchdatalist()">
+                              <option value="">ทุกประเภท</option>
+                              <option [value]="1">โครงการทั่วไป</option>
+                              <option [value]="2">โครงการวิจัย</option>
+                            </select>
+                          </div>
+                        <div class="col-md-1">
+                            <label class="form-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> 
+                            <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalist()"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+                                    class="fa fa-search"></i>&nbsp;ค้นหาข้อมูล</button>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="exampleModalLabel">รายงานสรุปรายการโครงการทั่วไป/โครงการวิจัย</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center center-screen" *ngIf="loading">
+                    <div class="spinner-border " role="status" id="loading"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()">Export
+                        Excel</button></div>
+                </div>        
+                <table id="excel-table"
+                    class="table card-table table-bordered table-striped table-vcenter tableFixHead">
+                    <thead>
+                        <tr >
+                            <td colspan="18" align="center"><strong>รายงานแผนความต้องการรายการโครงการทั่วไป/โครงการวิจัย {{dataAdd.PRSTATUS_NAME}}</strong></td>
+                        </tr>
+                        <tr >
+                            <td colspan="18" align="center"><strong>ประจำปีงบประมาณ {{dataAdd.SPRYEARASSET_CODE}}-{{dataAdd.EPRYEARASSET_CODE}} {{dataAdd.PLINCOME_NAME}}</strong></td>
+                        </tr>
+                        <tr >
+                            <td colspan="18" align="center"><strong>มหาวิทยาลัยเทคโนโลยีราชมงคลศรีวิชัย</strong></td>
+                        </tr>
+                      <tr [ngStyle]="{'background-color':'#999999'}">
+                        <th rowspan="2">ลำดับ</th>
+                        <th rowspan="2"><div  align="center">ชื่อรายการ</div></th>
+                        <th rowspan="2" ><div  align="center">แหล่งเงิน</div></th>
+                        <th rowspan="2" ><div  align="center">ผลผลิต</div></th>
+                        <td rowspan="2"  ><div  align="center"><strong>จำนวนหน่วย</strong></div></td>
+                        <th colspan="1" *ngFor="let thitem of datalistyear;" ><div  align="center">{{thitem.YEARNAME}}</div></th>
+                      </tr>
+                     <tr [ngStyle]="{'background-color':'#999999'}" >
+                        <td  align="center" bgcolor="#3FBEEB"*ngFor="let thitem of datalistyear;" ><strong>งบประมาณ</strong></td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                       <tr *ngFor="let item of datalist; ">
+                            <td colspan="18" style="background-color:rgb(141, 245, 247);" *ngIf="item.FACULTY_CODE">
+                                {{item.FACULTY_TNAME}}</td>
+                           <td width="5%" *ngIf="item.PRASSET_NAME"> {{item.NUMBER}}</td>
+                           <td *ngIf="item.PRASSET_NAME"> {{item.PRASSET_NAME}}</td> 
+                           <td *ngIf="item.PRASSET_NAME" > {{item.PLINCOME_NAME}}</td>
+                           <td *ngIf="item.PRASSET_NAME" > {{item.PLGPRODUCT_NAME}}</td> 
+                           <td align="center" *ngIf="item.PRASSET_NAME"> {{item.PRASSET_NUMBER}}</td>
+                           <td align="right" *ngIf="rownum>=0 && item.PRASSET_NAME"> {{item.PRASSET_MONEY0| number : '1.2-2'}}</td> 
+                           <td align="right" *ngIf="rownum>=1 && item.PRASSET_NAME"> {{item.PRASSET_MONEY1| number : '1.2-2'}}</td> 
+                           <td align="right" *ngIf="rownum>=2 && item.PRASSET_NAME"> {{item.PRASSET_MONEY2| number : '1.2-2'}}</td> 
+                           <td align="right" *ngIf="rownum>=3 && item.PRASSET_NAME"> {{item.PRASSET_MONEY3| number : '1.2-2'}}</td> 
+                           <td align="right" *ngIf="rownum>=4 && item.PRASSET_NAME"> {{item.PRASSET_MONEY4| number : '1.2-2'}}</td> 
+                           <td align="right" *ngIf="rownum>=5 && item.PRASSET_NAME"> {{item.PRASSET_MONEY5| number : '1.2-2'}}</td> 
+
+                           <td colspan="5" style="background-color:rgb(247, 198, 168);" align="right"  *ngIf="item.NAME">{{item.NAME}}</td>
+                            <td  align="right"  style="background-color:rgb(247, 198, 168);" *ngIf="item.NAME && rownum>=0">  
+                            {{item.PRASSET_MONEY0| number : '1.2-2'}}</td>
+                            <td   align="right"  style="background-color:rgb(247, 198, 168);" *ngIf="item.NAME && rownum>=1">  
+                            {{item.PRASSET_MONEY1| number : '1.2-2'}}</td>
+                            <td  align="right"  style="background-color:rgb(247, 198, 168);" *ngIf="item.NAME && rownum>=2">  
+                            {{item.PRASSET_MONEY2| number : '1.2-2'}}</td>
+                            <td  align="right"  style="background-color:rgb(247, 198, 168);" *ngIf="item.NAME && rownum>=3">  
+                            {{item.PRASSET_MONEY3| number : '1.2-2'}}</td>
+                            <td   align="right"  style="background-color:rgb(247, 198, 168);" *ngIf="item.NAME && rownum>=4">  
+                            {{item.PRASSET_MONEY4| number : '1.2-2'}}</td>
+                            <td   align="right"  style="background-color:rgb(247, 198, 168);" *ngIf="item.NAME && rownum>=5">  
+                             {{item.PRASSET_MONEY5| number : '1.2-2'}}</td>
+
+                            <td colspan="5" style="background-color:rgb(244, 140, 117);" align="right"  *ngIf="item.NAME1">{{item.NAME1}}</td>
+                            <td  align="right"  style="background-color:rgb(244, 140, 117);" *ngIf="item.NAME1 && rownum>=0">  
+                                {{item.PRASSET_MONEY0| number : '1.2-2'}}</td>
+                                <td   align="right"  style="background-color:rgb(244, 140, 117);" *ngIf="item.NAME1 && rownum>=1">  
+                                {{item.PRASSET_MONEY1| number : '1.2-2'}}</td>
+                                <td  align="right"  style="background-color:rgb(244, 140, 117);" *ngIf="item.NAME1 && rownum>=2">  
+                                {{item.PRASSET_MONEY2| number : '1.2-2'}}</td>
+                                <td   align="right"  style="background-color:rgb(244, 140, 117);" *ngIf="item.NAME1 && rownum>=3">  
+                                {{item.PRASSET_MONEY3| number : '1.2-2'}}</td>
+                                <td  align="right"  style="background-color:rgb(244, 140, 117);" *ngIf="item.NAME1 && rownum>=4">  
+                                {{item.PRASSET_MONEY4| number : '1.2-2'}}</td>
+                                <td   align="right"  style="background-color:rgb(244, 140, 117);" *ngIf="item.NAME1 && rownum>=5">  
+                                 {{item.PRASSET_MONEY5| number : '1.2-2'}}</td>
+                        </tr>
+                    </tbody>
+                </table>       
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+

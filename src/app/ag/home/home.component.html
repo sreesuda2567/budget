@@ -1,0 +1,69 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><i class="fa-solid fa-building me-2 text-primary"></i>ระบบหน่วยงาน</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="../"><i
+              class="fa-solid fa-home me-1"></i>หน้าหลัก</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-database me-1"></i>ข้อมูลหลัก
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="university"><i
+                  class="fa-solid fa-university me-2 text-primary"></i>มหาวิทยาลัย</a></li>
+            <li><a class="dropdown-item" routerLink="campus"><i
+                  class="fa-solid fa-map-location-dot me-2 text-success"></i>วิทยาเขต</a></li>
+            <li><a class="dropdown-item" routerLink="prefix"><i
+                  class="fa-solid fa-tag me-2 text-info"></i>คำนามหน่วยงาน</a></li>
+            <li><a class="dropdown-item" routerLink="typefac"><i
+                  class="fa-solid fa-layer-group me-2 text-warning"></i>ประเภทหน่วยงาน</a></li>
+            <li><a class="dropdown-item" routerLink="faculty"><i
+                  class="fa-solid fa-building-columns me-2 text-danger"></i>คณะ/หน่วยงาน</a></li>
+            <li><a class="dropdown-item" routerLink="department"><i
+                  class="fa-solid fa-sitemap me-2 text-secondary"></i>สาขา/สำนักงาน</a></li>
+            <li><a class="dropdown-item" routerLink="section"><i
+                  class="fa-solid fa-book-open me-2 text-primary"></i>หลักสูตร/ฝ่ายงาน</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-users-cog me-1"></i>ผู้รับผิดชอบระบบ
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="useracc3d"><i
+                  class="fa-solid fa-user-shield me-2 text-primary"></i>ผู้รับผิดชอบระบบ</a></li>
+            <li><a class="dropdown-item" routerLink="system"><i
+                  class="fa-solid fa-server me-2 text-info"></i>ระบบสารสนเทศ</a></li>
+            <li><a class="dropdown-item" routerLink="statusprogram"><i
+                  class="fa-solid fa-chart-line me-2 text-success"></i>สถานะการใช้งานระบบ</a></li>
+            <li><a class="dropdown-item" routerLink="license"><i
+                  class="fa-solid fa-key me-2 text-warning"></i>สิทธิการใช้งานระบบ</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-cogs me-1"></i>จัดการข้อมูล
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="agsignature"><i
+                  class="fa-solid fa-signature me-2 text-dark"></i>ลายเซ็น</a></li>
+            <li><a class="dropdown-item" routerLink="foreman"><i
+                  class="fa-solid fa-user-tie me-2 text-primary"></i>ผู้บริหารประจำหน่วยงาน</a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

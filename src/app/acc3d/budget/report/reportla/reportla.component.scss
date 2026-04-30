@@ -1,0 +1,19 @@
+.btn-font2 {
+    margin-top: 5px;
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 16px;
+  
+  }
+  .btn-font3 {
+    margin-top: 5px;
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 16px;
+  
+  }
+  .tableFixHead          { overflow: auto;  }
+.tableFixHead thead th { position: sticky; top: 60px; z-index: 1; }
+
+/* Just common table stuff. Really. */
+table  { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px 12px; font-size: 16px;}
+th     { background:#b2e3fa; }

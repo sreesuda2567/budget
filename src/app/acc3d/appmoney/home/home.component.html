@@ -1,0 +1,253 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+                <a class="navbar-brand" href="#"><i
+                                class="fas fa-money-check-alt text-primary me-2"></i>ระบบขออนุมัติเงิน</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                        <a class="nav-link active" aria-current="page" routerLink="../"><i
+                                                        class="fas fa-home text-primary me-1"></i>หน้าหลัก</a>
+                                </li>
+                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'  || datastatus=='3' || datastatus=='8' || datastatus=='7'"
+                                        class="nav-item">
+                                        <a class="nav-link active" aria-current="page" routerLink="disbursement"><i
+                                                        class="fas fa-search-dollar text-info me-1"></i>ตรวจสอบหลักฐานการเบิก</a>
+                                </li>
+                                <li *ngIf="datastatus=='A' || datastatus=='1'  || datastatus=='2'   || datastatus=='3' || datastatus=='4' || datastatus=='5' || datastatus=='8'|| datastatus=='9'|| datastatus=='7'"
+                                        class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-hand-holding-usd text-success me-1"></i>เงินทดรองจ่าย
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='7' || datastatus=='2'">
+                                                        <a class="dropdown-item" routerLink="contractnumber"><i
+                                                                        class="fas fa-file-contract text-primary me-1"></i>ลงเลขสัญญายืมเงิน</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2' "><a
+                                                                class="dropdown-item" routerLink="transferannal"><i
+                                                                        class="fas fa-exchange-alt text-info me-1"></i>โอนระหว่างกัน</a>
+                                                </li>
+                                                <!--   <li *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='7'"><a class="dropdown-item"
+                                routerLink="disbursementapp">หลักฐานการเบิกจ่าย</a></li>-->
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='4'|| datastatus=='7' || datastatus=='2'">
+                                                        <a class="dropdown-item" routerLink="offercheck"><i
+                                                                        class="fas fa-money-check text-success me-1"></i>เสนอเขียนเช็ค</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='5'|| datastatus=='9'"><a
+                                                                class="dropdown-item" routerLink="writecheck1"><i
+                                                                        class="fas fa-signature text-warning me-1"></i>ลงนามเช็ค</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='7' || datastatus=='2'">
+                                                        <a class="dropdown-item" routerLink="clearcheck"><i
+                                                                        class="fas fa-eraser text-danger me-1"></i>ล้างลูกหนี้</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='3'|| datastatus=='7' || datastatus=='2'">
+                                                        <a class="dropdown-item" routerLink="financecheck"><i
+                                                                        class="fas fa-file-invoice text-secondary me-1"></i>ออกใบปะหน้าเบิก</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='3'|| datastatus=='7' || datastatus=='2'">
+                                                        <a class="dropdown-item" routerLink="writecheck"><i
+                                                                        class="fas fa-plus-circle text-success me-1"></i>เสนอเขียนเช็คเพิ่ม</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='3'|| datastatus=='7' || datastatus=='2'">
+                                                        <a class="dropdown-item" routerLink="rqannal"><i
+                                                                        class="fas fa-undo-alt text-warning me-1"></i>เรียกเงินคืน</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='3' || datastatus=='2' || datastatus=='1'">
+                                                        <a class="dropdown-item" routerLink="load3dannal"><i
+                                                                        class="fas fa-download text-info me-1"></i>ออกใบโหลด(ชดใช้เงินคืน)</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='3' || datastatus=='2' || datastatus=='1'">
+                                                        <a class="dropdown-item" routerLink="load3dfacean"><i
+                                                                        class="fas fa-file-export text-primary me-1"></i>ออกใบปะหน้าจ่าย(ชดใช้เงินคืน)</a>
+                                                </li>
+
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='3' || datastatus=='2'">
+                                                        <a class="dropdown-item" routerLink="annalsendm"><i
+                                                                        class="fas fa-clock text-warning me-1"></i>ใบสำคัญค้างจ่าย</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='7'  "><a
+                                                                class="dropdown-item" routerLink="annalsend"><i
+                                                                        class="fas fa-paper-plane text-success me-1"></i>ส่งใบสำคัญค้างจ่าย</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='7' "><a
+                                                                class="dropdown-item" routerLink="annalrefund"><i
+                                                                        class="fas fa-coins text-warning me-1"></i>ชดใช้ใบสำคัญ</a>
+                                                </li>
+
+                                        </ul>
+                                </li>
+                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='7' || datastatus=='5' || datastatus=='6' || datastatus=='9' || datastatus=='2'   "
+                                        class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-file-alt text-info me-1"></i>รายงานทดรองจ่าย
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='7' || datastatus=='2'">
+                                                        <a class="dropdown-item" routerLink="reportannal"><i
+                                                                        class="fas fa-plus text-success me-1"></i>เพิ่มรายงานประจำวัน</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A'  || datastatus=='5' || datastatus=='9'|| datastatus=='6'">
+                                                        <a class="dropdown-item" routerLink="reportsign"><i
+                                                                        class="fas fa-user-check text-primary me-1"></i>ลงนามคนตรวจรายงานประจำวัน</a>
+                                                </li>
+                                        </ul>
+                                </li>
+                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2' || datastatus=='3'  || datastatus=='6' || datastatus=='9' || datastatus=='B'"
+                                        class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-wallet text-warning me-1"></i>เงินอื่นๆ
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                <li *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='3'"><a
+                                                                class="dropdown-item" routerLink="contractotherw">
+                                                                <i
+                                                                        class="fas fa-hourglass-half text-warning me-1"></i>รอลงเลขสัญญายืมเงิน</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'"><a
+                                                                class="dropdown-item" routerLink="contractother"><i
+                                                                        class="fas fa-file-contract text-primary me-1"></i>ลงเลขสัญญายืมเงิน</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'"><a
+                                                                class="dropdown-item" routerLink="clearother">
+                                                                <i
+                                                                        class="fas fa-broom text-danger me-1"></i>ล้างหนี้เงินยืม</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'"><a
+                                                                class="dropdown-item" routerLink="sendother">
+                                                                <i
+                                                                        class="fas fa-paper-plane text-success me-1"></i>ส่งใช้เงินยืม</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'"><a
+                                                                class="dropdown-item" routerLink="returnother">
+                                                                <i
+                                                                        class="fas fa-undo text-info me-1"></i>เบิกเกินส่งคืน</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2' "><a
+                                                                class="dropdown-item" routerLink="scheckother">
+                                                                <i
+                                                                        class="fas fa-search text-secondary me-1"></i>ส่งตรวจ</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2' || datastatus=='3'">
+                                                        <a class="dropdown-item" routerLink="checkother"><i
+                                                                        class="fas fa-clipboard-check text-success me-1"></i>ตรวจเอกสาร</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2' || datastatus=='3'">
+                                                        <a class="dropdown-item" routerLink="receiveother"><i
+                                                                        class="fas fa-inbox text-primary me-1"></i>รับเอกสาร</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2' || datastatus=='3'">
+                                                        <a class="dropdown-item" routerLink="load3dm"><i
+                                                                        class="fas fa-file-download text-info me-1"></i>ออกใบโหลดจ่ายเงินเพิ่ม(ขบ)</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='3' || datastatus=='2' || datastatus=='1'">
+                                                        <a class="dropdown-item" routerLink="load3d"><i
+                                                                        class="fas fa-download text-success me-1"></i>ออกใบโหลด(ขบ)</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='3' || datastatus=='2' || datastatus=='1'">
+                                                        <a class="dropdown-item" routerLink="load3df"><i
+                                                                        class="fas fa-file-invoice-dollar text-warning me-1"></i>ออกใบปะหน้าจ่าย</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'"><a
+                                                                class="dropdown-item" routerLink="loaddktb"><i
+                                                                        class="fas fa-university text-primary me-1"></i>โหลด
+                                                                KTB</a>
+                                                </li>
+
+                                                <!--  <li *ngIf="datastatus=='A' || datastatus=='6' || datastatus=='9' "><a class="dropdown-item"
+                                routerLink="load3dsign">ลงนามใบโหลด</a></li>-->
+
+                                                <!--  <li *ngIf="datastatus=='A' || datastatus=='6' || datastatus=='9' "><a class="dropdown-item"
+                                routerLink="load3dfsign">ลงนามใบปะหน้าจ่าย</a></li>-->
+
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'"><a
+                                                                class="dropdown-item" routerLink="loaddktbannal"><i
+                                                                        class="fas fa-exchange-alt text-info me-1"></i>โหลด
+                                                                KTB(โอนระหว่างกัน)</a></li>
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'"><a
+                                                                class="dropdown-item" routerLink="loaddktbreport"><i
+                                                                        class="fas fa-chart-bar text-secondary me-1"></i>รายงานโหลด
+                                                                KTB</a></li>
+                                                <li *ngIf="datastatus=='A'  || datastatus=='B' || datastatus=='2'"><a
+                                                                class="dropdown-item" routerLink="paymentdate"><i
+                                                                        class="fas fa-calendar-check text-success me-1"></i>ลงวันจ่าย(ขจ)</a>
+                                                </li>
+
+                                        </ul>
+                                </li>
+                                <!-- <li *ngIf="datastatus=='A' || datastatus=='2' || datastatus=='6' || datastatus=='9' "
+                    class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        รายงานเงินอื่นๆ
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li *ngIf="datastatus=='A' || datastatus=='2'"><a class="dropdown-item"
+                                routerLink="reportannalth">เพิ่มรายงานประจำวัน</a></li>
+                        <li *ngIf="datastatus=='A'  || datastatus=='5' || datastatus=='9'|| datastatus=='6'"><a
+                                class="dropdown-item" routerLink="reportannalthsign">ลงนามคนตรวจรายงานประจำวัน</a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li *ngIf="datastatus=='A' || datastatus=='1'  || datastatus=='3'|| datastatus=='2'|| datastatus=='4' " class="nav-item">
+                    <a class="nav-link active" aria-current="page" routerLink="reportday">ส่งรายงานประจำวัน</a>
+                </li>-->
+                                <li *ngIf="datastatus=='A' || datastatus=='1'  || datastatus=='3'|| datastatus=='2'|| datastatus=='4' || datastatus=='E'|| datastatus=='9' "
+                                        class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-calendar-day text-secondary me-1"></i>รายงานประจำวัน
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1'  || datastatus=='3'|| datastatus=='2'|| datastatus=='4' || datastatus=='9'">
+                                                        <a class="dropdown-item" routerLink="reportday"><i
+                                                                        class="fas fa-paper-plane text-primary me-1"></i>ส่งรายงานประจำวัน</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1'  || datastatus=='2' || datastatus=='3'|| datastatus=='9' ">
+                                                        <a class="dropdown-item" routerLink="reportamend"><i
+                                                                        class="fa-solid fa-pencil text-danger me-1"></i>ปรับปรุงรายงาน</a>
+                                                </li>
+                                                <li
+                                                        *ngIf="datastatus=='A' || datastatus=='1'  || datastatus=='3'|| datastatus=='2'|| datastatus=='4' ">
+                                                        <a class="dropdown-item" routerLink="reportdayedit"><i
+                                                                        class="fas fa-edit text-warning me-1"></i>แก้ไขรายงาน</a>
+                                                </li>
+                                                <li *ngIf="datastatus=='A' ||  datastatus=='E' ">
+                                                        <a class="dropdown-item" routerLink="reportdayapp"><i
+                                                                        class="fas fa-file-alt text-info me-1"></i>รายงานประจำวัน</a>
+                                                </li>
+                                        </ul>
+                                </li>
+                        </ul>
+                </div>
+        </div>
+</nav>
+<router-outlet></router-outlet>

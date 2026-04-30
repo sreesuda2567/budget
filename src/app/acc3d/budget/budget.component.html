@@ -1,0 +1,201 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><i
+        class="fa-solid fa-calendar-check me-2 text-primary"></i>ระบบติดตามผลการปฏิบัติงานประจำปี</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="../"><i
+              class="fa-solid fa-home me-1"></i>หน้าหลัก</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-money-bills me-1 text-success"></i>เงินที่ได้รับจัดสรร
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="income"><i
+                  class="fa-solid fa-sack-dollar me-2 text-primary"></i>เงินที่ได้รับจัดสรร</a></li>
+            <li><a class="dropdown-item" routerLink="incometf"><i
+                  class="fa-solid fa-money-bill-transfer me-2 text-info"></i>เงินจัดสรรหลังโอนย้าย</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown"
+          *ngIf="datastatus=='A' || datastatusma=='1'  || datastatusbg=='3' || datastatusbg=='1' || datastatusbg=='4' || datastatusbg=='2'">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-hand-holding-dollar me-1 text-warning"></i>ขอเบิกเงิน
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown"
+            *ngIf="datastatus=='A' || datastatusma=='1'  || datastatusbg=='3' || datastatusbg=='1' || datastatusbg=='4' || datastatusbg=='2'">
+            <li
+              *ngIf="datastatus=='A'||datastatusma=='1'|| datastatusbg=='3' || datastatusbg=='4' || datastatusbg=='2'">
+              <a class="dropdown-item" routerLink="listexpenses"><i
+                  class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ขอเบิกเงิน</a></li>
+            <li *ngIf="datastatus=='A'||datastatusma=='1'||datastatusbg=='3'||datastatusbg=='1' || datastatusbg=='2'|| datastatusbg=='4'"><a
+                class="dropdown-item" routerLink="showexpenses"><i
+                  class="fa-solid fa-list-ol me-2 text-info"></i>รายการขอเบิก</a></li>
+            <li *ngIf="datastatus=='A'||datastatusma=='1'|| datastatusbg=='3' || datastatusbg=='2'"><a
+                class="dropdown-item" routerLink="creditor"><i
+                  class="fa-solid fa-store me-2 text-success"></i>เพิ่มผู้รับเงิน/ร้านค้า</a></li>
+            <li *ngIf="datastatus=='A'||datastatusma=='1'|| datastatusbg=='3'"><a class="dropdown-item"
+                routerLink="middle"><i class="fa-solid fa-piggy-bank me-2 text-warning"></i>ขอใช้งบกลาง</a></li>
+            <!--  <li><a class="dropdown-item" href="#">เช็คข้อมูลเบิกจ่าย</a></li>-->
+          </ul>
+        </li>
+        <!--   <li class="nav-item dropdown" *ngIf="datastatus=='A' || datastatusbg=='1'  || datastatusbg=='2' || datastatusbg=='4'">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              ขออนุมัติเงิน
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" routerLink="financecheck" *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'">ตรวจสอบเอกสารขออนุมัติเงิน</a></li> 
+               <li><a class="dropdown-item" routerLink="contractnumber" *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'">ออกเลขสัญญายืมเงิน</a></li>  
+             <li><a class="dropdown-item" routerLink="writecheck" *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'">เขียนเช็ค</a></li>
+           < <li><a class="dropdown-item" routerLink="approve_binding" *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'">ตรวจสอบเอกสารขออนุมัติเงิน</a></li>          
+            </ul>
+          </li>-->
+        <li class="nav-item dropdown"
+          *ngIf="datastatus=='A' || datastatusbg=='1'  || datastatusbg=='2' || datastatusbg=='4'">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-clipboard-check me-1 text-info"></i>อนุมัติรายการ
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="approve_expenses"
+                *ngIf="datastatus=='A' || datastatusbg=='4' || datastatus=='L' || datastatusbg=='1'"><i
+                  class="fa-solid fa-file-invoice me-2 text-primary"></i>รายการขอเบิก</a></li>
+            <li><a class="dropdown-item" routerLink="approve_po"
+                *ngIf="datastatus=='A' || datastatusbg=='1'   || datastatusbg=='2' || datastatusbg=='4'"><i
+                  class="fa-solid fa-file-contract me-2 text-warning"></i>ผูกพัน PO (ค่าวัสดุ ,ทดรองจ่าย)</a></li>
+            <li><a class="dropdown-item" routerLink="poday"
+                *ngIf="datastatus=='A'  || datastatusbg=='2' || datastatusbg=='4'"><i
+                  class="fa-solid fa-file-contract me-2 text-info"></i>รายการ PO ประจำวัน</a></li>
+            <li><a class="dropdown-item" routerLink="approve_binding"
+                *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
+                  class="fa-solid fa-link me-2 text-info"></i>ผูกพัน (GF)</a></li>
+            <li><a class="dropdown-item" routerLink="approve_pay"
+                *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
+                  class="fa-solid fa-credit-card me-2 text-success"></i>เงินจ่ายจริง</a></li>
+            <li><a class="dropdown-item" routerLink="fpaymentdate"
+                *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
+                  class="fa-solid fa-calendar-day me-2 text-secondary"></i>รายการลงวันที่จ่าย (PM)</a></li>
+            <li><a class="dropdown-item" routerLink="salary"
+                *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
+                  class="fa-solid fa-wallet me-2 text-danger"></i>ตัดยอดเงินเดือน</a></li>
+            <li><a class="dropdown-item" routerLink="daily"
+                *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
+                  class="fa-solid fa-clock me-2 text-dark"></i>รายการเบิกจ่ายประจำวัน</a></li>
+
+            <!--  <li><a class="dropdown-item" href="#">ตัดยอดเงินเดือน</a></li>
+              <li><a class="dropdown-item" href="#">การดำเนินโครงการ</a></li>
+              <li><a class="dropdown-item" href="#">โครงการ(การเงิน)</a></li>-->
+
+
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-calendar-plus me-1 text-primary"></i>จัดทำแผน
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="projectmore"><i
+                  class="fa-solid fa-folder-plus me-2 text-success"></i>โครงการเพิ่มเติม</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-magnifying-glass-chart me-1 text-secondary"></i>ติดตามงาน
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="follow_project"><i
+                  class="fa-solid fa-diagram-project me-2 text-warning"></i>ติดตามโครงการทั่วไป/วิจัย</a></li>
+            <li><a class="dropdown-item" routerLink="follow_asset"><i
+                  class="fa-solid fa-computer me-2 text-info"></i>ติดตามครุภัณฑ์/สิ่งก่อสร้าง</a></li>
+            <!-- <li><a class="dropdown-item" href="#">โครงการวิจัย</a></li>
+              <li><a class="dropdown-item" href="#">ครภัณฑ์</a></li>
+              <li><a class="dropdown-item" href="#">สิ่งก่อสร้าง</a></li>
+              <li><a class="dropdown-item" href="#">อื่นๆ</a></li>-->
+          </ul>
+        </li>
+
+        <li *ngIf="datastatus=='A' || datastatusma=='1' || datastatusbg=='1' || datastatusbg=='4' || datastatusbg=='3'"
+          class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-gear me-1 text-secondary"></i>จัดการข้อมูล
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="manage_gf" *ngIf="datastatus=='A' || datastatusma=='1'"><i
+                  class="fa-solid fa-database me-2 text-primary"></i>ลงรายการ gf</a></li>
+            <li><a class="dropdown-item" routerLink="manage_revenue" *ngIf="datastatus=='A' || datastatusma=='1'"><i
+                  class="fa-solid fa-coins me-2 text-success"></i>ประมาณการรายรับ</a></li>
+            <li><a class="dropdown-item" routerLink="savemoney" *ngIf="datastatus=='A' || datastatusma=='1'"><i
+                  class="fa-solid fa-piggy-bank me-2 text-warning"></i>กันเงิน</a></li>
+            <li><a class="dropdown-item" routerLink="mallocate"
+                *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
+                  class="fa-solid fa-money-bill-transfer me-2 text-info"></i>จัดสรรเงินภายนอก</a></li>
+            <li><a class="dropdown-item" routerLink="insproject"
+                *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4' || datastatusbg=='3'"><i
+                  class="fa-solid fa-folder-plus me-2 text-danger"></i>เพิ่มโครงการเงินภายนอก</a></li>
+            <!--   <li><a class="dropdown-item" routerLink="manage_rm" *ngIf="datastatus=='A' || datastatusma=='1'">ลงรายการ รม.4</a></li>-->
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="fa-solid fa-chart-column me-1 text-success"></i>รายงาน
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="controlregis"><i
+                  class="fa-solid fa-book me-2 text-primary"></i>ทะเบียนคุม</a></li>
+            <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="report_yexpenses"><i
+                  class="fa-solid fa-chart-pie me-2 text-info"></i>สรุปผลการเบิกจ่ายประจำปี</a></li>
+            <li *ngIf="datastatus=='A' || datastatusma=='1'|| datastatusbg=='1'|| datastatusbg=='4'"><a
+                class="dropdown-item" routerLink="difference_gf"><i
+                  class="fa-solid fa-not-equal me-2 text-warning"></i>รายงานผลต่าง 3ดี กับ gf</a></li>
+            <!--   <li><a class="dropdown-item" routerLink="difference_rm">รายงานผลต่าง 3ดี กับ รม4.</a></li>-->
+            <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="report_income"><i
+                  class="fa-solid fa-sack-dollar me-2 text-success"></i>สรุปวงเงินตั้งงบประมาณ</a></li>
+            <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="report_submoney"><i
+                  class="fa-solid fa-layer-group me-2 text-secondary"></i>รายงานแยกตามหมวดรายจ่าย</a></li>
+            <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="report_submoneyacc"><i
+                  class="fa-solid fa-list-ul me-2 text-dark"></i>รายงานแยกตามหมวดรายจ่าย(บัญชีแยกประเภท)</a></li>
+            <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="report_acc"><i
+                  class="fa-solid fa-file-invoice me-2 text-primary"></i>รายงานบัญชีแยกประเภท</a></li>
+            <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="report_fexpenses"><i
+                  class="fa-solid fa-building-columns me-2 text-info"></i>รายงานผลการการเบิกจ่ายแยกตามหน่วยงาน</a></li>
+            <li><a class="dropdown-item" routerLink="report_asset"><i
+                  class="fa-solid fa-computer me-2 text-warning"></i>รายงานการดำเนินงานครุภัณฑ์/สิ่งก่อสร้าง</a></li>
+            <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="report_project"><i
+                  class="fa-solid fa-diagram-project me-2 text-success"></i>รายงานการดำเนินงานโครงการ</a></li>
+            <li><a class="dropdown-item" routerLink="report_cincome"><i
+                  class="fa-solid fa-chart-line me-2 text-secondary"></i>รายงานรายได้สะสม</a></li>
+            <li *ngIf="datastatus=='A'   || datastatusbg=='2' || datastatusbg=='4'"><a class="dropdown-item"
+                routerLink="report_purchase"><i
+                  class="fa-solid fa-receipt me-2 text-danger"></i>รายงานใบสั่งซื้อสั่งจ้าง</a></li>
+            <li *ngIf="datastatus=='A' || datastatusma=='1'|| datastatusbg=='1'"><a class="dropdown-item"
+                routerLink="report_train"><i
+                  class="fa-solid fa-plane-departure me-2 text-primary"></i>ตรวจสอบไปราชการ</a></li>
+            <li *ngIf="datastatus=='A' || datastatusma=='1'|| datastatusbg=='1'"><a class="dropdown-item"
+                routerLink="report_la"><i class="fa-solid fa-bed me-2 text-info"></i>ตรวจสอบลางาน</a></li>
+          </ul>
+        </li>
+        <!--     <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>-->
+      </ul>
+      <!--    <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>-->
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>

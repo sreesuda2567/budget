@@ -1,0 +1,228 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">แผนการจัดทำประมาณการราคาไฟฟ้า</h5>
+            </div>
+            <div class="col-md-2" align="right">
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div class="col-md-7 text-secondary" style="font-size: 10pt">
+
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE" (change)="fetchdatalist()">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataMyear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <table id="excel-table" class="table btn-font3" width="150%"
+            class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">คณะ/หน่วยงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อโครงการ</div>
+                    </th>
+                    <th>
+                        <div align="center">แหล่งเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">สถานะ</div>
+                    </th>
+                    <th>
+                        <div align="center">จัดการข้อมูล</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                    <tr class="btn-font2" *ngFor="let p of datalist|filter:searchTerm; let i = index">
+                        <td width="5%" align="center">{{+i+1}}</td>
+                        <td>{{p.FACULTY_TNAME}}</td>
+                        <td>{{p.BDOPERATION_NAME}}</td>
+                        <td>{{p.PLINCOME_NAME}}</td>
+                        <td align="right">{{p.BDOPERATION_MONEY| number : '1.2-2'}}</td>
+                        <td align="center">{{p.BDSTATUS_NAME}}</td>
+                        <td align="center">
+                            <a *ngIf="p.BDOPERATION_RSTATUS !='2'" role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
+                                class="btn btn-warning text-white" (click)="editdata(p.BDOPERATION_CODE)"><i
+                                    class="fa fa-edit"></i></a>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!rownum">
+                        <td colspan="7">ไม่มีข้อมูล{{rownum}}</td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalrqvehicle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">แผนการจัดทำประมาณการราคาโครงสร้าง</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input name="BDELECTRIC_CODE" type="hidden" id="BDELECTRIC_CODE"
+                    [(ngModel)]="dataAdd.BDELECTRIC_CODE" />
+                    <div class="form-group col-md-12">
+                        <label for="name"><strong>ถอดปริมาณวัสดุ </strong></label>
+                        <br>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="text-secondary" style="font-size: 10pt">วันที่เริ่มต้น
+                            <input type="hidden" name="BDTYPEDATE_CODE" class="form-control"
+                                [(ngModel)]="dataAdd.BDTYPEDATE_CODE[0]" >
+                        </label>
+                        <input placeholder="วันที่เริ่มต้น" type="text" class="form-control" bsDatepicker
+                            #dp1="bsDatepicker" [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[0]" readonly >
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp1.toggle()">
+                        </i>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="text-secondary" style="font-size: 10pt">วันที่สิ้นสุด
+                        </label>
+                        <input placeholder="วันที่สิ้นสุด" type="text" class="form-control" bsDatepicker
+                            #dp2="bsDatepicker" [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[0]" readonly >
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp2.toggle()">
+                        </i>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="name"><strong>สืบราคา </strong></label>
+                        <br>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="text-secondary" style="font-size: 10pt">วันที่เริ่มต้น
+                            <input type="hidden" name="BDTYPEDATE_CODE" class="form-control"
+                            [(ngModel)]="dataAdd.BDTYPEDATE_CODE[1]">
+                        </label>
+                        <input placeholder="วันที่เริ่มต้น" type="text" class="form-control" bsDatepicker
+                            #dp3="bsDatepicker" [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[1]" readonly >
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp3.toggle()">
+                        </i>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="text-secondary" style="font-size: 10pt">วันที่สิ้นสุด
+                        </label>
+                        <input placeholder="วันที่สิ้นสุด" type="text" class="form-control" bsDatepicker
+                            #dp4="bsDatepicker" [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[1]" readonly >
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp4.toggle()">
+                        </i>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="name"><strong>แบ่งงวด </strong></label>
+                        <input type="hidden" name="BDTYPEDATE_CODE" class="form-control"
+                            [(ngModel)]="dataAdd.BDTYPEDATE_CODE[2]">
+                        <br>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="text-secondary" style="font-size: 10pt">วันที่เริ่มต้น
+                            <input type="hidden" name="BDTYPEDATE_CODE" class="form-control"
+                                [(ngModel)]="dataAdd.BDTYPEDATE_CODE[2]">
+                        </label>
+                        <input placeholder="วันที่เริ่มต้น" type="text" class="form-control" bsDatepicker
+                            #dp5="bsDatepicker" [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[2]" readonly >
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp5.toggle()">
+                        </i>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="text-secondary" style="font-size: 10pt">วันที่สิ้นสุด
+                        </label>
+                        <input placeholder="วันที่สิ้นสุด" type="text" class="form-control" bsDatepicker
+                            #dp6="bsDatepicker" [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[2]" readonly >
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp6.toggle()">
+                        </i>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="name"><strong>ประชุมคณะกรรมการราคา </strong></label>
+                        <input type="hidden" name="BDTYPEDATE_CODE" class="form-control"
+                            [(ngModel)]="dataAdd.BDTYPEDATE_CODE[3]">
+                        <br>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="text-secondary" style="font-size: 10pt">วันที่เริ่มต้น
+                            <input type="hidden" name="BDTYPEDATE_CODE" class="form-control"
+                                [(ngModel)]="dataAdd.BDTYPEDATE_CODE[3]">
+                        </label>
+                        <input placeholder="วันที่เริ่มต้น" type="text" class="form-control" bsDatepicker
+                            #dp7="bsDatepicker" [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[3]" readonly >
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp7.toggle()">
+                        </i>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="text-secondary" style="font-size: 10pt">วันที่สิ้นสุด
+                        </label>
+                        <input placeholder="วันที่สิ้นสุด" type="text" class="form-control" bsDatepicker
+                            #dp8="bsDatepicker" [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[3]" readonly >
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp8.toggle()">
+                        </i>
+                    </div>
+
+                <br>
+                <div class="modal-footer">
+                    <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                    <button *ngIf="rowpbu" type="button" class="btn btn-primary"
+                        (click)="updatedata()">บันทึกข้อมูล</button>
+                </div>
+            </div>
+        </div>
+    </div>

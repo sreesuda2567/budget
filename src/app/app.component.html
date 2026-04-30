@@ -1,0 +1,36 @@
+<div id="app">
+  <nav *ngIf="isLoggedIn" class="navbar shadow navbar-expand sticky-top" style="background-color:#0176f3;">
+    <div class="navbar-brand display_sm_hide" style="margin-left: 15px;"> <a routerLink="home"> <img src="assets/images/logoRUTS_t.png" width="110"></a>
+      <small class="txt_version3" style="color:rgba(245, 245, 245, 0.781);margin-top: 11px;margin-left: 10px;">Platform <!--V{{this.version}}--></small>
+    </div>
+    <div class="navbar-brand display_xl_hide" style="margin-top: -8px;margin-left: 15px;margin-bottom: 10px;"><img src="assets/images/logoRUTS_t.png" width="85">
+      <small class="txt_version2 " style="margin-top: 27px;">Platform</small>
+      <small class="txt_version3" style="color:rgba(245, 245, 245, 0.781);margin-top: 24px;margin-left: 10px;"><!--V{{this.version}}--></small>
+    </div>
+
+    <ul class="navbar-nav ms-auto" routerLinkActive="active">
+      <li class="nav-item" *ngIf="!isLoggedIn">
+        <a href="/home" class="nav-link text-center" routerLink="home"><span style="color: #001C54;"><b>Ruts</b>
+          <small style="color:#fcae07;">Platform</small>
+          <small style="color: #001C54;">
+          <b> V {{version}}</b></small> </span>
+        </a>
+      </li>
+    <!-- <li class="nav-item btn-home display_sm_hide" *ngIf="isLoggedIn">
+         <i class="fa fa-fw fa-2x fa-home" style="cursor: pointer;margin-top:5px;" routerLink="home"></i>
+      </li>--> 
+      <li class="nav-item mx-3" *ngIf="isLoggedIn">
+        <span class="txt-font">
+          <i class="fa fa-user" style="position: absolute;font-size: 16px;margin-top: 2px; margin-left: -16px;"></i>
+          {{username}}</span>
+        <i class="fa fa-fw fa-2x  fa-power-off" style="cursor: pointer;margin-top:5px;" (click)="logout()"></i>
+      </li>
+    </ul>
+
+  </nav>
+
+  <div class="app-container">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

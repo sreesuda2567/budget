@@ -1,0 +1,194 @@
+<div class="card border-light mx-4 mt-4">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-10">
+        <h5 class="card-title">รายการผู้รับเงิน</h5>
+      </div>
+      <div class="col-md-2" align="right">
+        <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEditlist"
+          (click)="showinput()" (click)="setshowbti()">
+          <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="shadow alert alert-info" role="alert">
+      <div class="row">
+        <div class="col-md-1" align="right">แสดงข้อมูล</div>
+        <div align="right" class="col-md-1">
+          <select (change)="onTableSizeChange($event)" class="form-select">
+            <option *ngFor="let size of tableSizes" [ngValue]="size">
+              {{ size }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-6"></div>
+        <div class="col-md-4">
+            <div class="input-group">
+              <input class="form-control border-end-0 border" type="search"
+                  placeholder="ค้นหาข้อมูล" id="example-search-input"
+                  [(ngModel)]="searchTerm" (keyup)="fetchdata()">
+              <span class="input-group-append">
+                  <button
+                      class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                      type="button">
+                      <i class="fa fa-search"></i>
+                  </button>
+              </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center center-screen" *ngIf="loading">
+      <div class="spinner-border " role="status" id="loading"></div>
+    </div>
+    <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+      <thead>
+        <tr class="bg-primary text-white">
+          <th><div align="center">ที่</div></th>
+          <th><div align="center">ประเภทเจ้าหนี้</div></th>
+          <th><div align="center">ชื่อ</div></th>
+          <th><div align="center">ที่อยู่</div></th>
+          <th><div align="center">จัดการข้อมูล</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+        <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                itemsPerPage: tableSize,
+                currentPage: page,
+                totalItems: count
+                } ; let i = index">
+          <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+          <td>{{p.GCTYPECOMPANY_NAME}}</td>
+          <td>{{p.GCPRECOMPANY_NAME}}{{p.FNCREDITOR_NAME}}</td>
+          <td>ตำบล{{p.FNCREDITOR_DISTRICT}} อำเภอ{{p.FNCREDITOR_CITY}} จังหวัด{{p.PROVINCE_TNAME}} </td>
+          <td width="10%">
+            <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+              (click)="deleteData(p.FNCREDITOR_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
+            <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlist"
+              class="btn btn-warning text-white" (click)="editdata(p.FNCREDITOR_CODE)"><i
+                class="fa fa-edit"></i></a>&nbsp;
+          </td>
+
+        </tr>
+
+        <tr *ngIf="!rownum">
+          <td colspan="5">ไม่มีข้อมูล{{rownum}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-left">
+      <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+      </pagination-controls>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+
+<div class="modal fade" id="modalEditlist" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalToggleLabel">รายละเอียดผู้รับเงิน</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-3 text-secondary" style="font-size: 10pt"> ประเภทเจ้าหนี้ </div>
+          <div class="col-md-2 text-secondary" style="font-size: 10pt">คำนำหน้า </div>
+          <div class="col-md-3 text-secondary" style="font-size: 10pt"> ชื่อภาษาไทย </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <input name="FNCREDITOR_CODE" type="hidden" id="FNCREDITOR_CODE" [(ngModel)]="dataAdd.FNCREDITOR_CODE" />
+            <select name="GCTYPECOMPANY_CODE" id="GCTYPECOMPANY_CODE" class="form-select"
+              [(ngModel)]="dataAdd.GCTYPECOMPANY_CODE">
+              <option [value]="type.GCTYPECOMPANY_CODE" *ngFor="let type of datatypec">{{type.GCTYPECOMPANY_NAME}}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select name="GCPRECOMPANY_CODE" id="GCPRECOMPANY_CODE" class="form-select"
+              [(ngModel)]="dataAdd.GCPRECOMPANY_CODE">
+              <option [value]="pre.GCPRECOMPANY_CODE" *ngFor="let pre of datapre">{{pre.GCPRECOMPANY_NAME}}</option>
+            </select>
+          </div>
+          <div class="col-md-7">
+            <input name="FNCREDITOR_NAME" id="FNCREDITOR_NAME" type="text" class="form-control"
+              placeholder="ชื่อภาษาไทย " [(ngModel)]="dataAdd.FNCREDITOR_NAME">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 text-secondary" style="font-size: 10pt"> ชื่อภาษาอังกฤษ </div>
+          <div class="col-md-6 text-secondary" style="font-size: 10pt">ชื่ออาคาร </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <input name="FNCREDITOR_ENAME" id="FNCREDITOR_ENAME" type="text" class="form-control"
+              placeholder="ชื่อภาษาอังกฤษ " [(ngModel)]="dataAdd.FNCREDITOR_ENAME">
+          </div>
+          <div class="col-md-6">
+            <input name="FNCREDITOR_BUILDING" id="FNCREDITOR_BUILDING" type="text" class="form-control"
+              placeholder="ชื่ออาคาร " [(ngModel)]="dataAdd.FNCREDITOR_BUILDING">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 text-secondary" style="font-size: 10pt">เลขที่</div>
+          <div class="col-md-3 text-secondary" style="font-size: 10pt"> ถนน</div>
+          <div class="col-md-3 text-secondary" style="font-size: 10pt"> ตำบล</div>
+          <div class="col-md-3 text-secondary" style="font-size: 10pt">อำเภอ</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3"> <input name="FNCREDITOR_HADDR" id="FNCREDITOR_HADDR" type="text" class="form-control"
+              placeholder="เลขที่ " [(ngModel)]="dataAdd.FNCREDITOR_HADDR"></div>
+          <div class="col-md-3"> <input name="FNCREDITOR_STREET" id="FNCREDITOR_STREET" type="text" class="form-control"
+              placeholder="ถนน" [(ngModel)]="dataAdd.FNCREDITOR_STREET"></div>
+          <div class="col-md-3"> <input name="FNCREDITOR_DISTRICT" id="FNCREDITOR_DISTRICT" type="text"
+              class="form-control" placeholder="ตำบล" [(ngModel)]="dataAdd.FNCREDITOR_DISTRICT"></div>
+          <div class="col-md-3"> <input name="FNCREDITOR_CITY" id="FNCREDITOR_CITY" type="text" class="form-control"
+              placeholder="อำเภอ" [(ngModel)]="dataAdd.FNCREDITOR_CITY"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 text-secondary" style="font-size: 10pt">จังหวัด</div>
+          <div class="col-md-3 text-secondary" style="font-size: 10pt">รหัสไปรษณี</div>
+          <div class="col-md-4 text-secondary" style="font-size: 10pt">โทรศัพท์</div>
+          <div class="col-md-2 text-secondary" style="font-size: 10pt">ต่อเบอร์</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3"> <select name="PROVINCE_ID" id="PROVINCE_ID" class="form-select"
+              [(ngModel)]="dataAdd.PROVINCE_ID">
+              <option [value]="pro.PROVINCE_ID" *ngFor="let pro of dataprovince">{{pro.PROVINCE_TNAME}}</option>
+            </select></div>
+          <div class="col-md-3"> <input name="FNCREDITOR_ZIPCODE" id="FNCREDITOR_ZIPCODE" type="text"
+              class="form-control" placeholder="รหัสไปรษณี " [(ngModel)]="dataAdd.FNCREDITOR_ZIPCODE"></div>
+          <div class="col-md-4"> <input name="FNCREDITOR_PHONE" id="FNCREDITOR_PHONE" type="text" class="form-control"
+              placeholder="โทรศัพท์ " [(ngModel)]="dataAdd.FNCREDITOR_PHONE"></div>
+          <div class="col-md-2"> <input name="FNCREDITOR_EXTPHONE" id="FNCREDITOR_EXTPHONE" type="text"
+              class="form-control" placeholder="ต่อเบอร์ " [(ngModel)]="dataAdd.FNCREDITOR_EXTPHONE"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-5 text-secondary" style="font-size: 10pt">FAX </div>
+          <div class="col-md-2 text-secondary" style="font-size: 10pt">ต่อเบอร์</div>
+          <div class="col-md-5 text-secondary" style="font-size: 10pt">อีเมลล์</div>
+        </div>
+        <div class="row">
+          <div class="col-md-5"> <input name="FNCREDITOR_FAX" id="FNCREDITOR_FAX" type="text" class="form-control"
+              placeholder="FAX " [(ngModel)]="dataAdd.FNCREDITOR_FAX"></div>
+          <div class="col-md-2"> <input name="FNCREDITOR_EXTFAX" id="FNCREDITOR_EXTFAX" type="text" class="form-control"
+              placeholder="ต่อเบอร์ " [(ngModel)]="dataAdd.FNCREDITOR_EXTFAX"></div>
+          <div class="col-md-5"> <input name="FNCREDITOR_EMAIL" id="FNCREDITOR_EMAIL" type="text" class="form-control"
+              placeholder="อีเมลล์ " [(ngModel)]="dataAdd.FNCREDITOR_EMAIL"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+        <button *ngIf="rowpbi" type="button" class="btn btn-primary" (click)="insertdata()">บันทึกข้อมูล</button>
+        <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,192 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">แก้ไขรายงานประจำวัน</h5>
+            </div>
+            <div class="col-md-2" align="right">
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                                <div align="right" class="col-md-1">
+                                    <select (change)="onTableSizeChange($event)" class="form-select">
+                                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                            {{ size }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 text-secondary">
+                                </div>
+                                <div class="col-md-4 text-secondary">
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.FACULTY_CODE" (change)=" fetchdatalist()">
+                                        <option *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" value="">ทั้งหมด</option>
+                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                            {{fac.FACULTY_TNAME}}</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-2 " style="font-size: 10pt">
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE" (change)=" fetchdatalist()">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 text-secondary" style="font-size: 10pt">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงานประจำวันที่</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อ-สกุล</div>
+                    </th>
+
+                    <th>
+                        <div align="center">เลขสัญญา</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                     <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">จัดการข้อมูล</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      } ; let i = index">
+                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                    <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
+                    <td>{{p.FSTF_FNAME}}
+                        <div *ngIf="p.FNANNALSMAPRDT_NOTE" class="text-danger">
+                            ({{p.FNANNALSMAPRDT_NOTE}})
+                        </div>
+
+                    </td>
+                    <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
+                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                    <td data-label="รายงาน:" >
+                        <a *ngIf="p.REPORT_LINK" role="button" title="รายงาน" class="btn btn-success text-white"
+                            (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
+                            </i></a> 
+                    </td>
+                    <td align="center">
+                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal" (click)="editdata(p.FNANNALSMAPR_CODE,p.FNANNALSMAP_CODE)"
+                            (click)="setshowbti()"><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
+                    </td>
+                </tr>
+                <tr *ngIf="!rownum">
+                    <td colspan="9">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-left">
+            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content">
+           <div class="modal-header bg-primary">
+                <h1 class="modal-title fs-5 text-white" id="staticBackdropLabel">รายละเอียด</h1>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
+                    <div class="spinner-border " role="status" id="loadingdetail"></div>
+                </div>
+                <input type="hidden" class="form-control" name="FEPSTATE_CODE" id="FEPSTATE_CODE"
+                    [(ngModel)]="dataAdd.FNANNALSMAPR_CODE">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
+                        </label>
+                        <br>
+                        <label for="name">แนบไฟล์เอกสาร</label>
+                        <br>
+                        <input class="form-control" type="file" (change)="onChangepdf($event)"
+                            [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank">ไฟล์</a>
+                        &nbsp;
+                    </div>
+                </div>
+                <br>
+
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+
+                <button type="button" class="btn btn-primary" (click)="updatedata()">บันทึกข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- PDF Preview Side Panel -->
+<div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
+<div class="pdf-preview-panel" [class.open]="previewPdfUrl">
+    <div class="pdf-preview-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+        <div>
+            <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+                <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+            </a>
+            <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+                <i class="fa fa-times me-1"></i> ปิด
+            </button>
+        </div>
+    </div>
+    <div class="pdf-preview-body">
+        <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
+    </div>
+</div>

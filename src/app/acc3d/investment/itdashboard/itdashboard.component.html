@@ -1,0 +1,285 @@
+<!-- Dashboard Header -->
+<div class="container-fluid px-4 py-3">
+    <div class="dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <h4 class="dashboard-title">
+                    <i class="fa-solid fa-sack-dollar me-2 text-primary"></i>
+                </h4>
+                <p class="text-muted mb-0">สรุปข้อมูลวางแผนงบประมาณ (ครุภัณฑ์ / สิ่งก่อสร้าง / โครงการ)</p>
+            </div>
+            <div class="col-md-1" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">
+                <label class="me-2 fw-bold text-secondary">พื้นที่:</label>
+                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CAMPUS_CODE"
+                    (change)="fetchdataCam()">
+                    <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='1'">
+                        ทั้งหมด
+                    </option>
+                    <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">
+                        {{cam.CAMPUS_PTNAME}}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="me-2 fw-bold text-secondary">คณะ/หน่วยงาน:</label>
+                <select class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
+                    <option value="">ทุกคณะ/หน่วยงาน</option>
+                    <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="me-2 fw-bold text-secondary">แผนปีงบประมาณ:</label>
+                <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE"
+                    (change)="onChangeyear()">
+                    <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataMyear">
+                        {{year.PLYEARBUDGET_NAME}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="me-2 fw-bold text-secondary">สถานะ:</label>
+                <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PRASSET_RSTATUS">
+                    <option value="">ทั้งหมด</option>
+                    <option [value]="crp.PRSTATUS_CODE" *ngFor="let crp of dataPstatus">
+                        {{crp.PRSTATUS_NAME}}</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <br>
+                <button class="btn btn-primary" (click)="fetchdashboard()">ค้นหา</button>
+            </div>
+        </div>
+        <br>
+        <!-- Loading Spinner -->
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border" role="status" id="loading"></div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-4">
+            <!-- Card 1: ครุภัณฑ์ -->
+            <div class="col-xl-4 col-md-6">
+                <div class="summary-card card-asset">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-computer"></i>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">ครุภัณฑ์</span>
+                        <span class="card-value"> {{assetTotal | number : '1.2-2'}}</span>
+                        <span class="card-unit"> บาท ({{assetCount | number}} รายการ)</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Card 3: สิ่งก่อสร้าง -->
+            <div class="col-xl-4 col-md-6">
+                <div class="summary-card card-building">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">สิ่งก่อสร้าง</span>
+                        <span class="card-value"> {{buildingTotal | number : '1.2-2'}}</span>
+                        <span class="card-unit"> บาท ({{buildingCount | number}} รายการ)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: โครงการ -->
+            <div class="col-xl-4 col-md-6">
+                <div class="summary-card card-project">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">โครงการ</span>
+                        <span class="card-value"> {{projectTotal | number : '1.2-2'}}</span>
+                        <span class="card-unit"> บาท ({{projectCount | number}} รายการ)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section - 3 Separate Vertical Bar Charts -->
+        <div class="row g-3 mb-4">
+            <!-- ครุภัณฑ์ Chart -->
+            <div class="col-md-4">
+                <div class="card shadow-sm chart-card">
+                    <div class="card-header chart-card-header asset-chart-header">
+                        <i class="fa-solid fa-computer me-2"></i>ครุภัณฑ์ (6 ปี)
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartAsset"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- สิ่งก่อสร้าง Chart -->
+            <div class="col-md-4">
+                <div class="card shadow-sm chart-card">
+                    <div class="card-header chart-card-header building-chart-header">
+                        <i class="fa-solid fa-building me-2"></i>สิ่งก่อสร้าง (6 ปี)
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartBuilding"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- โครงการ Chart -->
+            <div class="col-md-4">
+                <div class="card shadow-sm chart-card">
+                    <div class="card-header chart-card-header project-chart-header">
+                        <i class="fa-solid fa-diagram-project me-2"></i>โครงการ (6 ปี)
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartProject"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Section -->
+        <div class="row g-3 mb-4">
+            <!-- Asset Table -->
+            <div class="col-md-6">
+                <div class="card shadow-sm table-card">
+                    <div class="card-header table-card-header asset-header">
+                        <i class="fa-solid fa-computer me-2"></i>รายการครุภัณฑ์ล่าสุด
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead>
+                                    <tr class="table-header-asset">
+                                        <th width="5%" class="text-center">ที่</th>
+                                        <th>คณะ/หน่วยงาน</th>
+                                        <th>รายการ</th>
+                                        <th class="text-center">จำนวน</th>
+                                        <th class="text-end">จำนวนเงิน</th>
+                                        <th class="text-center">สถานะ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of datalistAsset; let i = index" class="table-row">
+                                        <td class="text-center">{{i+1}}</td>
+                                        <td>{{p.FACULTY_TNAME}}</td>
+                                        <td>{{p.PRASSET_NAME}}</td>
+                                        <td class="text-center">{{p.PRASSET_NUM}}</td>
+                                        <td class="text-end fw-bold">{{p.PRASSET_MONEY | number : '1.2-2'}}</td>
+                                        <td class="text-center">
+                                            <span class="badge"
+                                                [ngClass]="p.PRASSET_RSTATUS == 'อนุมัติ(ระดับมหาวิทยาลัย)' ? 'bg-success' : 'bg-warning text-dark'">
+                                                {{p.PRASSET_RSTATUS}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="!datalistAsset || datalistAsset.length === 0">
+                                        <td colspan="6" class="text-center text-muted py-3">ไม่มีข้อมูล</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a routerLink="listasset" class="btn btn-sm btn-outline-danger">
+                            <i class="fa-solid fa-arrow-right me-1"></i>ดูทั้งหมด
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Building Table -->
+            <div class="col-md-6">
+                <div class="card shadow-sm table-card">
+                    <div class="card-header table-card-header building-header">
+                        <i class="fa-solid fa-building me-2"></i>รายการสิ่งก่อสร้างล่าสุด
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead>
+                                    <tr class="table-header-building">
+                                        <th width="5%" class="text-center">ที่</th>
+                                        <th>คณะ/หน่วยงาน</th>
+                                        <th>รายการ</th>
+                                        <th class="text-end">จำนวนเงิน</th>
+                                        <th class="text-center">สถานะ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of datalistBuilding; let i = index" class="table-row">
+                                        <td class="text-center">{{i+1}}</td>
+                                        <td>{{p.FACULTY_TNAME}}</td>
+                                        <td>{{p.PRBUILDING_NAME}}</td>
+                                        <td class="text-end fw-bold">{{p.PRBUILDING_MONEY | number : '1.2-2'}}</td>
+                                        <td class="text-center">
+                                            <span class="badge"
+                                                [ngClass]="p.PRBUILDING_RSTATUS == 'อนุมัติ(ระดับมหาวิทยาลัย)' ? 'bg-success' : 'bg-warning text-dark'">
+                                                {{p.PRBUILDING_RSTATUS}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="!datalistBuilding || datalistBuilding.length === 0">
+                                        <td colspan="5" class="text-center text-muted py-3">ไม่มีข้อมูล</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a routerLink="listbuilding" class="btn btn-sm btn-outline-success">
+                            <i class="fa-solid fa-arrow-right me-1"></i>ดูทั้งหมด
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Table - full width -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-12">
+                <div class="card shadow-sm table-card">
+                    <div class="card-header table-card-header project-header">
+                        <i class="fa-solid fa-diagram-project me-2"></i>รายการโครงการล่าสุด
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead>
+                                    <tr class="table-header-project">
+                                        <th width="3%" class="text-center">ที่</th>
+                                        <th width="20%">คณะ/หน่วยงาน</th>
+                                        <th>ชื่อโครงการ</th>
+                                        <th class="text-end" width="15%">จำนวนเงิน</th>
+                                        <th class="text-center" width="10%">สถานะ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of datalistProject; let i = index" class="table-row">
+                                        <td class="text-center">{{i+1}}</td>
+                                        <td>{{p.FACULTY_TNAME}}</td>
+                                        <td>{{p.PRPROJECT_NAME}}</td>
+                                        <td class="text-end fw-bold">{{p.PRPROJECT_MONEY | number : '1.2-2'}}</td>
+                                        <td class="text-center">
+                                            <span class="badge"
+                                                [ngClass]="p.PRPROJECT_RSTATUS == 'อนุมัติ' ? 'bg-success' : 'bg-warning text-dark'">
+                                                {{p.PRPROJECT_RSTATUS}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="!datalistProject || datalistProject.length === 0">
+                                        <td colspan="5" class="text-center text-muted py-3">ไม่มีข้อมูล</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a routerLink="listproject" class="btn btn-sm btn-outline-primary">
+                            <i class="fa-solid fa-arrow-right me-1"></i>ดูทั้งหมด
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

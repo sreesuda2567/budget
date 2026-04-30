@@ -1,0 +1,87 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">ลายเซ็น</h5>
+            </div>
+            <div class="col-md-2" align="right">
+
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1"></div>
+                                <div align="right" class="col-md-1">
+                                    
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()" >
+                                        <option [value]="main.FACULTY_CODE" *ngFor="let main of dataFac">{{main.FACULTY_TNAME1}}
+                                        </option>
+                                      </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overflow-auto">
+                        <table width="100%" id="example"
+                            class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th><div align="center">ที่</div></th>
+                                    <th><div align="center">รหัสบัตรประชาชน</div></th>
+                                    <th><div align="center">ชื่อ-สกุล</div></th>
+                                    <th><div align="center">ประเภทบุคลากร</div></th>
+                                    <th><div align="center">ตำแหน่ง</div></th>
+                                    <th><div align="center">ลายเซ็น</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalist|filter:searchTerm; let i = index">
+                                    <td align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                                    <td>{{p.CITIZEN_ID}}</td>
+                                    <td>{{p.STF_FNAME}}</td>
+                                    <td>{{p.STAFFTYPE_NAME}} </td>
+                                    <td>{{p.POSITION_WORK}} </td>
+                                    <td align="center"><img src="{{p.SIGNATURE_LINK}}"
+                                        id="img" width="100"></td>
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

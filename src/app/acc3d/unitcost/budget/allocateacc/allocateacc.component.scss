@@ -1,0 +1,40 @@
+.txt-font {
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 18px;
+    text-align: center;
+  }
+  .txt-font2 {
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 20px;
+    text-align: center;
+  }
+  .btn-font3 {
+    margin-top: 5px;
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 16px;
+  
+  }
+  .outer{
+    //margin:0 auto;
+    display: table;
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, 5%);
+    //top: 0;
+  //  margin-top: 100px;
+    height: 50%;
+    width:50%;
+    position:fixed; /* หรือจะใช้ absolute ถ้าต้องการให้มันไม่เลื่อนตามหน้าจอ*/
+    overflow-y: scroll;
+    scrollbar-color: rebeccapurple green;
+    scrollbar-width: thin;
+    z-index: 100; /* ถ้ายังไม่อยู่บนสุดก็เพิ่มค่านี้ */         
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  }
+  
+  .tableFixHead          { overflow: auto;  }
+  .tableFixHead thead  { position: sticky; top: 60px; z-index: 1; }
+  .ng-autocomplete {
+    width: 100%;
+    border-radius: 25px;
+  }

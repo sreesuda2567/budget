@@ -1,0 +1,155 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">จัดสรรงบประมาณภายนอก</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col-md-7">
+                    <label> <strong>คณะ /หน่วยงาน</strong></label>
+                    <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
+                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                    </select>
+                </div>
+                <div class="col-md-5 ">
+                    <label> <strong>หมวดรายจ่าย</strong></label>
+                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLMONEYPAY_CODE"
+                        (change)="fetchdatalist()">
+                     <!--  <option [value]="mo.PLMONEYPAY_CODE" *ngFor="let mo of dataplmoney">{{mo.PLMONEYPAY_NAME}}
+                        </option>--> 
+                        <option value="2L">เงินจากหน่วยงานภายนอก
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2 ">
+                    <label> <strong>แหล่งเงิน</strong></label>
+                    <select name="PLINCOME_CODE1" id="PLINCOME_CODE1" class="form-select"
+                        [(ngModel)]="dataAdd.PLINCOME_CODE">
+                     <!--  <option [value]="in.PLINCOME_CODE" *ngFor="let in of dataIncome">
+                            {{in.PLINCOME_NAME}}</option>--> 
+                            <option value="11" >งบประมาณจากภายนอก</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label> <strong>ประเภท</strong></label>
+                    <select name="CRPARTM_CODE" id="CRPARTM_CODE" class="form-select" [(ngModel)]="dataAdd.CRPARTM_CODE"
+                        (change)="onChangeCrpart()">
+                      <!--<option [value]="cr.CRPARTM_CODE" *ngFor="let cr of dataCrpartm">
+                            {{cr.CRPARTM_NAME}}</option>--> 
+                            <option value="01" >
+                                ไม่ระบุ</option> 
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label> <strong>ภาค</strong></label>
+                    <select name="CRPART_ID" id="CRPART_ID" class="form-select" [(ngModel)]="dataAdd.CRPART_ID">
+                      <!-- <option [value]="cr.CRPART_ID" *ngFor="let cr of dataCrpart">
+                            {{cr.CRPART_TNAME}}</option>--> 
+                            <option value="00" >
+                                ไม่ระบุ</option> 
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label> <strong>ปีงบประมาณ</strong></label>
+                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE"
+                        (change)="fetchdatalist()">
+                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                            {{year.PLYEARBUDGET_NAME}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>
+                        <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></label>
+                    <button type="submit" class="btn btn-primary" id="submitinsert" (click)="insertdata()"><i
+                            class="fa fa-plus-circle"></i>&nbsp;บันทึก</button>
+                    &nbsp;
+                    <button type="submit" class="btn btn-success" id="submitinsert" (click)="fetchdatalist()"><i
+                            class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row justify-content-center center-screen" *ngIf="loading">
+                    <div class="spinner-border " role="status" id="loading"></div>
+                  </div>
+                  <div style="width:100%; height:500px; overflow:auto;">
+                    <input type="hidden" class="form-control" name="numrow" id="numrow" [(ngModel)]="dataAdd.numrow">
+                    <input type="hidden" class="form-control" name="c_cinumcomlumtizen" id="numcomlum" [(ngModel)]="dataAdd.numcomlum">
+                <table  id="example" class=" table table-bordered   table-hover ">
+                    <thead>
+                        <tr class="bg-primary text-white">
+                            <th width="10%">
+                                <div align="center">หมวยรายจ่าย</div>
+                            </th>
+                            <th  *ngFor="let p of datalistp;let i = index">
+                                <div align="center">{{p.PLGPRODUCT_SHORTNAME}}</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr  class="btn-font3" class="bg-info " >
+                        <td align="left">
+                        </td>
+                        <td align="right" *ngFor="let p of datalistp;let j = index">
+                            {{dataAdd.PLTRBUDGET_MONEYALL[j]| number : '1.2-2'}}
+                        </td>
+
+                    </tr>
+                        <tr  class="btn-font3" *ngFor="let p of datalist|filter:searchTerm;let i = index"
+                            [ngStyle]="{'background-color':p.PLSUBMONEYPAY_LEVEL=='1' ? '#d2faf9':p.PLSUBMONEYPAY_LEVEL=='2' ? '#fff2f9':p.PLSUBMONEYPAY_LEVEL=='3' ? '#faf7e6':p.PLSUBMONEYPAY_LEVEL=='4' ? '#e8fae6':''}">
+                            <td align="left" width="20%">
+                                <span *ngIf="p.PLSUBMONEYPAY_LEVEL=='2'">&nbsp;</span>
+                                <span *ngIf="p.PLSUBMONEYPAY_LEVEL=='3'">&nbsp;&nbsp;</span>
+                                <span *ngIf="p.PLSUBMONEYPAY_LEVEL=='4'">&nbsp;&nbsp;&nbsp;-</span>
+                                {{p.PLSUBMONEYPAY_NAME}}
+                                <input  type="hidden" name="PLSUBMONEYPAY_CODE" class="form-control" id="PLSUBMONEYPAY_CODE"
+                                [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE[i]" >
+                                <input  type="hidden" name="PLSUBMONEYPAY_LCODE" class="form-control" id="PLSUBMONEYPAY_LCODE"
+                                [(ngModel)]="dataAdd.PLSUBMONEYPAY_LCODE[i]" >
+                            </td>
+                            <td   *ngFor="let p of datalistp;let j = index">
+                                <input (keypress)="CheckNum($event)" (keyup)="summoney(dataAdd.PLSUBMONEYPAY_CODE[i],i,j,dataAdd.PLGPRODUCT_CODE[i][j])" style="font-size: 10pt;text-align:right; " type="text" name="PLTRBUDGETD_NOTE" class="form-control" id="PLTRBUDGETD_NOTE"
+                                 [(ngModel)]="dataAdd.PLTRBUDGET_MONEY[i][j]" [disabled]="dataAdd.LEVEL[i]">
+                                 <input   type="hidden" name="PLTRBUDGET_CODE" class="form-control" id="PLTRBUDGET_CODE"
+                                 [(ngModel)]="dataAdd.PLTRBUDGET_CODE[i][j]">
+                                 <input  type="hidden" name="PLGPRODUCT_CODE" class="form-control" id="PLGPRODUCT_CODE"
+                                 [(ngModel)]="dataAdd.PLGPRODUCT_CODE[i][j]" ></td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+
+    <!--    <div class="row">
+            <table tyle="width:200%" id="example" class=" table table-bordered   table-hover ">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>
+                            <div align="center">หมวยรายจ่าย</div>
+                        </th>
+                        <th  *ngFor="let p of datalistp;let i = index">
+                            <div align="center">{{p.PLGPRODUCT_SHORTNAME}}</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of datalist;">
+                        <td><input type="text" [(ngModel)]="item.product0"></td>
+                        <td><input type="text" [(ngModel)]="item.product1"></td>
+                        <td><input type="text" [(ngModel)]="item.product2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>-->
+
+    </div>
+</div>

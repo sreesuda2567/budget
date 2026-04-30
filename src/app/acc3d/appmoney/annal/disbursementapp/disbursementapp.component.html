@@ -1,0 +1,236 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">หลักฐานการเบิกจ่าย</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col">
+                    <!-- BASIC TABLE -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-4 text-secondary">
+                                    <label for="name">คณะ /หน่วยงาน</label>
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.FACULTY_CODE">
+                                         <option *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" value="" >ทั้งหมด</option>
+                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                            {{fac.FACULTY_TNAME}}</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="name">ปีงบประมาณ</label>
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 text-secondary">
+                                    <label> จากวันที่ผ่านรายการเบิก: </label>
+                                    <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker
+                                        #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
+                                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                                    </i>
+                                </div>
+                                <div class="col-md-2 text-secondary">
+                                    <label> ถึงวันที่: </label>
+                                    <input placeholder="ถึงวันที่" type="text" class="form-control" bsDatepicker
+                                        #dp2="bsDatepicker" [(ngModel)]="dataAdd.DATENOWT" readonly>
+                                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                                        class="fa-solid fa-calendar-days cursor-p text-primary"
+                                        (click)="dp2.toggle()"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <br>
+                                    <a class="btn btn-danger text-white" (click)="fetchdatalist()">
+                                        <i class="fa fa-plus-circle"></i> มอบหมาย</a>&nbsp;
+                                    <button type="submit" class="btn btn-primary" id="submitinsert"
+                                        (click)="fetchdatalistapp()"><i
+                                            class="fa fa-search"></i>&nbsp;รายการมอบหมาย</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table *ngIf="rownum" width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่ดำเนินการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อเรื่อง</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภท</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">มอบหมาย</div>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr *ngFor="let p of datalist; let i = index">
+                    <td align="center" data-label="ที่:">{{i+1}}</td>
+                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                    <td data-label="ชื่อเรื่อง:">{{p.FNANNALS_BOOK_SUB}}
+                    </td>
+                    <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                    <td data-label="รายงาน:">
+                   
+                       
+                        <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานใบปะหน้า"
+                                class="btn btn-primary text-white" href="{{p.CONTRACT_LINK}}" target="_blank"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>
+                        
+                    </td>
+                    <td align="center" data-label="เลือก:">
+                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALSMAP_CODE,p.CITIZEN_IDA)"
+                            ><i class="fa fa-arrow-circle-right"></i>&nbsp;มอบหมาย</button>
+                    </td>
+                </tr>
+                <tr *ngIf="!rownum">
+                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table *ngIf="rownum1" width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่ดำเนินการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อเรื่อง</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภท</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">แก้ไข</div>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr *ngFor="let p of datalistapp; let i = index">
+                    <td align="center" data-label="ที่:">{{i+1}}</td>
+                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                    <td data-label="ชื่อเรื่อง:">{{p.FNANNALS_BOOK_SUB}}
+                    </td>
+                    <td align="center" data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                    <td data-label="รายงาน:">
+                        
+                        <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานใบปะหน้า"
+                                class="btn btn-primary text-white" href="{{p.CONTRACT_LINK}}" target="_blank"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>
+                        <span *ngIf="p.linkclear"><a role="button" title="รายงานใบเบิก"
+                                class="btn btn-secondary text-white" href="{{p.linkclear}}" target="_blank"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>
+                    </td>
+                    <td align="center" data-label="เลือก:">
+                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalupdate"
+                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDA,p.CITIZEN_IDB)"
+                            (click)="setshowbti()"><i class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
+                    </td>
+                </tr>
+                <tr *ngIf="!rownum1">
+                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">หลักฐานการเบิกจ่าย</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">การเงินผู้รับผิดชอบ</label>
+                        <br>
+                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDA">
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ผู้เสนอเขียนเช็ค</label>
+                        <br>
+                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDB">
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+
+            </div>
+        </div>
+    </div>
+</div>

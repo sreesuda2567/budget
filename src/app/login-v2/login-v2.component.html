@@ -1,0 +1,79 @@
+<div class="container">
+  <div class="row justify-content-center center-screen" *ngIf="loading">
+    <div class="spinner-border " role="status" id="loading"></div>
+  </div>
+
+
+  <div class="row justify-content-center mt-5 mx-1">
+    <div class="col-xs-12 col-sm-10 col-md-7 col-lg-5 col-xl-4 ">
+      <div class="card card-signin box-shadow2 my-5 ">
+        <div class="card-body">
+          <img src="assets/images/RUTS.png" class="img-fluid" alt="" style="max-width: 100%;height: auto;">
+          <h5 class="card-title"><b>PLATFORM</b></h5>
+
+          <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+
+            <!-- username input -->
+            <div class="col-lg">
+              <label class="txt-card">Username</label>
+              <input type="text" id="form2Example3" name="username"
+                [ngClass]="username.errors && f.submitted ? 'form-control is-invalid' : 'form-control'"
+                [(ngModel)]="form.username" required #username="ngModel" placeholder="Username" />
+              <div id="validationServer03Feedback" class="invalid-feedback" *ngIf="username.errors && f.submitted">
+                Username is required!</div>
+              <!--<label class="form-label" >[ชื่อผู้ใช้ E-passport ไม่ต้องพิมพ์ @rmutsv.ac.th]</label>-->
+              <small id="epassport" class="form-text text-left text-muted" style="font-size:10px;">[ ชื่อผู้ใช้
+                e-Passport ไม่ต้องพิมพ์ @rmutsv.ac.th ]</small>
+            </div>
+            <!-- Password input -->
+            <div class="col-lg mt-3">
+              <label class="txt-card">Password</label>
+              <!--<input type="password" id="form2Example4" name="password" [(ngModel)]="form.password" required  #password="ngModel" placeholder="Password"
+                              [ngClass]="password.errors && f.submitted ? 'form-control is-invalid' : 'form-control'" />-->
+              <div style="position: relative;">
+                <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="form2Example4"
+                  name="password" placeholder="Password" [(ngModel)]="form.password" required />
+
+                <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" (click)="togglePassword()" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%);
+            cursor: pointer; color: gray;">
+                </i>
+              </div>
+
+
+
+
+              <!-- <div id="validationServer04Feedback" class="invalid-feedback" *ngIf="password.errors && f.submitted">
+                Password is required!</div>-->
+
+            </div>
+            <!--<div class="form-group">
+                          <div class="form-check form-switch">
+                              <input class="form-check-input" type="checkbox" id="remember" name="remember" >
+                              <label class="form-check-label text-muted" for="remember" style="font-size:12px;">
+                                จดจำชื่อผู้ใช้ [Remember]
+                              </label>
+                            </div>
+                      </div>-->
+            <div class="form-group mt-5">
+              <div class="d-grid gap-2 text-center">
+                <button class="btn btn-primary mb-3"
+                  style="font-family: 'Prompt-Regular', sans-serif;font-size: 16px;height: 50px;">
+                  <i style="font-size:20px;" class="fa-solid fa-key"></i>&nbsp;LOGIN
+                </button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="text-center" style="margin-top: -10px;">
+  <p class="text-center text-muted">{{this.key.namev}}</p>
+  <span class=" text-center text-muted" style="margin-top: -50px;">
+    <i class=" fa-solid fa-school-lock" style="font-size:18px ;"></i> RUTS@All Rights Reserved.
+  </span>
+</div>

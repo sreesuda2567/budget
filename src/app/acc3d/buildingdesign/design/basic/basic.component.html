@@ -1,0 +1,1583 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">รายการออกแบบและพัฒนาอาคาร</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
+                    (click)="showinput()" (click)="setshowbti()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                                <div align="right" class="col-md-1">
+                                  <select (change)="onTableSizeChange($event)" class="form-select">
+                                    <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                      {{ size }}
+                                    </option>
+                                  </select>
+                                </div>
+                                <div class="col-md-5 text-secondary">
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODEM" (change)="fetchdatalist()">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataMyear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <table id="excel-table" class="table btn-font3" width="150%"
+            class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">คณะ/หน่วยงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อโครงการ</div>
+                    </th>
+                    <th>
+                        <div align="center">วิธีดำเนินการ</div>
+                    </th>
+                    <th>
+                        <div align="center">แหล่งเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">สถานะ</div>
+                    </th>
+                    <th>
+                        <div align="center">จัดการข้อมูล</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr class="btn-font2" *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                    itemsPerPage: tableSize,
+                    currentPage: page,
+                    totalItems: count
+                    } ; let i = index">
+                    <td width="5%" align="center">{{+i+1}}</td>
+                    <td>{{p.FACULTY_TNAME}}</td>
+                    <td>{{p.BDOPERATION_NAME}}</td>
+                    <td>{{p.BDTYPE_NAME}}</td>
+                    <td>{{p.PLINCOME_NAME}}</td>
+                    <td align="right">{{p.BDOPERATION_MONEY| number : '1.2-2'}}</td>
+                    <td align="center">{{p.BDSTATUS_NAME}}</td>
+                    <td align="center" width="8%"><a *ngIf="p.BDOPERATION_RSTATUS =='0'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                            (click)="deleteData(p.BDOPERATION_CODE)"><i class="fa fa-trash"></i>
+                        </a>&nbsp;
+                        <a  *ngIf="p.BDOPERATION_RSTATUS =='0' || (p.BDOPERATION_RSTATUS =='1' && p.BDTYPE_CODE =='2')" role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
+                            class="btn btn-warning text-white" (click)="editdata(p.BDOPERATION_CODE)"><i
+                                class="fa fa-edit"></i></a>
+                    </td>
+                </tr>
+                <tr *ngIf="!rownum">
+                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-left">
+            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+            </pagination-controls>
+          </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalrqvehicle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">การออกแบบและพัฒนาอาคารสถานที่</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input name="BDOPERATION_CODE" type="hidden" id="BDOPERATION_CODE"
+                    [(ngModel)]="dataAdd.BDOPERATION_CODE" />
+                <ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#basic"
+                            type="button" role="tab" aria-controls="home" aria-selected="true">
+                            ข้อมูลพื้นฐาน
+                        </button>
+                    </li>
+                    <li (click)="onChangetype(1)" *ngIf="dataAdd.BDTYPE_CODE !='2'" class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#format"
+                            type="button" role="tab" aria-controls="list" aria-selected="false">
+                            การจัดทำรูปแบบรายการ
+                        </button>
+                    </li>
+                    <li (click)="onChangetype(2)" *ngIf="dataAdd.BDTYPE_CODE !='2'" class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="structure-tab" data-bs-toggle="tab"
+                            data-bs-target="#estimatestructure" type="button" role="tab" aria-controls="structure"
+                            aria-selected="false">
+                            การจัดทำประมาณการราคาโครงสร้าง
+                        </button>
+                    </li>
+                    <li (click)="onChangetype(3)" *ngIf="dataAdd.BDTYPE_CODE !='2'" class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="electricity-tab" data-bs-toggle="tab"
+                            data-bs-target="#estimateelectricity" type="button" role="tab" aria-controls="electricity"
+                            aria-selected="false">
+                            การจัดทำประมาณการราคาไฟฟ้า
+                        </button>
+                    </li>
+                    <li (click)="onChangetype(4)" *ngIf="dataAdd.BDTYPE_CODE !='2'" class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="signed-tab" data-bs-toggle="tab" data-bs-target="#offer"
+                            type="button" role="tab" aria-controls="signed" aria-selected="false">
+                            เสนอลงนาม
+                        </button>
+                    </li>
+                    <li  class="nav-item"
+                        role="presentation">
+                        <button class="nav-link" id="signed-tab" data-bs-toggle="tab" data-bs-target="#director"
+                            type="button" role="tab" aria-controls="signed" aria-selected="false">
+                            คณะกรรมการ
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="name" class="txt-font3">แผนปีงบประมาณ </label>
+                                                <select name="y_code" id="y_code" class="form-select"
+                                                    [(ngModel)]="dataAdd.PLYEARBUDGET_CODE" (change)="onChangeyear()">
+                                                    <option [value]="year.PLYEARBUDGET_CODE"
+                                                        *ngFor="let year of dataMyear">
+                                                        {{year.PLYEARBUDGET_NAME}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="name" class="txt-font3">บรรจุลงในแผนประจำปี</label>
+                                                <select name="y_code" id="y_code" class="form-select"
+                                                    [(ngModel)]="dataAdd.PRYEARASSET_CODE" (change)="fetchdataCam()">
+                                                    <option [value]="year.PLYEARBUDGET_CODE"
+                                                        *ngFor="let year of dataYear">
+                                                        {{year.PLYEARBUDGET_CODE}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="name" class="txt-font3">คณะ/หน่วยงาน</label>
+                                                <select name="f_code" id="f_code" class="form-select"
+                                                    [(ngModel)]="dataAdd.FACULTY_CODE" (change)="onChangeBuilding()">
+                                                    <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                                        {{fac.FACULTY_TNAME}}</option>
+                                                </select>
+
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="name" class="txt-font3">ชื่อโครงการ</label>
+                                                <select name="PRBUILDING_CODE" id="PRBUILDING_CODE" class="form-select"
+                                                    [(ngModel)]="dataAdd.PRBUILDING_CODE"
+                                                    (change)="onChangeBuildmoney()">
+                                                    <option [value]="item.PRBUILDING_CODE"
+                                                        *ngFor="let item of dataBuild">
+                                                        {{item.PRREGISBUILDING_NAME}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="name" class="txt-font3">ชื่อโครงการ</label>
+                                                <input class="form-control" placeholder="ชื่อโครงการ"
+                                                    name="FEDUCAPIO_YEAR" type="text" id="BDOPERATION_NAME" size="10"
+                                                    [(ngModel)]="dataAdd.BDOPERATION_NAME" />
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="name" class="txt-font3">กรอบงบประมาณ</label>
+                                                <input class="form-control" placeholder="กรอบงบประมาณ"
+                                                    name="PRBUILDING_MONEY" type="text" id="PRBUILDING_MONEY" size="10"
+                                                    [(ngModel)]="dataAdd.PRBUILDING_MONEY" />
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name"
+                                                    class="txt-font3">เลขที่หนังสืออนมุัติให้จัดทำแบบ</label>
+                                                <input class="form-control" placeholder="เลขที่หนังสือ"
+                                                    name="PLBUILDING_BOOK" type="text" id="PLBUILDING_BOOK" size="10"
+                                                    [(ngModel)]="dataAdd.PLBUILDING_BOOK" />
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <label for="name" class="txt-font3">วันที่อนุมัติให้จัดทำแบบ</label>
+                                                <input type="text" name="p_bname" id="p_bname" bsDatepicker
+                                                    #dp0="bsDatepicker" class="form-control"
+                                                    placeholder="วันที่อนุมัติให้จัดทำแบบ"
+                                                    [(ngModel)]="dataAdd.BDOPERATION_ADATE" readonly>
+                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                    (click)="dp0.toggle()">
+                                                </i>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="name" class="txt-font3">วิธีดำเนินการโครงการ</label>
+                                                <select name="BDTYPE_CODE" id="BDTYPE_CODE" class="form-select"
+                                                    [(ngModel)]="dataAdd.BDTYPE_CODE" (change)="onChangtype()">
+                                                    <option value="1">ดำเนินการโดยงานออกแบบ</option>
+                                                    <option value="2">จ้างดำเนินการบุคคลภายนอก</option>
+                                                    <option value="3">จ้างดำเนินการบุคคลภายใน</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-md-2"></div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name" class="txt-font3">สถาปนิก</label>
+                                                <input name="CITIZEN_IDA" type="hidden" id="CITIZEN_IDA"
+                                                    [(ngModel)]="dataAdd.CITIZEN_IDA" />
+                                                <input name="CITIZEN_IDA" type="hidden" id="BDOPERATION_NAMEA"
+                                                    [(ngModel)]="dataAdd.BDOPERATION_NAMEA" />
+                                                <div class="ng-autocomplete">
+                                                    <ng-autocomplete [(ngModel)]="dataAdd.BDOPERATION_NAMEA1"
+                                                        [data]="datacomplete" [searchKeyword]="keyword"
+                                                        placeholder="สถาปนิก" (selected)='selectEvent($event,1)'
+                                                        (inputChanged)='onChangeSearch($event,1)'
+                                                        [itemTemplate]="itemTemplate"
+                                                        [notFoundTemplate]="notFoundTemplate">
+                                                    </ng-autocomplete>
+                                                    <ng-template #itemTemplate let-item>
+                                                        <a [innerHTML]="item.name"></a>
+                                                    </ng-template>
+                                                    <ng-template #notFoundTemplate let-notFound>
+                                                        <div [innerHTML]="notFound"></div>
+                                                    </ng-template>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name" class="txt-font3">วิศวกรโยธา</label>
+                                                <input name="CITIZEN_IDCE" type="hidden" id="CITIZEN_IDCE"
+                                                    [(ngModel)]="dataAdd.CITIZEN_IDCE" />
+                                                <input name="BDOPERATION_NAMECE" type="hidden" id="BDOPERATION_NAMECE"
+                                                    [(ngModel)]="dataAdd.BDOPERATION_NAMECE" />
+                                                <div class="ng-autocomplete">
+                                                    <ng-autocomplete [(ngModel)]="dataAdd.BDOPERATION_NAMECE1"
+                                                        [data]="datacomplete" [searchKeyword]="keyword"
+                                                        placeholder="วิศวกรโยธา" (selected)='selectEvent($event,2)'
+                                                        (inputChanged)='onChangeSearch($event,2)'
+                                                        [itemTemplate]="itemTemplate"
+                                                        [notFoundTemplate]="notFoundTemplate">
+                                                    </ng-autocomplete>
+                                                    <ng-template #itemTemplate let-item>
+                                                        <a [innerHTML]="item.name"></a>
+                                                    </ng-template>
+                                                    <ng-template #notFoundTemplate let-notFound>
+                                                        <div [innerHTML]="notFound"></div>
+                                                    </ng-template>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name" class="txt-font3">วิศวกรไฟฟ้า</label>
+                                                <input name="CITIZEN_IDC" type="hidden" id="CITIZEN_IDEL"
+                                                    [(ngModel)]="dataAdd.CITIZEN_IDEL" />
+                                                <input name="BDOPERATION_NAMEL" type="hidden" id="BDOPERATION_NAMEL"
+                                                    [(ngModel)]="dataAdd.BDOPERATION_NAMEL" />
+                                                <div class="ng-autocomplete">
+                                                    <ng-autocomplete [(ngModel)]="dataAdd.BDOPERATION_NAMEL1"
+                                                        [data]="datacomplete" [searchKeyword]="keyword"
+                                                        placeholder="วิศวกรไฟฟ้า" (selected)='selectEvent($event,3)'
+                                                        (inputChanged)='onChangeSearch($event,3)'
+                                                        [itemTemplate]="itemTemplate"
+                                                        [notFoundTemplate]="notFoundTemplate">
+                                                    </ng-autocomplete>
+                                                    <ng-template #itemTemplate let-item>
+                                                        <a [innerHTML]="item.name"></a>
+                                                    </ng-template>
+                                                    <ng-template #notFoundTemplate let-notFound>
+                                                        <div [innerHTML]="notFound"></div>
+                                                    </ng-template>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">แผนการดำเนินโครงการ</label>
+                                                <br>
+                                                <label for="name" class="text-danger"
+                                                    *ngIf="dataAdd.sdate==''">แสดงข้อมูลอัตโนมัติ</label>
+                                                <label for="name" class="text-danger"
+                                                    *ngIf="dataAdd.sdate">{{dataAdd.sdate}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">แผนแล้วเสร็จ</label>
+                                                <br>
+                                                <label for="name" class="text-danger"
+                                                    *ngIf="dataAdd.edate==''">แสดงข้อมูลอัตโนมัติ</label>
+                                                <label for="name" class="text-danger"
+                                                    *ngIf="dataAdd.edate">{{dataAdd.edate}}</label>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="dataAdd.BDTYPE_CODE=='2'" class="form-group col-md-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    แผนการจัดทำแบบรูปรายการและประมาณการราคา
+                                                </div>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="name"><strong>ประเมินราคาก่อสร้าง
+                                                                </strong></label>
+                                                            <br>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น(แผน)
+                                                                    <input type="hidden" name="BDTYPEDATE_CODE"
+                                                                        class="form-control"
+                                                                        [(ngModel)]="dataAdd.BDTYPEDATE_CODE[0]">
+                                                                </label>
+                                                                <input placeholder="วันที่เริ่มต้น" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp1="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[0]"
+                                                                    readonly  [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp1.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp2="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[0]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp2.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ(ผล)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp13="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_TDATE[0]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='0'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp13.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label for="name"><strong>แต่งตั้งคณะกรรมการ ร่าง
+                                                                        TOR</strong></label>
+                                                                <br>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น(แผน)
+                                                                    <input type="hidden" name="BDTYPEDATE_CODE"
+                                                                        class="form-control"
+                                                                        [(ngModel)]="dataAdd.BDTYPEDATE_CODE[1]">
+                                                                </label>
+                                                                <input placeholder="วันที่เริ่มต้น" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp3="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[1]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp3.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp4="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[1]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp4.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ(ผล)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp14="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_TDATE[1]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='0'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp14.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label for="name"><strong>แต่งตั้งคณะกรรมการจ้างออกแบบ
+                                                                    </strong></label>
+                                                                <br>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่เริ่มต้น" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp5="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[2]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp5.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp6="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[2]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp6.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ(ผล)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp15="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_TDATE[2]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='0'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp15.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label
+                                                                    for="name"><strong>พิจารณาผลการประกวดแบบ</strong></label>
+                                                                <br>
+                                                            </div>
+
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่เริ่มต้น" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp7="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[3]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp7.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp8="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[3]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp8.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ(ผล)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp16="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_TDATE[3]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='0'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp16.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label
+                                                                    for="name"><strong>ระยะเวลาจัดทำแบบรูปรายการและประมาณราคา</strong></label>
+                                                                <br>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่เริ่มต้น" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp9="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[4]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp9.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp10="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[4]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp10.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ(ผล)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp17="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_TDATE[4]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='0'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp17.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-12">
+                                                                <label for="name"><strong>ประชุมพิจารณาแบบรูปรายการ
+                                                                        และประมาณการราคา </strong></label>
+                                                                <br>
+                                                            </div>
+
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่เริ่มต้น(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่เริ่มต้น" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp11="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_SDATE[5]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp11.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่สิ้นสุด(แผน)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp12="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_EDATE[5]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='1'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp12.toggle()">
+                                                                </i>
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="name" class="text-secondary"
+                                                                    style="font-size: 10pt">วันที่ดำเนินการ(ผล)
+                                                                </label>
+                                                                <input placeholder="วันที่สิ้นสุด" type="text"
+                                                                    class="form-control" bsDatepicker
+                                                                    #dp18="bsDatepicker"
+                                                                    [(ngModel)]="dataAdd.BDOPERATIONTD_TDATE[5]"
+                                                                    readonly [disabled]="dataAdd.BDOPERATION_RSTATUS=='0'">
+                                                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                                                    class="fa-solid fa-calendar-days cursor-p text-primary"
+                                                                    (click)="dp18.toggle()">
+                                                                </i>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="format" role="tabpanel" aria-labelledby="list-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="name">1. วันที่เริ่มจัดทำแบบรูปรายการ</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_SDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">2. ระยะเวลาจัดทำแบบรูปรายการ</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_NDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">3. วันที่จัดทำแบบรูปรายการแล้วเสร็จ</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_EDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">4. ขั้นตอนการจัดทำแบบรูปแบบรายการ</label>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.1 สำรวจพื้นที่ </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น</label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.2 ประชุมหาความต้องการ</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[1]}}</div>
+
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.3 ออกแบบ (จัดทำแบบร่าง)</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.4 ประชุมสรุปความต้องการ</label>
+                                                        <br>
+                                                    </div>
+
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[3]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[3]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[3]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[3]}}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">&nbsp;4.5 เขียนแบบ</label>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;&nbsp;สถาปัตย์</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;&nbsp;{{dataAdd.sdateshow[4]}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[4]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[4]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[4]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;&nbsp;โครงสร้าง
+                                                        </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;&nbsp;{{dataAdd.sdateshow[5]}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[5]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[5]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[5]}}</div>
+                                                    </div>
+
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;&nbsp;ไฟฟ้า
+                                                        </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;&nbsp;{{dataAdd.sdateshow[6]}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[6]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[6]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[6]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;&nbsp;สุขาภิบาล
+                                                        </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;&nbsp;{{dataAdd.sdateshow[7]}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[7]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[7]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[7]}}</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">5. ประชุมคณะกรรมการแบบรูปรายการ</label>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.sdateshow[8]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.edateshow[8]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">จำนวนวัน</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.ndateshow[8]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.tdateshow[8]}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade " id="estimatestructure" role="tabpanel" aria-labelledby="structure-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="name">1. วันที่เริ่มจัดทำประมาณราคา</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_SDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">2. ระยะเวลาจัดทำประมาณประมาณการราคา (จำนวนวัน
+                                                    อัตโนมัติ)</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_NDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">3. วันที่จัดทำประมาณการราคา</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_EDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">4. ขั้นตอนการจัดทำประมาณการราคา</label>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.1 ถอดปริมาณวัสดุ </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น</label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนิงาน</label>
+                                                        <br>
+                                                        <div class="text-danger"></div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.2 สืบราคา</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[1]}}</div>
+
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.3 แบ่งงวด</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[2]}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="name">5. ประชุมคณะกรรมการแบบรูปรายการ</label>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.sdateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.edateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">จำนวนวัน</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.ndateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.tdateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">6. ราคากลาง</label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.BDSTRUCTURE_MONEY}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="estimateelectricity" role="tabpanel"
+                        aria-labelledby="electricity-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <label for="name">1. วันที่เริ่มจัดทำประมาณราคา</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_SDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">2. ระยะเวลาจัดทำประมาณประมาณการราคา (จำนวนวัน
+                                                    อัตโนมัติ)</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_NDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">3. วันที่จัดทำประมาณการราคา</label>
+                                                <br>
+                                                <label for="name"
+                                                    class="text-danger">&nbsp;{{dataAdd.BDFORMAT_EDATEM}}</label>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">4. ขั้นตอนการจัดทำประมาณการราคา</label>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.1 ถอดปริมาณวัสดุ </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น</label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนิงาน</label>
+                                                        <br>
+                                                        <div class="text-danger"></div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.2 สืบราคา</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[1]}}</div>
+
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">&nbsp;4.3 แบ่งงวด</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[2]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[2]}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="name">5. ประชุมคณะกรรมการแบบรูปรายการ</label>
+                                                <br>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">&nbsp;วันที่เริ่มต้น
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.sdateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่สิ้นสุด
+                                                </label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.edateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">จำนวนวัน</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.ndateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="name" class="text-secondary"
+                                                    style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                <br>
+                                                <div class="text-danger">{{dataAdd.tdateshow[3]}}</div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <label for="name">6. ราคากลาง</label>
+                                                <br>
+                                                <div class="text-danger">&nbsp;{{dataAdd.BDSTRUCTURE_MONEY}}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="offer" role="tabpanel" aria-labelledby="signed-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">1 เสนอลงนามแบบรูปรายการและประมาณการราคา
+                                                        </label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น</label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[0]}}</div>
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[0]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[0]}}</div>
+                                                    </div>
+
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name">2. จัดส่งแบบและราคาคืนเจ้าของรายการ</label>
+                                                        <br>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">&nbsp;วันที่เริ่มต้น </label>
+                                                        <br>
+                                                        <div class="text-danger">&nbsp;{{dataAdd.sdateshow[1]}}</div>
+
+
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่สิ้นสุด
+                                                        </label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.edateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">จำนวนวัน</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.ndateshow[1]}}</div>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="name" class="text-secondary"
+                                                            style="font-size: 10pt">วันที่ดำเนินการ</label>
+                                                        <br>
+                                                        <div class="text-danger">{{dataAdd.tdateshow[1]}}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="director" role="tabpanel" aria-labelledby="signed-tab">
+                        <div class="shadow alert " role="alert">
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name" class="txt-font3">คณะกรรมการพิจารณาผลการประกวดราคา</label>
+                                                        <input name="CITIZEN_IDTEN" type="hidden" id="CITIZEN_IDTEN"
+                                                            [(ngModel)]="dataAdd.CITIZEN_IDTEN" />
+                                                        <input name="BDOPERATION_NAMETEN" type="hidden" id="BDOPERATION_NAMETEN"
+                                                            [(ngModel)]="dataAdd.BDOPERATION_NAMETEN" />
+                                                        <div class="ng-autocomplete">
+                                                            <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_IDTEN1"
+                                                                [data]="datacomplete" [searchKeyword]="keyword"
+                                                                placeholder="คณะกรรมการพิจารณาผลการประกวดราคา" (selected)='selectEvent($event,4)'
+                                                                (inputChanged)='onChangeSearch($event,4)'
+                                                                [itemTemplate]="itemTemplate"
+                                                                [notFoundTemplate]="notFoundTemplate">
+                                                            </ng-autocomplete>
+                                                            <ng-template #itemTemplate let-item>
+                                                                <a [innerHTML]="item.name"></a>
+                                                            </ng-template>
+                                                            <ng-template #notFoundTemplate let-notFound>
+                                                                <div [innerHTML]="notFound"></div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name" class="txt-font3">คณะกรรมการตรวจรับพัสดุในงานก่อสร้าง</label>
+                                                        <input name="CITIZEN_IDCE" type="hidden" id="CITIZEN_IDINS"
+                                                            [(ngModel)]="dataAdd.CITIZEN_IDINS" />
+                                                        <input name="BDOPERATION_NAMEINS" type="hidden" id="BDOPERATION_NAMEINS"
+                                                            [(ngModel)]="dataAdd.BDOPERATION_NAMEINS" />
+                                                        <div class="ng-autocomplete">
+                                                            <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_IDINS1"
+                                                                [data]="datacomplete" [searchKeyword]="keyword"
+                                                                placeholder="คณะกรรมการตรวจรับพัสดุในงานก่อสร้าง" (selected)='selectEvent($event,5)'
+                                                                (inputChanged)='onChangeSearch($event,5)'
+                                                                [itemTemplate]="itemTemplate"
+                                                                [notFoundTemplate]="notFoundTemplate">
+                                                            </ng-autocomplete>
+                                                            <ng-template #itemTemplate let-item>
+                                                                <a [innerHTML]="item.name"></a>
+                                                            </ng-template>
+                                                            <ng-template #notFoundTemplate let-notFound>
+                                                                <div [innerHTML]="notFound"></div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name" class="txt-font3">ผู้ควบคุมงาน</label>
+                                                        <input name="CITIZEN_IDC" type="hidden" id="CITIZEN_IDSUP"
+                                                            [(ngModel)]="dataAdd.CITIZEN_IDSUP" />
+                                                        <input name="BDOPERATION_NAMESUP" type="hidden" id="BDOPERATION_NAMESUP"
+                                                            [(ngModel)]="dataAdd.BDOPERATION_NAMESUP" />
+                                                        <div class="ng-autocomplete">
+                                                            <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_IDSUP1"
+                                                                [data]="datacomplete" [searchKeyword]="keyword"
+                                                                placeholder="ผู้ควบคุมงาน" (selected)='selectEvent($event,6)'
+                                                                (inputChanged)='onChangeSearch($event,6)'
+                                                                [itemTemplate]="itemTemplate"
+                                                                [notFoundTemplate]="notFoundTemplate">
+                                                            </ng-autocomplete>
+                                                            <ng-template #itemTemplate let-item>
+                                                                <a [innerHTML]="item.name"></a>
+                                                            </ng-template>
+                                                            <ng-template #notFoundTemplate let-notFound>
+                                                                <div [innerHTML]="notFound"></div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name" class="txt-font3">คณะกรรมการกำหนดราคากลางงานก่อสร้าง</label>
+                                                        <input name="CITIZEN_IDC" type="hidden" id="CITIZEN_IDSET"
+                                                            [(ngModel)]="dataAdd.CITIZEN_IDSET" />
+                                                        <input name="BDOPERATION_NAMESET" type="hidden" id="BDOPERATION_NAMESET"
+                                                            [(ngModel)]="dataAdd.BDOPERATION_NAMESET" />
+                                                        <div class="ng-autocomplete">
+                                                            <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_IDSET1"
+                                                                [data]="datacomplete" [searchKeyword]="keyword"
+                                                                placeholder="คณะกรรมการกำหนดราคากลางงานก่อสร้าง" (selected)='selectEvent($event,7)'
+                                                                (inputChanged)='onChangeSearch($event,7)'
+                                                                [itemTemplate]="itemTemplate"
+                                                                [notFoundTemplate]="notFoundTemplate">
+                                                            </ng-autocomplete>
+                                                            <ng-template #itemTemplate let-item>
+                                                                <a [innerHTML]="item.name"></a>
+                                                            </ng-template>
+                                                            <ng-template #notFoundTemplate let-notFound>
+                                                                <div [innerHTML]="notFound"></div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="name" class="txt-font3">คณะกรรมการกำหนดรายละเอียดคุณลักษณะเฉพาะของแบบรูปรายการ</label>
+                                                        <input name="CITIZEN_IDC" type="hidden" id="CITIZEN_IDDET"
+                                                            [(ngModel)]="dataAdd.CITIZEN_IDDET" />
+                                                        <input name="BDOPERATION_NAMEDET" type="hidden" id="BDOPERATION_NAMEDET"
+                                                            [(ngModel)]="dataAdd.BDOPERATION_NAMEDET" />
+                                                        <div class="ng-autocomplete">
+                                                            <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_IDDET1"
+                                                                [data]="datacomplete" [searchKeyword]="keyword"
+                                                                placeholder="คณะกรรมการกำหนดรายละเอียดคุณลักษณะเฉพาะของแบบรูปรายการ" (selected)='selectEvent($event,8)'
+                                                                (inputChanged)='onChangeSearch($event,8)'
+                                                                [itemTemplate]="itemTemplate"
+                                                                [notFoundTemplate]="notFoundTemplate">
+                                                            </ng-autocomplete>
+                                                            <ng-template #itemTemplate let-item>
+                                                                <a [innerHTML]="item.name"></a>
+                                                            </ng-template>
+                                                            <ng-template #notFoundTemplate let-notFound>
+                                                                <div [innerHTML]="notFound"></div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </td>
+                                    <td width="5%"></td>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>

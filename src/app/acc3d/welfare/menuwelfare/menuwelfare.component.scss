@@ -1,0 +1,6 @@
+// Sticky navbar - ทำให้ header ล็อคอยู่ด้านบนเมื่อเลื่อนหน้าจอ
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}

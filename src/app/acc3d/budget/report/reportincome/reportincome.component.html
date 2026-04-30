@@ -1,0 +1,366 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">สรุปวงเงินเพื่อตั้งงบประมาณรายจ่าย
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col">
+                    <!-- BASIC TABLE -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                                    <label> หน่วยเบิกจ่าย: </label>
+                                    <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
+                                        id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdataCam()"
+                                        (change)="fetchdatalistcr()">
+                                        <option value=""
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS!='1'">
+                                            ทุกวิทยาเขต
+                                        </option>
+                                        <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">
+                                            {{cam.CAMPUS_TNAME}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 text-secondary" style="font-size: 10pt">
+                                    <label> คณะ /หน่วยงาน: </label>
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalistcr()">
+                                        <option value=""
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS!='1'">
+                                            ทุกคณะ/หน่วยงาน</option>
+                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                            {{fac.FACULTY_TNAME}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 " style="font-size: 10pt">
+                                    <label>ปีงบประมาณ: </label>
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE" (change)="fetchdatalistcr()">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 ">
+                                    <label for="name" class="text-secondary" style="font-size: 10pt">ระดับ</label>
+                                    <select name="in_come" id="in_come" class="form-select"
+                                        [(ngModel)]="dataAdd.CRCOURSE_ID">
+                                        <option value="">ทุกระดับ</option>
+                                        <option [value]="inc.CRCOURSE_ID" *ngFor="let inc of dataCrcourse">
+                                            {{inc.CRCOURSE_TNAME}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="name" class="text-secondary" style="font-size: 10pt">ภาค</label>
+                                    <select name="cr_code" id="cr_code" class="form-select"
+                                        [(ngModel)]="dataAdd.CRPART_ID">
+                                        <option value="">ทุกภาค</option>
+                                        <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpart">
+                                            {{crp.CRPART_TNAME}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2" style="font-size: 10pt">
+                                    <label for="name" class="text-secondary" style="font-size: 10pt">จากวันที่</label>
+                                    <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker
+                                        #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
+                                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                                    </i>
+                                </div>
+                                <div class="col-md-2" style="font-size: 10pt">
+                                    <label for="name" class="text-secondary" style="font-size: 10pt">ถึงวันที่</label>
+                                    <input placeholder="ถึงวันที่" type="text" class="form-control" bsDatepicker
+                                        #dp2="bsDatepicker" [(ngModel)]="dataAdd.DATENOWT" readonly>
+                                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp2.toggle()">
+                                    </i>
+                                </div>
+                                <div class="col-md-1">
+                                    <br>
+                                    <button type="submit" class="btn btn-primary" id="submitinsert"
+                                        (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border " role="status" id="loading"></div>
+        </div>
+        <div *ngIf="rownum" class="row">
+            <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()"> <i
+                        class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export
+                    Excel</button></div>
+            <div class="col-md-5"></div>
+            <div class="col-md-5">
+
+            </div>
+        </div>
+        <div class="overflow-auto">
+
+            <div *ngIf="rownum" class="row" id="excel-table">
+                <div class="col-md-12">
+                    <table class="table " width="100%" class="table table-bordered table-striped table-hover ">
+                        <thead>
+                            <tr>
+                                <th colspan="18">
+                                    <div align="center">สรุปวงเงินเพื่อตั้งงบประมาณรายจ่าย
+                                        {{dataAdd.CAMPUS_NAME}}
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th colspan="18">
+                                    <div align="center">{{dataAdd.CRCOURSE_TNAME}}</div>
+                                </th>
+                            </tr>
+                            <tr class="bg-info">
+                                <th width="15%" rowspan="3" align="center"><strong>
+                                        <div align="center">คณะ/หน่วยงาน</div>
+                                    </strong></th>
+                                <th height="15" colspan="4" align="center"><strong>
+                                        <div align="center">ข้อมูลประมาณการรายรับค่าธรรมเนียมการศึกษา</div>
+                                    </strong></th>
+                                <th colspan="4" align="center"><strong>
+                                        <div align="center">ข้อมูลรายรับจริง</div>
+                                    </strong></th>
+                                <th colspan="3" align="center"><strong>
+                                        <div align="center">สูง(ต่ำ)กว่าประมาณการ</div>
+                                    </strong></th>
+                                <th colspan="3" align="center"><strong>
+                                        <div align="center">นักศึกษาลงทะเบียน</div>
+                                    </strong></th>
+                            </tr>
+                            <tr class="bg-info">
+                                <th height="15" colspan="4" align="center"><strong>
+                                        <div align="center">ประมาณการ</div>
+                                    </strong></th>
+                                <th colspan="4" align="center"><strong>
+                                        <div align="center">ค่าธรรมเนียมการศึกษา</div>
+                                    </strong></th>
+                                <th colspan="3" align="center"><strong>
+                                        <div align="center">ค่าธรรมเนียมการศึกษา</div>
+                                    </strong></th>
+                                <th colspan="3" align="center"><strong>
+                                        <div align="center">ค่าลงทะเบียน</div>
+                                    </strong></th>
+                            </tr>
+                            <tr class="bg-info">
+                                <th>
+                                    <div align="center">2/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">3/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">1/{{dataAdd.PLYEARBUDGET_CODE}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">รวม</div>
+                                </th>
+                                <th>
+                                    <div align="center">2/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">3/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">1/{{dataAdd.PLYEARBUDGET_CODE}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">รวม</div>
+                                </th>
+                                <th>
+                                    <div align="center">2/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">3/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">1/{{dataAdd.PLYEARBUDGET_CODE}}</div>
+                                </th>
+                                <th>
+                                    <div align="center">เทอม1</div>
+                                </th>
+                                <th>
+                                    <div align="center">เทอม2</div>
+                                </th>
+                                <th>
+                                    <div align="center">เทอม3</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                            <tr *ngFor="let p of datalist">
+                                <td>{{p.FACULTY_NAME}}
+                                    <br>
+                                    ({{p.CRPART_TNAME}})
+                                </td>
+                                <td align="right">{{p.REVEVUE_N2| number : '1.2-2'}}</td>
+                                <td align="right">{{p.REVEVUE_N3| number : '1.2-2'}}</td>
+                                <td align="right">{{p.REVEVUE_N1| number : '1.2-2'}}</td>
+                                <td align="right">{{p.REVEVUE_SUM| number : '1.2-2'}}</td>
+                                <td align="right">{{p.term2| number : '1.2-2'}}</td>
+                                <td align="right">{{p.term3| number : '1.2-2'}}</td>
+                                <td align="right">{{p.term1| number : '1.2-2'}}</td>
+                                <td align="right">{{p.term_SUM| number : '1.2-2'}}</td>
+                                <td align="right">{{p.estimate2| number : '1.2-2'}}</td>
+                                <td align="right">{{p.estimate3| number : '1.2-2'}}</td>
+                                <td align="right">{{p.estimate1| number : '1.2-2'}}</td>
+                                <td align="right">{{p.REVEVUE_REGISTER1| number : '1.2-2'}}</td>
+                                <td align="right">{{p.REVEVUE_REGISTER2| number : '1.2-2'}}</td>
+                                <td align="right">{{p.REVEVUE_REGISTER3| number : '1.2-2'}}</td>
+
+                            </tr>
+                            <tr *ngIf="!rownum">
+                                <td colspan="15">ไม่มีข้อมูล{{rownum}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-md-12">
+                        <table class="table" width="100%" class="table table-bordered table-striped table-hover ">
+                            <thead>
+                                <tr>
+                                    <th colspan="18">
+                                        <div align="center">ข้อมูลรายจ่ายจริง</div>
+                                    </th>
+                                </tr>
+                                <tr class="bg-info">
+                                    <th width="15%" rowspan="2" align="center"><strong>
+                                            <div align="center">คณะ/หน่วยงาน</div>
+                                        </strong></th>
+                                    <th colspan="4" align="center"><strong>
+                                            <div align="center">ข้อมูลรายรับที่ใช้ในการคำนวณ</div>
+                                        </strong></th>
+                                    <th  [attr.colspan]="dataAdd?.numpay || 1" align="center"><strong>
+                                            <div align="center">วงเงินตั้งงบประมาณรายจ่าย</div>
+                                        </strong></th>
+                                    <th rowspan="2" align="center"><strong>
+                                            <div align="center">วงเงินตั้งจ่าย</div>
+                                        </strong></th>
+                                    <th rowspan="2" align="center"><strong>
+                                            <div align="center">รวมหัก</div>
+                                        </strong></th>
+                                    <th rowspan="2" align="center"><strong>
+                                            <div align="center">งบกลาง</div>
+                                        </strong></th>
+                                    <th rowspan="2" align="center"><strong>
+                                            <div align="center">เบิกจ่าย</div>
+                                        </strong></th>
+                                    <th rowspan="2" align="center"><strong>
+                                            <div align="center">คงเหลือ</div>
+                                        </strong></th>
+                                </tr>
+                                <tr class="bg-info">
+                                    <th>
+                                        <div align="center">2/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">3/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">1/{{dataAdd.PLYEARBUDGET_CODE}}</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">รวม</div>
+                                    </th>
+                                    <th  *ngFor="let item of datalistpayd">
+                                        <div align="center">{{item.REVEVUE_NAME}}</div>
+                                    </th>
+
+                                  <!--  <th>
+                                        <div align="center">สมทบค่าไฟฟ้ามหาวิทยาลัย</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">สมทบจัดการศึกษามหาวิทยาลัย</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">สมทบส่วนกลางสงขลา/วิทยาเขตฯ</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">เงินสนับสนุนสวัสดิการ นศ. </div>
+                                    </th>
+                                    <th>
+                                        <div align="center">ค่าบำรุงห้องสมุด</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">ค่าบริการคอมพิวเตอร์และเครื่อข่าย</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">งบประมาณส่งเสริมและพัฒนางานวิจัยส่วนงานภายใน</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">งบประมาณพัฒนางานวิจัย</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">งบประมาณเพื่อพัฒนาบุคลากร</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">สมทบส่วนราชการ</div>
+                                    </th>
+                                    <th>
+                                        <div align="center">ค่าธรรมเนียมอื่น</div>
+                                    </th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalistpay">
+                                    <td>{{p.FACULTY_NAME}}
+                                        <br>
+                                        ({{p.CRPART_TNAME}})
+                                    </td>
+                                   <td align="right">{{p.REVEVUE_N2| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_N3| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_N1| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_SUM| number : '1.2-2'}}</td>
+                                   <!--   <td align="right">{{p.REVEVUE_ELE| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_EDT| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_CEN| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_BE| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_LIBRARY| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_NETWORK| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_FRESD| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_RES| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_FPER| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_FAC| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_OTHER| number : '1.2-2'}}</td>-->  
+                                    <td align="right" *ngFor="let item of datalistpayd">{{item.REVEVUE_MONEY| number : '1.2-2'}}</td> 
+                                    <td align="right">{{p.PAYMENT| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.TOTAL| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REVEVUE_MB| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.DISBURSEMENT| number : '1.2-2'}}</td>
+                                    <td align="right">{{p.REMAINING| number : '1.2-2'}}</td>
+
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="15">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

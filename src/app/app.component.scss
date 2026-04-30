@@ -1,0 +1,98 @@
+@font-face {
+  font-family: kanit;
+  src: local("kanit"), url(../assets/fonts/Kanit-Regular.ttf) format("truetype");
+}
+.app-container{
+  //font-family: "kanit";
+  font-family: 'Prompt-Regular', sans-serif;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 700,
+  'GRAD' 200,
+  'opsz' 48
+}
+.material-symbols-sharp {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 200,
+  'opsz' 48
+}
+.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 700,
+  'GRAD' 200,
+  'opsz' 48
+}
+
+.txt-user {
+  font-family: "kanit";
+  font-size: 14px;
+}
+
+.navbar {
+  color:white;
+  //font-family: 'Kanit-Regular', sans-serif;
+  font-size: 14px;
+}
+.txt-font {
+  //font-family: 'Kanit-Regular', sans-serif;
+  position: absolute;
+  font-size: 16px;
+  margin-top: 11px;
+  margin-left: -80px;
+}
+.txt_version {
+  //font-family: 'Kanit-Regular', sans-serif;
+  position:absolute;
+  font-size: 14px;
+  margin-top: 20px;
+  color:rgba(255, 255, 255, 0.685);
+  font-family: 'Prompt-Regular', sans-serif;
+}
+.txt_version2 {
+  //font-family: 'Kanit-Regular', sans-serif;
+  font-family: 'Prompt-Regular', sans-serif;
+  font-weight: bold;
+  position:absolute;
+  font-size: 12px;
+  margin-top: 20px;
+  margin-left: -52px;
+  color: #000;
+  //color:rgba(255, 255, 255, 0.685);
+
+}
+.txt_version3 {
+  //font-family: 'Kanit-Regular', sans-serif;
+  font-family: 'Prompt-Regular', sans-serif;
+  position:absolute;
+  font-size: 15px;
+  margin-top: 20px;
+  color:rgba(255, 255, 255, 0.685);
+}
+
+.btn-home {
+  position: absolute;
+  margin-left: -120px;
+}
+
+@media (min-width: 1px) and (max-width: 650px) {
+  .display_sm_hide {
+      display:none;
+  }
+  .display_sm_show {
+    display:inline-block;
+  }
+}
+@media (min-width: 650px) and (max-width: 3200px) {
+  .display_xl_hide {
+      display:none;
+  }
+  .display_xl_show {
+    display:inline-block;
+  }
+}

@@ -1,0 +1,209 @@
+<!-- Dashboard Header -->
+<div class="container-fluid px-4 py-3">
+    <div class="dashboard-header mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <h4 class="dashboard-title">
+                    <i class="fa-solid fa-chart-pie me-2 text-primary"></i>
+                </h4>
+                <p class="text-muted mb-0">สรุปข้อมูลเบิกการรักษาพยาบาลและการศึกษาของบุตร</p>
+            </div>
+            <div class="col-md-2">
+                <label class="me-2 fw-bold text-secondary">หน่วยเบิกจ่าย:</label>
+                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CAMPUS_CODE"
+                    (change)=" fetchdataCam()">
+                    <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS =='1'">
+                        ทุกวิทยาเขต
+                    </option>
+                    <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">
+                        {{cam.CAMPUS_TNAME}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="me-2 fw-bold text-secondary">คณะ/หน่วยงาน:</label>
+                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
+                    <option value="">
+                        ทุกคณะ/หน่วยงาน</option>
+                    <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}
+                    </option>
+                </select>
+
+            </div>
+            <div class="col-md-1">
+                <label class="me-2 fw-bold text-secondary">ปีงบประมาณ:</label>
+                <select class="form-select year-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE"
+                    (change)="fetchdashboard()">
+                    <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                        {{year.PLYEARBUDGET_CODE}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <br>
+                <button class="btn btn-primary" (click)="fetchdashboard()">ค้นหา</button>
+            </div>
+        </div>
+        <br>
+        <!-- Loading Spinner -->
+        <div class="row justify-content-center center-screen" *ngIf="loading">
+            <div class="spinner-border" role="status" id="loading"></div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-4">
+            <!-- Card 1: จำนวนรายการค่ารักษาพยาบาล -->
+            <div class="col-xl-3 col-md-6">
+                <div class="summary-card card-medical-count">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-file-medical"></i>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">จำนวนรายการการรักษาพยาบาล</span>
+                        <span class="card-value"> {{medicalCount | number}}</span>
+                        <span class="card-unit"> รายการ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: ยอดเบิกค่ารักษาพยาบาล -->
+            <div class="col-xl-3 col-md-6">
+                <div class="summary-card card-medical-total">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-notes-medical"></i>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">ยอดเบิกการรักษาพยาบาล</span>
+                        <span class="card-value"> {{medicalTotal | number : '1.2-2'}}</span>
+                        <span class="card-unit"> บาท</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: จำนวนรายการค่าเล่าเรียนบุตร -->
+            <div class="col-xl-3 col-md-6">
+                <div class="summary-card card-school-count">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">จำนวนรายการการศึกษาของบุตร</span>
+                        <span class="card-value"> {{schoolCount | number}}</span>
+                        <span class="card-unit"> รายการ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: ยอดเบิกค่าเล่าเรียนบุตร -->
+            <div class="col-xl-3 col-md-6">
+                <div class="summary-card card-school-total">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+                    <div class="card-content">
+                        <span class="card-label">ยอดเบิกการศึกษาของบุตร</span>
+                        <span class="card-value"> {{schoolTotal | number : '1.2-2'}}</span>
+                        <span class="card-unit"> บาท</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow-sm chart-card">
+                    <div class="card-header chart-card-header">
+                        <i class="fa-solid fa-chart-column me-2"></i>สรุปยอดเบิกรายเดือน
+                    </div>
+                    <div class="card-body">
+                        <canvas id="wfBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Section -->
+        <div class="row g-3 mb-4">
+            <!-- Medical Table -->
+            <div class="col-md-6">
+                <div class="card shadow-sm table-card">
+                    <div class="card-header table-card-header medical-header">
+                        <i class="fa-solid fa-notes-medical me-2"></i>รายการเบิกการรักษาพยาบาลล่าสุด
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead>
+                                    <tr class="table-header-medical">
+                                        <th width="5%" class="text-center">ที่</th>
+                                        <th>คณะ/หน่วยงาน</th>
+                                        <th>ชื่อ-สกุล</th>
+                                        <th class="text-end">จำนวนเงิน</th>
+                                        <th class="text-center">วันที่</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of datalistMedical; let i = index" class="table-row">
+                                        <td class="text-center">{{i+1}}</td>
+                                        <td>{{p.FACULTY_TNAME}}</td>
+                                        <td>{{p.STF_FNAME}}</td>
+                                        <td class="text-end fw-bold">{{p.FEREIMDT_WMONEY | number : '1.2-2'}}</td>
+                                        <td class="text-center">{{p.FEDUCATION_RDATE}}</td>
+                                    </tr>
+                                    <tr *ngIf="!datalistMedical || datalistMedical.length === 0">
+                                        <td colspan="5" class="text-center text-muted py-3">ไม่มีข้อมูล</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a routerLink="epmedical_load" class="btn btn-sm btn-outline-danger">
+                            <i class="fa-solid fa-arrow-right me-1"></i>ดูทั้งหมด
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- School Table -->
+            <div class="col-md-6">
+                <div class="card shadow-sm table-card">
+                    <div class="card-header table-card-header school-header">
+                        <i class="fa-solid fa-graduation-cap me-2"></i>รายการเบิกการศึกษาของบุตรล่าสุด
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead>
+                                    <tr class="table-header-school">
+                                        <th width="5%" class="text-center">ที่</th>
+                                        <th>คณะ/หน่วยงาน</th>
+                                        <th>ชื่อ-สกุล</th>
+                                        <th class="text-end">จำนวนเงิน</th>
+                                        <th class="text-center">วันที่</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of datalistSchool; let i = index" class="table-row">
+                                        <td class="text-center">{{i+1}}</td>
+                                        <td>{{p.FACULTY_TNAME}}</td>
+                                        <td>{{p.STF_FNAME}}</td>
+                                        <td class="text-end fw-bold">{{p.FEREIMDT_WMONEY | number : '1.2-2'}}</td>
+                                        <td class="text-center">{{p.FEDUCATION_RDATE}}</td>
+                                    </tr>
+                                    <tr *ngIf="!datalistSchool || datalistSchool.length === 0">
+                                        <td colspan="5" class="text-center text-muted py-3">ไม่มีข้อมูล</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <a routerLink="epschool_load" class="btn btn-sm btn-outline-primary">
+                            <i class="fa-solid fa-arrow-right me-1"></i>ดูทั้งหมด
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

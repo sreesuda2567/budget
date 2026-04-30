@@ -1,0 +1,137 @@
+<div class="card border-light mx-4 mt-4">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-10">
+        <h5 class="card-title">เพิ่มรายงานการใช้เงินนอกงบประมาณ (รม.4)</h5>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="shadow alert alert-info" role="alert">
+    <div class="row">
+      <div class="col-md-9 text-secondary" style="font-size: 10pt"> คณะ/หน่วยงาน: </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select" (change)="fetchcrpart()"
+          [(ngModel)]="dataAdd.FACULTY_CODE">
+          <option [value]="cam.FACULTY_CODE" *ngFor="let cam of dataFac">{{cam.FACULTY_TNAME}}</option>
+
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 text-secondary" style="font-size: 10pt"> แหล่งเงิน: </div>
+      <div class="col-md-3 text-secondary" style="font-size: 10pt"> ปีงบประมาณ: </div>
+      <div class="col-md-3 text-secondary" style="font-size: 10pt"> วันที่: </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select" [(ngModel)]="dataAdd.CRPART_ID">
+          <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpart">{{crp.CRPART_TNAME}}</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+          <option [value]="inc.PLYEARBUDGET_CODE" *ngFor="let inc of dataYear">{{inc.PLYEARBUDGET_NAME}}</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input placeholder="วันที่" type="text" class="form-control" bsDatepicker #dp="bsDatepicker"
+          [(ngModel)]="dataAdd.CHECK3D_GF_DATE">
+          <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+          class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+        </i>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-success" id="submitinsert" (click)="fetchdatalist()"><i
+            class="fa fa-search"></i>&nbsp;ค้นหาข้อมูล</button>
+      </div>
+      <div class="col-md-2">
+        <button *ngIf="bon" type="submit" class="btn btn-primary" id="submitinsert" (click)="insertdata()"><i
+            class="fa fa-plus-circle"></i>&nbsp;บันทึกข้อมูล</button>
+      </div>
+    </div>
+  </div>
+    <div class="row justify-content-center center-screen" *ngIf="loading">
+      <div class="spinner-border " role="status" id="loading"></div>
+    </div>
+    <table id="excel-table" class="shadow-lg table card-table table-bordered table-vcenter tableFixHead btn-font3">
+      <thead>
+        <tr class="bg-primary  text-white">
+          <th><div align="center">รายการ</div></th>
+          <th><div align="center">รับจริง</div></th>
+         <th><div align="center">ค่าใช้จ่ายภายในกรม</div></th>
+          <th><div align="center">ลูกหนี้คงเหลือสิ้นปี</div></th>
+          <th><div align="center">รายได้ภายในกรม</div></th>
+          <th><div align="center">จัดสรรหลังโอนเปลี่ยนแปลง</div></th>
+          <th><div align="center">ผลเบิกจ่าย</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of datalist;let i = index">
+          <td [ngStyle]="{'background-color':'#00CCFF'}" *ngIf="p.PLGPRODUCT_SHORTNAME" colspan="7">
+            <strong>{{p.PLGPRODUCT_SHORTNAME}}</strong></td>
+          <td [ngStyle]="{'background-color':'#77E3FF'}" *ngIf="p.PLMONEYPAY_NAME" colspan="7">
+            <strong>{{p.PLMONEYPAY_NAME}}</strong></td>
+          <td
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME">{{p.PLSUBMONEYPAY_NAME}}
+            <input class="form-control" name="CHECK3D_GF_CODE" type="hidden" id="CHECK3D_GF_CODE" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.CHECK3D_GF_CODE[i]" />
+          </td>
+          <td width="13%"
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">
+            <input class="form-control" name="CHECK3D_RM_RMONEY" type="text" id="CHECK3D_RM_RMONEY" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.CHECK3D_RM_RMONEY[i]" />
+          </td>
+          <td width="13%"
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">
+            <input class="form-control" name="CHECK3D_RM_EXPENSESD" type="text" id="CHECK3D_RM_EXPENSESD" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.CHECK3D_RM_EXPENSESD[i]" />
+          </td>
+          <td width="13%"
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">
+            <input class="form-control" name="CHECK3D_RM_DEBTOR" type="text" id="CHECK3D_RM_DEBTOR" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.CHECK3D_RM_DEBTOR[i]" />
+          </td>
+          <td width="13%"
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">
+            <input class="form-control" name="CHECK3D_RM_INCOME" type="text" id="CHECK3D_RM_INCOME" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.CHECK3D_RM_INCOME[i]" />
+          </td>
+          <td width="13%"
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">
+            <input class="form-control" name="CHECK3D_GF_MONEYAL" type="text" id="CHECK3D_GF_MONEYAL" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.CHECK3D_GF_MONEYAL[i]" />
+          </td>
+          <td width="13%"
+            [ngStyle]="{'background-color':p.PLASSET_RSTATUS=='0' ? '#FF8282':p.PLSUBMONEYPAY_LEVEL=='1' ? '#D7F2FF':p.PLSUBMONEYPAY_LEVEL=='2' ? '#FFE6FF':'#FFFFCC'}"
+            *ngIf="p.PLSUBMONEYPAY_NAME" align="right">
+            <input class="form-control" name="CHECK3D_GF_MONEYGF" type="text" id="CHECK3D_GF_MONEYGF" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.CHECK3D_GF_MONEYGF[i]" />
+
+            <input class="form-control" name="PLSUBMONEYPAY_CODE" type="hidden" id="PLSUBMONEYPAY_CODE" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE[i]" />
+            <input class="form-control" name="PLGPRODUCT_CODE" type="hidden" id="PLGPRODUCT_CODE" size="10"
+              style="font-size: 16pt;text-align:center; " [(ngModel)]="dataAdd.PLGPRODUCT_CODE[i]" />
+          </td>
+
+        </tr>
+        <tr [ngStyle]="{'background-color':'#eee'}">
+          <td align="right" colspan="5">รวมทั้งหมด</td>
+          <td align="right" [(innerHTML)]="dataAdd.moneybl1"></td>
+          <td align="right" [(innerHTML)]="dataAdd.moneybl2"></td>
+
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+</div>

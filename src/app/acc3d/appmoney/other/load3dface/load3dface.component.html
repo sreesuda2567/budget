@@ -1,0 +1,321 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col">
+                <h5 class="card-title mb-0">เงินอื่นๆ/ออกใบปะหน้าจ่าย</h5>
+            </div>
+            <div class="col-auto">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-danger text-white" (click)="fetchdatalist()">
+                        <i class="fa fa-plus-circle"></i> ออกใบปะหน้า</a>
+                    <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalistapp()"><i
+                            class="fa fa-search"></i>&nbsp;รายการใบปะหน้า</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+                <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col">
+                    <!-- BASIC TABLE -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label for="name">แสดงข้อมูล</label>
+                                    <select (change)="onTableSizeChange($event)" class="form-select">
+                                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                            {{ size }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-4 text-secondary">
+                                    <label for="name">คณะ /หน่วยงาน</label>
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()">
+                                         <option *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" value="" >ทั้งหมด</option>
+                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                            {{fac.FACULTY_TNAME}}</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="name">ปีงบประมาณ</label>
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+                            <div class="col-md-3 text-secondary" style="font-size: 10pt">
+                                    <br>
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>    
+                             <!--  <div class="col-md-2 text-secondary">
+                                    <label> จากวันที่: </label>
+                                    <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker
+                                        #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
+                                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                                    </i>
+                                </div>
+                                <div class="col-md-2 text-secondary">
+                                    <label> ถึงวันที่: </label>
+                                    <input placeholder="ถึงวันที่" type="text" class="form-control" bsDatepicker
+                                        #dp2="bsDatepicker" [(ngModel)]="dataAdd.DATENOWT" readonly>
+                                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                                        class="fa-solid fa-calendar-days cursor-p text-primary"
+                                        (click)="dp2.toggle()"></i>
+                                </div>--> 
+                                
+                            </div>
+                        </div>
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table *ngIf="rownum" width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่ดำเนินการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                    </th>
+                    <th>
+                        <div align="center">หน่วยงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภทเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภท</div>
+                    </th>
+                    <th>
+                        <div align="center">เลขสัญญา</div>
+                    </th>
+                    <th>
+                        <div align="center">เลขฎีกา</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">จัดการข้อมูล</div>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      }; let i = index">
+                    <td align="center" data-label="ที่:">{{i+1}}</td>
+                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                     <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
+                    <td data-label="ชื่อเรื่อง:">{{p.FNANNALS_BOOK_SUB}}</td>
+                    <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                    <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
+                    <td data-label="เลขฎีกา:">{{p.FNANNALSMAP_DEKA}}</td>
+                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                    <td data-label="รายงาน:">
+                        
+                        <span *ngIf="p.load3d"><a role="button" title="รายงานใบโหลด"
+                                class="btn btn-secondary text-white" (click)="previewPdf(p.load3d)"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>     
+                    </td>
+                    <td align="center" data-label="เลือก:">
+                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALSMAP_CODE,p.CONTRACT_LINK)"
+                           ><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
+                    </td>
+                </tr>
+                <tr *ngIf="!rownum">
+                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table *ngIf="rownum1" width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่ดำเนินการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                    </th>
+                     <th>
+                        <div align="center">หน่วยงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภทเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภท</div>
+                    </th>
+                   <th>
+                        <div align="center">เลขสัญญา</div>
+                    </th>
+                    <th>
+                        <div align="center">เลขฎีกา</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">แก้ไข</div>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr *ngFor="let p of datalistapp|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      }; let i = index">
+                    <td align="center" data-label="ที่:">{{i+1}}</td>
+                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                     <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
+                    <td data-label="ชื่อเรื่อง:">{{p.FNANNALS_BOOK_SUB}}</td>
+                    <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                     <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
+                     <td data-label="เลขฎีกา:">{{p.FNANNALSMAP_DEKA}}</td>
+                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                    <td data-label="รายงาน:">
+                      
+                         <span *ngIf="p.load3df"><a role="button" title="รายงานใบปะหน้าจ่าย"
+                                class="btn btn-success text-white" (click)="previewPdf(p.load3df)"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>     
+                    </td>
+                    <td align="center" data-label="เลือก:">
+                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalupdate" (click)="editdatapp(p.FNANNALSMAP_CODE,p.disbursement,p.CITIZEN_IDD1)"
+                            ><i class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
+                    </td>
+                </tr>
+                <tr *ngIf="!rownum1">
+                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div *ngIf="rownum1" class="d-flex justify-content-left">
+            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกใบปะหน้าจ่าย</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                     <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ผู้รับผิดชอบ</label>
+                        <br>
+                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDD1">
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-8">
+                        <label for="name">แนบไฟล์เอกสาร</label>
+                        <br>
+                        <input class="form-control" type="file" (change)="onChangepdf($event)"
+                            [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+
+                    </div>
+                    <div class="col-md-2">
+                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
+                        </label>
+                        <br>
+                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i class="fa-solid fa-file-pdf "
+                                            style="color: green; font-size: 30px;"></i></a>
+                        &nbsp;
+                    </div>
+                    <div class="form-group col-md-1"></div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- PDF Preview Side Panel -->
+<div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
+<div class="pdf-preview-panel" [class.open]="previewPdfUrl">
+    <div class="pdf-preview-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+        <div>
+            <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+                <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+            </a>
+            <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+                <i class="fa fa-times me-1"></i> ปิด
+            </button>
+        </div>
+    </div>
+    <div class="pdf-preview-body">
+        <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
+    </div>
+</div>

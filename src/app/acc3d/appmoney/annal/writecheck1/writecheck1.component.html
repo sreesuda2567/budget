@@ -1,0 +1,235 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">ลงนามเช็ค</h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="shadow alert alert-info" role="alert">
+            <div class="row">
+                <div class="col">
+                    <!-- BASIC TABLE -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <nav class="nav">
+                                        <a class="nav-link text-primary fw-bold" style="cursor:pointer"
+                                            (click)="fetchdatalist('0')">รอลงนาม</a>
+                                        |
+                                        <a class="nav-link text-success fw-bold" style="cursor:pointer"
+                                            (click)="fetchdatalist('1')">ลงนามแล้ว</a>
+                                    </nav>
+                                </div>
+                                <div class="col-md-4 text-secondary">
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.FACULTY_CODE">
+                                        <option *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" value="">ทั้งหมด</option>
+                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                            {{fac.FACULTY_TNAME}}</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select name="y_code" id="y_code" class="form-select"
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+                                        <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                            {{year.PLYEARBUDGET_CODE}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button *ngIf="dataAdd.STATUS=='0'" type="submit" class="btn btn-success"
+                                        id="submitupdate" (click)="submitData()"><i
+                                            class="fa fa-edit"></i>&nbsp;ลงนาม</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่ดำเนินการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                    </th>
+                    <th>
+                        <div align="center">หน่วยงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภทเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภท</div>
+                    </th>
+                    <th>
+                        <div align="center">เลขสัญญา</div>
+                    </th>
+                    <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                    <th *ngIf="dataAdd.STATUS=='0'">
+                        <div align="center">เลือก
+                            <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
+                                [(ngModel)]="dataAdd.checkall" (click)="checkall()" [disabled]="dataAdd.checkll==0">
+                        </div>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr *ngFor="let p of datalist; let i = index">
+                    <td align="center" data-label="ที่:">{{i+1}}</td>
+                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                    <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
+                    <td data-label="ประเภทเงิน:">{{p.FNANNALS_BOOK_SUB}}</td>
+                    <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                    <td align="center" data-label="เลขสัญญา:">{{p.FNALLBW_CTNO}}</td>
+                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                    <td data-label="รายงาน:">
+                        <!--  <span *ngIf="p.link1">
+                            <a role="button" title="เอกสานแนบedoc" class="btn btn-danger text-white" href="{{p.link1}}"
+                                target="_blank"><i class="fa-solid fa-paperclip"></i></a>
+                            &nbsp;
+                        </span>
+                        <span *ngIf="p.FNANNALS_LINK">
+                            <a role="button" title="เอกสานแนบเพิ่มเติม" class="btn btn-secondary text-white"
+                                href="{{p.FNANNALS_LINK}}" target="_blank"><i class="fa-solid fa-paperclip"></i> </a>
+                            &nbsp;
+                        </span>
+                        <span *ngIf="p.link2 && p.FNANNALS_CODE2">
+                            <a role="button" title="ขออนุญาต" class="btn btn-warning text-white" href="{{p.link2}}"
+                                target="_blank"> <i class="fa-solid fa-person-walking-luggage"></i></a>
+                            &nbsp; </span>
+                        <span *ngIf="p.link3">
+                            <a role="button" title="ขออนุมัติเงิน" class="btn btn-success text-white" href="{{p.link3}}"
+                                target="_blank"><i class="fas fa-file-alt"></i></a>
+                            &nbsp; </span>-->
+                        <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานสัญญา"
+                                class="btn btn-primary text-white" href="{{p.CONTRACT_LINK}}" target="_blank"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>
+                        <!--  <span *ngIf="p.linkclear"><a role="button" title="รายงานใบเบิก"
+                                class="btn btn-secondary text-white" href="{{p.linkclear}}" target="_blank"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>-->
+                        <span *ngIf="p.disbursement"><a role="button" title="รายงานใบปะหน้า"
+                                class="btn btn-warning text-white" href="{{p.disbursement}}" target="_blank"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>    
+                    </td>
+                    <td *ngIf="dataAdd.STATUS=='0'" align="center" data-label="เลือก:">
+                        <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
+                            [(ngModel)]="dataAdd.check[i]">
+                        <input name="FNANNALS_CODE" type="hidden" id="FNANNALS_CODE" size="10"
+                            [(ngModel)]="dataAdd.FNANNALS_CODE[i]" />
+                    </td>
+                </tr>
+                <tr *ngIf="!rownum">
+                    <td colspan="10">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table *ngIf="rownum1" width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th>
+                        <div align="center">ที่</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่ดำเนินการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                    </th>
+                    <th>
+                        <div align="center">ชื่อเรื่อง</div>
+                    </th>
+                    <th>
+                        <div align="center">ประเภท</div>
+                    </th>
+                    <th>
+                        <div align="center">สถานะ</div>
+                    </th>
+                    <th>
+                        <div align="center">รายงาน</div>
+                    </th>
+                    <th>
+                        <div align="center">แก้ไข</div>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                <tr *ngFor="let p of datalistapp; let i = index">
+                    <td align="center" data-label="ที่:">{{i+1}}</td>
+                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                    <td data-label="ชื่อเรื่อง:">{{p.FNANNALS_BOOK_SUB}}
+                        <div *ngIf="p.FSTF_FNAMEA" class="text-danger">
+                            <br>
+                            (ผู้ตรวจสอบ:{{p.FSTF_FNAMEA}})
+                        </div>
+                    </td>
+                    <td align="center" data-label="สถานะ:">{{p.FNCSTATUS_NAME}}</td>
+                    <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                    <td data-label="รายงาน:">
+                        <span *ngIf="p.link1">
+                            <a role="button" title="เอกสานแนบ" class="btn btn-danger text-white" href="{{p.link1}}"
+                                target="_blank"><i class="fa-solid fa-paperclip"></i></a>
+                            &nbsp;
+                        </span>
+                        <span *ngIf="p.link2 && p.FNANNALS_CODE2">
+                            <a role="button" title="ขออนุญาต" class="btn btn-warning text-white" href="{{p.link2}}"
+                                target="_blank"> <i class="fa-solid fa-person-walking-luggage"></i></a>
+                            &nbsp; </span>
+                        <span *ngIf="p.link3">
+                            <a role="button" title="ขออนุมัติเงิน" class="btn btn-success text-white" href="{{p.link3}}"
+                                target="_blank"><i class="fas fa-file-alt"></i></a>
+                            &nbsp; </span>
+                        <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานสัญญา"
+                                class="btn btn-primary text-white" href="{{p.CONTRACT_LINK}}" target="_blank"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>
+                        <span *ngIf="p.linkclear"><a role="button" title="รายงานใบเบิก"
+                                class="btn btn-secondary text-white" href="{{p.linkclear}}" target="_blank"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>
+                    </td>
+                    <td align="center" data-label="เลือก:">
+                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalupdate"
+                            (click)="editdatapp(p.FNANNALS_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2)"
+                            (click)="setshowbti()"><i class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
+                    </td>
+                </tr>
+                <tr *ngIf="!rownum1">
+                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

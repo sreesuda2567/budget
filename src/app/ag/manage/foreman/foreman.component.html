@@ -1,0 +1,218 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">ผู้บริหารประจำหน่วยงาน</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                (click)="showinput()" (click)="setshowbti()">
+                <i class="fa fa-plus-circle"></i> เพิ่มรายการใหม่</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1"></div>
+                                <div align="right" class="col-md-1">
+                                    
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()"  >
+                                        <option [value]="main.FACULTY_CODE" *ngFor="let main of dataFac">{{main.FACULTY_TNAME1}}
+                                        </option>
+                                      </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table width="100%" id="example"
+                            class="shadow-lg table table-bordered  table-striped table-hover">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th><div align="center">ที่</div></th>
+                                    <th><div align="center">รหัสบัตรประชาชน</div></th>
+                                    <th><div align="center">ชื่อ-สกุล</div></th>
+                                    <th><div align="center">ตำแหน่ง</div></th>
+                                    <th><div align="center">วันที่รับ</div></th>
+                                    <th><div align="center">วันที่สิ้นสุด</div></th>
+                                    <th><div align="center">สถานะ</div></th>
+                                    <th><div align="center">จัดการข้อมูล</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalist|filter:searchTerm; let i = index">
+                                    <td align="center">{{i+1}}</td>
+                                    <td align="center">{{p.CITIZEN_ID}}</td>
+                                    <td>{{p.STF_FNAME}}</td>
+                                    <td>{{p.CHIEF_NAME1}} </td>
+                                    <td align="center">{{p.FOREMAN_SDATE1}} </td>
+                                    <td align="center">{{p.FOREMAN_EDATE1}} </td>
+                                    <td align="center">{{p.FOREMAN_RSTATUS}} </td>
+                                    <td align="center"><a role="button" title="แก้ไข" data-bs-toggle="modal"
+                                        data-bs-target="#modalEdit" class="btn btn-warning text-white"
+                                        (click)="editdata(p.FOREMAN_CODE,p.STF_FNAME)"><i
+                                            class="fa fa-edit"></i></a></td>
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+<div class="modal fade" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <input type="hidden" class="form-control" name="FOREMAN_CODE" id="FOREMAN_CODE"
+                    [(ngModel)]="dataAdd.FOREMAN_CODE">
+                        <label for="name">ประเภท</label>
+                        <select name="FOREMAN_AT" id="FOREMAN_AT" class="form-select" [(ngModel)]="dataAdd.FOREMAN_AT" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="type.FOREMANTYPE_CODE" *ngFor="let type of dataForeman">{{type.FOREMANTYPE_NAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ชื่อ-สกุล</label>
+                        <input name="CITIZEN_ID" type="hidden" id="CITIZEN_ID" [(ngModel)]="dataAdd.CITIZEN_ID" />
+                        <div class="ng-autocomplete">
+                            <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_ID1" [data]="datacomplete"
+                                [searchKeyword]="keyword" placeholder="ชื่อ-สกุล" (selected)='selectEvent($event)'
+                                (inputChanged)='onChangeSearch($event)' [itemTemplate]="itemTemplate"
+                                [notFoundTemplate]="notFoundTemplate">
+                            </ng-autocomplete>
+                            <ng-template #itemTemplate let-item>
+                                <a [innerHTML]="item.name"></a>
+                            </ng-template>
+                            <ng-template #notFoundTemplate let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ตำแหน่งทางบริหาร</label>
+                        <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select" [(ngModel)]="dataAdd.CHIEF_CODE" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="type.CHIEF_CODE" *ngFor="let type of dataChief">{{type.CHIEF_NAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">สาขา/ฝ่ายที่ประเมิน:</label>
+                        <select name="DEPARTMENT_CODE" id="DEPARTMENT_CODE" class="form-select" [(ngModel)]="dataAdd.DEPARTMENT_CODE" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="type.DEPARTMENT_CODE" *ngFor="let type of dataDepart">{{type.DEPARTMENT_TNAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">รายละเอียด</label>
+                        <select name="FOREMAN_DETAIL" id="FOREMAN_DETAIL" class="form-select" [(ngModel)]="dataAdd.FOREMAN_DETAIL" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option value="รักษาราชการแทน" >รักษาราชการแทน</option>
+                            <option value="ปฏิบัติหน้าที่" >ปฏิบัติหน้าที่</option>
+                            <option value="ปฏิบัติหน้าที่แทน" >ปฏิบัติหน้าที่แทน</option>
+                            <option value="ปฏิบัติราชการแทน" >ปฏิบัติราชการแทน</option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">รักษาราชการแทน</label>
+                        <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select" [(ngModel)]="dataAdd.CHIEF_CODE2" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="type.CHIEF_CODE" *ngFor="let type of dataChief">{{type.CHIEF_NAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">สถานะ</label>
+                        <select name="FOREMAN_RSTATUS" id="FOREMAN_RSTATUS" class="form-select" [(ngModel)]="dataAdd.FOREMAN_RSTATUS" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option value="1" >ใช้งาน</option>
+                            <option value="0" >ไม่ใช้งาน</option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-3">
+                        <label for="name">วันที่รับตำแหน่ง</label>
+                        <input type="text" name="p_bname" id="p_bname" bsDatepicker #dp5="bsDatepicker"
+                            class="form-control" placeholder="วันที่สิ้นสุดรับตำแหน่ง" [(ngModel)]="dataAdd.FOREMAN_SDATE" readonly>
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp5.toggle()">
+                        </i>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="name">วันที่สิ้นสุดรับตำแหน่ง</label>
+                        <input type="text" name="p_bname" id="p_bname" bsDatepicker #dp6="bsDatepicker"
+                            class="form-control" placeholder="วันที่สิ้นสุดรับตำแหน่ง" [(ngModel)]="dataAdd.FOREMAN_EDATE" readonly>
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp6.toggle()">
+                        </i>
+                    </div>
+                    <div class="form-group col-md-7"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>

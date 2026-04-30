@@ -1,0 +1,236 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">หมวดรายจ่ายย่อย</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                    (click)="showinput()" (click)="setshowbti()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                                <div align="right" class="col-md-1">
+                                    <select (change)="onTableSizeChange($event)" class="form-select">
+                                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                            {{ size }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-4">
+                                    <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLMONEYPAY_CODE" (change)="fetchdatalist()">
+                                      <option value="" >ทั้งหมด</option>
+                                      <option [value]="mo.PLMONEYPAY_CODE" *ngFor="let mo of dataplmoney">{{mo.PLMONEYPAY_NAME}}
+                                      </option>
+                                    </select>
+                              </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table width="100%" id="example"
+                            class="shadow-lg table table-bordered   table-hover tableFixHead btn-font3">
+                            <thead>
+                                <tr class="bg-primary text-white">
+                                    <th> <div align="center">ที่</div></th>
+                                    <th> <div align="center">รหัส</div></th>
+                                    <th> <div align="center">LCODE</div></th>
+                                    <th> <div align="center">ชื่อหมวดรายจ่ายย่อย</div></th>
+                                    <th><div align="center">ระดับ</div></th>
+                                    <th><div align="center">ใช้กับ</div></th>
+                                    <th><div align="center">การตัดเงิน</div></th>
+                                    <th><div align="center">rstatus</div></th>
+                                    <th><div align="center">ดึงgf</div></th>
+                                    <th><div align="center">สถานะการใช้งาน</div></th>
+                                    <th>จัดการข้อมูล</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      } ; let i = index" [ngStyle]="{'background-color':p.PLSUBMONEYPAY_LEVEL=='1' ? '#d2faf9':p.PLSUBMONEYPAY_LEVEL=='2' ? '#fff2f9':p.PLSUBMONEYPAY_LEVEL=='3' ? '#faf7e6':p.PLSUBMONEYPAY_LEVEL=='4' ? '#e8fae6':''}">
+                                    <td width="5%" align="center" >{{(page*tableSize)-tableSize+i+1}}</td>
+                                    <td >{{p.PLSUBMONEYPAY_CODE}}</td>
+                                    <td>{{p.PLSUBMONEYPAY_LCODE}} </td>
+                                    <td >{{p.PLSUBMONEYPAY_NAME}} </td>
+                                    <td align="center">{{p.PLSUBMONEYPAY_LEVEL}} </td>
+                                    <td align="center">{{p.PLSUBMONEYPAY_TYPE}} </td>
+                                    <td align="center">{{p.PLSUBMONEYPAY_PSTATUS}} </td>
+                                    <td align="center">{{p.PLSUBMONEYPAY_RSTATUS}} </td>
+                                    <td align="center">{{p.PLSUBMONEYPAY_GSTATUS}} </td>
+                                    <td align="center">{{p.SASTATUS_NAME}} </td>
+                                    <td width="8%">
+                                        <a *ngIf="PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                                            (click)="deleteData(p.PLSUBMONEYPAY_CODE)"><i class="fa fa-trash"></i>
+                                        </a>&nbsp;
+                                        <a  *ngIf="PRIVILEGE_RSTATUS=='A'" role="button" title="แก้ไข" data-bs-toggle="modal"
+                                            data-bs-target="#modalEdit" class="btn btn-warning text-white"
+                                            (click)="editdata(p.PLSUBMONEYPAY_CODE,p.PLSUBMONEYPAY_NAME)"><i
+                                                class="fa fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!rownum">
+                                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-left">
+                            <pagination-controls previousLabel="Prev" nextLabel="Next"
+                                (pageChange)="onTableDataChange($event)">
+                            </pagination-controls>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+<div class="modal fade" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-2">
+                        <label for="name">ระดับ</label>
+                        <select name="PLSUBMONEYPAY_LEVEL" id="PLSUBMONEYPAY_LEVEL" class="form-select" [(ngModel)]="dataAdd.PLSUBMONEYPAY_LEVEL" (change)="onChangecode()" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="1" >ระดับ 1</option>
+                            <option [value]="2" >ระดับ 2</option>
+                            <option [value]="3" >ระดับ 3</option>
+                            <option [value]="4" >ระดับ 4</option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="name">ภายใต้หมวดรายจ่าย</label>
+                        <select name="PLSUBMONEYPAY_LCODE1" id="PLSUBMONEYPAY_LCODE1" class="form-select" [(ngModel)]="dataAdd.PLSUBMONEYPAY_LCODE1" (change)="onChanglcode()" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="type.PLSUBMONEYPAY_CODE" *ngFor="let type of datalcode">{{type.PLSUBMONEYPAY_NAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">รหัสหมวดรายจ่ายย่อย</label>
+                        <input type="text" name="PLSUBMONEYPAY_CODE" class="form-control" id="PLSUBMONEYPAY_CODE"
+                            placeholder="รหัสหมวดรายจ่ายย่อย" [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">LCODE</label>
+                        <input type="text" name="PLSUBMONEYPAY_LCODE" class="form-control" id="PLSUBMONEYPAY_LCODE"
+                            placeholder="LCODE" [(ngModel)]="dataAdd.PLSUBMONEYPAY_LCODE">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ชื่อหมวดรายจ่ายย่อย</label>
+                        <input type="text" name="PLSUBMONEYPAY_NAME" class="form-control" id="PLSUBMONEYPAY_NAME"
+                            placeholder="ชื่อหมวดรายจ่ายย่อย" [(ngModel)]="dataAdd.PLSUBMONEYPAY_NAME">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ใช้กับ</label>
+                        <select name="PLSUBMONEYPAY_TYPE" id="PLSUBMONEYPAY_TYPE" class="form-select" [(ngModel)]="dataAdd.PLSUBMONEYPAY_TYPE" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="1" >งบประมาณ</option>
+                            <option [value]="2" >เงินรายได้</option>
+                            <option [value]="3" >ทุกประเภท</option>
+
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">การตัดเงิน</label>
+                        <select name="PLSUBMONEYPAY_PSTATUS" id="PLSUBMONEYPAY_PSTATUS" class="form-select" [(ngModel)]="dataAdd.PLSUBMONEYPAY_PSTATUS" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="0" >ไม่ตัดเงิน</option>
+                            <option [value]="1" >ตัดเงินได้</option>
+
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">rstatus</label>
+                        <input type="text" name="PLSUBMONEYPAY_RSTATUS" class="form-control" id="PLSUBMONEYPAY_RSTATUS"
+                            placeholder="rstatus" [(ngModel)]="dataAdd.PLSUBMONEYPAY_RSTATUS">
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ดึงรายงานgf</label>
+                        <select name="PLSUBMONEYPAY_GSTATUS" id="PLSUBMONEYPAY_GSTATUS" class="form-select" [(ngModel)]="dataAdd.PLSUBMONEYPAY_GSTATUS" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="0" >ไม่ดึงgf</option>
+                            <option [value]="1" >ดึงgf</option>
+
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">สถานะ</label>
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLSUBMONEYPAY_ASTATUS" >
+                            <option value="" >กรุณาเลือก</option>
+                            <option [value]="type.SASTATUS_CODE" *ngFor="let type of datastatus">{{type.SASTATUS_NAME}}
+                            </option>
+                          </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

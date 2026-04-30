@@ -1,0 +1,210 @@
+<div class="card border-light mx-4 mt-4">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-10">
+                <h5 class="card-title">ทะเบียนโครงการ</h5>
+            </div>
+            <div class="col-md-2" align="right">
+                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                    (click)="showinput()" (click)=" setshowbti()">
+                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <!-- BASIC TABLE -->
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="shadow alert alert-info" role="alert">
+                            <div class="row">
+                                <div class="col-md-12 "><strong>คณะ /หน่วยงาน</strong> </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()">
+                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                            {{fac.FACULTY_TNAME}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center center-screen" *ngIf="loading">
+                            <div class="spinner-border " role="status" id="loading"></div>
+                        </div>
+                        <div class="shadow alert alert-secondary" role="alert">
+                            <div class="row">
+                                <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                                <div align="right" class="col-md-1">
+                                    <select (change)="onTableSizeChange($event)" class="form-select">
+                                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                                            {{ size }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6"></div>
+                                <div class="col-md-4" align="center">
+                                    <div class="input-group">
+                                        <input class="form-control border-end-0 border" type="search"
+                                            placeholder="ค้นหาข้อมูล" id="example-search-input"
+                                            [(ngModel)]="searchTerm">
+                                        <span class="input-group-append">
+                                            <button
+                                                class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
+                                                type="button">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="overflow-auto">
+                            <table width="100%" id="example"
+                                class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+                                <thead>
+                                    <tr class="bg-primary text-white">
+                                        <th>
+                                            <div align="center">ที่</div>
+                                        </th>
+                                        <th>
+                                            <div align="center">ประเภทโครงการ</div>
+                                        </th>
+                                        <th>
+                                            <div align="center">สถานะ</div>
+                                        </th>
+                                        <th>
+                                            <div align="center">ชื่อรายการ</div>
+                                        </th>
+                                        <th>
+                                            <div align="center">จัดการข้อมูล</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                                    <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      } ; let i = index">
+                                        <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                                        <td width="15%">{{p.PLPROJECTTYPE_NAME}}</td>
+                                        <td width="10%">{{p.type}}</td>
+                                        <td>{{p.PRREGISPROJECT_NAME}}</td>
+                                        <td width="8%">
+                                            <span *ngIf="(p.numrow==0 && (dataAdd.CITIZEN_ID== p.CITIZEN_ID)) || dataAdd.PRIVILEGE_RSTATUS=='A'"> <a role="button" title="ลบข้อมูล"
+                                                    class="btn btn-danger text-white"
+                                                    (click)="deleteData(p.PRREGISPROJECT_CODE)"><i
+                                                        class="fa fa-trash"></i> </a>&nbsp;</span>
+                                            <a *ngIf="(p.numrowde==0 && (dataAdd.CITIZEN_ID== p.CITIZEN_ID)) || dataAdd.PRIVILEGE_RSTATUS=='A'" role="button"
+                                                title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                                class="btn btn-warning text-white"
+                                                (click)="editdata(p.PRREGISPROJECT_CODE)"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="!rownum">
+                                        <td colspan="5">ไม่มีข้อมูล{{rownum}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-left">
+                                <pagination-controls previousLabel="Prev" nextLabel="Next"
+                                    (pageChange)="onTableDataChange($event)">
+                                </pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+<div class="modal fade" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">รายละเอียดทะเบียนโครงการ</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-6">
+                        <input name="PRREGISPROJECT_CODE" type="hidden" id="PRREGISPROJECT_CODE"
+                            [(ngModel)]="dataAdd.PRREGISPROJECT_CODE" />
+                        <label for="name">ประเภทโครงการ</label>
+                        <select name="provice_code" id="provice_code" class="form-select"
+                            [(ngModel)]="dataAdd.PLPROJECTTYPE_CODE">
+                            <option [value]="assettype.PLPROJECTTYPE_CODE" *ngFor="let assettype of dataAssettype">
+                                {{assettype.PLPROJECTTYPE_NAME}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-5"></div>
+                  <!-- <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-3">
+                        <label for="name">พื้นที่ดำเนินโครงการ จังหวัด</label>
+                        <select name="provice_code" id="provice_code" class="form-select"
+                            (change)="onChangedistrict('')" [(ngModel)]="dataAdd.PROVINCE_ID">
+                            <option [value]="provice.PROVINCE_ID" *ngFor="let provice of dataProvince">
+                                {{provice.PROVINCE_TNAME}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="name">อำเภอ</label>
+                        <select name="district_code" id="district_code" class="form-select"
+                            (change)="onChangesubdistrict('')" [(ngModel)]="dataAdd.DISTRICT_ID">
+                            <option [value]="">กรุณาเลือก</option>
+                            <option [value]="district.DISTRICT_ID" *ngFor="let district of dataDistrict">
+                                {{district.DISTRICT_NAME_TH}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="name">ตำบล</label>
+                        <select name="subdistrict_code" id="subdistrict_code" class="form-select"
+                            [(ngModel)]="dataAdd.SUB_DISTRICT_ID">
+                            <option [value]="">กรุณาเลือก</option>
+                            <option [value]="subdistrict.SUB_DISTRICT_ID" *ngFor="let subdistrict of dataSubdistrict">
+                                {{subdistrict.SUB_DISTRICT_NAME_TH}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>--> 
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ชื่อโครงการ</label>
+                        <!--<textarea id="PRREGISPROJECT_NAME" name="PRREGISPROJECT_NAME"
+                            [(ngModel)]="dataAdd.PRREGISPROJECT_NAME" rows="4" cols="50" class="form-control"></textarea>-->
+                        <input name="PRREGISPROJECT_NAME" list="list-timezone" id="PRREGISPROJECT_NAME" type="text"
+                            rows="4" class="form-control" placeholder="ชื่อเรื่อง/ชื่อโครงการ" (keyup)="keyname()"
+                            [(ngModel)]="dataAdd.PRREGISPROJECT_NAME          ">
+                        <datalist id="list-timezone">
+                            <option *ngFor="let nameasset of datalistname">{{nameasset.PRREGISASSET_NAME}}</option>
+                        </datalist>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-2">
+                        <label for="name">สถานะ</label>
+                        <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE">
+                            <option [value]="1">โครงการทั่วไป</option>
+                            <option [value]="2">โครงการวิจัย</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
+                    (click)="insertdata()">บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            </div>
+        </div>
+    </div>
+</div>
