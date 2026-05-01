@@ -309,6 +309,8 @@ export class DisbursementComponent implements OnInit {
     this.dataAdd.FNEXACCTD_NOTE = '';
     this.dataAdd.FNRESTATUS_CODE = '2';
     this.dataAdd.FNRESTATUS = '';
+    this.dataAdd.CITIZEN_IDP1 = '';
+    this.dataAdd.CITIZEN_IDP2 = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any, link: any, money: any, mail: any, at: any, name: any) {
@@ -377,6 +379,30 @@ export class DisbursementComponent implements OnInit {
                 }
               }
               );
+            this.fetchdatalist();
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            document.getElementById("ModalClose")?.click();
+          } else {
+            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+          }
+        });
+
+
+    }
+  }
+    // ฟังก์ขันสำหรับการเพิ่มข้อมูล
+  insertdataapp() {
+    if (this.dataAdd.FNANNALS_MONEYC == '') {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกจำนวนเงิน");
+
+    } else {
+      this.dataAdd.opt = "insertapp";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);   uploadbook    
+          if (data.status == 1) {
             this.fetchdatalist();
             this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
             document.getElementById("ModalClose")?.click();
