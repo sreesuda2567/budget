@@ -35,7 +35,7 @@ export class DisbursementComponent implements OnInit {
   rowpbi: any;
   rowpbu: any;
   rownum1: any;
-  dataAdd: any = {FRACCCODE:[]};
+  dataAdd: any = {FRACCCODE:[],FRACCMONEY:[]};
   locale = 'th-be';
   locales = listLocales();
   datalistapp: any;
@@ -53,6 +53,7 @@ export class DisbursementComponent implements OnInit {
   dataAcc: any;
   datacampus: any;
   dataIncome: any;
+  dataProduct: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   constructor(
@@ -101,7 +102,7 @@ export class DisbursementComponent implements OnInit {
           .pipe(first())
           .subscribe((data: any) => {
             this.datacampus = data;
-            this.dataAdd.CAMPUS_CODE = data[0].CAMPUS_CODE;
+            //this.dataAdd.CAMPUS_CODE = data[0].CAMPUS_CODE;
           });
         //รายการปี
         var Table = {
@@ -170,7 +171,18 @@ export class DisbursementComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataIncome = data;
-        this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+       // this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+      }); 
+       //รายการผลผลิต
+    var Tablein = {
+      "opt": "viewPLGPRODUCT"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataProduct = data;
+       // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
       });   
        
   }
@@ -311,6 +323,11 @@ export class DisbursementComponent implements OnInit {
     this.dataAdd.FNRESTATUS = '';
     this.dataAdd.CITIZEN_IDP1 = '';
     this.dataAdd.CITIZEN_IDP2 = '';
+    this.dataAdd.PLINCOME_CODE = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
+    this.dataAdd.CAMPUS_CODE = '';
+    this.dataAdd.FRACCCODE = [];
+    this.dataAdd.FRACCMONEY = [];
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any, link: any, money: any, mail: any, at: any, name: any) {
@@ -328,6 +345,45 @@ export class DisbursementComponent implements OnInit {
       this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
     }
     this.rowpbi = true;
+  }
+    // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+  editdatapr(id: any, link: any, money: any, mail: any, at: any, name: any) {
+    this.setshowbti();
+    this.onChangeedoc();
+    this.onChangechief();
+    this.fetchdatareport();
+    this.fetchdatareportnamea();
+    this.dataAdd.FNANNALS_CODE = id;
+    this.dataAdd.EBOOKREQ_LINK = link;
+    this.dataAdd.USERNAME_CISCO = mail;
+    this.dataAdd.FNANNALS_BOOK_AT = at;
+    this.dataAdd.FSTF_FNAME = name;
+    if (money != null) {
+      this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
+    }
+    this.rowpbi = true;
+    
+    this.apiService
+      .getById(id, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+       // this.dataSeq = data.data2;
+        this.dataAdd.FNANNALSMAP_RSTATUS = data.data[0].FNANNALSMAP_STATUS;
+        this.dataAdd.FNANNALS_MONEYC = parseFloat(data.data[0].FNANNALS_MONEYC).toFixed(2);
+        this.dataAdd.CITIZEN_IDB = data.data[0].CITIZEN_IDB;
+        this.dataAdd.CHIEF_CODE = data.data[0].CHIEF_CODE;
+        this.dataAdd.DEPARTMENT_CODE = data.data[0].DEPARTMENT_CODE;
+        this.dataAdd.PLINCOME_CODE = data.data[0].PLINCOME_CODE;
+        this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
+        this.dataAdd.CAMPUS_CODE = data.data[0].CAMPUS_CODE;
+        this.dataAdd.CITIZEN_IDP1 = data.data[0].CITIZEN_IDP1;
+        this.dataAdd.CITIZEN_IDP2 = data.data[0].CITIZEN_IDP2;
+        this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
+         for (let i = 0; i < data.data2.length; i++) {
+            this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
+            this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
+          }
+      });
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdatapp(id: any, link: any, ciz: any, code: any, edoc: any, chief: any, money: any, type: any, status: any) {

@@ -153,7 +153,7 @@
                     <td align="center" data-label="เลือก:">
                         <button type="submit" title="ใบเบิก" class="btn btn-primary text-white" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
+                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
                             (click)="onChangeRadio(1)"><i
                                 class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
                          <button type="submit" title="สถานะใบเสร็จ" class="btn btn-secondary" id="submitupdate"
@@ -563,7 +563,17 @@
                             </option>
                         </select>
                     </div>
-                    
+                    <div class="form-group col-md-2">
+                        <label for="name">ผลผลิต</label>
+                        <select name="PLGPRODUCT_CODE" id="PLGPRODUCT_CODE" class="form-select"
+                            [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
+                            <option [value]="item.PLGPRODUCT_CODE" *ngFor="let item of dataProduct">
+                                {{item.PLGPRODUCT_SHORTNAME}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-7"></div>
+                    <div class="form-group col-md-1"></div>
                     <div *ngIf="dataAdd.FNANNALSMAP_RSTATUS=='6'" class="form-group col-md-3">
                         <label for="name">หน่วยเบิกจ่าย</label>
                         <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select"
@@ -573,7 +583,6 @@
                             </option>
                         </select>
                     </div>
-        
                     <div class="form-group col-md-3">
                         <label for="name">ผู้อนุมัติ 1</label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDP1">
@@ -606,6 +615,9 @@
                                   <option [value]="sec.FRACC_CODE" *ngFor="let sec of dataAcc">
                                     {{sec.FRACC_TNAME}}-->{{sec.FRACC_CODE}}</option>
                                 </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FRACCMONEY[i]" >
                     </div>
                     
                 </div>
