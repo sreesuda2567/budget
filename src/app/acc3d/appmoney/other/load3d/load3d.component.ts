@@ -237,6 +237,8 @@ export class Load3dComponent implements OnInit {
     this.dataAdd.CITIZEN_IDC2 = '';
     this.dataAdd.CHIEF_CODE = '';
     this.dataAdd.FNANNALSMAP_DEKA = '';
+    this.dataAdd.FNANNALSMAP_DOC = '';
+    this.dataAdd.DATENOWS = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any, id2: any) {
@@ -294,6 +296,11 @@ export class Load3dComponent implements OnInit {
 
     } else {
       this.dataAdd.opt = "insert";
+      if (this.dataAdd.DATENOWS != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWS);
+      } else {
+        this.dataAdd.FNANNALSMAP_DDATE = '';
+      }
       this.apiService
         .getupdate(this.dataAdd, this.url)
         .pipe(first())
@@ -324,6 +331,11 @@ export class Load3dComponent implements OnInit {
   updatedata() {
 
     this.dataAdd.opt = "update";
+    if (this.dataAdd.DATENOWS != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWS);
+      } else {
+        this.dataAdd.FNANNALSMAP_DDATE = '';
+      }
     this.apiService
       .getupdate(this.dataAdd, this.url)
       .pipe(first())

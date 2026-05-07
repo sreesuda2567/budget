@@ -12,6 +12,7 @@ import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-disbursement',
@@ -323,6 +324,7 @@ export class DisbursementComponent implements OnInit {
     this.dataAdd.FNRESTATUS = '';
     this.dataAdd.CITIZEN_IDP1 = '';
     this.dataAdd.CITIZEN_IDP2 = '';
+    this.dataAdd.CITIZEN_IDP3 = '';
     this.dataAdd.PLINCOME_CODE = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
     this.dataAdd.CAMPUS_CODE = '';
@@ -378,6 +380,7 @@ export class DisbursementComponent implements OnInit {
         this.dataAdd.CAMPUS_CODE = data.data[0].CAMPUS_CODE;
         this.dataAdd.CITIZEN_IDP1 = data.data[0].CITIZEN_IDP1;
         this.dataAdd.CITIZEN_IDP2 = data.data[0].CITIZEN_IDP2;
+        this.dataAdd.CITIZEN_IDP3 = data.data[0].CITIZEN_IDP3;
         this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
          for (let i = 0; i < data.data2.length; i++) {
             this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
@@ -461,7 +464,7 @@ export class DisbursementComponent implements OnInit {
           if (data.status == 1) {
             this.fetchdatalist();
             this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-            document.getElementById("ModalClose")?.click();
+            document.getElementById("ModalCloseb")?.click();
           } else {
             this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
           }
@@ -470,6 +473,36 @@ export class DisbursementComponent implements OnInit {
 
     }
   }
+    sendfile(id: any, link: any, link3: any) {
+      this.dataAdd.FNANNALSMAP_CODE = id;
+    //  this.editdata(id);
+      this.dataAdd.link2 = link;
+      this.dataAdd.link3 = link3;
+      Swal.fire({
+        title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        this.dataAdd.opt = "sendfile";
+        if (result.value) {
+          this.apiService
+            .getdata(this.dataAdd, this.url)
+            .pipe(first())
+            .subscribe((data: any) => {
+              if (data.status == 1) {
+                this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                this.fetchdatalist();
+  
+              }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+        }
+      });
+  
+    }
   updatedata() {
 
     this.dataAdd.opt = "update";

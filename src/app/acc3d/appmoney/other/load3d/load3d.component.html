@@ -289,7 +289,20 @@
                             placeholder="เลขฎีกา" [(ngModel)]="dataAdd.FNANNALSMAP_DEKA">
 
                     </div>
-                    <div class="form-group col-md-8"></div>
+                    <div class="form-group col-md-3">
+                        <label for="name">เลขเอกสาร</label>
+                        <input type="text" name="FNANNALSMAP_DOC" class="form-control" id="FNANNALSMAP_DOC"
+                            placeholder="เลขเอกสาร" [(ngModel)]="dataAdd.FNANNALSMAP_DOC">
+                    </div>
+                    <div class="col-md-3 text-secondary" style="font-size: 10pt">
+                        <label> วันที่ผ่านรายการเบิก: </label>
+                        <input placeholder="วันที่ผ่านรายการเบิก" type="text" class="form-control" bsDatepicker
+                            #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                        </i>
+                    </div>
+                    <div class="form-group col-md-2"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
                         <label for="name">เรียน</label>
