@@ -425,4 +425,85 @@ export class FollowprojectComponent implements OnInit {
     XLSX.writeFile(wb, this.fileName);
   
   } 
+  printModalPdf() {
+    const printContent = document.getElementById('printArea');
+    if (!printContent) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>รายละเอียดโครงการ - ${this.dataFAdd.PLPROJECT_NAME}</title>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+            * { box-sizing: border-box; }
+            body {
+              font-family: 'TH Sarabun New', 'Sarabun', 'Tahoma', sans-serif;
+              padding: 20px;
+              font-size: 14pt;
+              color: #333;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 0;
+            }
+            td, th {
+              border: 1px solid #dee2e6;
+              padding: 8px 10px;
+              vertical-align: top;
+            }
+            .bg-warning {
+              background-color: #ffc107 !important;
+            }
+            .bg-info {
+              background-color: #0dcaf0 !important;
+            }
+            .text-danger { color: #dc3545 !important; }
+            .text-white { color: #fff !important; }
+            td[bgcolor="#999999"], tr[bgcolor="#999999"], [bgcolor="#999999"] {
+              background-color: #999999 !important;
+              color: #000;
+              font-weight: bold;
+              text-align: center;
+            }
+            strong { font-weight: bold; }
+            .d-print-none { display: none !important; }
+            .row { display: flex; flex-wrap: wrap; }
+            .col-md-11 { flex: 0 0 91.66%; max-width: 91.66%; }
+            .col-md-1 { flex: 0 0 8.33%; max-width: 8.33%; }
+            .table { width: 100%; margin-bottom: 0; }
+            .table-bordered td, .table-bordered th { border: 1px solid #dee2e6; }
+            .table-hover tbody tr:hover { background-color: rgba(0,0,0,.075); }
+            @media print {
+              body { margin: 0; padding: 15px; }
+              .d-print-none { display: none !important; }
+              .bg-warning { background-color: #ffc107 !important; }
+              .bg-info { background-color: #0dcaf0 !important; }
+              td[bgcolor="#999999"], tr[bgcolor="#999999"], [bgcolor="#999999"] {
+                background-color: #999999 !important;
+              }
+            }
+            @page {
+              size: A4;
+              margin: 15mm;
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent.innerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.onafterprint = () => {
+        printWindow.close();
+      };
+    }, 800);
+  }
 }

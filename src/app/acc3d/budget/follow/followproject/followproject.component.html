@@ -191,7 +191,7 @@
           <h5 class="modal-title text-white" id="exampleModalLabel">รายละเอียดโครงการ</h5>
           <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="printArea">
 
           <table *ngFor="let p of datalists;let i = index" width="100%" border="0" cellspacing="0" cellpadding="0"
             class="table table-bordered table-hover">
@@ -202,66 +202,66 @@
                  
                   <div class="row">
                     <div class="col-md-11" > {{dataFAdd.PLPROJECT_NAME}} </div>
-                    <div class="col-md-1"> 
-                      <a role="button" title="แนบสำเนาคำสั่งจ้าง" class="btn btn-danger text-white"
-                                                    href="https://budget.rmutsv.ac.th/follow/show_plan.php?id={{dataAdd.id }}" target="_blank"><i class="fa-solid fa-print"></i></a>
+                    <div class="col-md-1 d-print-none"> 
+                      <a role="button" title="พิมพ์รายละเอียด" class="btn btn-danger text-white"
+                                                    (click)="printModalPdf()"><i class="fa-solid fa-print"></i></a>
                       </div>
                   </div>
                 
                 </td>
               </tr>
-              <tr *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'">
+              <tr *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" class="d-print-none">
                 <td colspan="2" align="center">
                   <div [(innerHTML)]="dataFAdd.PLPROJECT_CODE"></div>
                 </td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td class="bg-warning" colspan="2" width="30%" align="center" valign="top">
                   <strong>รายละเอียดโครงการ</strong>
                 </td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>ชื่อโครงการ ::</strong></td>
                 <td height="20" valign="top" class="cs3">{{p.PLPROJECT_NAME}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>แหล่งงบประมาณ ::</strong></td>
                 <td height="20" align="left" valign="top" class="cs3">{{p.PLINCOME_NAME}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>หมวดรายจ่าย ::</strong></td>
                 <td height="20" align="left" valign="top" class="cs3">{{p.PLMONEYPAY_NAME}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>หมวดรายจ่ายย่อย ::</strong></td>
                 <td height="20" align="left" valign="top" class="cs3">{{p.PLSUBMONEYPAY_NAME}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>ผลผลิต ::</strong></td>
                 <td height="20" align="left" valign="top" class="cs3">{{p.PLGPRODUCT_SHORTNAME}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>งบประมาณที่ได้รับจัดสรร
                     ::</strong>
                 </td>
                 <td height="20" valign="top" class="cs3">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>งบประมาณหลังโอนเปลี่ยนแปลง ::</strong>
                 </td>
                 <td height="20" valign="top" class="cs3">{{p.PLPROJECT_MONEYT| number : '1.2-2'}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>ผู้รับผิดชอบโครงการ ::</strong>
                 </td>
                 <td height="20" valign="top" class="cs3">{{p.PLTRACPROSIECT_NAME}} โทร :: {{p.PLTRACPROSIECT_TEL}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>ระยะเวลาดำเนินการตามแผน:: </strong>
                 </td>
                 <td height="20" align="left" valign="top" class="cs3">{{p.PLPROJECT_SDATE}}</td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>ผลการเบิกจ่าย 3D ::</strong></td>
                 <td colspan="2" width="55%" height="20" align="left" valign="top" class="cs3">
                   <table width="90%" class="table table-bordered">
@@ -383,7 +383,7 @@
                   </table>
                 </td>
               </tr>
-              <tr>
+              <tr class="d-print-none">
                 <td width="30%" align="right" valign="top" class="cs4"><strong>สถานะดำเนินงาน
                     ::</strong></td>
                 <td height="20" align="left" valign="top" class="cs3">

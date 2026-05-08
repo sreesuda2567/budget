@@ -31,7 +31,8 @@ export class ReportdaycheckComponent implements OnInit {
   datalistdetail: any;
   loading: any;
   loadingdetail: any;
-  dataAdd: any = { check: [], FNANNALSMAPR_CODE: [], FNEXACC_DETAIL: [], USERNAME_CISCO: [], FNANNALSMAP_CODE: [] };
+  dataAdd: any = { check: [], FNANNALSMAPR_CODE: [], FNEXACC_DETAIL: [], USERNAME_CISCO: [], FNANNALSMAP_CODE: [],CFNANNALSMAPR_CODE: [], CFNANNALSMAP_CODE: [] };
+  selectedItems: any[] = [];
   searchTerm: any;
   show: any;
   dataPro: any;
@@ -369,11 +370,37 @@ fetchdata() {
       for (let i = 0; i < this.datalist.length; i++) {
         this.dataAdd.check[i] = false;
       }
+      this.selectedItems = [];
+      this.dataAdd.CFNANNALSMAPR_CODE = [];
+      this.dataAdd.CFNANNALSMAP_CODE = [];
     } else {
       for (let i = 0; i < this.datalist.length; i++) {
         this.dataAdd.check[i] = true;
       }
+      this.selectedItems = [...this.datalist];
+      this.dataAdd.CFNANNALSMAPR_CODE = this.datalist.map((item: any) => item.FNANNALSMAPR_CODE);
+      this.dataAdd.CFNANNALSMAP_CODE = this.datalist.map((item: any) => item.FNANNALSMAP_CODE);
     }
+  }
+  onCheckChange(item: any, index: number) {
+    if (this.dataAdd.check[index]) {
+      // คลิกเลือก → เก็บค่าไว้ในตัวแปร
+      this.selectedItems.push(item);
+      this.dataAdd.CFNANNALSMAPR_CODE.push(item.FNANNALSMAPR_CODE);
+      this.dataAdd.CFNANNALSMAP_CODE.push(item.FNANNALSMAP_CODE);
+    } else {
+      // คลิกออก → ลบค่าที่เก็บไว้ในตัวแปร
+      const idx = this.selectedItems.findIndex(
+        (s: any) => s.FNANNALSMAPR_CODE === item.FNANNALSMAPR_CODE
+      );
+      if (idx > -1) {
+        this.selectedItems.splice(idx, 1);
+        this.dataAdd.CFNANNALSMAPR_CODE.splice(idx, 1);
+        this.dataAdd.CFNANNALSMAP_CODE.splice(idx, 1);
+      }
+    }
+   // console.log('CFNANNALSMAPR_CODE:', this.dataAdd.CFNANNALSMAPR_CODE);
+    //console.log('CFNANNALSMAP_CODE:', this.dataAdd.CFNANNALSMAP_CODE);
   }
   previewPdf(url: string) {
     this.previewPdfUrl = url;

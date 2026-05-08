@@ -33,7 +33,7 @@ export class FinancecheckComponent implements OnInit {
   rowpbi: any;
   rowpbu: any;
   rownum1: any;
-  dataAdd: any = {};
+  dataAdd: any = {FRACCCODE:[],FRACCMONEY:[]};
   locale = 'th-be';
   locales = listLocales();
   dataEdoc: any;
@@ -41,9 +41,14 @@ export class FinancecheckComponent implements OnInit {
   datalistapp: any;
   datareceipt: any;
   dataReceiptdetail: any;
+  dataAcc: any;
+  dataNamea: any;
+  dataIncome: any;
+  datacampus: any;
+  dataProduct: any;
   page = 1;
   count = 0;
-  number = 0;
+  number: any = [0, 1, 2];
   tableSize = 20;
   tableSizes = [20, 30, 40, 100, 200];
   searchTerm: any;
@@ -96,6 +101,19 @@ export class FinancecheckComponent implements OnInit {
       .subscribe((data: any) => {
         this.datarstatus = data;
         this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
+        //หน่วยเบิกจ่าย
+        var Tablein = {
+          "opt": "viewCAMPUS",
+          "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS,
+          "citizen": this.tokenStorage.getUser().citizen
+        }
+        this.apiService
+          .getdata(Tablein, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.datacampus = data;
+            //this.dataAdd.CAMPUS_CODE = data[0].CAMPUS_CODE;
+          });
         //รายการปี
         var Table = {
           "opt": "viewyear"
@@ -133,7 +151,36 @@ export class FinancecheckComponent implements OnInit {
       .subscribe((data: any) => {
         this.datareceipt = data;
       });
-
+     this.dataAdd.opt = "viewFRACCE";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAcc = data;
+        //console.log(data);
+      }); 
+      //รายการประเภทเงิน
+    var Tablein = {
+      "opt": "viewPLINCOME"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataIncome = data;
+       // this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+      }); 
+       //รายการผลผลิต
+    var Tablein = {
+      "opt": "viewPLGPRODUCT"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataProduct = data;
+       // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
+      });   
   }
 
   fetchdatalist() {
@@ -233,6 +280,28 @@ export class FinancecheckComponent implements OnInit {
     this.dataAdd.DEPARTMENT_CODE = '';
     this.dataAdd.FNANNALS_MONEYC = '';
     this.dataAdd.FNRESTATUS_CODE = '2';
+    this.dataAdd.CITIZEN_IDP1 = '';
+    this.dataAdd.CITIZEN_IDP2 = '';
+    this.dataAdd.CITIZEN_IDP3 = '';
+    this.dataAdd.PLINCOME_CODE = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
+    this.dataAdd.CAMPUS_CODE = '';
+    this.dataAdd.FRACCCODE = [];
+    this.dataAdd.FRACCMONEY = [];
+  }
+     fetchdatareportnamea() {
+    this.dataNamea = null;
+    var varN1 = {
+      "opt": "viewnamecheckc",
+      "citizen": this.tokenStorage.getUser().citizen,
+      "FACULTY_CODE": this.dataAdd.FACULTY_CODE
+    }
+    this.apiService
+      .getdata(varN1, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataNamea = data;
+      });
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any, id2: any, money: any, mail: any, bookdate: any, name: any) {
@@ -261,6 +330,96 @@ export class FinancecheckComponent implements OnInit {
     this.rowpbi = '';
     this.rowpbu = 1;
   }
+   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+  editdatapr(id: any, id2: any, money: any, mail: any, bookdate: any, name: any) {
+ 
+    this.setshowbti();
+    this.onChangeedoc();
+    this.onChangechief();
+    this.fetchdatareportnamea();
+    this.onChangeReceiptdetail(id2);
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.FNANNALS_CODE = id2;
+    this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
+    this.dataAdd.USERNAME_CISCO = mail;
+    this.dataAdd.FNANNALS_BOOK_AT = bookdate;
+    this.dataAdd.FSTF_FNAME = name;
+    this.rowpbi = true;
+    
+    this.apiService
+      .getById(id2, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+       // this.dataSeq = data.data2;
+        this.dataAdd.CHIEF_CODE = data.data[0].CHIEF_CODE;
+        this.dataAdd.DEPARTMENT_CODE = data.data[0].DEPARTMENT_CODE;
+        this.dataAdd.PLINCOME_CODE = data.data[0].PLINCOME_CODE;
+        this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
+        this.dataAdd.CAMPUS_CODE = data.data[0].CAMPUS_CODE;
+        this.dataAdd.CITIZEN_IDP1 = data.data[0].CITIZEN_IDP1;
+        this.dataAdd.CITIZEN_IDP2 = data.data[0].CITIZEN_IDP2;
+        this.dataAdd.CITIZEN_IDP3 = data.data[0].CITIZEN_IDP3;
+        this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
+         for (let i = 0; i < data.data2.length; i++) {
+            this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
+            this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
+          }
+      });
+  }
+  sendfile(id: any, link: any, link3: any) {
+        this.dataAdd.FNANNALSMAP_CODE = id;
+      //  this.editdata(id);
+        this.dataAdd.link2 = link;
+        this.dataAdd.link3 = link3;
+        Swal.fire({
+          title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'ตกลง',
+          cancelButtonText: 'ยกเลิก',
+        }).then((result) => {
+          this.dataAdd.opt = "sendfile";
+          if (result.value) {
+            this.apiService
+              .getdata(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                if (data.status == 1) {
+                  this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                  this.fetchdatalist();
+    
+                }
+              });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+          }
+        });
+    
+      }
+  // ฟังก์ขันสำหรับการเพิ่มข้อมูล
+  insertdataapp() {
+    if (this.dataAdd.FNANNALS_MONEYC == '') {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกจำนวนเงิน");
+
+    } else {
+      this.dataAdd.opt = "insertapp";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);   uploadbook    
+          if (data.status == 1) {
+            this.fetchdatalist();
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            document.getElementById("ModalCloseb")?.click();
+          } else {
+            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+          }
+        });
+
+
+    }
+  }     
   onChangepdf(event: any) {
     this.file = event.target.files[0];
   }

@@ -608,6 +608,7 @@
                     <div class="form-group col-md-3">
                         <label for="name">ลงนามคนที่ 1</label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDP1">
+                             <option value="" >--เลือก--</option>
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                 {{name.STF_FNAME}}
                             </option>
@@ -617,6 +618,7 @@
                     <div class="form-group col-md-3">
                         <label for="name">ลงนามคนที่ 2</label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDP2">
+                             <option value="" >--เลือก--</option>
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                 {{name.STF_FNAME}}
                             </option>
@@ -626,6 +628,7 @@
                     <div *ngIf="dataAdd.FNANNALSMAP_RSTATUS=='3'" class="form-group col-md-3">
                         <label for="name">ลงนามคนที่ 3</label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDP3">
+                             <option value="" >--เลือก--</option>
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                 {{name.STF_FNAME}}
                             </option>

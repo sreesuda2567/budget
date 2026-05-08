@@ -161,7 +161,7 @@
                     </td>
                     <td align="center">
                         <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
-                            [(ngModel)]="dataAdd.check[i]">
+                            [(ngModel)]="dataAdd.check[i]" (change)="onCheckChange(p, i)">
 
                     </td>
                 </tr>
