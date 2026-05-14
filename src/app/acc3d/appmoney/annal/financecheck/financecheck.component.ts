@@ -283,6 +283,7 @@ export class FinancecheckComponent implements OnInit {
     this.dataAdd.CITIZEN_IDP1 = '';
     this.dataAdd.CITIZEN_IDP2 = '';
     this.dataAdd.CITIZEN_IDP3 = '';
+    this.dataAdd.CITIZEN_IDP4 = '';
     this.dataAdd.PLINCOME_CODE = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
     this.dataAdd.CAMPUS_CODE = '';
@@ -359,6 +360,7 @@ export class FinancecheckComponent implements OnInit {
         this.dataAdd.CITIZEN_IDP1 = data.data[0].CITIZEN_IDP1;
         this.dataAdd.CITIZEN_IDP2 = data.data[0].CITIZEN_IDP2;
         this.dataAdd.CITIZEN_IDP3 = data.data[0].CITIZEN_IDP3;
+        this.dataAdd.CITIZEN_IDP4 = data.data[0].CITIZEN_IDP4;
         this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
          for (let i = 0; i < data.data2.length; i++) {
             this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;

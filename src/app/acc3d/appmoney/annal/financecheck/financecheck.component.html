@@ -259,11 +259,29 @@
 
                     </td>
                     <td align="center" data-label="เลือก:">
+                        <!--
                         <button type="submit" title="สถานะใบเสร็จ" class="btn btn-secondary" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#modalEditreceipt"
                             (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
                             (click)="onChangeRadio(2)"><i
                                 class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;
+                        -->
+                        <span *ngIf="p.clearcheck"><a role="button" title="รายงานใบล้างหนี้"
+                                class="btn btn-success text-white" (click)="previewPdf(p.clearcheck)" ><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>
+                        <span *ngIf="p.linkreport"><a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
+                                (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>        
+                        <button *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " type="submit" title="ใบเบิก" class="btn btn-success text-white" id="submitupdate"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
+                            (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;   
+                         <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button" title="รวมไฟล์ส่งสารบรรณ"
+                            class="btn btn-secondary text-white"
+                            (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
+                                class="fa-solid fa-file-arrow-up"></i>
+                        </a>&nbsp;            
                         <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล"
                             class="btn btn-danger text-white" (click)="deleteData(p.FNANNALSMAP_CODE)"><i
                                 class="fa fa-trash"></i>
@@ -510,7 +528,7 @@
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
-                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' ||dataAdd.PRIVILEGE_RSTATUS=='A'"  class="form-group col-md-3">
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' ||dataAdd.PRIVILEGE_RSTATUS=='A'"  class="form-group col-md-3">
                         <label for="name">หน่วยเบิกจ่าย</label>
                         <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select"
                             [(ngModel)]="dataAdd.CAMPUS_CODE">
@@ -537,9 +555,9 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-4"></div>
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' ||dataAdd.PRIVILEGE_RSTATUS=='A'" class="form-group col-md-4"></div>
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='7' " class="form-group col-md-7"></div>
                     <div class="form-group col-md-1"></div>
-                    
                     <div class="form-group col-md-3">
                         <label for="name">ลงนามคนที่ 1</label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDP1">
@@ -560,9 +578,22 @@
                         </select>
 
                     </div>
+                     
                     <div  class="form-group col-md-3">
                         <label for="name">ลงนามคนที่ 3</label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDP3">
+                             <option value="" >--เลือก--</option>
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+
+                    </div>
+                    <div  class="form-group col-md-2"></div>
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' ||dataAdd.PRIVILEGE_RSTATUS=='A'"  class="form-group col-md-1"></div>
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' ||dataAdd.PRIVILEGE_RSTATUS=='A'" class="form-group col-md-3">
+                        <label for="name">ลงนามคนที่ 4</label>
+                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDP4">
                              <option value="" >--เลือก--</option>
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                 {{name.STF_FNAME}}

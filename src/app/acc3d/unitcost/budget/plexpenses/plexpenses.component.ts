@@ -143,12 +143,11 @@ export class PlexpensesComponent implements OnInit {
 
           });
         //รายการปี
-        var Table = {
-          "opt": "viewyear",
-          "Table": "PLYEARBUDGET where (PLYEARBUDGET_RSTATUS='D' or PLYEARBUDGET_RSTATUS='A' ) order by PLYEARBUDGET_CODE desc"
+        var Tabley = {
+          "opt": "viewyear"
         }
         this.apiService
-          .getdata(Table, this.url1)
+          .getdata(Tabley, this.url1)
           .pipe(first())
           .subscribe((data: any) => {
             this.dataYear = data;
