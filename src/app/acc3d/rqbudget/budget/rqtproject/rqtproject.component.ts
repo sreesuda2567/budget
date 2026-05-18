@@ -1639,7 +1639,7 @@ export class RqtprojectComponent implements OnInit {
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0217' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0209'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0305' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0304'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0302' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0303'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0301' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0306'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0301' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0306'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0104'
     ) {
       this.dataAdd.GCUNIT_ACODE = '';
       this.dataAdd.GCUNIT_BCODE = '';

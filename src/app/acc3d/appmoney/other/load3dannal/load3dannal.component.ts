@@ -69,6 +69,7 @@ export class Load3dannalComponent implements OnInit {
     this.rownum = 1;
     this.dataAdd.DATENOWS = '';
     this.dataAdd.DATENOWT = '';
+    this.dataAdd.DATENOWF = '';
   }
    fetchdata() {
     //ดึงคณะตามสังกัด
@@ -253,7 +254,7 @@ export class Load3dannalComponent implements OnInit {
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any, link: any, deka: any) {
+  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any, link: any, deka: any,doc:any,ddate:any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -265,6 +266,8 @@ export class Load3dannalComponent implements OnInit {
     this.dataAdd.CHIEF_CODE = chief;
     this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.FNANNALSMAP_DEKA = deka;
+    this.dataAdd.FNANNALSMAP_DOC = doc;
+    this.dataAdd.DATENOWF =  new Date(ddate);
     this.dataAdd.code = id;
     this.rowpbi = '';
     this.rowpbu = 1;
@@ -300,8 +303,8 @@ export class Load3dannalComponent implements OnInit {
     } else {
       this.dataAdd.opt = "insert";
       this.dataAdd.opt = "insert";
-      if (this.dataAdd.DATENOWS != '') {
-        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWS);
+      if (this.dataAdd.DATENOWF != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWF);
       } else {
         this.dataAdd.FNANNALSMAP_DDATE = '';
       }
@@ -336,8 +339,8 @@ export class Load3dannalComponent implements OnInit {
 
     this.dataAdd.opt = "update";
     this.dataAdd.opt = "insert";
-      if (this.dataAdd.DATENOWS != '') {
-        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWS);
+      if (this.dataAdd.DATENOWF != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWF);
       } else {
         this.dataAdd.FNANNALSMAP_DDATE = '';
       }

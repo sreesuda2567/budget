@@ -245,7 +245,7 @@ fetchdatalist(status: any) {
    this.fetchdataload();
   }
    fetchdataload() {
-
+    this.datalistdetail=null;
     this.dataAdd.opt = "viewannal";
     this.apiService
       .getdata(this.dataAdd, this.url)

@@ -131,6 +131,7 @@ export class ReportannalComponent implements OnInit {
       });
   }
   fetchdataloadshows(id: any) {
+    this.dataSeq=null;
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.opt = "viewshow";
     this.apiService
@@ -185,7 +186,7 @@ export class ReportannalComponent implements OnInit {
       });
   }
   fetchdataloadshow() {
-
+    this.datalistdetail=null;
     this.dataAdd.opt = "viewannalshow";
     this.apiService
       .getdata(this.dataAdd, this.url)

@@ -69,6 +69,7 @@ export class Load3dComponent implements OnInit {
     this.rownum = 1;
     this.dataAdd.DATENOWS = '';
     this.dataAdd.DATENOWT = '';
+    this.dataAdd.DATENOWF = '';
   }
   fetchdata() {
     //ดึงคณะตามสังกัด
@@ -155,7 +156,7 @@ export class Load3dComponent implements OnInit {
     this.datalistapp = null;
     this.loading = true;
     this.dataAdd.opt = "readAll";
-    if (this.dataAdd.DATENOWS != '') {
+   /* if (this.dataAdd.DATENOWS != '') {
       this.applyLocale('thBeLocale');
       this.dataAdd.DATENOWS1 = this.datenow(this.dataAdd.DATENOWS);
       this.dataAdd.DATENOWT2 = this.datenow(this.dataAdd.DATENOWT);
@@ -163,7 +164,7 @@ export class Load3dComponent implements OnInit {
       this.dataAdd.DATENOWS1 = '';
       this.dataAdd.DATENOWT2 = '';
       //console.log(this.dataAdd.DATENOWS);  
-    }
+    }*/
     this.rownum = null;
     this.rownum1 = null;
     this.apiService.getdata(this.dataAdd, this.url)
@@ -296,8 +297,8 @@ export class Load3dComponent implements OnInit {
 
     } else {
       this.dataAdd.opt = "insert";
-      if (this.dataAdd.DATENOWS != '') {
-        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWS);
+      if (this.dataAdd.DATENOWF != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWF);
       } else {
         this.dataAdd.FNANNALSMAP_DDATE = '';
       }
@@ -331,8 +332,8 @@ export class Load3dComponent implements OnInit {
   updatedata() {
 
     this.dataAdd.opt = "update";
-    if (this.dataAdd.DATENOWS != '') {
-        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWS);
+    if (this.dataAdd.DATENOWF != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWF);
       } else {
         this.dataAdd.FNANNALSMAP_DDATE = '';
       }

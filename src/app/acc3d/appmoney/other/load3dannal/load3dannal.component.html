@@ -229,7 +229,7 @@
                             *ngIf="p.FNANNALSMAP_RSTATUS=='F' || dataAdd.PRIVILEGE_RSTATUS=='A' "
                             type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
-                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.load3d,p.FNANNALSMAP_DEKA)"
+                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.load3d,p.FNANNALSMAP_DEKA,p.FNANNALSMAP_DOC,p.FNANNALSMAP_DDATE)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
                     </td>
                 </tr>
@@ -295,7 +295,7 @@
                     <div class="col-md-3 text-secondary" style="font-size: 10pt">
                         <label> วันที่ผ่านรายการเบิก: </label>
                         <input placeholder="วันที่ผ่านรายการเบิก" type="text" class="form-control" bsDatepicker
-                            #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
+                            #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWF" readonly>
                         <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
                             class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
                         </i>
