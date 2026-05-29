@@ -155,7 +155,7 @@
                 </td>
                 <td width="8%">
                   <span
-                    *ngIf="(p.PRASSET_RSTATUS=='0' &&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)) || dataAdd.PRIVILEGE_RSTATUS=='A'
+                    *ngIf="(p.PRASSET_RSTATUS=='0' || p.PRASSET_RSTATUS=='1' &&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)) || dataAdd.PRIVILEGE_RSTATUS=='A'
                     || (dataAdd.PRIVILEGE_RSTATUS=='2' && (p.PRASSET_RSTATUS=='0' || p.PRASSET_RSTATUS=='1' || p.PRASSET_RSTATUS=='2' || p.PRASSET_RSTATUS=='3'))">
                     <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
                       (click)="deleteData(p.PRASSET_CODE)"><i class="fa fa-trash"></i> </a>

@@ -135,7 +135,7 @@
                     <a *ngIf="p.PRASSET_SLINK1" role="button" title="ใบเสนอราคา" class="btn btn-success text-white"
                       (click)="previewPdf(p.PRASSET_SLINK1)" target="_blank">QN</a>&nbsp;
                     <a *ngIf="p.PLINCOME_NAME" role="button" title="รายงาน" class="btn btn-success text-white"
-                      (click)="previewPdf('https://hr.rmutsv.ac.th/html2pdf/reportpasset.php?PRASSET_CODE={{p.PRASSET_CODE}}&type=0')"
+                      (click)="previewPdf('https://pis.rmutsv.ac.th/html2pdf/reportpasset.php?PRASSET_CODE='+p.PRASSET_CODE+'&type=0')"
                       target="_blank"><i class="fas fa-file-alt"></i></a>
                   </td>
                   <td width="5%"> <a

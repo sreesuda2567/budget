@@ -104,7 +104,7 @@
                           (click)="previewPdf(p.PRBUILDING_PAT)"  >แบบรูป</a>&nbsp; </span>
                           
                         <a role="button" title="รายงาน" class="btn btn-success text-white"
-                        (click)="previewPdf('https://hr.rmutsv.ac.th/html2pdf/reportbuilding.php?PRBUILDING_CODE={{p.PRBUILDING_CODE}}&type=0')"  ><i class="fas fa-file-alt"></i></a>
+                        (click)="previewPdf('https://pis.rmutsv.ac.th/html2pdf/reportbuilding.php?PRBUILDING_CODE='+p.PRBUILDING_CODE+'&type=0')"  ><i class="fas fa-file-alt"></i></a>
                     </td>
                     <td width="5%"> <a *ngIf="p.PRBUILDING_RSTATUS=='2' || p.PRBUILDING_RSTATUS=='3'" role="button" title="อนุมัติ"  class="btn btn-warning text-white"
                         data-bs-toggle="modal" data-bs-target="#modalapprove"

@@ -528,7 +528,7 @@
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
-                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' ||dataAdd.PRIVILEGE_RSTATUS=='A'"  class="form-group col-md-3">
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='2' ||dataAdd.PRIVILEGE_RSTATUS=='A'"  class="form-group col-md-3">
                         <label for="name">หน่วยเบิกจ่าย</label>
                         <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select"
                             [(ngModel)]="dataAdd.CAMPUS_CODE">
@@ -555,7 +555,7 @@
                             </option>
                         </select>
                     </div>
-                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' ||dataAdd.PRIVILEGE_RSTATUS=='A'" class="form-group col-md-4"></div>
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='2' ||dataAdd.PRIVILEGE_RSTATUS=='A'" class="form-group col-md-4"></div>
                     <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='7' " class="form-group col-md-7"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-3">
@@ -590,8 +590,8 @@
 
                     </div>
                     <div  class="form-group col-md-2"></div>
-                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' ||dataAdd.PRIVILEGE_RSTATUS=='A'"  class="form-group col-md-1"></div>
-                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' ||dataAdd.PRIVILEGE_RSTATUS=='A'" class="form-group col-md-3">
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='2'  ||dataAdd.PRIVILEGE_RSTATUS=='A'"  class="form-group col-md-1"></div>
+                    <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='2' ||dataAdd.PRIVILEGE_RSTATUS=='A'" class="form-group col-md-3">
                         <label for="name">ลงนามคนที่ 4</label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDP4">
                              <option value="" >--เลือก--</option>
