@@ -248,19 +248,19 @@
                             (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
                             (click)="onChangeRadio(2)"><i
                                 class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;-->
-                        <span *ngIf="p.linkclear"><a role="button" title="รายงานใบเบิกค่าใช้จ่าย"
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' "><a role="button" title="รายงานใบเบิกค่าใช้จ่าย"
                                 class="btn btn-secondary text-white" (click)="previewPdf(p.linkclear)"><i
                                     class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>
-                        <span *ngIf="p.linkreport"><a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' "><a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
                                 (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>
-                         <a  *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button" title="รวมไฟล์ส่งสารบรรณ"
+                         <a  *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'  " role="button" title="รวมไฟล์ส่งสารบรรณ"
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
                                 class="fa-solid fa-file-arrow-up"></i>
                         </a>&nbsp;    
-                        <button type="submit" *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' || dataAdd.PRIVILEGE_RSTATUS=='A' "
+                        <button type="submit" *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'  "
                             title="ใบเบิก" class="btn btn-success text-white" id="submitupdate" data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
                             (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"

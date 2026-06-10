@@ -86,6 +86,9 @@
                     <th>
                         <div align="center">จำนวนเงิน</div>
                     </th>
+                    <th>
+                        <div align="center">ฎีกา</div>
+                    </th>
                      <th>
                         <div align="center">รายงาน</div>
                     </th>
@@ -112,6 +115,7 @@
                     </td>
                     <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                    <td data-label="ฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
                     <td data-label="รายงาน:" >
                         <a *ngIf="p.REPORT_LINK" role="button" title="รายงาน" class="btn btn-success text-white"
                             (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">

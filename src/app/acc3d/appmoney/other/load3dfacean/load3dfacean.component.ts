@@ -12,7 +12,7 @@ import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-load3dfacean',
@@ -228,6 +228,7 @@ export class Load3dfaceanComponent implements OnInit {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
+    this.fetchdatareportnamea();
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.EBOOKREQ_FILE = link;
     this.rowpbi = true;
@@ -237,6 +238,7 @@ export class Load3dfaceanComponent implements OnInit {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
+    this.fetchdatareportnamea();
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.EBOOKREQ_FILE = link;
     this.dataAdd.CITIZEN_IDD1 = ciz;
@@ -298,6 +300,96 @@ export class Load3dfaceanComponent implements OnInit {
 
     }
   }
+  // ฟังก์ขันสำหรับการเพิ่มข้อมูล
+  insertdataload() {
+    if (this.dataAdd.CITIZEN_IDD1 == '' ) {
+      if (this.dataAdd.CITIZEN_IDD1 == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขบัตรประชาชน");
+      }
+     
+
+    } else {
+      this.dataAdd.opt = "insertload";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);   uploadbook    
+          if (data.status == 1) {
+            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '32')
+              .subscribe((event: any) => {
+                // 
+                if (event.type == 4) {
+                  this.fetchdatalist();
+                }
+              }
+              );
+
+            this.dataAdd.opt = "sendemail";
+            this.apiService
+              .getupdate(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                //console.log(data.status);       
+                if (data.status == 1) {
+                  // this.toastr.success("แจ้งเตือน:ส่งอีเรียบร้อยแล้ว");
+                }
+              });
+            this.fetchdatalist();
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            document.getElementById("ModalClose")?.click();
+          } else {
+            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+          }
+        });
+
+
+    }
+  }
+     fetchdatareportnamea() {
+    this.dataName = null;
+    var varN1 = {
+      "opt": "viewnamecheckc1",
+      "citizen": this.tokenStorage.getUser().citizen,
+      "FACULTY_CODE": this.dataAdd.FACULTY_CODE
+    }
+    this.apiService
+      .getdata(varN1, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataName = data;
+      });
+  }
+   sendfile(id: any, link: any, link3: any) {
+          this.dataAdd.FNANNALSMAP_CODE = id;
+        //  this.editdata(id);
+          this.dataAdd.link2 = link;
+          this.dataAdd.link3 = link3;
+          Swal.fire({
+            title: 'ต้องการรวมไฟล์ส่งเบิกจ่าย',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ตกลง',
+            cancelButtonText: 'ยกเลิก',
+          }).then((result) => {
+            this.dataAdd.opt = "sendfile";
+            if (result.value) {
+              this.apiService
+                .getdata(this.dataAdd, this.url)
+                .pipe(first())
+                .subscribe((data: any) => {
+                  if (data.status == 1) {
+                    this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                    this.fetchdatalist();
+      
+                  }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+              Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+            }
+          });
+      
+        }
   updatedata() {
 
     this.dataAdd.opt = "update";

@@ -111,7 +111,7 @@ export class PlexpensesComponent implements OnInit {
           .subscribe((data: any) => {
             this.datarstatus = data;
             this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
-            var varN = {
+            /*var varN = {
               "opt": "viewfacf",
               "citizen": this.tokenStorage.getUser().citizen,
               "PRIVILEGERSTATUS": data[0].PRIVILEGE_RSTATUS,
@@ -124,7 +124,33 @@ export class PlexpensesComponent implements OnInit {
                 //  console.log(data);
                 this.dataFac = data;
                 this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
+              });*/
+            var varN = {
+          "opt": "viewcam",
+          "citizen": this.tokenStorage.getUser().citizen,
+          "PRIVILEGERSTATUS": data[0].PRIVILEGE_RSTATUS
+        }
+        this.apiService
+          .getdata(varN, this.url2)
+          .pipe(first())
+          .subscribe((datacam: any) => {
+            this.dataCam = datacam;
+            this.dataAdd.CAMPUS_CODE = datacam[0].CAMPUS_CODE;
+            //คณะ/หน่วยงาน
+            var Tablesub = {
+              "opt": "viewfac",
+              "CAMPUS_CODE": datacam[0].CAMPUS_CODE
+            }
+            // console.log(Tablesub);
+            this.apiService
+              .getdata(Tablesub, this.url2)
+              .pipe(first())
+              .subscribe((dataf: any) => {
+                this.dataFac = dataf;
+                this.dataAdd.FACULTY_CODE = dataf[0].FACULTY_CODE;
               });
+
+          });  
           });
 
         //รายการประเภทเงิน

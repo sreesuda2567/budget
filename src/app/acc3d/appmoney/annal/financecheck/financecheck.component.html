@@ -273,11 +273,11 @@
                         <span *ngIf="p.linkreport"><a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
                                 (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>        
-                        <button *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " type="submit" title="ใบเบิก" class="btn btn-success text-white" id="submitupdate"
+                        <button *ngIf="p.FNANNALSMAP_RSTATUS=='0'  " type="submit" title="ใบเบิก" class="btn btn-success text-white" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                             (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
                             (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;   
-                         <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button" title="รวมไฟล์ส่งสารบรรณ"
+                         <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' " role="button" title="รวมไฟล์ส่งสารบรรณ"
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
                                 class="fa-solid fa-file-arrow-up"></i>

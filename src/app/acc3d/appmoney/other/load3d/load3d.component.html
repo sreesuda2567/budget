@@ -144,15 +144,27 @@
                     <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
                     <td data-label="รายงาน:">
-                       <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานสัญญา"
+                      <!--  <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานสัญญา"
                                 class="btn btn-warning text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
-                                    class="fa-solid fa-file-contract"></i></a>&nbsp;</span>
+                                    class="fa-solid fa-file-contract"></i></a>&nbsp;</span>-->
 
                         <span *ngIf="p.disbursement"><a role="button" title="รายงานใบปะหน้าเบิก"
                                 class="btn btn-warning text-white" (click)="previewPdf(p.disbursement)"><i
                                     class="fa-solid fa-file-contract"></i></a>&nbsp;</span>
+                       <span *ngIf="p.load3ddoc"><a role="button" title="รายงานใบโหลด" class="btn btn-info text-white"
+                                (click)="previewPdf(p.load3ddoc)"><i class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>              
                     </td>
                     <td align="center" data-label="เลือก:">
+                        <button *ngIf="p.disbursement" type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALSMAP_DEKA,p.FNANNALSMAP_DOC,p.FNANNALSMAP_DDATE,p.load3ddoc)"
+                            ><i class="fa fa-plus-circle"></i>&nbsp;ใบโหลด</button>&nbsp;
+                        <a *ngIf="p.load3ddoc" role="button" title="รวมไฟล์ส่งสารบรรณ"
+                            class="btn btn-secondary text-white"
+                            (click)="sendfile(p.FNANNALSMAP_CODE,p.load3ddoc,p.disbursement)"><i
+                                class="fa-solid fa-file-arrow-up"></i>
+                        </a>&nbsp;   
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALS_CODE,p.FNANNALSMAP_CODE)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
@@ -222,16 +234,31 @@
                     <td data-label="รายงาน:">
 
                         <span *ngIf="p.load3d"><a role="button" title="รายงานใบโหลด"
-                                class="btn btn-secondary text-white" (click)="previewPdf(p.load3d)"><i
+                                class="btn btn-success text-white" (click)="previewPdf(p.load3d)"><i
                                     class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='1'"><a role="button" title="รายงานใบโหลด" class="btn btn-info text-white"
+                                (click)="previewPdf(p.load3ddoc)"><i class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>    
                     </td>
                     <td align="center" data-label="เลือก:">
+                       <span *ngIf="p.FNANNALSMAP_RSTATUS=='1'"><a role="button" title="รายงานใบปะหน้าเบิก"
+                                class="btn btn-warning text-white" (click)="previewPdf(p.disbursement)"><i
+                                    class="fa-solid fa-file-contract"></i></a>&nbsp;</span> 
+                       <span *ngIf="p.FNANNALSMAP_RSTATUS=='1'"><button type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALSMAP_DEKA,p.FNANNALSMAP_DOC,p.FNANNALSMAP_DDATE,p.load3ddoc)"
+                            ><i class="fa fa-plus-circle"></i>&nbsp;ใบโหลด</button>&nbsp;
+                        <a  role="button" title="รวมไฟล์ส่งสารบรรณ"
+                            class="btn btn-secondary text-white"
+                            (click)="sendfile(p.FNANNALSMAP_CODE,p.load3ddoc,p.disbursement)"><i
+                                class="fa-solid fa-file-arrow-up"></i>
+                        </a>&nbsp;</span> 
                         <button
-                            *ngIf="p.FNANNALSMAP_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS=='2' || dataAdd.PRIVILEGE_RSTATUS=='3'"
+                            *ngIf="p.FNANNALSMAP_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='A'"
                             type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
-                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALSMAP_DEKA)"
+                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALSMAP_DEKA,p.FNANNALSMAP_DOC,p.FNANNALSMAP_DDATE,p.load3d)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
                     </td>
                 </tr>
@@ -338,7 +365,7 @@
                         <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
                         </label>
                         <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i class="fa-solid fa-file-pdf "
+                        <a *ngIf="dataAdd.EBOOKREQ_LINK"  href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i class="fa-solid fa-file-pdf "
                                             style="color: green; font-size: 30px;"></i></a>
                         &nbsp;
                     </div>
@@ -351,6 +378,93 @@
                 <button *ngIf="rowpbi" type="button" class="btn btn-primary"
                     (click)="insertdata()">บันทึกข้อมูล</button>
                 <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกใบโหลด</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                   
+                     <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-3">
+                        <label for="name">เลขฎีกา</label>
+                        <br>
+                        <input type="text" name="FNANNALSMAP_DEKA" class="form-control" id="FNANNALSMAP_DEKA"
+                            placeholder="เลขฎีกา" [(ngModel)]="dataAdd.FNANNALSMAP_DEKA">
+
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="name">เลขเอกสาร</label>
+                        <input type="text" name="FNANNALSMAP_DOC" class="form-control" id="FNANNALSMAP_DOC"
+                            placeholder="เลขเอกสาร" [(ngModel)]="dataAdd.FNANNALSMAP_DOC">
+                    </div>
+                    <div class="col-md-3 text-secondary" style="font-size: 10pt">
+                        <label> วันที่ผ่านรายการเบิก: </label>
+                        <input placeholder="วันที่ผ่านรายการเบิก" type="text" class="form-control" bsDatepicker
+                            #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWF" readonly>
+                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
+                        </i>
+                    </div>
+                    <div class="form-group col-md-2"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">เรียน</label>
+                        <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select" [(ngModel)]="dataAdd.CHIEF_CODE">
+                            <option value="">กรุณาเลือก</option>
+                            <option [value]="fac.CHIEF_CODE" *ngFor="let fac of datachief">{{fac.CHIEF_NAME2}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label class="form-label">ส่งเข้าสารบรรณ</label>
+                            <select name="EBOOKTYPE_CODE" id="EBOOKTYPE_CODE" class="form-select"
+                                [(ngModel)]="dataAdd.DEPARTMENT_CODE">
+                                <option value="">กรุณาเลือก</option>
+                                <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-8">
+                        <label for="name">แนบไฟล์เอกสาร</label>
+                        <br>
+                        <input class="form-control" type="file" (change)="onChangepdf($event)"
+                            [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+
+                    </div>
+                    <div class="col-md-2">
+                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
+                        </label>
+                        <br>
+                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i class="fa-solid fa-file-pdf "
+                                            style="color: green; font-size: 30px;"></i></a>
+                        &nbsp;
+                    </div>
+                    <div class="form-group col-md-1"></div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalCloseload" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button  type="button" class="btn btn-primary"
+                    (click)="insertdataload()">บันทึกข้อมูล</button>
+                
 
             </div>
         </div>

@@ -152,9 +152,22 @@
                         <span *ngIf="p.load3d"><a role="button" title="รายงานใบโหลด"
                                 class="btn btn-secondary text-white" (click)="previewPdf(p.load3d)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>     
+                            &nbsp;</span>  
+                         <span *ngIf="p.load3df"><a role="button" title="รายงานใบปะหน้า"
+                                class="btn btn-info text-white" (click)="previewPdf(p.load3df)"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>        
                     </td>
                     <td align="center" data-label="เลือก:">
+                        <button type="submit" title="ใบปะหน้า" class="btn btn-success text-white" id="submitupdate"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.load3df,p.CITIZEN_IDD1)"
+                            ><i class="fa fa-plus-circle"></i>&nbsp;ใบปะหน้า</button>&nbsp;
+                        <a *ngIf="p.load3df" role="button" title="รวมไฟล์ส่งสารบรรณ"
+                            class="btn btn-secondary text-white"
+                            (click)="sendfile(p.FNANNALSMAP_CODE,p.load3df,p.load3d)"><i
+                                class="fa-solid fa-file-arrow-up"></i>
+                        </a>&nbsp;    
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALSMAP_CODE,p.CONTRACT_LINK)"
                            ><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
@@ -223,13 +236,22 @@
                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
                     <td data-label="รายงาน:">
                       
-                         <span *ngIf="p.load3df"><a role="button" title="รายงานใบปะหน้าจ่าย"
-                                class="btn btn-success text-white" (click)="previewPdf(p.load3df)"><i
+                         <span *ngIf="p.load3d"><a role="button" title="รายงานใบปะหน้าจ่าย"
+                                class="btn btn-success text-white" (click)="previewPdf(p.load3d)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>     
+                            &nbsp;</span> 
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='5'"><a role="button" title="รายงานใบปะหน้า"
+                                class="btn btn-info text-white" (click)="previewPdf(p.load3df)"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>         
                     </td>
                     <td align="center" data-label="เลือก:">
-                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                        <a *ngIf="p.FNANNALSMAP_RSTATUS=='5'" role="button" title="รวมไฟล์ส่งสารบรรณ"
+                            class="btn btn-secondary text-white"
+                            (click)="sendfile(p.FNANNALSMAP_CODE,p.load3df,p.load3d)"><i
+                                class="fa-solid fa-file-arrow-up"></i>
+                        </a>&nbsp;
+                        <button *ngIf="p.FNANNALSMAP_RSTATUS=='5'|| dataAdd.PRIVILEGE_RSTATUS=='A'" type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate" (click)="editdatapp(p.FNANNALSMAP_CODE,p.disbursement,p.CITIZEN_IDD1)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
                     </td>
@@ -301,6 +323,42 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกใบปะหน้าจ่าย</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ผู้รับผิดชอบโหลด KTB</label>
+                        <br>
+                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDD1">
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                <button  type="button" class="btn btn-primary"
+                    (click)="insertdataload()">บันทึกข้อมูล</button>
+                
+
+            </div>
+        </div>
+    </div>
+</div>  
     <!-- PDF Preview Side Panel -->
 <div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
 <div class="pdf-preview-panel" [class.open]="previewPdfUrl">
