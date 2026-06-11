@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -29,7 +30,8 @@ export class SmprojectComponent implements OnInit {
   dataAdd: any = { check: [], PRASSET_CODEA: [], PRASSET_MONEY: [] };
   url = "/acc3d/rqbudget/submit/smproject.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
-
+    previewPdfUrl: string = '';
+    safePdfUrl: SafeResourceUrl | undefined;
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -37,7 +39,8 @@ export class SmprojectComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private eRef: ElementRef,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -193,5 +196,48 @@ fetchdata() {
         this.dataAdd.check[i] = true;
       }
     }
+  }
+      returnedit(id: any, name: any) {
+        
+        this.dataAdd.opt = "returnedit";
+        this.dataAdd.htmlStringd = name;
+        this.dataAdd.id = id;
+        Swal.fire({
+          
+          title: 'ต้องการส่งคืนข้อมูล?'+name,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'ตกลง',
+          cancelButtonText: 'ยกเลิก',
+        }).then((result) => {
+          if (result.value) {
+            this.loading = true;  
+            this.apiService
+              .getdata(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                if (data.status == 1) {
+                  this.loading = null;  
+                  Swal.fire('ส่งคืนข้อมูล!', 'ส่งคืนข้อมูลเรียบร้อยแล้ว', 'success');
+                  this.fetchdatalistapp();
+                }
+              });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('ยกเลิก', 'ยกเลิกการส่งคืนข้อมูล', 'error');
+          }
+        });
+      }
+  previewPdf(url: string) {
+    if (!url) {
+      Swal.fire('แจ้งเตือน', 'ไม่พบลิงก์ไฟล์ PDF (ข้อมูล p.link ไม่มีค่าส่งมา)', 'warning');
+      console.log('ข้อมูล datalistapp: ', this.datalistapp);
+      return;
+    }
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
   }
 }

@@ -347,7 +347,7 @@ export class Load3dfaceComponent implements OnInit {
   insertdataload() {
     if (this.dataAdd.CITIZEN_IDD1 == '' ) {
       if (this.dataAdd.CITIZEN_IDD1 == '') {
-        this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขบัตรประชาชน");
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกผู้รับผิดชอบโหลด KTB");
       }
      
 

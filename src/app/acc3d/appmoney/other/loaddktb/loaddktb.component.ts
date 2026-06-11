@@ -12,7 +12,7 @@ import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-loaddktb',
   templateUrl: './loaddktb.component.html',
@@ -139,7 +139,36 @@ export class LoaddktbComponent implements OnInit {
 
 
   }
-
+   sendfile(id: any, link: any, link3: any) {
+          this.dataAdd.FNANNALSMAP_CODE = id;
+        //  this.editdata(id);
+          this.dataAdd.link2 = link;
+          this.dataAdd.link3 = link3;
+          Swal.fire({
+            title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'ตกลง',
+            cancelButtonText: 'ยกเลิก',
+          }).then((result) => {
+            this.dataAdd.opt = "sendfile";
+            if (result.value) {
+              this.apiService
+                .getdata(this.dataAdd, this.url)
+                .pipe(first())
+                .subscribe((data: any) => {
+                  if (data.status == 1) {
+                    this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                    this.fetchdatalist();
+      
+                  }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+              Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+            }
+          });
+      
+        }
   fetchdatalist() {
     this.datalist = null;
     this.datalistapp = null;
@@ -257,8 +286,17 @@ export class LoaddktbComponent implements OnInit {
 
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
-    if (this.dataAdd.CITIZEN_IDK1 == this.dataAdd.CITIZEN_IDK2) {
-      this.toastr.warning("แจ้งเตือน:กรุณาคนลงผู้อนุมัติไม่ซ้ำกัน");
+    if (this.dataAdd.DEPARTMENT_CODE == '' || this.dataAdd.CHIEF_CODE == '' || this.dataAdd.EBOOKREQ_FILE == '') {
+      if (this.dataAdd.DEPARTMENT_CODE == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกสารบรรณ");
+      }
+
+       if (this.dataAdd.CHIEF_CODE == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกเรียน");
+      }
+      if (this.dataAdd.EBOOKREQ_FILE == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
+      }
 
     } else {
       this.dataAdd.opt = "insert";
@@ -281,6 +319,54 @@ export class LoaddktbComponent implements OnInit {
             this.fetchdatalist();
             this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
             document.getElementById("ModalClose")?.click();
+          } else {
+            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+          }
+        });
+
+
+    }
+  }
+   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
+  insertdataload() {
+    if (this.dataAdd.DEPARTMENT_CODE == '' || this.dataAdd.CHIEF_CODE == '' || this.dataAdd.EBOOKREQ_FILE == '') {
+      if (this.dataAdd.DEPARTMENT_CODE == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกสารบรรณ");
+      }
+
+       if (this.dataAdd.CHIEF_CODE == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกเรียน");
+      }
+      if (this.dataAdd.EBOOKREQ_FILE == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
+      }
+
+    } else {
+      this.dataAdd.opt = "insertload";
+      if (this.dataAdd.DATENOWF != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWF);
+      } else {
+        this.dataAdd.FNANNALSMAP_DDATE = '';
+      }
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);   uploadbook    
+          if (data.status == 1) {
+
+            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '120')
+              .subscribe((event: any) => {
+                // 
+                if (event.type == 4) {
+                  this.fetchdatalist();
+                }
+              }
+              );
+
+            this.fetchdatalist();
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            document.getElementById("ModalCloseload")?.click();
           } else {
             this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
           }

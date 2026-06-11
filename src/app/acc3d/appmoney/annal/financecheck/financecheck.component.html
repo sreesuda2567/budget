@@ -266,11 +266,11 @@
                             (click)="onChangeRadio(2)"><i
                                 class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;
                         -->
-                        <span *ngIf="p.clearcheck"><a role="button" title="รายงานใบล้างหนี้"
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='0' "><a role="button" title="รายงานใบล้างหนี้"
                                 class="btn btn-success text-white" (click)="previewPdf(p.clearcheck)" ><i
                                     class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>
-                        <span *ngIf="p.linkreport"><a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='0' "><a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
                                 (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>        
                         <button *ngIf="p.FNANNALSMAP_RSTATUS=='0'  " type="submit" title="ใบเบิก" class="btn btn-success text-white" id="submitupdate"
