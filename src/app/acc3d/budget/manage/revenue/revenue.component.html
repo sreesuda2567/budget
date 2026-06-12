@@ -45,41 +45,15 @@
             <div align="center">ภาค</div>
           </th>
           <th>
-            <div align="center">ค่าไฟฟ้ามหาวิทยาลัย</div>
+            <div align="center">เทอม1</div>
           </th>
           <th>
-            <div align="center">จัดการศึกษามหาวิทยาลัย</div>
+            <div align="center">เทอม2</div>
           </th>
           <th>
-            <div align="center">สมทบส่วนกลางสงขลา/วิทยาเขตฯ</div>
+            <div align="center">เทอม3</div>
           </th>
-          <th>
-            <div align="center">เงินสนับสนุนสวัสดิการ นศ.</div>
-          </th>
-          <th>
-            <div align="center">ค่าบำรุงห้องสมุด</div>
-          </th>
-          <th>
-            <div align="center">ค่าบริการคอมพิวเตอร์และเครือข่าย</div>
-          </th>
-          <th>
-            <div align="center">งบประมาณส่งเสริมและพัฒนางานวิจัยส่วนงานภายใน</div>
-          </th>
-          <th>
-            <div align="center">วงเงินพัฒนางานวิจัย</div>
-          </th>
-          <th>
-            <div align="center">งบประมาณเพื่อพัฒนาบุคลากร</div>
-          </th>
-          <th>
-            <div align="center">งบกลาง</div>
-          </th>
-          <th>
-            <div align="center">สมทบส่วนราชการ</div>
-          </th>
-          <th>
-            <div align="center">ค่าธรรมเนียมอื่นๆ</div>
-          </th>
+         
           <th>
             <div align="center">จัดการข้อมูล</div>
           </th>
@@ -91,18 +65,10 @@
           <td>{{p.FACULTY_TNAME}}</td>
           <td>{{p.CRCOURSE_TNAME}}</td>
           <td>{{p.CRPART_TNAME}}</td>
-          <td align="right">{{p.REVEVUE_ELE| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_EDT| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_CEN| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_BE| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_LIBRARY| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_NETWORK| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_FRESD| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_RES| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_FPER| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_MB| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_FAC| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_OTHER| number : '1.2-2'}}</td>
+          <td align="right">{{p.REVEVUE_N1| number : '1.2-2'}}</td>
+          <td align="right">{{p.REVEVUE_N2| number : '1.2-2'}}</td>
+          <td align="right">{{p.REVEVUE_N3| number : '1.2-2'}}</td>
+
           <td width="8%" align="center">
             <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white" (click)="deleteData(p.REVEVUE_CODE)"><i
                 class="fa fa-trash"></i>

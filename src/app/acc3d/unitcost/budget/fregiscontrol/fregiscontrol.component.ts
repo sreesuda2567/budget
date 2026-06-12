@@ -30,6 +30,16 @@ export class FregiscontrolComponent implements OnInit {
   loading: any;
   loadingdetail: any;
   dataAdd: any = { check: [], FNEXACCPAYDATE_CODE: [], FNCREDITOR_NAME: [], FNEXPENSES_TITLE: [], MONEY: [], FNEXPENSES_PDATE: [], FNEXPENSES_PODATE: [], FNEXPENSES_PO: [], FNEXPENSES_DELIVERRY: [], FNEXPENSES_ORDER: [], FNEXACC_TYPE: [], FNEXACC_NUMBER: [] };
+  get totalAmount(): number {
+    if (!this.datalist) return 0;
+    return this.datalist.reduce((sum: number, item: any, index: number) => {
+      if (this.dataAdd.check[index]) {
+        const amountStr = this.dataAdd.MONEY[index] ? this.dataAdd.MONEY[index].toString().replace(/,/g, '') : '0';
+        return sum + (Number(amountStr) || 0);
+      }
+      return sum;
+    }, 0);
+  }
   clickshow: any;
   datalistdetailmoney: any;
   searchTerm: any;

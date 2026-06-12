@@ -33,6 +33,12 @@ export class ReportdaycheckComponent implements OnInit {
   loadingdetail: any;
   dataAdd: any = { check: [], FNANNALSMAPR_CODE: [], FNEXACC_DETAIL: [], USERNAME_CISCO: [], FNANNALSMAP_CODE: [],CFNANNALSMAPR_CODE: [], CFNANNALSMAP_CODE: [] };
   selectedItems: any[] = [];
+  get totalAmount(): number {
+    return this.selectedItems.reduce((sum, item) => {
+      const amountStr = item.FNANNALS_AMOUNT ? item.FNANNALS_AMOUNT.toString().replace(/,/g, '') : '0';
+      return sum + (Number(amountStr) || 0);
+    }, 0);
+  }
   searchTerm: any;
   show: any;
   dataPro: any;
@@ -140,6 +146,7 @@ fetchdata() {
   showinput(type: any) {
     // console.log(type);
     this.fetchdatareport();
+    this.dataAdd.FNEXACCTD_NOTE='';
     this.dataAdd.type = type;
     if (type == 1) {
       this.rowpbi = '';
@@ -218,8 +225,8 @@ fetchdata() {
     this.datalist = null;
     this.dataAdd.opt = "readAll";
     this.dataAdd.check = [];
-    this.dataAdd.FNEXACC_CODE = [];
-    this.dataAdd.FNEXACC_DETAIL = [];
+    this.dataAdd.CFNANNALSMAPR_CODE = [];
+    this.dataAdd.CFNANNALSMAP_CODE = [];
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
@@ -391,7 +398,7 @@ fetchdata() {
     } else {
       // คลิกออก → ลบค่าที่เก็บไว้ในตัวแปร
       const idx = this.selectedItems.findIndex(
-        (s: any) => s.FNANNALSMAPR_CODE === item.FNANNALSMAPR_CODE
+        (s: any) => s.FNANNALSMAP_CODE === item.FNANNALSMAP_CODE
       );
       if (idx > -1) {
         this.selectedItems.splice(idx, 1);
@@ -400,7 +407,7 @@ fetchdata() {
       }
     }
    // console.log('CFNANNALSMAPR_CODE:', this.dataAdd.CFNANNALSMAPR_CODE);
-    //console.log('CFNANNALSMAP_CODE:', this.dataAdd.CFNANNALSMAP_CODE);
+    console.log('CFNANNALSMAP_CODE:', this.dataAdd.CFNANNALSMAP_CODE);
   }
   previewPdf(url: string) {
     this.previewPdfUrl = url;

@@ -75,7 +75,11 @@
       <div class="row">
         <div class="col-md-3">
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-4 d-flex align-items-center">
+            <h4 *ngIf="totalAmount > 0" class="text-danger mb-0" style="font-weight: bold;">
+                รวมยอดเงินที่เลือก: {{ totalAmount | number : '1.2-2' }} บาท
+            </h4>
+        </div>
         <div class="col-md-3">
           <input type="text" class="form-control" placeholder="ค้นหาเลข3ดี/เลขฎีกา"
             [(ngModel)]="dataAdd.FNEXPENSES_STEP" (keyup)="fetchdatalist()">

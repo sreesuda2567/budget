@@ -232,7 +232,11 @@
                         <!--<button type="button" class="btn btn-success" (click)="exportexcel()">Export
                 Excel</button>-->
                     </div>
-                    <div class="col-md-5"></div>
+                    <div class="col-md-5 d-flex align-items-center">
+                        <h4 *ngIf="totalAmount > 0" class="text-danger mb-0" style="font-weight: bold;">
+                            รวมยอดเงินที่เลือก: {{ totalAmount | number : '1.2-2' }} บาท
+                        </h4>
+                    </div>
                     <div class="col-md-3">
                         <div class="input-group">
                             <input class="form-control border-end-0 border" type="search"

@@ -51,6 +51,8 @@ import { ReportdayappcComponent } from './report/reportdayappc/reportdayappc.com
 import { ReportamendComponent } from './report/reportamend/reportamend.component';
 
 
+import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'pdf-annotator';
+
 @NgModule({
   declarations: [
     HomeComponent,
@@ -104,7 +106,17 @@ import { ReportamendComponent } from './report/reportamend/reportamend.component
         AutocompleteLibModule,
         BsDatepickerModule,
         Ng2SearchPipeModule,
-        NgxPaginationModule
+        NgxPaginationModule,
+        PdfAnnotatorModule
+  ],
+  providers: [
+    {
+      provide: PDF_ANNOTATOR_CONFIG,
+      useValue: {
+        pdfApiUrl: '/acc3d/appmoney',
+        pdfWorkerSrc: '/assets/pdf.worker.min.js'
+      }
+    }
   ]
 })
 export class AppmoneyModule { }

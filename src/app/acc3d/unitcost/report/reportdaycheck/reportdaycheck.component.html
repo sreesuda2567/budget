@@ -73,7 +73,11 @@
         <div  class="shadow alert alert-secondary" role="alert">
             <div class="row">
 
-                <div class="col-md-8"></div>
+                <div class="col-md-8 d-flex align-items-center">
+                    <h4 *ngIf="totalAmount > 0" class="text-danger mb-0" style="font-weight: bold;">
+                        รวมยอดเงินที่เลือก: {{ totalAmount | number : '1.2-2' }} บาท
+                    </h4>
+                </div>
                 <div class="col-md-4" align="right">
                     <button type="submit" class="btn btn-warning"   (click)="showinput('2')"  ><i
                             class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ดูรายการส่งกลับ</button>

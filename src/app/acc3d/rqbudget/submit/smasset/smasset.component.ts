@@ -28,6 +28,16 @@ export class SmassetComponent implements OnInit {
   clickshow: any;
   datastatus: any
   dataAdd: any = { check: [], PRASSET_CODEA: [], PRASSET_MONEY: [] };
+  get totalAmount(): number {
+    if (!this.datalistapp) return 0;
+    return this.datalistapp.reduce((sum: number, item: any, index: number) => {
+      if (this.dataAdd.check[index]) {
+        const amountStr = this.dataAdd.PRASSET_MONEY[index] ? this.dataAdd.PRASSET_MONEY[index].toString().replace(/,/g, '') : '0';
+        return sum + (Number(amountStr) || 0);
+      }
+      return sum;
+    }, 0);
+  }
   url = "/acc3d/rqbudget/submit/smasset.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   previewPdfUrl: string = '';

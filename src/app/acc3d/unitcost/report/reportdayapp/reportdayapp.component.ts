@@ -31,6 +31,16 @@ export class ReportdayappComponent implements OnInit {
   loading: any;
   loadingdetail: any;
   dataAdd: any = { check: [], FNANNALSMAPR_CODE: [], FNEXACC_DETAIL: [], USERNAME_CISCO: [], FNANNALSMAP_CODE: [] };
+  get totalAmount(): number {
+    if (!this.datalist) return 0;
+    return this.datalist.reduce((sum: number, item: any, index: number) => {
+      if (this.dataAdd.check[index]) {
+        const amountStr = item.FNANNALS_AMOUNT ? item.FNANNALS_AMOUNT.toString().replace(/,/g, '') : '0';
+        return sum + (Number(amountStr) || 0);
+      }
+      return sum;
+    }, 0);
+  }
   searchTerm: any;
   show: any;
   dataPro: any;

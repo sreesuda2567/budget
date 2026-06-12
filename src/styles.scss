@@ -11,3 +11,19 @@
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+/* PDF Annotator Right Side Modal */
+.pdf-modal-right-side {
+  --width: 90vw;
+  --height: 100vh;
+  --max-width: 90vw;
+  --max-height: 100vh;
+  --border-radius: 0;
+  justify-content: flex-end;
+}
+
+/* Ionic CSS */
+@import '~@ionic/angular/css/core.css';
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';

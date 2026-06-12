@@ -89,11 +89,11 @@
                             class="btn btn-warning text-white" (click)="editdatashow(p.FNANNALSMAPR_CODE)"><i
                                 class="fa-solid fa-eye"></i></a>&nbsp;
                         <a *ngIf="p.REPORT_LINK" role="button" title="รายงาน" class="btn btn-success text-white"
-                            href="{{p.REPORT_LINK}}" target="_blank"><i class="fas fa-file-alt">
+                            (click)="openPdfAnnotator(p)" ><i class="fas fa-file-alt">
                             </i></a> &nbsp;
                         <button *ngIf="p.FNANNALSMAPR_RSTATUS=='7' || p.FNANNALSMAPR_RSTATUS=='8'" type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
-                            (click)="editdata(p.FNANNALSMAPR_CODE,p.FNANNALSMAPR_RSTATUS)" (click)="setshowbti()"><i
+                            (click)="editdata(p.FNANNALSMAPR_CODE,p.FNANNALSMAPR_RSTATUS)"><i
                                 class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
 
                     </td>

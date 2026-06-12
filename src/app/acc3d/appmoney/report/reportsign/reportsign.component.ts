@@ -10,6 +10,9 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
+
 defineLocale('th', thBeLocale);
 
 @Component({
@@ -49,7 +52,8 @@ export class ReportsignComponent implements OnInit {
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private modalCtrl: ModalController
   ) { 
     
   }
@@ -190,6 +194,7 @@ fetchdatalist(status: any) {
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any,status: any) {
+    this.setshowbti();
     this.dataAdd.FNANNALSMAPR_CODE = id;
     if(status=='7'){
     this.dataAdd.FNANNALSMAPR_RSTATUS = '8';
@@ -265,6 +270,61 @@ fetchdatalist(status: any) {
       for (let i = 0; i < this.datalist.length; i++) {
         this.dataAdd.check[i] = true;
       }
+    }
+  }
+
+  async openPdfAnnotator(p: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.REPORT_LINK + (p.REPORT_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+      
+      // Determine new status and status code
+      let newStatus = p.FNANNALSMAPR_RSTATUS;
+      let statusCode = '0'; // default
+      if (p.FNANNALSMAPR_RSTATUS == '7') {
+        newStatus = '8';
+        statusCode = '59';
+      } else if (p.FNANNALSMAPR_RSTATUS == '8') {
+        newStatus = '9';
+        statusCode = '60';
+      }
+
+      // Update Database Status
+      this.dataAdd.FNANNALSMAPR_CODE = p.FNANNALSMAPR_CODE;
+      this.dataAdd.FNANNALSMAPR_RSTATUS = newStatus;
+      this.dataAdd.FNANNALSSTATUS_CODE = statusCode;
+      this.dataAdd.opt = "update";
+
+      this.apiService.getupdate(this.dataAdd, this.url).pipe(first()).subscribe((res: any) => {
+        if (res.status == 1) {
+          // Upload the signed PDF file
+          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAPR_CODE, user.citizen, statusCode)
+            .subscribe((event: any) => {
+              if (event.type == 4) { // HttpEventType.Response
+                 this.toastr.success("แจ้งเตือน: อัปโหลดลายเซ็นและอัปเดตข้อมูลเรียบร้อยแล้ว");
+                 this.fetchdatalist('0');
+              }
+            });
+        } else {
+          this.toastr.warning("แจ้งเตือน: ไม่สามารถอัปเดตข้อมูลได้");
+        }
+      });
     }
   }
 }

@@ -141,6 +141,7 @@ export class ReportincomeComponent implements OnInit {
     .subscribe((data: any) => {
       this.dataFac = data;
       this.dataAdd.FACULTY_CODE =data[0].FACULTY_CODE;
+      this.fetchdatalistcr();
     });
   }
 

@@ -1,4 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule} from '@angular/common';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
@@ -61,7 +62,8 @@ import { SafeUrlPipe } from './shared/pipes/safe-url.pipe';
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    NgbModule
+    NgbModule,
+    IonicModule.forRoot()
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent],
