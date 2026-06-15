@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
@@ -43,6 +44,8 @@ export class ReportsignComponent implements OnInit {
   datalistdetail: any;
   loadingdetail: any;
   searchTerm: any;
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -53,7 +56,8 @@ export class ReportsignComponent implements OnInit {
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private sanitizer: DomSanitizer
   ) { 
     
   }
@@ -260,6 +264,18 @@ fetchdatalist(status: any) {
           this.datalistdetail = data.data;
         }
       });
+  }
+    exportpdf(link: any) {
+    let url = link;
+    window.open(url, '_blank');
+  }
+  previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
   }
     checkall() {
     if (this.dataAdd.checkall == true) {

@@ -1,7 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+
 @font-face {
   font-family: Prompt-Regular;
   src: url(assets/fonts/Prompt-Regular.ttf) format('truetype');
+}
+
+/* Force Sarabun font for PDF Annotator Text Input */
+.annotator-layout *,
+.annotator-content *,
+.pdf-modal-right-side *,
+.canvas-container *,
+textarea.upper-canvas {
+  font-family: 'Sarabun', 'Prompt-Regular', sans-serif !important;
 }
 
 // regular style toast
@@ -22,8 +33,59 @@
   justify-content: flex-end;
 }
 
-/* Ionic CSS */
+/* Ionic CSS 
 @import '~@ionic/angular/css/core.css';
 @import '~@ionic/angular/css/normalize.css';
 @import '~@ionic/angular/css/structure.css';
 @import '~@ionic/angular/css/typography.css';
+*/
+
+/* Fix for PDF Annotator Signature Pad Canvas Overflow */
+.signature-modal__content {
+  width: 90vw !important;
+  max-width: 400px !important; /* ทำให้กรอบเล็กลง */
+  margin: auto !important;
+  overflow: hidden !important;
+}
+
+.signature-modal__canvas {
+  width: 100% !important; /* ย่อ canvas ให้พอดีกับกรอบ */
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* Fix for Ionic buttons (since core.css is disabled) */
+ion-button[color="primary"]::part(native) {
+  background: #3880ff !important;
+  color: #ffffff !important;
+  border-color: #3880ff !important;
+}
+
+ion-button[fill="outline"]::part(native) {
+  border-style: solid !important;
+  border-width: 1px !important;
+  background: transparent !important;
+}
+
+ion-button[color="medium"]::part(native) {
+  color: #92949c !important;
+  border-color: #92949c !important;
+}
+
+ion-button[color="danger"]::part(native) {
+  color: #eb445a !important;
+  border-color: #eb445a !important;
+}
+
+ion-button[color="success"]::part(native) {
+  color: #2dd36f !important;
+  border-color: #2dd36f !important;
+}
+
+ion-button[color="tertiary"]::part(native),
+ion-button[color="secondary"]::part(native) {
+  color: #5260ff !important;
+  border-color: #5260ff !important;
+}

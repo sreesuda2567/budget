@@ -1,0 +1,3 @@
+template: function PdfAnnotatorModalComponent_Template(rf, ctx) { if (rf & 1) {
+        ɵngcc0.ɵɵelementStart(0, "ion-header")(1, "ion-toolbar")(2, "ion-buttons", 0)(3, "ion-button", 1);
+        ɵngcc0.ɵɵlistener("click", function PdfAnnotatorModalComponent_Template_ion_button_click_3_listener() { return ctx.close(); }

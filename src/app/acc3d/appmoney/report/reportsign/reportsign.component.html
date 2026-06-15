@@ -89,9 +89,13 @@
                             class="btn btn-warning text-white" (click)="editdatashow(p.FNANNALSMAPR_CODE)"><i
                                 class="fa-solid fa-eye"></i></a>&nbsp;
                         <a *ngIf="p.REPORT_LINK" role="button" title="รายงาน" class="btn btn-success text-white"
-                            (click)="openPdfAnnotator(p)" ><i class="fas fa-file-alt">
+                            (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
                             </i></a> &nbsp;
-                        <button *ngIf="p.FNANNALSMAPR_RSTATUS=='7' || p.FNANNALSMAPR_RSTATUS=='8'" type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                        <a *ngIf="p.REPORT_LINK" role="button" title="ลงนาม" class="btn btn-info text-white"
+                            (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
+                            </i></a> &nbsp;
+                        <button *ngIf="p.FNANNALSMAPR_RSTATUS=='7' || p.FNANNALSMAPR_RSTATUS=='8'" type="submit"
+                            class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
                             (click)="editdata(p.FNANNALSMAPR_CODE,p.FNANNALSMAPR_RSTATUS)"><i
                                 class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
@@ -203,6 +207,25 @@
 
 
                 </div>
-            </div>
         </div>
     </div>
+</div>
+
+<!-- PDF Preview Side Panel -->
+<div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
+<div class="pdf-preview-panel" [class.open]="previewPdfUrl">
+    <div class="pdf-preview-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+        <div>
+            <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+                <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+            </a>
+            <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+                <i class="fa fa-times me-1"></i> ปิด
+            </button>
+        </div>
+    </div>
+    <div class="pdf-preview-body">
+        <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
+    </div>
+</div>
