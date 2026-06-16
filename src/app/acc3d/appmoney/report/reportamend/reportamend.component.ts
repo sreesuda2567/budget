@@ -12,6 +12,8 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thLocale } from 'ngx-bootstrap/locale'; // ✅ เปลี่ยนเป็น path ที่ถูกต้อง
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 defineLocale('th', thLocale); // โหลด locale ภาษาไทย
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 
 @Component({
   selector: 'app-reportamend',
@@ -61,7 +63,8 @@ title = 'angular-app';
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -238,5 +241,36 @@ fetchdata() {
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+  } 
+  async openPdfAnnotator(p: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.REPORT_LINK + (p.REPORT_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+             
+          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '86')
+            .subscribe((event: any) => {
+              if (event.type == 4) { // HttpEventType.Response
+                 this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
+                 this.fetchdatalist();
+              }
+            });
+    
+    }
   } 
 }

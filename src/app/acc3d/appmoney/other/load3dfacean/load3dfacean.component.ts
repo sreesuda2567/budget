@@ -11,6 +11,8 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 defineLocale('th', thBeLocale);
 import Swal from 'sweetalert2';
 
@@ -20,7 +22,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./load3dfacean.component.scss']
 })
 export class Load3dfaceanComponent implements OnInit {
- datalist: any;
+  datalist: any;
   loading: any;
   rownum: any;
   file: any;
@@ -40,16 +42,16 @@ export class Load3dfaceanComponent implements OnInit {
   datalistapp: any;
   dataEdoc: any;
   datachief: any;
-     page = 1;
+  page = 1;
   count = 0;
   number = 0;
   tableSize = 20;
-  tableSizes = [20, 30,40,100,200];
+  tableSizes = [20, 30, 40, 100, 200];
   searchTerm: any;
-    previewPdfUrl: string = '';
+  previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   constructor(
-        private tokenStorage: TokenStorageService,
+    private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -58,11 +60,12 @@ export class Load3dfaceanComponent implements OnInit {
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
-        this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
+    this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
     this.dataAdd.search = "";
     this.dataAdd.FNANNALSSEQREQ_DETAIL = "";
     this.fetchdata();
@@ -70,7 +73,7 @@ export class Load3dfaceanComponent implements OnInit {
     this.dataAdd.DATENOWS = '';
     this.dataAdd.DATENOWT = '';
   }
- fetchdata() {
+  fetchdata() {
     //ดึงคณะตามสังกัด
     var varN = {
       "opt": "viewufac",
@@ -230,7 +233,7 @@ export class Load3dfaceanComponent implements OnInit {
     this.onChangechief();
     this.fetchdatareportnamea();
     this.dataAdd.FNANNALSMAP_CODE = id;
-    this.dataAdd.EBOOKREQ_FILE = link;
+    this.dataAdd.EBOOKREQ_LINK = link;
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
@@ -240,7 +243,7 @@ export class Load3dfaceanComponent implements OnInit {
     this.onChangechief();
     this.fetchdatareportnamea();
     this.dataAdd.FNANNALSMAP_CODE = id;
-    this.dataAdd.EBOOKREQ_FILE = link;
+    this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.CITIZEN_IDD1 = ciz;
     this.rowpbi = '';
     this.rowpbu = 1;
@@ -258,7 +261,7 @@ export class Load3dfaceanComponent implements OnInit {
       if (this.dataAdd.CHIEF_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกเรียน");
       }
-       if (this.dataAdd.DEPARTMENT_CODE == '') {
+      if (this.dataAdd.DEPARTMENT_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกสารบรรณ");
       }
 
@@ -302,11 +305,11 @@ export class Load3dfaceanComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdataload() {
-    if (this.dataAdd.CITIZEN_IDD1 == '' ) {
+    if (this.dataAdd.CITIZEN_IDD1 == '') {
       if (this.dataAdd.CITIZEN_IDD1 == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาผู้รับผิดชอบโหลด KTB");
       }
-     
+
 
     } else {
       this.dataAdd.opt = "insertload";
@@ -346,7 +349,7 @@ export class Load3dfaceanComponent implements OnInit {
 
     }
   }
-     fetchdatareportnamea() {
+  fetchdatareportnamea() {
     this.dataName = null;
     var varN1 = {
       "opt": "viewnamecheckc1",
@@ -360,36 +363,36 @@ export class Load3dfaceanComponent implements OnInit {
         this.dataName = data;
       });
   }
-   sendfile(id: any, link: any, link3: any) {
-          this.dataAdd.FNANNALSMAP_CODE = id;
-        //  this.editdata(id);
-          this.dataAdd.link2 = link;
-          this.dataAdd.link3 = link3;
-          Swal.fire({
-            title: 'ต้องการรวมไฟล์ส่งเบิกจ่าย',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'ตกลง',
-            cancelButtonText: 'ยกเลิก',
-          }).then((result) => {
-            this.dataAdd.opt = "sendfile";
-            if (result.value) {
-              this.apiService
-                .getdata(this.dataAdd, this.url)
-                .pipe(first())
-                .subscribe((data: any) => {
-                  if (data.status == 1) {
-                    this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
-                    this.fetchdatalist();
-      
-                  }
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-              Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+  sendfile(id: any, link: any, link3: any) {
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    //  this.editdata(id);
+    this.dataAdd.link2 = link;
+    this.dataAdd.link3 = link3;
+    Swal.fire({
+      title: 'ต้องการรวมไฟล์ส่งเบิกจ่าย',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      this.dataAdd.opt = "sendfile";
+      if (result.value) {
+        this.apiService
+          .getdata(this.dataAdd, this.url)
+          .pipe(first())
+          .subscribe((data: any) => {
+            if (data.status == 1) {
+              this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+              this.fetchdatalist();
+
             }
           });
-      
-        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+      }
+    });
+
+  }
   updatedata() {
 
     this.dataAdd.opt = "update";
@@ -421,10 +424,10 @@ export class Load3dfaceanComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataEdoc = data.data;
-         this.dataAdd.DEPARTMENT_CODE = data.data[0].mapSectionCode;
+        this.dataAdd.DEPARTMENT_CODE = data.data[0].mapSectionCode;
       });
   }
-    onChangechief() {
+  onChangechief() {
     this.datachief = null;
     this.dataAdd.opt = "viewCHIEFANNAL";
     this.apiService
@@ -435,7 +438,7 @@ export class Load3dfaceanComponent implements OnInit {
         this.dataAdd.CHIEF_CODE = data[0].CHIEF_CODE;
       });
   }
-           // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
     this.fetchdatalistapp();
@@ -445,12 +448,46 @@ export class Load3dfaceanComponent implements OnInit {
     this.page = 1;
     this.fetchdatalistapp();
   }
-    previewPdf(url: string) {
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+  }
+
+  async openPdfAnnotator(p: any) {
+    console.log(p.EBOOKREQ_LINK);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    }
   }
 }

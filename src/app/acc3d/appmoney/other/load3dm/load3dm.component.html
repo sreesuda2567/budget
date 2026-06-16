@@ -156,7 +156,7 @@
                     </td>
                     <td align="center" data-label="เลือก:">
                             <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-                            data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNALLBW_CTNO,p.FNANNALS_MONEYRE)"
+                            data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNALLBW_CTNO,p.FNANNALS_MONEYRE,p.linkclear)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
                     </td>
                 </tr>
@@ -270,6 +270,8 @@
                             placeholder="เลขฎีกา" [(ngModel)]="dataAdd.FNANNALSMAP_DEKA">
 
                     </div>
+                    <div class="form-group col-md-8"></div>
+                    <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
                         <label for="name">ผู้รับผิดชอบ</label>
                         <br>
@@ -314,11 +316,11 @@
 
                     </div>
                     <div class="col-md-2">
-                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
+                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ลงนาม
                         </label>
                         <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i
-                                class="fa-solid fa-file-pdf " style="color: green; font-size: 30px;"></i></a>
+                        <a *ngIf="dataAdd.EBOOKREQ_LINK" (click)="openPdfAnnotator(dataAdd)"><i
+                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
                         &nbsp;
                     </div>
                     <div class="form-group col-md-1"></div>

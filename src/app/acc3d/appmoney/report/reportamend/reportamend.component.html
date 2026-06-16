@@ -118,6 +118,9 @@
                             </i></a> 
                     </td>
                     <td align="center">
+                        <a *ngIf="p.REPORT_LINK" role="button" title="ลงนาม" class="btn btn-info text-white"
+                            (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
+                            </i></a> &nbsp;
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModal" (click)="editdata(p.FNANNALSMAPR_CODE,p.FNANNALSMAP_CODE)"
                             (click)="setshowbti()"><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>

@@ -11,6 +11,8 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 defineLocale('th', thBeLocale);
 
 @Component({
@@ -50,7 +52,7 @@ export class CheckotherComponent implements OnInit {
     previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   constructor(
-        private tokenStorage: TokenStorageService,
+     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -59,7 +61,8 @@ export class CheckotherComponent implements OnInit {
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -266,7 +269,7 @@ fetchdata() {
     this.dataAdd.FNANNALS_NUMBER = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any,id2: any, mail: any, at: any, name: any, mail2: any, no: any) {
+  editdata(id: any,id2: any, mail: any, at: any, name: any, mail2: any, no: any, link: any) {
     this.setshowbti();
     this.fetchdatareport();
     this.onChangeedoc();
@@ -278,6 +281,7 @@ fetchdata() {
     this.dataAdd.FNANNALS_BOOK_AT = at;
     this.dataAdd.FNANNALS_NUMBER = no;
     this.dataAdd.FSTF_FNAME = name;
+    this.dataAdd.EBOOKREQ_LINK = link;
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไขFNANNALSMAP_CODE
@@ -420,4 +424,37 @@ fetchdata() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
   } 
+   async openPdfAnnotator(p: any) {
+      console.log(p.EBOOKREQ_LINK);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+      
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+      
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    }
+  }    
 }

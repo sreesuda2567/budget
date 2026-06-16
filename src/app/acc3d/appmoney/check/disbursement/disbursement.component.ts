@@ -11,6 +11,9 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
+
 defineLocale('th', thBeLocale);
 import Swal from 'sweetalert2';
 
@@ -67,7 +70,8 @@ export class DisbursementComponent implements OnInit {
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -514,7 +518,7 @@ export class DisbursementComponent implements OnInit {
       .subscribe((data: any) => {
         //console.log(data.status);       
         if (data.status == 1) {
-          this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '57')
+          this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '57')
             .subscribe((event: any) => {
               // 
               if (event.type == 4) {
@@ -613,5 +617,36 @@ export class DisbursementComponent implements OnInit {
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+  }
+  async openPdfAnnotator(p: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.linkclear + (p.linkclear.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+             
+          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '52')
+            .subscribe((event: any) => {
+              if (event.type == 4) { // HttpEventType.Response
+                 this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
+                 this.fetchdatalist();
+              }
+            });
+    
+    }
   }
 }

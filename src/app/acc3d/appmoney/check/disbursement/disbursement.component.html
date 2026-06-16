@@ -150,6 +150,9 @@
                             &nbsp;</span>
                     </td>
                     <td align="center" data-label="เลือก:">
+                        <a *ngIf="p.linkclear" role="button" title="ลงนาม" class="btn btn-info text-white"
+                            (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
+                            </i></a> &nbsp;
                         <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                             (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"

@@ -178,7 +178,7 @@
                         </a>&nbsp;    
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
-                            (click)="editdata(p.FNANNALSMAP_CODE,p.CONTRACT_LINK)"><i
+                            (click)="editdata(p.FNANNALSMAP_CODE,p.load3d)"><i
                                 class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
                     </td>
                 </tr>
@@ -313,8 +313,8 @@
                         <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
                         </label>
                         <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i
-                                class="fa-solid fa-file-pdf " style="color: green; font-size: 30px;"></i></a>
+                         <a *ngIf="dataAdd.EBOOKREQ_LINK" (click)="openPdfAnnotator(dataAdd)"><i
+                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
                         &nbsp;
                     </div>
                     <div class="form-group col-md-1"></div>

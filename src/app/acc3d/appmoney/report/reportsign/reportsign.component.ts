@@ -333,7 +333,7 @@ fetchdatalist(status: any) {
           this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAPR_CODE, user.citizen, statusCode)
             .subscribe((event: any) => {
               if (event.type == 4) { // HttpEventType.Response
-                 this.toastr.success("แจ้งเตือน: อัปโหลดลายเซ็นและอัปเดตข้อมูลเรียบร้อยแล้ว");
+                 this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
                  this.fetchdatalist('0');
               }
             });

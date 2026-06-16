@@ -12,6 +12,8 @@ import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 
 @Component({
   selector: 'app-clearcheck',
@@ -56,7 +58,8 @@ export class ClearcheckComponent implements OnInit {
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -342,5 +345,38 @@ export class ClearcheckComponent implements OnInit {
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+  }
+  async openPdfAnnotator(p: any) {
+      console.log(p.EBOOKREQ_LINK);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+      
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+      
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    }
   }
 }
