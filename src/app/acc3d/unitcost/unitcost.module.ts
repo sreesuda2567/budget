@@ -31,7 +31,7 @@ import { ReportdayappComponent } from './report/reportdayapp/reportdayapp.compon
 import { ReportdaycheckComponent } from './report/reportdaycheck/reportdaycheck.component';
 import { ReportdaycorrectComponent } from './report/reportdaycorrect/reportdaycorrect.component';
 import { FpaymentdateComponent } from './budget/fpaymentdate/fpaymentdate.component';
-
+import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'pdf-annotator';
 
 @NgModule({
   declarations: [
@@ -69,7 +69,18 @@ import { FpaymentdateComponent } from './budget/fpaymentdate/fpaymentdate.compon
     AutocompleteLibModule,
     BsDatepickerModule,
     Ng2SearchPipeModule,
-    NgxPaginationModule
-  ]
+    NgxPaginationModule,
+    PdfAnnotatorModule
+  ],
+    providers: [
+      {
+        provide: PDF_ANNOTATOR_CONFIG,
+        useValue: {
+          pdfApiUrl: '/acc3d/appmoney',
+          signaturesApiUrl: 'https://e-doc.rmutsv.ac.th/api/signatures/signatures.php',
+          pdfWorkerSrc: '/assets/pdf.worker.min.js'
+        }
+      }
+    ]
 })
 export class UnitcostModule { }

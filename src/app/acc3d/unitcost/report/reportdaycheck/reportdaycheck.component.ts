@@ -11,6 +11,8 @@ import { UploadfileserviceService } from '../../../../acc3d/_services/uploadfile
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thLocale } from 'ngx-bootstrap/locale'; // ✅ เปลี่ยนเป็น path ที่ถูกต้อง
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 defineLocale('th', thLocale); // โหลด locale ภาษาไทย
 
 
@@ -70,7 +72,8 @@ export class ReportdaycheckComponent implements OnInit {
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -380,6 +383,7 @@ fetchdata() {
       this.selectedItems = [];
       this.dataAdd.CFNANNALSMAPR_CODE = [];
       this.dataAdd.CFNANNALSMAP_CODE = [];
+      this.dataAdd.EBOOKREQ_LINK = '';
     } else {
       for (let i = 0; i < this.datalist.length; i++) {
         this.dataAdd.check[i] = true;
@@ -387,6 +391,9 @@ fetchdata() {
       this.selectedItems = [...this.datalist];
       this.dataAdd.CFNANNALSMAPR_CODE = this.datalist.map((item: any) => item.FNANNALSMAPR_CODE);
       this.dataAdd.CFNANNALSMAP_CODE = this.datalist.map((item: any) => item.FNANNALSMAP_CODE);
+      if (this.datalist.length > 0) {
+        this.dataAdd.EBOOKREQ_LINK = this.datalist[this.datalist.length - 1].REPORT_LINK;
+      }
     }
   }
   onCheckChange(item: any, index: number) {
@@ -395,6 +402,7 @@ fetchdata() {
       this.selectedItems.push(item);
       this.dataAdd.CFNANNALSMAPR_CODE.push(item.FNANNALSMAPR_CODE);
       this.dataAdd.CFNANNALSMAP_CODE.push(item.FNANNALSMAP_CODE);
+      this.dataAdd.EBOOKREQ_LINK = item.REPORT_LINK;
     } else {
       // คลิกออก → ลบค่าที่เก็บไว้ในตัวแปร
       const idx = this.selectedItems.findIndex(
@@ -404,6 +412,13 @@ fetchdata() {
         this.selectedItems.splice(idx, 1);
         this.dataAdd.CFNANNALSMAPR_CODE.splice(idx, 1);
         this.dataAdd.CFNANNALSMAP_CODE.splice(idx, 1);
+      }
+      if (this.dataAdd.EBOOKREQ_LINK === item.REPORT_LINK) {
+        if (this.selectedItems.length > 0) {
+          this.dataAdd.EBOOKREQ_LINK = this.selectedItems[this.selectedItems.length - 1].REPORT_LINK;
+        } else {
+          this.dataAdd.EBOOKREQ_LINK = '';
+        }
       }
     }
    // console.log('CFNANNALSMAPR_CODE:', this.dataAdd.CFNANNALSMAPR_CODE);
@@ -417,4 +432,41 @@ fetchdata() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
   } 
+   async openPdfAnnotator(p: any) {
+      console.log(p.EBOOKREQ_LINK);
+      if (!p.EBOOKREQ_LINK) {
+        this.toastr.warning("แจ้งเตือน: ไม่พบไฟล์เอกสาร PDF หรือคุณยังไม่ได้เลือกรายการ");
+        return;
+      }
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+      
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+      
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    }
+  }   
 }

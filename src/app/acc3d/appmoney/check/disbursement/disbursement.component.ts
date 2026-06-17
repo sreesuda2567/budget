@@ -60,6 +60,7 @@ export class DisbursementComponent implements OnInit {
   dataProduct: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
+  pdfUrlToView: SafeResourceUrl | null = null;
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -554,6 +555,7 @@ export class DisbursementComponent implements OnInit {
       });
   }
   fetchdataloadshow(id: any) {
+    this.pdfUrlToView = null;
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.opt = "viewshow";
 
@@ -598,8 +600,9 @@ export class DisbursementComponent implements OnInit {
 
   }
   exportpdf(link: any) {
-    let url = link;
-    window.open(url, '_blank');
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
   }
   onTableDataChange(event: any) {
     this.page = event;

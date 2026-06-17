@@ -11,8 +11,10 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 defineLocale('th', thBeLocale);
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-annalsendm',
@@ -35,7 +37,7 @@ export class AnnalsendmComponent implements OnInit {
   rowpbi: any;
   rowpbu: any;
   rownum1: any;
-  dataAdd: any = {};
+  dataAdd: any = {FRACCCODE:[],FRACCMONEY:[]};
   locale = 'th-be';
   locales = listLocales();
   datalistapp: any;
@@ -43,9 +45,15 @@ export class AnnalsendmComponent implements OnInit {
   datachief: any;
   datareceipt: any;
   dataReceiptdetail: any;
+  dataAcc: any;
+  dataNamea: any;
+  datacampus: any;
+  dataProduct: any;
+  dataIncome: any;
+  number: any = [0, 1, 2];
   page = 1;
   count = 0;
-  number = 0;
+ // number = 0;
   tableSize = 40;
   tableSizes = [40, 100, 200];
   searchTerm: any;
@@ -61,7 +69,8 @@ export class AnnalsendmComponent implements OnInit {
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -110,6 +119,19 @@ export class AnnalsendmComponent implements OnInit {
       .subscribe((data: any) => {
         this.datarstatus = data;
         this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
+        //หน่วยเบิกจ่าย
+        var Tablein = {
+          "opt": "viewCAMPUS",
+          "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS,
+          "citizen": this.tokenStorage.getUser().citizen
+        }
+        this.apiService
+          .getdata(Tablein, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.datacampus = data;
+            //this.dataAdd.CAMPUS_CODE = data[0].CAMPUS_CODE;
+          });
         //รายการปี
         var Table = {
           "opt": "viewyear"
@@ -133,6 +155,7 @@ export class AnnalsendmComponent implements OnInit {
                 // console.log(data[0].FACULTY_CODE);
                 this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
                 this.fetchdatalist();
+                this.fetchdatareportnamea();
 
               });
           });
@@ -148,8 +171,51 @@ export class AnnalsendmComponent implements OnInit {
       .subscribe((data: any) => {
         this.datareceipt = data;
       });
+    this.dataAdd.opt = "viewFRACCE";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAcc = data;
+        //console.log(data);
+      });
+           //รายการผลผลิต
+    var Tablein = {
+      "opt": "viewPLGPRODUCT"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataProduct = data;
+       // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
+      }); 
+          //รายการประเภทเงิน
+    var Tablein = {
+      "opt": "viewPLINCOME"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataIncome = data;
+       // this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+      });     
   }
-
+  fetchdatareportnamea() {
+    this.dataNamea = null;
+    var varN1 = {
+      "opt": "viewnamecheckc",
+      "citizen": this.tokenStorage.getUser().citizen,
+      "FACULTY_CODE": this.dataAdd.FACULTY_CODE
+    }
+    this.apiService
+      .getdata(varN1, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataNamea = data;
+      });
+  }
   fetchdatalist() {
     this.datalist = null;
     this.datalistapp = null;
@@ -243,7 +309,7 @@ export class AnnalsendmComponent implements OnInit {
     this.dataAdd.FNRESTATUS_CODE2 = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, id2: any, money: any, mail: any, at: any, name: any, mail2: any) {
+  editdata(id: any, id2: any, money: any, mail: any, at: any, name: any, mail2: any, link: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -255,8 +321,49 @@ export class AnnalsendmComponent implements OnInit {
     this.dataAdd.FNANNALS_BOOK_AT = at;
     this.dataAdd.FSTF_FNAME = name;
     this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
+    this.dataAdd.EBOOKREQ_LINK = link;
     this.rowpbi = true;
     // console.log(this.dataAdd.FNANNALSMAP_CODE1);
+  }
+  // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+  editdatapr(id: any, id2: any, money: any, mail: any, at: any, name: any, mail2: any) {
+    this.setshowbti();
+    this.onChangeedoc();
+    this.onChangechief();
+    this.onChangeReceiptdetail(id2);
+    this.fetchdatareportnamea();
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.FNANNALS_CODE = id2;
+    this.dataAdd.USERNAME_CISCO = mail;
+    this.dataAdd.USERNAME_CISCOA = mail2;
+    this.dataAdd.FNANNALS_BOOK_AT = at;
+    this.dataAdd.FSTF_FNAME = name;
+    this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
+    this.rowpbi = true;
+    // console.log(this.dataAdd.FNANNALSMAP_CODE1);
+    this.apiService
+      .getById(id2, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+       // this.dataSeq = data.data2;
+        this.dataAdd.FNANNALSMAP_RSTATUS = data.data[0].FNANNALSMAP_STATUS;
+        this.dataAdd.FNANNALS_MONEYC = parseFloat(data.data[0].FNANNALS_MONEYC).toFixed(2);
+        this.dataAdd.CITIZEN_IDB = data.data[0].CITIZEN_IDB;
+        this.dataAdd.CHIEF_CODE = data.data[0].CHIEF_CODE;
+        this.dataAdd.DEPARTMENT_CODE = data.data[0].DEPARTMENT_CODE;
+        this.dataAdd.PLINCOME_CODE = data.data[0].PLINCOME_CODE;
+        this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
+        this.dataAdd.CAMPUS_CODE = data.data[0].CAMPUS_CODE;
+        this.dataAdd.CITIZEN_IDP1 = data.data[0].CITIZEN_IDP1;
+        this.dataAdd.CITIZEN_IDP2 = data.data[0].CITIZEN_IDP2;
+        this.dataAdd.CITIZEN_IDP3 = data.data[0].CITIZEN_IDP3;
+        this.dataAdd.CITIZEN_IDP4 = data.data[0].CITIZEN_IDP4;
+        this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
+         for (let i = 0; i < data.data2.length; i++) {
+            this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
+            this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
+          }
+      });
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไขFNANNALSMAP_CODE
   editdatapp(id: any, id2: any, link: any, ciz: any, money: any, status: any) {
@@ -324,6 +431,59 @@ export class AnnalsendmComponent implements OnInit {
 
     }
   }
+  insertdataapp() {
+    if (this.dataAdd.FNANNALS_MONEYC == '') {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกจำนวนเงิน");
+
+    } else {
+      this.dataAdd.opt = "insertapp";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);   uploadbook    
+          if (data.status == 1) {
+            this.fetchdatalist();
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            document.getElementById("ModalCloseb")?.click();
+          } else {
+            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+          }
+        });
+
+
+    }
+  }
+   sendfile(id: any, link: any, link3: any) {
+        this.dataAdd.FNANNALSMAP_CODE = id;
+      //  this.editdata(id);
+        this.dataAdd.link2 = link;
+        this.dataAdd.link3 = link3;
+        Swal.fire({
+          title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'ตกลง',
+          cancelButtonText: 'ยกเลิก',
+        }).then((result) => {
+          this.dataAdd.opt = "sendfile";
+          if (result.value) {
+            this.apiService
+              .getdata(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                if (data.status == 1) {
+                  this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                  this.fetchdatalist();
+    
+                }
+              });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+          }
+        });
+    
+      }
   updatedata() {
 
     this.dataAdd.opt = "update";
@@ -477,12 +637,45 @@ export class AnnalsendmComponent implements OnInit {
     this.page = 1;
     this.fetchdatalistapp();
   }
-    previewPdf(url: string) {
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+  }
+  async openPdfAnnotator(p: any) {
+    console.log(p.EBOOKREQ_LINK);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    }
   }
 }

@@ -78,20 +78,19 @@
                         รวมยอดเงินที่เลือก: {{ totalAmount | number : '1.2-2' }} บาท
                     </h4>
                 </div>
-                <div class="col-md-4" align="right">
-                    <button type="submit" class="btn btn-warning"   (click)="showinput('2')"  ><i
-                            class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ดูรายการส่งกลับ</button>
-                    &nbsp;
-                    <button *ngIf="dataAdd.edit=='2'" type="submit" class="btn btn-primary"   (click)="showinput('3')"  ><i
-                            class="fa-solid fa-check"></i>&nbsp;ดูรายการตรวจสอบ</button>
-                    &nbsp;
-                    <button  *ngIf="rownum && dataAdd.edit=='1'" type="submit" class="btn btn-danger" id="submitupdate" data-bs-toggle="modal"
-                        data-bs-target="#modalEdit" (click)="showinput('0')"  ><i
-                            class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ส่งกลับ</button>
-                    &nbsp;
-                    <button  *ngIf="rownum && dataAdd.edit=='1'" type="submit" class="btn btn-success" id="submitupdate" data-bs-toggle="modal"
-                        data-bs-target="#modalEdit"  (click)="showinput('1')"><i
-                            class="fa fa-edit"></i>&nbsp;อนุมัติ</button>
+                <div class="col-md-4 d-flex justify-content-end">
+                    <div class="btn-group" role="group">
+                        <button type="submit" class="btn btn-warning" (click)="showinput('2')"><i
+                                class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ดูรายการส่งกลับ</button>
+                        <button *ngIf="dataAdd.edit=='2'" type="submit" class="btn btn-primary" (click)="showinput('3')"><i
+                                class="fa-solid fa-check"></i>&nbsp;ดูรายการตรวจสอบ</button>
+                        <button *ngIf="rownum && dataAdd.edit=='1'" type="submit" class="btn btn-danger" id="submitupdate" data-bs-toggle="modal"
+                            data-bs-target="#modalEdit" (click)="showinput('0')"><i
+                                class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ส่งกลับ</button>
+                        <button *ngIf="rownum && dataAdd.edit=='1'" type="submit" class="btn btn-success" id="submitupdate" data-bs-toggle="modal"
+                            data-bs-target="#modalEdit" (click)="showinput('1')"><i
+                                class="fa fa-edit"></i>&nbsp;อนุมัติ</button>
+                    </div>
                 </div>
 
             </div>
@@ -207,11 +206,18 @@
                         <textarea id="FNEXACCTD_NOTE" name="FNEXACCTD_NOTE" [(ngModel)]="dataAdd.FNEXACCTD_NOTE"
                             rows="4" cols="50" class="form-control"></textarea>
                     </div>
-                    <div *ngIf="dataAdd.type==1" class="form-group col-md-12">
+                    <div *ngIf="dataAdd.type==1" class="form-group col-md-10">
                        <label for="name">แนบไฟล์เอกสาร</label>
                         <br>
                         <input class="form-control" type="file" (change)="onChangepdf($event)"
                             [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+                    </div>
+                    <div *ngIf="dataAdd.type==1" class="form-group col-md-2">
+                       <label for="name">ลงนาม</label>
+                        <br>
+                         <a  (click)="openPdfAnnotator(dataAdd)"><i
+                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
+                        &nbsp;
                     </div>
                     <div *ngIf="dataAdd.type==1" class="form-group col-md-12">
                         <div class="row" *ngFor="let type of datareceipt">

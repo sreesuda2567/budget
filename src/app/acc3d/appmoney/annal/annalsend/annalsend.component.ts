@@ -10,6 +10,9 @@ import { UploadfileserviceService } from '../../../../acc3d/_services/uploadfile
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thLocale } from 'ngx-bootstrap/locale'; // ✅ เปลี่ยนเป็น path ที่ถูกต้อง
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 defineLocale('th', thLocale); // โหลด locale ภาษาไทย
 
 @Component({
@@ -46,6 +49,7 @@ title = 'angular-app';
   number = 0;
   tableSize = 20;
   tableSizes = [20, 30, 40];
+  pdfUrlToView: SafeResourceUrl | null = null;
   rowpbi: any;
   rowpbu: any;
   file: any;
@@ -60,7 +64,9 @@ title = 'angular-app';
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private modalCtrl: ModalController,
+    private sanitizer: DomSanitizer
 
   ) { }
 
@@ -183,6 +189,7 @@ title = 'angular-app';
       });
   }
    fetchdataloadshows(id: any) {
+    this.pdfUrlToView = null;
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.opt = "viewshow";
     this.apiService
@@ -298,6 +305,15 @@ title = 'angular-app';
     this.dataAdd.DEPARTMENT_CODE = '';
     this.dataAdd.EBOOKREQ_FILE = ''
   }
+  onCheckChange(selectedIndex: number) {
+    if (this.dataAdd.check[selectedIndex]) {
+      for (let i = 0; i < this.dataAdd.check.length; i++) {
+        if (i !== selectedIndex) {
+          this.dataAdd.check[i] = false;
+        }
+      }
+    }
+  }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
     this.loading = true;
@@ -403,6 +419,11 @@ title = 'angular-app';
     this.tableSize = event.target.value;
     this.page = 1;
     this.fetchdata();
+  }
+   exportpdf(link: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
   }
   onChangeedoc() {
     this.dataEdoc = null;

@@ -51,6 +51,7 @@ export class ClearchecktComponent implements OnInit {
   tableSizes = [20, 30, 40, 100, 200];
     previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
+  pdfUrlToView: SafeResourceUrl | null = null;
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -367,6 +368,7 @@ export class ClearchecktComponent implements OnInit {
       });
   }
   fetchdataloadshow(id: any) {
+    this.pdfUrlToView = null;
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.opt = "viewshow";
 
@@ -380,8 +382,9 @@ export class ClearchecktComponent implements OnInit {
       });
   }
   exportpdf(link: any) {
-    let url = link;
-    window.open(url, '_blank');
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
   }
   // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {

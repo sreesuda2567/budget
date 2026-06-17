@@ -9,6 +9,8 @@ import { UploadfileserviceService } from '../../../../acc3d/_services/uploadfile
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thLocale } from 'ngx-bootstrap/locale'; // ✅ เปลี่ยนเป็น path ที่ถูกต้อง
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 defineLocale('th', thLocale); // โหลด locale ภาษาไทย
 
 @Component({
@@ -50,7 +52,8 @@ export class TransferannalComponent implements OnInit {
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -330,5 +333,38 @@ export class TransferannalComponent implements OnInit {
     this.tableSize = event.target.value;
     this.page = 1;
     this.fetchdatalistapp();
+  }
+  async openPdfAnnotator(p: any) {
+      console.log(p.EBOOKREQ_LINK);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+      
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+      
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    }
   }
 }

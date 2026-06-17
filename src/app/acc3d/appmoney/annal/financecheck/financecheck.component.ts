@@ -11,6 +11,7 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+
 defineLocale('th', thBeLocale);
 import Swal from 'sweetalert2';
 @Component({
@@ -55,6 +56,7 @@ export class FinancecheckComponent implements OnInit {
   dataSeq: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
+  pdfUrlToView: SafeResourceUrl | null = null;
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -551,6 +553,7 @@ export class FinancecheckComponent implements OnInit {
       });
   }
   fetchdataloadshow(id: any) {
+    this.pdfUrlToView = null;
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.opt = "viewshow";
 
@@ -564,8 +567,9 @@ export class FinancecheckComponent implements OnInit {
       });
   }
   exportpdf(link: any) {
-    let url = link;
-    window.open(url, '_blank');
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
   }
   //ส่งอีเมลสถานะใบเสร็จ
   sendemail() {

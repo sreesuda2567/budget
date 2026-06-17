@@ -28,6 +28,16 @@ export class ApproveaccComponent implements OnInit {
   loading: any;
   loadingdetail: any;
   dataAdd: any = { check: [], FNEXACC_CODE: [], FNEXACC_DETAIL: [], USERNAME_CISCO: [] };
+  get totalAmount(): number {
+    if (!this.datalist) return 0;
+    return this.datalist.reduce((sum: number, item: any, index: number) => {
+      if (this.dataAdd.check[index]) {
+        const amountStr = item.FNEXPENSES_RMONEY ? item.FNEXPENSES_RMONEY.toString().replace(/,/g, '') : '0';
+        return sum + (Number(amountStr) || 0);
+      }
+      return sum;
+    }, 0);
+  }
   clickshow: any;
   datalistdetailmoney: any;
   searchTerm: any;

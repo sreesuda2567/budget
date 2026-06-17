@@ -175,8 +175,11 @@
                            
                     </td>
                     <td align="center" data-label="เลือก:">
+                        <a *ngIf="p.linkclear" role="button" title="ลงนาม" class="btn btn-info text-white"
+                            (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
+                            </i></a> &nbsp;
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-                            data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.FNANNALS_AMOUNT,p.FNALLBW_AMOUNT)"
+                            data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.FNANNALS_AMOUNT,p.FNALLBW_AMOUNT,p.CONTRACT_LINK)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แนปไฟล์</button>
                     </td>
                 </tr>
@@ -265,7 +268,7 @@
                     <td align="center" data-label="เลือก:">
                         <button *ngIf="p.FNANNALSMAP_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='A'  " type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
-                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CHIEF_CODE,p.DEPARTMENT_CODE,p.FNANNALS_AMOUNT,p.FNALLBW_AMOUNT)"
+                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CHIEF_CODE,p.DEPARTMENT_CODE,p.FNANNALS_AMOUNT,p.FNALLBW_AMOUNT,p.CONTRACT_LINK)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
                     </td>
                 </tr>
@@ -323,11 +326,11 @@
 
                     </div>
                     <div class="col-md-2">
-                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
+                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ลงนาม
                         </label>
                         <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i class="fa-solid fa-file-pdf "
-                                            style="color: green; font-size: 30px;"></i></a>
+                        <a *ngIf="dataAdd.EBOOKREQ_LINK" (click)="openPdfAnnotator(dataAdd)"><i
+                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
                         &nbsp;
                     </div>
                     <div class="form-group col-md-1"></div>

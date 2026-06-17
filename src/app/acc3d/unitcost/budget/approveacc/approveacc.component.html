@@ -77,7 +77,11 @@
             <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export
             Excel</button>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+          <h4 *ngIf="totalAmount > 0" class="text-danger mb-0" style="font-weight: bold;">
+            รวมยอดเงินที่เลือก: {{ totalAmount | number : '1.2-2' }} บาท
+          </h4>
+        </div>
         <div class="col-md-3">
           <div class="input-group">
             <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาเลข3ดี/เลขฎีกา"
@@ -90,13 +94,13 @@
             </span>
           </div>
         </div>
-        <div class="col-md-1" *ngIf="rownum" align="right">
-          <button type="submit" class="btn btn-danger" id="submitupdate" data-bs-toggle="modal"
-            data-bs-target="#modalEdit"><i class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ส่งกลับ</button>
-        </div>
-        <div class="col-md-1" *ngIf="rownum" align="right">
-          <button type="submit" class="btn btn-success" id="submitupdate" (click)="submitData('1')"><i
-              class="fa fa-edit"></i>&nbsp;อนุมัติ</button>
+        <div class="col-md-2 d-flex justify-content-end" *ngIf="rownum">
+          <div class="btn-group" role="group">
+            <button type="submit" class="btn btn-danger" id="submitupdate" data-bs-toggle="modal"
+              data-bs-target="#modalEdit"><i class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ส่งกลับ</button>
+            <button type="submit" class="btn btn-success" id="submitupdate" (click)="submitData('1')"><i
+                class="fa fa-edit"></i>&nbsp;อนุมัติ</button>
+          </div>
         </div>
       </div>
     </div>
