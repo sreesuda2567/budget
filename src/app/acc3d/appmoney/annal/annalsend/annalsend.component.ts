@@ -13,6 +13,7 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ModalController } from '@ionic/angular';
 import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 defineLocale('th', thLocale); // โหลด locale ภาษาไทย
 
 @Component({
@@ -291,6 +292,7 @@ title = 'angular-app';
         this.dataAdd.CHIEF_CODE = data.data[0].CHIEF_CODE;
         this.dataAdd.DEPARTMENT_CODE = data.data[0].DEPARTMENT_CODE;
         this.dataAdd.DATENOWT =  new Date(data.data[0].FNANNALSMAPR_DATE);
+        this.dataAdd.FOREMAN_CODE = data.data[0].FOREMAN_CODE;
         // console.log(this.dataAdd.CHIEF_CODE);
         this.fetchdataload();
       });
@@ -304,6 +306,7 @@ title = 'angular-app';
     this.dataAdd.CHIEF_CODE = '';
     this.dataAdd.DEPARTMENT_CODE = '';
     this.dataAdd.EBOOKREQ_FILE = ''
+    this.dataAdd.FOREMAN_CODE = '';
   }
   onCheckChange(selectedIndex: number) {
     if (this.dataAdd.check[selectedIndex]) {
@@ -312,6 +315,9 @@ title = 'angular-app';
           this.dataAdd.check[i] = false;
         }
       }
+      this.dataAdd.clearcheck = this.datalistdetail[selectedIndex].clearcheck;
+    } else {
+      this.dataAdd.clearcheck = null;
     }
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
@@ -447,5 +453,41 @@ title = 'angular-app';
         //this.dataAdd.CHIEF_CODE = data[0].CHIEF_CODE;
       });
   }
+ async openPdfAnnotator(p: any) {
+    if (!p.clearcheck) {
+      alert('กรุณาเลือกรายการที่มีไฟล์รายงานใบล้างหนี้เพื่อลงนาม');
+      return;
+    }
+  //  console.log(p.clearcheck);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.clearcheck + (p.clearcheck.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
 
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+      
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+      
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    }
+  }
 }

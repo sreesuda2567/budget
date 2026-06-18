@@ -374,7 +374,7 @@ fetchdata() {
     this.safePdfUrl = '';
   } 
   async openPdfAnnotator(p: any) {
-      console.log(p.EBOOKREQ_LINK);
+     // console.log(p.EBOOKREQ_LINK);
     const cacheBuster = new Date().getTime();
     const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
     const user = this.tokenStorage.getUser();

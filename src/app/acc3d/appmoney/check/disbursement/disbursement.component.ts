@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { PDFDocument } from 'pdf-lib';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
@@ -480,35 +481,74 @@ export class DisbursementComponent implements OnInit {
 
     }
   }
-    sendfile(id: any, link: any, link3: any) {
+    async sendfile(id: any, link: any, link3: any) {
       this.dataAdd.FNANNALSMAP_CODE = id;
-    //  this.editdata(id);
       this.dataAdd.link2 = link;
       this.dataAdd.link3 = link3;
+
       Swal.fire({
         title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
+        text: 'กำลังรวมไฟล์ PDF...',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'ตกลง',
         cancelButtonText: 'ยกเลิก',
-      }).then((result) => {
-        this.dataAdd.opt = "sendfile";
+      }).then(async (result) => {
         if (result.value) {
-          this.apiService
-            .getdata(this.dataAdd, this.url)
-            .pipe(first())
-            .subscribe((data: any) => {
-              if (data.status == 1) {
-                this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
-                this.fetchdatalist();
-  
-              }
-            });
+          Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+          try {
+            // 1. โหลดไฟล์ PDF ทั้งสองไฟล์จาก URL
+            const pdf1Bytes = await fetch(link).then(res => res.arrayBuffer());
+            const pdf2Bytes = await fetch(link3).then(res => res.arrayBuffer());
+
+            // 2. อ่านข้อมูลไฟล์ PDF
+            const pdf1 = await PDFDocument.load(pdf1Bytes);
+            const pdf2 = await PDFDocument.load(pdf2Bytes);
+
+            // 3. สร้างไฟล์ PDF ใหม่เพื่อนำหน้ากระดาษมารวมกัน
+            const mergedPdf = await PDFDocument.create();
+
+            // นำหน้าทั้งหมดจากไฟล์ที่ 1 มาใส่
+            const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+            copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+            // นำหน้าทั้งหมดจากไฟล์ที่ 2 มาใส่
+            const copiedPages2 = await mergedPdf.copyPages(pdf2, pdf2.getPageIndices());
+            copiedPages2.forEach((page) => mergedPdf.addPage(page));
+
+            // 4. บันทึกไฟล์ใหม่และแปลงเป็น File Object
+            const mergedPdfBytes = await mergedPdf.save();
+            const mergedFile = new File([mergedPdfBytes], "merged_document.pdf", { type: "application/pdf" });
+            const user = this.tokenStorage.getUser();
+
+            // 5. อัปโหลดไฟล์ที่รวมแล้ว (ใช้ code 57 แบบเดียวกับการแนบไฟล์เบิก)
+            this.Uploadfiles.uploadcheck(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '57')
+              .subscribe((event: any) => {
+                if (event.type == 4) {
+                   // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ
+                   this.dataAdd.opt = "sendfile";
+                   this.apiService.getdata(this.dataAdd, this.url)
+                     .pipe(first())
+                     .subscribe((data: any) => {
+                       if (data.status == 1) {
+                         Swal.close();
+                         this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                         this.fetchdatalist();
+                       } else {
+                         Swal.fire('ข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ', 'error');
+                       }
+                     });
+                }
+              });
+
+          } catch (error) {
+            console.error("Error merging PDFs:", error);
+            Swal.fire('ข้อผิดพลาด', 'ไม่สามารถรวมไฟล์ได้ (อาจเกิดจากไฟล์ไม่มีอยู่จริง หรือติดปัญหา Cross-Origin)', 'error');
+          }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
         }
       });
-  
     }
   updatedata() {
 

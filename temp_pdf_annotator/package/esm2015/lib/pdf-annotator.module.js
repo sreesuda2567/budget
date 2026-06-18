@@ -1,0 +1,31 @@
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from './pdf-annotator-modal.component';
+import { PdfManagerService } from './pdf-manager.service';
+import { PDF_ANNOTATOR_CONFIG } from './tokens';
+// HttpClient must be provided by the host application:
+//   Angular 15+:  provideHttpClient()  in app.config.ts
+//   Angular 12-14: HttpClientModule    in AppModule imports
+export class PdfAnnotatorModule {
+    static forRoot(config) {
+        return {
+            ngModule: PdfAnnotatorModule,
+            providers: [
+                { provide: PDF_ANNOTATOR_CONFIG, useValue: config },
+                PdfManagerService
+            ]
+        };
+    }
+}
+PdfAnnotatorModule.decorators = [
+    { type: NgModule, args: [{
+                declarations: [PdfAnnotatorModalComponent],
+                imports: [CommonModule, FormsModule, IonicModule],
+                exports: [PdfAnnotatorModalComponent],
+                providers: [DatePipe, PdfManagerService],
+                schemas: [CUSTOM_ELEMENTS_SCHEMA]
+            },] }
+];
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicGRmLWFubm90YXRvci5tb2R1bGUuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi9wcm9qZWN0cy9wZGYtYW5ub3RhdG9yL3NyYy9saWIvcGRmLWFubm90YXRvci5tb2R1bGUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLFFBQVEsRUFBdUIsc0JBQXNCLEVBQUUsTUFBTSxlQUFlLENBQUM7QUFDdEYsT0FBTyxFQUFFLFlBQVksRUFBRSxRQUFRLEVBQUUsTUFBTSxpQkFBaUIsQ0FBQztBQUN6RCxPQUFPLEVBQUUsV0FBVyxFQUFFLE1BQU0sZ0JBQWdCLENBQUM7QUFDN0MsT0FBTyxFQUFFLFdBQVcsRUFBRSxNQUFNLGdCQUFnQixDQUFDO0FBQzdDLE9BQU8sRUFBRSwwQkFBMEIsRUFBRSxNQUFNLGlDQUFpQyxDQUFDO0FBQzdFLE9BQU8sRUFBRSxpQkFBaUIsRUFBRSxNQUFNLHVCQUF1QixDQUFDO0FBQzFELE9BQU8sRUFBRSxvQkFBb0IsRUFBc0IsTUFBTSxVQUFVLENBQUM7QUFFcEUsdURBQXVEO0FBQ3ZELHdEQUF3RDtBQUN4RCw0REFBNEQ7QUFRNUQsTUFBTSxPQUFPLGtCQUFrQjtJQUM3QixNQUFNLENBQUMsT0FBTyxDQUFDLE1BQTBCO1FBQ3ZDLE9BQU87WUFDTCxRQUFRLEVBQUUsa0JBQWtCO1lBQzVCLFNBQVMsRUFBRTtnQkFDVCxFQUFFLE9BQU8sRUFBRSxvQkFBb0IsRUFBRSxRQUFRLEVBQUUsTUFBTSxFQUFFO2dCQUNuRCxpQkFBaUI7YUFDbEI7U0FDRixDQUFDO0lBQ0osQ0FBQzs7O1lBaEJGLFFBQVEsU0FBQztnQkFDUixZQUFZLEVBQUUsQ0FBQywwQkFBMEIsQ0FBQztnQkFDMUMsT0FBTyxFQUFFLENBQUMsWUFBWSxFQUFFLFdBQVcsRUFBRSxXQUFXLENBQUM7Z0JBQ2pELE9BQU8sRUFBRSxDQUFDLDBCQUEwQixDQUFDO2dCQUNyQyxTQUFTLEVBQUUsQ0FBQyxRQUFRLEVBQUUsaUJBQWlCLENBQUM7Z0JBQ3hDLE9BQU8sRUFBRSxDQUFDLHNCQUFzQixDQUFDO2FBQ2xDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgTmdNb2R1bGUsIE1vZHVsZVdpdGhQcm92aWRlcnMsIENVU1RPTV9FTEVNRU5UU19TQ0hFTUEgfSBmcm9tICdAYW5ndWxhci9jb3JlJztcbmltcG9ydCB7IENvbW1vbk1vZHVsZSwgRGF0ZVBpcGUgfSBmcm9tICdAYW5ndWxhci9jb21tb24nO1xuaW1wb3J0IHsgRm9ybXNNb2R1bGUgfSBmcm9tICdAYW5ndWxhci9mb3Jtcyc7XG5pbXBvcnQgeyBJb25pY01vZHVsZSB9IGZyb20gJ0Bpb25pYy9hbmd1bGFyJztcbmltcG9ydCB7IFBkZkFubm90YXRvck1vZGFsQ29tcG9uZW50IH0gZnJvbSAnLi9wZGYtYW5ub3RhdG9yLW1vZGFsLmNvbXBvbmVudCc7XG5pbXBvcnQgeyBQZGZNYW5hZ2VyU2VydmljZSB9IGZyb20gJy4vcGRmLW1hbmFnZXIuc2VydmljZSc7XG5pbXBvcnQgeyBQREZfQU5OT1RBVE9SX0NPTkZJRywgUGRmQW5ub3RhdG9yQ29uZmlnIH0gZnJvbSAnLi90b2tlbnMnO1xuXG4vLyBIdHRwQ2xpZW50IG11c3QgYmUgcHJvdmlkZWQgYnkgdGhlIGhvc3QgYXBwbGljYXRpb246XG4vLyAgIEFuZ3VsYXIgMTUrOiAgcHJvdmlkZUh0dHBDbGllbnQoKSAgaW4gYXBwLmNvbmZpZy50c1xuLy8gICBBbmd1bGFyIDEyLTE0OiBIdHRwQ2xpZW50TW9kdWxlICAgIGluIEFwcE1vZHVsZSBpbXBvcnRzXG5ATmdNb2R1bGUoe1xuICBkZWNsYXJhdGlvbnM6IFtQZGZBbm5vdGF0b3JNb2RhbENvbXBvbmVudF0sXG4gIGltcG9ydHM6IFtDb21tb25Nb2R1bGUsIEZvcm1zTW9kdWxlLCBJb25pY01vZHVsZV0sXG4gIGV4cG9ydHM6IFtQZGZBbm5vdGF0b3JNb2RhbENvbXBvbmVudF0sXG4gIHByb3ZpZGVyczogW0RhdGVQaXBlLCBQZGZNYW5hZ2VyU2VydmljZV0sXG4gIHNjaGVtYXM6IFtDVVNUT01fRUxFTUVOVFNfU0NIRU1BXVxufSlcbmV4cG9ydCBjbGFzcyBQZGZBbm5vdGF0b3JNb2R1bGUge1xuICBzdGF0aWMgZm9yUm9vdChjb25maWc6IFBkZkFubm90YXRvckNvbmZpZyk6IE1vZHVsZVdpdGhQcm92aWRlcnM8UGRmQW5ub3RhdG9yTW9kdWxlPiB7XG4gICAgcmV0dXJuIHtcbiAgICAgIG5nTW9kdWxlOiBQZGZBbm5vdGF0b3JNb2R1bGUsXG4gICAgICBwcm92aWRlcnM6IFtcbiAgICAgICAgeyBwcm92aWRlOiBQREZfQU5OT1RBVE9SX0NPTkZJRywgdXNlVmFsdWU6IGNvbmZpZyB9LFxuICAgICAgICBQZGZNYW5hZ2VyU2VydmljZVxuICAgICAgXVxuICAgIH07XG4gIH1cbn1cbiJdfQ==

@@ -153,12 +153,12 @@
                                 class="btn btn-warning text-white" (click)="previewPdf(p.load3df)"><i
                                     class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>
-                        <span *ngIf="p.ktbdoc"><a role="button" title="KTB" class="btn btn-info text-white"
+                      <!--   <span *ngIf="p.ktbdoc"><a role="button" title="KTB" class="btn btn-info text-white"
                                 (click)="previewPdf(p.ktbdoc)"><i class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>     
+                            &nbsp;</span>   -->  
                     </td>
                     <td align="center" data-label="เลือก:">
-                        <button *ngIf="p.load3df" type="submit" title="KTB" class="btn btn-success text-white" id="submitupdate"
+                      <!--   <button *ngIf="p.load3df" type="submit" title="KTB" class="btn btn-success text-white" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                             (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDK1,p.CITIZEN_IDK2,p.loadktb,p.DEPARTMENT_CODE,p.CHIEF_CODE)"
                             ><i class="fa fa-plus-circle"></i>&nbsp;KTB</button>&nbsp;
@@ -166,7 +166,7 @@
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.ktbdoc,p.load3df)"><i
                                 class="fa-solid fa-file-arrow-up"></i>
-                        </a>&nbsp;   
+                        </a>&nbsp;   -->
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
                             (click)="editdata(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.load3df)"><i
@@ -239,12 +239,12 @@
                         <span *ngIf="p.loadktb"><a role="button" title="รายงาน KTB" class="btn btn-success text-white"
                                 (click)="previewPdf(p.loadktb)"><i class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>
-                        <span *ngIf="p.ktbdoc"><a role="button" title="KTB" class="btn btn-info text-white"
+                      <!--   <span *ngIf="p.ktbdoc"><a role="button" title="KTB" class="btn btn-info text-white"
                                 (click)="previewPdf(p.ktbdoc)"><i class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>      
+                            &nbsp;</span>      -->
                     </td>
                     <td align="center" data-label="เลือก:">
-                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='C'"><a role="button" title="รายงานใบปะหน้าจ่าย"
+                      <!--   <span *ngIf="p.FNANNALSMAP_RSTATUS=='C'"><a role="button" title="รายงานใบปะหน้าจ่าย"
                                 class="btn btn-warning text-white" (click)="previewPdf(p.load3df)"><i
                                     class="fa-solid fa-file-contract"></i></a>
                             &nbsp;
@@ -256,7 +256,7 @@
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.ktbdoc,p.load3df)"><i
                                 class="fa-solid fa-file-arrow-up"></i>
-                        </a>&nbsp; </span>
+                        </a>&nbsp; </span>-->
                         <button *ngIf="p.FNANNALSMAP_RSTATUS=='C' || dataAdd.PRIVILEGE_RSTATUS=='A' " type="submit"
                             class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
@@ -276,7 +276,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+<div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -364,7 +364,7 @@
     </div>
 </div> 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+<div class="modal fade" data-bs-focus="false" id="exampleModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">

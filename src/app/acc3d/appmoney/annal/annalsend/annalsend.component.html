@@ -82,6 +82,9 @@
                         <div align="center">ชื่อ-สกุล</div>
                     </th>
                     <th>
+                        <div align="center">จำนวนเงิน</div>
+                    </th>
+                    <th>
                         <div align="center">สถานะ</div>
                     </th>
                     <th>
@@ -100,17 +103,22 @@
                     <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
                     <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
                     <td>{{p.FNANNALSMAPR_NAME}}</td>
+                     <td align="center" data-label="จำนวนเงิน:">{{p.FNANNALS_MONEYC| number : '1.2-2'}}</td>
                     <td>{{p.FNANNALSM_TNAME}}</td>
                     <td align="center">
                         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
                             (click)="fetchdataloadshows(p.FNANNALSMAPR_CODE)">
                             <i class="fa-solid fa-eye"></i></button>&nbsp;
-                        <a role="button" title="ดูรายการ" data-bs-toggle="modal" data-bs-target="#exampleModalshow"
+                      <!--  <a role="button" title="ดูรายการ" data-bs-toggle="modal" data-bs-target="#exampleModalshow"
                             class="btn btn-info text-white" (click)="editdatashow(p.FNANNALSMAPR_CODE)"><i
-                                class="fa fa-search"></i></a>&nbsp;
+                                class="fa fa-search"></i></a>&nbsp;-->
+                          <span ><a *ngIf="p.linkreport" role="button" title="รายงานส่งใบสำคัญ" class="btn btn-info text-white"
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"     (click)="exportpdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>        
                         <a *ngIf="p.REPORT_LINK" role="button" title="รายงาน" class="btn btn-success text-white"
-                            href="{{p.REPORT_LINK}}" target="_blank"><i class="fas fa-file-alt">
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                            (click)="dataSeq=null; exportpdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
                             </i></a> &nbsp;
                         <a *ngIf="p.FNANNALSSTATUS_CODE=='83' || p.FNANNALSSTATUS_CODE=='3'  || dataAdd.PRIVILEGE_RSTATUS=='A'" role="button"
                             title="ลบข้อมูล" class="btn btn-danger text-white"
@@ -134,7 +142,7 @@
     </div>
 </div>
 <!-- The Modal -->
-<div class="modal fade" id="exampleModalshow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModalshow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -194,7 +202,7 @@
     </div>
 </div>
 <!-- The Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -208,6 +216,7 @@
                 <input type="hidden" class="form-control" name="FEPSTATE_CODE" id="FEPSTATE_CODE"
                     [(ngModel)]="dataAdd.FNANNALSMAPR_CODE">
                 <div class="row">
+                    <div class="form-group col-md-1"></div>
                     <div class="col-md-2 text-secondary">
                         <label> วันที่: </label>
                         <input placeholder="วันที่" type="text" class="form-control" bsDatepicker #dp2="bsDatepicker"
@@ -215,7 +224,7 @@
                         <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
                             class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp2.toggle()"></i>
                     </div>
-                    <div class="form-group col-md-11"></div>
+                    <div class="form-group col-md-9"></div>
                      <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
                         <label for="name">เรียน</label>
@@ -239,6 +248,17 @@
                         </div>
                     </div>
                     <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-10">
+                        <label for="name">ผู้ขออนมุัติ</label>
+                        <select name="FOREMAN_CODE" id="FOREMAN_CODE" class="form-select" [(ngModel)]="dataAdd.FOREMAN_CODE">
+                            <option value="">กรุณาเลือก</option>
+                            <option [value]="fac.FOREMAN_CODE" *ngFor="let fac of datachief">{{fac.CHIEF_NAME2}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-1"></div>
+                    <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-9">
                         <label for="name">แนบไฟล์เอกสาร</label>
                         <br>
@@ -247,11 +267,12 @@
 
                     </div>
                     <div class="col-md-2">
-                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
+                        <label for="name" *ngIf="dataAdd.clearcheck">ลงนาม
                         </label>
                         <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i
-                                class="fa-solid fa-file-pdf " style="color: green; font-size: 30px;"></i></a>
+                        
+                         <a  (click)="openPdfAnnotator(dataAdd)"><i
+                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
                         &nbsp;
                     </div>
                     <div class="form-group col-md-1"></div>
@@ -282,7 +303,8 @@
                                             class="fa-solid fa-file-contract"></i></a>
                                     &nbsp;</span>
                                 <span *ngIf="p.clearcheck"><a role="button" title="รายงานใบล้างหนี้"
-                                        class="btn btn-primary text-white" href="{{p.clearcheck}}" target="_blank"><i
+                                        class="btn btn-primary text-white" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                                        (click)="exportpdf(p.clearcheck)"><i
                                             class="fa-solid fa-file-contract"></i></a>
                                     &nbsp;</span>
                             </td>
@@ -310,16 +332,16 @@
     </div>
 </div>
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" data-bs-backdrop="static"
-    aria-labelledby="offcanvasRightLabel" [style.width]="pdfUrlToView ? '90vw' : '400px'" style="transition: width 0.3s ease;">
+    aria-labelledby="offcanvasRightLabel" [style.width]="pdfUrlToView ? (dataSeq ? '90vw' : '50vw') : '400px'" style="transition: width 0.3s ease;">
     <div class="offcanvas-header bg-primary text-white">
-        <h5 id="offcanvasRightLabel">สถานะดำเนินการ(หนังสือเสนอลงนาม)</h5>
+        <h5 id="offcanvasRightLabel">{{ dataSeq ? 'สถานะดำเนินการ(หนังสือเสนอลงนาม)' : 'รายงาน' }}</h5>
         <button type="button" class="btn-close text-reset bg-white" data-bs-dismiss="offcanvas"
             aria-label="Close" (click)="pdfUrlToView = null"></button>
     </div>
     <div class="offcanvas-body p-0">
         <div class="row m-0 h-100">
             <!-- Left side: PDF Viewer (Only show if pdfUrlToView is not null) -->
-            <div class="col-md-8 p-0 h-100 border-end d-flex flex-column bg-dark" *ngIf="pdfUrlToView">
+            <div class="p-0 h-100 border-end d-flex flex-column bg-dark" *ngIf="pdfUrlToView" [ngClass]="dataSeq ? 'col-md-8' : 'col-md-12'">
                 <div class="p-2 d-flex justify-content-between align-items-center bg-white">
                     <span class="fw-bold"><i class="fa-solid fa-file-pdf text-danger"></i> ดูเอกสาร</span>
                     <div>
@@ -333,7 +355,7 @@
             </div>
 
             <!-- Right side: Timeline (Take full width if no PDF, or col-md-4 if PDF is shown) -->
-            <div class="p-4 h-100" [ngClass]="pdfUrlToView ? 'col-md-4' : 'col-md-12'" style="overflow-y: auto;">
+            <div class="p-4 h-100" *ngIf="dataSeq" [ngClass]="pdfUrlToView ? 'col-md-4' : 'col-md-12'" style="overflow-y: auto;">
                 <ul class="timeline-with-icons">
                     <li class="timeline-item mb-5" *ngFor="let item of dataSeq">
                         <span  class="timeline-icon">

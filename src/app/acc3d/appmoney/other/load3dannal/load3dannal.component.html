@@ -155,7 +155,7 @@
                             &nbsp;</span>        
                     </td>
                     <td align="center" data-label="เลือก:">
-                        <button *ngIf="p.disbursement" type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
+                    <!--   <button *ngIf="p.disbursement" type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                             (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALSMAP_DEKA,p.FNANNALSMAP_DOC,p.FNANNALSMAP_DDATE,p.load3ddoc)"
                             ><i class="fa fa-plus-circle"></i>&nbsp;ใบโหลด</button>&nbsp;
@@ -163,7 +163,7 @@
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.load3ddoc,p.disbursement)"><i
                                 class="fa-solid fa-file-arrow-up"></i>
-                        </a>&nbsp;
+                        </a>&nbsp;-->
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.disbursement)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
@@ -235,12 +235,12 @@
                                 class="btn btn-success text-white" (click)="previewPdf(p.load3d)"><i
                                     class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>
-                         <span *ngIf="p.load3ddoc"><a role="button" title="รายงานใบโหลด" class="btn btn-info text-white"
+                      <!--    <span *ngIf="p.load3ddoc"><a role="button" title="รายงานใบโหลด" class="btn btn-info text-white"
                                 (click)="previewPdf(p.load3ddoc)"><i class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>     
+                            &nbsp;</span> -->    
                     </td>
                     <td align="center" data-label="เลือก:">
-                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='F'"><a role="button" title="รายงานใบปะหน้าเบิก"
+                       <!--  <span *ngIf="p.FNANNALSMAP_RSTATUS=='F'"><a role="button" title="รายงานใบปะหน้าเบิก"
                                 class="btn btn-warning text-white" (click)="previewPdf(p.disbursement)"><i
                                     class="fa-solid fa-file-contract"></i></a>&nbsp;</span> 
                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='F'"><button type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
@@ -251,7 +251,7 @@
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.load3ddoc,p.disbursement)"><i
                                 class="fa-solid fa-file-arrow-up"></i>
-                        </a>&nbsp;</span> 
+                        </a>&nbsp;</span> -->
                         <button
                             *ngIf="p.FNANNALSMAP_RSTATUS=='F' || dataAdd.PRIVILEGE_RSTATUS=='A' "
                             type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
@@ -272,7 +272,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+<div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -382,7 +382,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
+<div class="modal fade" data-bs-focus="false" id="exampleModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
