@@ -205,7 +205,37 @@ dataFac: any;
         this.dataAdd.check[i]=true;
        }
     }  
-  } 
+  }
+  returnedit(id: any, name: any) {
+        
+        this.dataAdd.opt = "returnedit";
+        this.dataAdd.htmlStringd = name;
+        this.dataAdd.id = id;
+        Swal.fire({
+          
+          title: 'ต้องการส่งคืนข้อมูล?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'ตกลง',
+          cancelButtonText: 'ยกเลิก',
+        }).then((result) => {
+          if (result.value) {
+            this.loading = true;  
+            this.apiService
+              .getdata(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                if (data.status == 1) {
+                  this.loading = null;  
+                  Swal.fire('ส่งคืนข้อมูล!', 'ส่งคืนข้อมูลเรียบร้อยแล้ว', 'success');
+                  this.fetchdatalistapp();
+                }
+              });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('ยกเลิก', 'ยกเลิกการส่งคืนข้อมูล', 'error');
+          }
+        });
+      } 
     previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');

@@ -434,7 +434,7 @@ export class AppassetComponent implements OnInit {
       });
     //สถานะ
     var Tabletar = {
-      "opt": "viewstatusfac"
+      "opt": "viewstatusplan"
     }
     this.apiService
       .getdata(Tabletar, this.url1)
@@ -1539,6 +1539,63 @@ export class AppassetComponent implements OnInit {
     //console.log(name);
     this.dataAdd.PRSTATUS_PSTATUS = name;
   }
+    editdataapp(id: any) {
+    this.setshowbti();
+    this.onChangerister();
+    this.dataAdd.opt = "readoneapp";
+    //console.log(1);
+    this.dataAdd.id = id;
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.onChangedistrict(data[0].PROVINCE_ID);
+        this.onChangesubdistrict(data[0].DISTRICT_ID);
+      });
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        // this.dataAdd  = data;
+        this.dataAdd.RPLINCOME_CODE = data[0].PLINCOME_CODE;
+        this.onChangecrpartrister();
+        this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+        this.dataAdd.PRASSET_CODE = data[0].PRASSET_CODE;
+        this.dataAdd.FPLINCOME_CODE = data[0].PLINCOME_CODE;
+        this.dataAdd.PRASSET_RSTATUS = 0;
+        this.dataAdd.FCRPART_ID = data[0].CRPART_ID;
+        this.dataAdd.PRASSET_CODE = data[0].PRASSET_CODE;
+        if (data[0].TYPEFACULTY_CODE == 1) {
+          this.dataAdd.TYPEFACULTY = "หลักสูตร/ฝ่าย";
+        } else {
+          this.dataAdd.TYPEFACULTY = "งาน";
+        }
+        this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
+       
+        this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
+        //this.dataAdd.PRREGISASSET_CODE = data[0].PRREGISASSET_CODE;
+       // this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
+        if(data[0].PRREGISASSET_CODE !=data[0].PRREGISASSET_CODEA){
+         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODEA;
+        }else{
+        this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODE;
+        }
+       if(data[0].PRASSET_NUMBER !=data[0].PRASSET_NUMBERA){
+         this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBERA; 
+        }else{
+        this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
+        }
+        this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
+         if(data[0].PRASSET_MONEY !=data[0].PRASSET_MONEYA){
+         this.dataAdd.sum = data[0].PRASSET_NUMBERA * data[0].PRASSET_MONEYA;   
+        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEYA).toFixed(2));  
+        }else{
+        this.dataAdd.sum = data[0].PRASSET_NUMBER * data[0].PRASSET_MONEY;  
+        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEY).toFixed(2));
+        }
+
+      });
+  }
   // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
@@ -1556,4 +1613,5 @@ export class AppassetComponent implements OnInit {
       return '%' + c.charCodeAt(0).toString(16).toUpperCase();
     });
   }
+
 }

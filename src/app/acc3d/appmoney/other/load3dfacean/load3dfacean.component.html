@@ -252,17 +252,21 @@
                         <span *ngIf="p.FNANNALSMAP_RSTATUS=='5'"><a role="button" title="รายงานใบปะหน้า"
                                 class="btn btn-info text-white" (click)="previewPdf(p.load3df)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>       
+                            &nbsp;</span>  
+                         <span *ngIf="p.FNANNALSMAP_RSTATUS=='5'"><a role="button" title="รายงานใบโหลด"
+                                class="btn btn-secondary text-white" (click)="previewPdf(p.load3dl)"><i
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>            
                     </td>
                     <td align="center" data-label="เลือก:">
                         <a *ngIf="p.FNANNALSMAP_RSTATUS=='5'" role="button" title="รวมไฟล์ส่งสารบรรณ"
                             class="btn btn-secondary text-white"
-                            (click)="sendfile(p.FNANNALSMAP_CODE,p.load3df,p.load3d)"><i
+                            (click)="sendfile(p.FNANNALSMAP_CODE,p.load3df,p.load3dl)"><i
                                 class="fa-solid fa-file-arrow-up"></i>
                         </a>&nbsp;
                         <button *ngIf="p.FNANNALSMAP_RSTATUS=='5' || dataAdd.PRIVILEGE_RSTATUS=='A'" type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
-                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.load3df,p.CITIZEN_IDD1)"><i
+                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.load3d,p.CITIZEN_IDD1)"><i
                                 class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
                     </td>
                 </tr>

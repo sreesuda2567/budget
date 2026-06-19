@@ -55,6 +55,7 @@ export class SmprojectComponent implements OnInit {
 
   ngOnInit(): void {
     document.getElementById("ModalClose")?.click();
+    this.datastatus='';
     this.fetchdata();
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
   }
@@ -67,9 +68,10 @@ fetchdata() {
     this.apiService.getdata(varP, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
-        this.datarstatus = data;
+        this.datarstatus =  data[0].PRIVILEGE_RSTATUS;
         this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
-        // console.log(data);
+       // this.datastatus = this.dataAdd.PRIVILEGE_RSTATUS
+        // console.log(this.dataAdd.PRIVILEGE_RSTATUS);
         var varN = {
           "opt": "viewfacasset",
           "citizen": this.tokenStorage.getUser().citizen,
@@ -82,6 +84,7 @@ fetchdata() {
             this.dataFac = datafac;
             // console.log(data[0].FACULTY_CODE);
             this.dataAdd.FACULTY_CODE = datafac[0].FACULTY_CODE;
+          //  this.datastatus = this.dataAdd.PRIVILEGE_RSTATUS
             this.fetchdatalistapp();
           });
       });
@@ -108,6 +111,7 @@ fetchdata() {
         this.datastatus = data;
         this.dataAdd.PRSTATUS_CODE = data[0].PRSTATUS_CODE;
       });
+
   }
   //  ฟังก์ขันสำหรับการดึงข้อมูลสิ่งก่อสร้าง
   fetchdatalistapp() {

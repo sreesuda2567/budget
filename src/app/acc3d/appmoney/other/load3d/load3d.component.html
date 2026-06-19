@@ -1,15 +1,17 @@
 <div class="card border-light mx-4 mt-4">
     <div class="card-header">
         <div class="row">
-             <div class="col">
+            
+            <div class="col">
                 <h5 class="card-title mb-0">เงินอื่นๆ/ออกใบโหลด</h5>
             </div>
             <div class="col-auto">
                 <div class="btn-group" role="group">
                     <a class="btn btn-danger text-white" (click)="fetchdatalist()">
-                        <i class="fa fa-plus-circle"></i> ออกใบโหลด</a>
-                    <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalistapp()"><i
-                            class="fa fa-search"></i>&nbsp;รายการใบโหลด</button>
+                        <i class="fa fa-plus-circle"></i> เสนอออกใบโหลด</a>
+                    <button type="submit" class="btn btn-primary" id="submitinsert"
+                        (click)="fetchdatalistapp()"><i
+                                class="fa fa-search"></i>&nbsp;รายการออกใบโหลด</button>
                 </div>
             </div>
         </div>
@@ -30,7 +32,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                 <div class="col-md-3"></div>
+                                <div class="col-md-3"></div>
                                 <div class="col-md-4 text-secondary">
                                     <label for="name">คณะ /หน่วยงาน</label>
                                     <select name="f_code" id="f_code" class="form-select"
@@ -50,7 +52,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                 <div class="col-md-3 text-secondary" style="font-size: 10pt">
+                                <div class="col-md-3 text-secondary" style="font-size: 10pt">
                                     <br>
                                     <div class="input-group">
                                         <input class="form-control border-end-0 border" type="search"
@@ -64,8 +66,8 @@
                                             </button>
                                         </span>
                                     </div>
-                                </div>   
-                            <!--   <div class="col-md-2 text-secondary">
+                                </div>
+                             <!--   <div class="col-md-2 text-secondary">
                                     <label> จากวันที่ </label>
                                     <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker
                                         #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
@@ -80,7 +82,7 @@
                                     <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
                                         class="fa-solid fa-calendar-days cursor-p text-primary"
                                         (click)="dp2.toggle()"></i>
-                                </div>--> 
+                                </div>-->
                                
                             </div>
                         </div>
@@ -142,21 +144,18 @@
                     <td data-label="ชื่อเรื่อง:">{{p.FNANNALS_BOOK_SUB}}</td>
                     <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
                     <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
-                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
                     <td data-label="รายงาน:">
-                      <!--  <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานสัญญา"
-                                class="btn btn-warning text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
-                                    class="fa-solid fa-file-contract"></i></a>&nbsp;</span>-->
-
-                        <span *ngIf="p.disbursement"><a role="button" title="รายงานใบปะหน้าเบิก"
+                      <span *ngIf="p.disbursement"><a role="button" title="รายงานใบปะหน้าเบิก"
                                 class="btn btn-warning text-white" (click)="previewPdf(p.disbursement)"><i
-                                    class="fa-solid fa-file-contract"></i></a>&nbsp;</span>
-                     <!--   <span *ngIf="p.load3ddoc"><a role="button" title="รายงานใบโหลด" class="btn btn-info text-white"
+                                    class="fa-solid fa-file-contract"></i></a>
+                            &nbsp;</span>
+                      <span *ngIf="p.load3ddoc"><a role="button" title="รายงานใบโหลด" class="btn btn-info text-white"
                                 (click)="previewPdf(p.load3ddoc)"><i class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>  -->            
+                            &nbsp;</span>        
                     </td>
                     <td align="center" data-label="เลือก:">
-                      <!--   <button *ngIf="p.disbursement" type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
+                    <!--   <button *ngIf="p.disbursement" type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                             (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALSMAP_DEKA,p.FNANNALSMAP_DOC,p.FNANNALSMAP_DDATE,p.load3ddoc)"
                             ><i class="fa fa-plus-circle"></i>&nbsp;ใบโหลด</button>&nbsp;
@@ -164,7 +163,7 @@
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.load3ddoc,p.disbursement)"><i
                                 class="fa-solid fa-file-arrow-up"></i>
-                        </a>&nbsp;   -->
+                        </a>&nbsp;-->
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.disbursement)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
@@ -232,20 +231,19 @@
                     <td data-label="เลขฎีกา:">{{p.FNANNALSMAP_DEKA}}</td>
                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
                     <td data-label="รายงาน:">
-
                         <span *ngIf="p.load3d"><a role="button" title="รายงานใบโหลด"
                                 class="btn btn-success text-white" (click)="previewPdf(p.load3d)"><i
                                     class="fa-solid fa-file-contract"></i></a>
                             &nbsp;</span>
-                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='1'"><a role="button" title="รายงานใบโหลด" class="btn btn-info text-white"
+                      <!--    <span *ngIf="p.load3ddoc"><a role="button" title="รายงานใบโหลด" class="btn btn-info text-white"
                                 (click)="previewPdf(p.load3ddoc)"><i class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>    
+                            &nbsp;</span> -->    
                     </td>
                     <td align="center" data-label="เลือก:">
-                       <span *ngIf="p.FNANNALSMAP_RSTATUS=='1'"><a role="button" title="รายงานใบปะหน้าเบิก"
+                       <!--  <span *ngIf="p.FNANNALSMAP_RSTATUS=='F'"><a role="button" title="รายงานใบปะหน้าเบิก"
                                 class="btn btn-warning text-white" (click)="previewPdf(p.disbursement)"><i
                                     class="fa-solid fa-file-contract"></i></a>&nbsp;</span> 
-                       <span *ngIf="p.FNANNALSMAP_RSTATUS=='1'"><button type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
+                       <span *ngIf="p.FNANNALSMAP_RSTATUS=='F'"><button type="submit" title="ใบโหลด" class="btn btn-success text-white" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                             (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALSMAP_DEKA,p.FNANNALSMAP_DOC,p.FNANNALSMAP_DDATE,p.load3ddoc)"
                             ><i class="fa fa-plus-circle"></i>&nbsp;ใบโหลด</button>&nbsp;
@@ -253,9 +251,9 @@
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.load3ddoc,p.disbursement)"><i
                                 class="fa-solid fa-file-arrow-up"></i>
-                        </a>&nbsp;</span> 
+                        </a>&nbsp;</span> -->
                         <button
-                            *ngIf="p.FNANNALSMAP_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='A'"
+                            *ngIf="p.FNANNALSMAP_RSTATUS=='F' || dataAdd.PRIVILEGE_RSTATUS=='A' "
                             type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
                             (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALSMAP_DEKA,p.FNANNALSMAP_DOC,p.FNANNALSMAP_DDATE,p.load3d)"
@@ -267,10 +265,10 @@
                 </tr>
             </tbody>
         </table>
-       <div *ngIf="rownum1" class="d-flex justify-content-left">
+        <div *ngIf="rownum1" class="d-flex justify-content-left">
             <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
             </pagination-controls>
-        </div>  
+        </div>
     </div>
 </div>
 <!-- Modal -->
@@ -279,12 +277,12 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกใบโหลด</h5>
+                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกเลขสัญญายิมเงิน</h5>
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
-                   <!-- <div class="form-group col-md-1"></div>
+                <!--  <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
                         <label for="name">อม.1</label>
                         <br>
@@ -307,7 +305,7 @@
                         </select>
 
                     </div>
-                    <div class="form-group col-md-1"></div>-->
+                    <div class="form-group col-md-1"></div>-->  
                      <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-3">
                         <label for="name">เลขฎีกา</label>
@@ -365,9 +363,10 @@
                         <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ลงนาม
                         </label>
                         <br>
-                         <a *ngIf="dataAdd.EBOOKREQ_LINK" (click)="openPdfAnnotator(dataAdd)"><i
+                        <a *ngIf="dataAdd.EBOOKREQ_LINK" (click)="openPdfAnnotator(dataAdd)"><i
                                 class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
                         &nbsp;
+                    </div>
                     <div class="form-group col-md-1"></div>
 
                 </div>
@@ -468,8 +467,8 @@
             </div>
         </div>
     </div>
-</div>    
-    <!-- PDF Preview Side Panel -->
+</div>
+<!-- PDF Preview Side Panel -->
 <div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
 <div class="pdf-preview-panel" [class.open]="previewPdfUrl">
     <div class="pdf-preview-header bg-primary text-white">
@@ -486,4 +485,5 @@
     <div class="pdf-preview-body">
         <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
     </div>
-</div>      
+</div>
+

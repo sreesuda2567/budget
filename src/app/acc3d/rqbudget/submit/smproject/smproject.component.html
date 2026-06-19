@@ -52,7 +52,7 @@
                   </span>
                 </div>
               </div>
-              <div align="right" class="col-md-2">
+              <div *ngIf="datastatus=='A' || dataAdd.PRIVILEGE_RSTATUS!='2'" align="right" class="col-md-2">
                 <button type="button" class="btn btn-primary" (click)="insertdataapp()"><i
                     class="fa fa-arrow-right"></i> นำส่งข้อมูล</button>
               </div>
@@ -90,7 +90,7 @@
                 <th>
                   <div align="center">รายงาน</div>
                 </th>
-                <th>
+                <th *ngIf="datastatus=='A' || dataAdd.PRIVILEGE_RSTATUS!='2'">
                   <div align="center">เลือก(นำส่งข้อมูลทั้งหมด)<input class="form-check-input filled-in" name="cnk_code"
                       id="cnk_code4" type="checkbox" [(ngModel)]="dataAdd.checkall" (click)="checkall()"></div>
                 </th>
@@ -110,18 +110,18 @@
                 <td>{{p.PLINCOME_NAME}}</td>
                 <td>{{p.CRPART_TNAME}}</td>
                 <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
-                <td width="15%" align="right">{{p.PRPLPROJECT_MONEY| number : '1.2-2'}}
+                <td align="right">{{p.PRPLPROJECT_MONEY| number : '1.2-2'}}
                 </td>
                 <td align="center">
                   <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"><i
                       class="fas fa-file-alt"></i></a>
                   &nbsp;
-                  <a *ngIf="p.PRASSET_RSTATUS=='7' && p.PRASSET_SSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' "
+                  <a 
                     role="button" title="อนุมัติ" class="btn btn-primary text-white"
                     (click)="returnedit(p.PRPLPROJECT_CODE,p.PRREGISPROJECT_NAME)"><i class="fa fa-reply">
                       ส่งคืน</i></a>
                 </td>
-                <td width="5%"> <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
+                <td *ngIf="datastatus=='A' || dataAdd.PRIVILEGE_RSTATUS!='2'" width="5%" > <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
                     [(ngModel)]="dataAdd.check[i]">
                   <input name="PRASSET_CODEA" type="hidden" id="PRASSET_CODEA" size="10"
                     [(ngModel)]="dataAdd.PRASSET_CODEA[i]" />

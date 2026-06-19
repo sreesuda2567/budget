@@ -401,6 +401,7 @@ export class DisbursementComponent implements OnInit {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
+    this.fetchdatareport();
     this.fetchdatareportnamea();
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.EBOOKREQ_LINK = link;
@@ -518,7 +519,7 @@ export class DisbursementComponent implements OnInit {
 
             // 4. บันทึกไฟล์ใหม่และแปลงเป็น File Object
             const mergedPdfBytes = await mergedPdf.save();
-            const mergedFile = new File([mergedPdfBytes], "merged_document.pdf", { type: "application/pdf" });
+            const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
             const user = this.tokenStorage.getUser();
 
             // 5. อัปโหลดไฟล์ที่รวมแล้ว (ใช้ code 57 แบบเดียวกับการแนบไฟล์เบิก)
