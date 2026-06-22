@@ -55,8 +55,8 @@
                   </option>
                 </select>
               </div>
-              <div class="col-md-6"></div>
-              <div class="col-md-4">
+              <div class="col-md-7"></div>
+              <div class="col-md-3">
                 <div class="input-group">
                   <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาข้อมูล"
                     id="example-search-input" [(ngModel)]="searchTerm">
@@ -129,23 +129,21 @@
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td>
                   <span *ngIf="p.PRASSET_SLINK2"> <a role="button" title="ICT" class="btn btn-success text-white"
-                      href="{{p.PRASSET_SLINK2}}" target="_blank">ICT</a>&nbsp;</span>
+                      (click)="previewPdf(p.PRASSET_SLINK2)">ICT</a>&nbsp;</span>
                   <span *ngIf="p.PRASSET_SLINK3"> <a role="button" title="แนบไฟล์แบบเสนอรายการครุภัณฑ์"
-                      class="btn btn-success text-white" href="{{p.PRASSET_SLINK3}}"
-                      target="_blank">แบบเสนอ</a>&nbsp;</span>
+                      class="btn btn-success text-white" (click)="previewPdf(p.PRASSET_SLINK3)">แบบเสนอ</a>&nbsp;</span>
                   <span *ngIf="p.PRASSET_SLINK4"> <a role="button" title="แบบรายละเอียดคุณลักษณะเฉพาะครุภัณฑ์(Spec)"
-                      class="btn btn-success text-white" href="{{p.PRASSET_SLINK4}}"
-                      target="_blank">Spec</a>&nbsp;</span>
+                      class="btn btn-success text-white" (click)="previewPdf(p.PRASSET_SLINK4)">Spec</a>&nbsp;</span>
                   <a *ngIf="p.PRASSET_SLINK1" role="button" title="ใบเสนอราาคา" class="btn btn-success text-white"
-                    href="{{p.PRASSET_SLINK1}}" target="_blank">QN</a>&nbsp;
+                    (click)="previewPdf(p.PRASSET_SLINK1)">QN</a>&nbsp;
                   <a *ngIf="p.PLINCOME_NAME" role="button" title="รายงาน" class="btn btn-success text-white"
-                    href="{{p.link}}" target="_blank"><i class="fas fa-file-alt"></i></a>
+                    (click)="previewPdf(p.link)"><i class="fas fa-file-alt"></i></a>
                 </td>
                 <td align="center">
-                  <a role="button" title="แก้ไข" (click)="showapp(p.PRASSET_CODE,p.PRREGISASSET_NAME)"
+                  <a *ngIf="p.PRASSET_RSTATUS =='6'" role="button" title="พิจารณา" (click)="showapp(p.PRASSET_CODE,p.PRREGISASSET_NAME)"
                     data-bs-toggle="modal" data-bs-target="#modalEdit" class="btn btn-warning text-white"><i
                       class="fa fa-edit">พิจารณา</i></a>&nbsp;
-                  <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
+                  <a *ngIf="p.PRASSET_RSTATUS =='8'" role="button" title="ปรับปรุง" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
                     class="btn btn-danger text-white" (click)="editdataapp(p.PRASSET_CODE)"><i
                       class="fa fa-edit"></i>ปรับปรุง</a>
                 </td>
@@ -228,7 +226,7 @@
         <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
           <i class="fa-solid fa-times me-1"></i> ปิด
         </button>
-        <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertdata()">
+        <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertappfac()">
           <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
         </button>
       </div>
@@ -346,5 +344,24 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- PDF Preview Side Panel -->
+<div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
+<div class="pdf-preview-panel" [class.open]="previewPdfUrl">
+  <div class="pdf-preview-header bg-primary text-white">
+    <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+    <div>
+      <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+        <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+      </a>
+      <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+        <i class="fa fa-times me-1"></i> ปิด
+      </button>
+    </div>
+  </div>
+  <div class="pdf-preview-body">
+    <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
   </div>
 </div>

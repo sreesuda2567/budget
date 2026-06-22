@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -142,7 +143,7 @@ export class AppbuildingComponent implements OnInit {
   datalistimport: any;
   dataYearimport: any;
   rownumimport: any;
-  url = "/acc3d/rqbudget/budget/rqbuilding.php";
+  url = "/acc3d/rqbudget/approve/appbuilding.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   //dataAdd:any = {PRBOBJECT_NAME:[],PRBOBJECT_CODE:[],PRUSE_NAME:[],PRUSE_CODE:[]};
   dataAdd: any = { check: [], checkimport: [], IMPORTASSET_CODE: [], PRASSET_CODEA: [], checkregis: [], PRREGISBUILDING_CODE: [] };
@@ -158,6 +159,9 @@ export class AppbuildingComponent implements OnInit {
   tablemonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
   rownum: any;
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
+
   constructor(
         private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -166,11 +170,13 @@ export class AppbuildingComponent implements OnInit {
     private router: Router,
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
-    private Uploadfiles: UploadfileserviceService
+    private Uploadfiles: UploadfileserviceService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
-        document.getElementById("ModalClose")?.click();
+    document.getElementById("ModalClose")?.click();
+    this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
     this.fetchdata();
     this.rowpbi = null;
   }
@@ -311,14 +317,14 @@ export class AppbuildingComponent implements OnInit {
       });
     //สถานะ
     var Tabletar = {
-      "opt": "viewstatusfac"
+      "opt": "viewstatusplan"
     }
     this.apiService
       .getdata(Tabletar, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
         this.datastatus = data;
-        this.dataAdd.PRSTATUS_CODE = data[0].PRSTATUS_CODE;
+        this.dataAdd.PRSTATUS_CODE = data[1].PRSTATUS_CODE;
       });
     //ปีงบประมาณ
     var Tabletar = {
@@ -486,7 +492,51 @@ export class AppbuildingComponent implements OnInit {
       });
 
   }
+ editdataapp(id: any) {
+    this.setshowbti();
+    this.onChangerister();
+    this.dataAdd.opt = "readoneapp";
+    this.dataAdd.id = id;
+  /*  this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        //console.log(data);
+        this.onChangedistrict(data[0].PROVINCE_ID);
+        this.onChangesubdistrict(data[0].DISTRICT_ID);
+      });*/
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
+        if(data[0].PRREGISBUILDING_CODE !=data[0].PRREGISBUILDING_CODEA && data[0].PRREGISBUILDING_CODEA !=null){
+         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODEA;
+        }else{
+        this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODE;
+        }
+        this.dataAdd.PRBUILDING_CODE = data[0].PRBUILDING_CODE;
+        this.dataAdd.PRBUILDING_NAME = data[0].PRREGISBUILDING_NAME;
+        //this.dataAdd.PRBUILDING_NUMBER = Number(data[0].PRBUILDING_NUMBER);
+         if(data[0].PRBUILDING_NUMBER !=data[0].PRBUILDING_NUMBERA  && data[0].PRBUILDING_NUMBERA !=null){
+         this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBERA);
+        }else{
+        this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBER);
+        }
+        this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
+       // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
+       if(data[0].PRBUILDING_MONEY !=data[0].PRBUILDING_MONEYA && data[0].PRBUILDING_MONEYA !=null){
+         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEYA).toFixed(2)); 
+        }else{
+        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
+        }
 
+
+      });
+  }
+   calexpenses() {
+    this.dataAdd.sum = this.dataAdd.PRASSET_NUMBER * this.dataAdd.PRASSET_MONEY.replace(/,/g, "");
+  }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any) {
     this.setshowbti();
@@ -1078,6 +1128,7 @@ export class AppbuildingComponent implements OnInit {
     this.dataAdd.PRBUILDING_CODE = code;
     this.dataAdd.htmlStringd = name;
     this.dataAdd.PRASSETFAC_NOTE = '';
+    this.dataAdd.PRASSET_PSTATUS = '0';
   }
   insertappfac() {
     this.dataAdd.opt = "approvefac";
@@ -1172,5 +1223,15 @@ export class AppbuildingComponent implements OnInit {
     return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
       return '%' + c.charCodeAt(0).toString(16).toUpperCase();
     });
+  }
+
+  previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
   }
 }

@@ -119,14 +119,14 @@
                     ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})
                   </div>
                 </td>
-                <td width="15%" align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
+                <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
-                <td width="3%">
+                <td >
                   <a *ngIf="(p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3'|| (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)"
                     role="button" title="spec" class="btn btn-primary text-white"><i
                       (click)="deliver(p.PRPLPROJECT_CODE)" class="fa fa-arrow-right"></i> </a>
                 </td>
-                <td width="15%">
+                <td >
                   <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1') &&(dataAdd.citizen== p.CITIZEN_ID)) || dataAdd.PRIVILEGE_RSTATUS=='A'
                     ||  (dataAdd.PRIVILEGE_RSTATUS=='2' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='2' || p.PLPROJECT_RSTATUS=='3'))"
                     role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
@@ -148,16 +148,16 @@
                 <td width="5%" align="center">{{i+1}}</td>
                 <td>{{p.PRPLPROJECT_DATE1}}
                 <td>{{p.PRREGISPROJECT_NAME}}</td>
-                <td width="15%" align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
+                <td  align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
-                <td width="3%">
+                <td >
                   <a *ngIf="p.status=='0'" role="button" title="spec" class="btn btn-primary text-white disabled"><i
                       class="fa fa-arrow-right"></i> </a>
                   <a *ngIf="p.status=='1' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1')" role="button"
                     title="spec" class="btn btn-primary text-white"><i (click)="deliver(p.PRPLPROJECT_CODE)"
                       class="fa fa-arrow-right"></i> </a>
                 </td>
-                <td width="15%" align="center">
+                <td  align="center">
                   <a *ngIf="p.PLPROJECT_RSTATUS=='0'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
                     (click)="deleteData(p.PRPLPROJECT_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
                   <a *ngIf="p.PLPROJECT_RSTATUS=='0'|| p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3' || p.PRASSET_RSTATUS=='7' || dataAdd.PLPROJECT_RSTATUS=='A'"

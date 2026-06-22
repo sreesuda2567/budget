@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -39,7 +40,7 @@ public editor = ClassicEditor;
     },
     // ใช้ CKFinder adapter (มีใน classic build)
     ckfinder: {
-      uploadUrl: 'https://pis.rmutsv.ac.th/api/acc3d/investment/project/upload_image.php'   // <= เปลี่ยนให้ถูกกับโปรเจกต์
+      uploadUrl: 'https://budget.rmutsv.ac.th/api/acc3d/investment/project/upload_image.php'   // <= เปลี่ยนให้ถูกกับโปรเจกต์
     },
     image: {
       toolbar: ['imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|', 'imageTextAlternative']
@@ -104,7 +105,7 @@ public editor = ClassicEditor;
   loadingimport: any;
   datalistimport: any;
   rownumimport: any;
-  url = "/acc3d/rqbudget/budget/rqproject.php";
+  url = "/acc3d/rqbudget/approve/appproject.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   locale = 'th-be';
   locales = listLocales();
@@ -176,6 +177,9 @@ public editor = ClassicEditor;
       },
     ]
   };
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
+
   constructor(
         private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -184,7 +188,8 @@ public editor = ClassicEditor;
     private router: Router,
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -300,7 +305,7 @@ applyLocale(pop: any) {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataYear = data;
-        this.dataAdd.PRYEARASSET_CODE = data[0].PLYEARBUDGET_CODE;
+        this.dataAdd.PLYEARBUDGET_CODE = data[0].PLYEARBUDGET_CODE;
         // this.dataAdd.FPRYEARASSET_CODE = data[0].PLYEARBUDGET_CODE;
         //รายการภาค
         var Table2 = {
@@ -478,14 +483,14 @@ applyLocale(pop: any) {
       });
     //สถานะ
     var Tabletar = {
-      "opt": "viewstatusfac"
+      "opt": "viewstatusplan"
     }
     this.apiService
       .getdata(Tabletar, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
         this.datastatus = data;
-        this.dataAdd.PRSTATUS_CODE = data[0].PRSTATUS_CODE;
+        this.dataAdd.PRSTATUS_CODE = data[1].PRSTATUS_CODE;
       });
     this.dataAdd.opt = "readAll";
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
@@ -502,30 +507,10 @@ applyLocale(pop: any) {
 
   }
   calexpensesdt() {
-    this.dataAdd.PLPROJECTGROUPDTMONEY = parseFloat(this.dataAdd.PLPROJECTGROUPDT_NUMA) * parseFloat(this.dataAdd.PLPROJECTGROUPDT_NUMB) * parseFloat(this.dataAdd.PLPROJECTGROUPDT_NUMC) * parseFloat(this.dataAdd.PLPROJECTGROUPDT_MONEY);
+    this.dataAdd.PLPROJECTGROUPDTMONEY =  parseFloat(this.dataAdd.PRASSET_MONEY);
   }
   calexpenses() {
-    let sum = 0;
-    for (let i = 0; i < this.dataProjectexd.length; i++) {
-      //console.log(this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY);
-      if (this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY > 0) {
-        sum += parseFloat(this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY);
-      }
-    }
-    this.dataAdd.PLPROJECT_MONEY = sum;
-    this.dataAdd.PLPROJECT_MONEYT = sum;
-
-
-    /* this.dataAdd.List1.push(this.dataAdd.PLPROJECTGROUP_CODE,this.dataAdd.PLPROJECTGROUPDT_CODE,this.dataAdd.PLPROJECTGROUPDT_NAME,this.dataAdd.PLPROJECTGROUPDT_NUM
-       ,this.dataAdd.GCUNIT_CODE,this.dataAdd.PLPROJECTGROUPDT_MONEY,this.dataAdd.PLPROJECTGROUPDT_MONEYA);*/
-
-    /* this.dataAdd.List1.push([
-       {
-         "type": "home",
-         "number": "212 555-1234"
-       }
-     ])
-     console.log(this.dataAdd.List1);*/
+    this.dataAdd.sum = this.dataAdd.PRASSET_MONEY.replace(/,/g, "");
   }
   //หลักสูตร
   fetchdatalistsubm() {
@@ -855,6 +840,53 @@ applyLocale(pop: any) {
 
       });
 
+  }
+   editdataapp(id: any) {
+    this.setshowbti();
+    this.onChangerister();
+    this.dataAdd.opt = "readoneapp";
+    this.dataAdd.id = id;
+  /*  this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        //console.log(data);
+        this.onChangedistrict(data[0].PROVINCE_ID);
+        this.onChangesubdistrict(data[0].DISTRICT_ID);
+      });*/
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
+        if(data[0].PRREGISBUILDING_CODE !=data[0].PRREGISBUILDING_CODEA && data[0].PRREGISBUILDING_CODEA !=null){
+         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODEA;
+        }else{
+        this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODE;
+        }
+        this.dataAdd.PRBUILDING_CODE = data[0].PRBUILDING_CODE;
+        this.dataAdd.PRBUILDING_NAME = data[0].PRREGISBUILDING_NAME;
+        //this.dataAdd.PRBUILDING_NUMBER = Number(data[0].PRBUILDING_NUMBER);
+         if(data[0].PRBUILDING_NUMBER !=data[0].PRBUILDING_NUMBERA  && data[0].PRBUILDING_NUMBERA !=null){
+         this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBERA);
+        }else{
+        this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBER);
+        }
+        this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
+       // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
+       if(data[0].PRBUILDING_MONEY !=data[0].PRBUILDING_MONEYA && data[0].PRBUILDING_MONEYA !=null){
+         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEYA).toFixed(2)); 
+        }else{
+        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
+        }
+
+
+      });
+  }
+    numberWithCommas(x: any) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdatadt(id: any) {
@@ -1519,6 +1551,7 @@ applyLocale(pop: any) {
     this.dataAdd.PRPLPROJECT_CODE = code;
     this.dataAdd.htmlStringd = name;
     this.dataAdd.PRASSETFAC_NOTE = '';
+    this.dataAdd.PRASSET_PSTATUS = '0';
   }
   showstep(name: any) {
     //console.log(name);
@@ -1795,5 +1828,15 @@ insertdataimport(){
      } 
      });
    }
+  }
+
+  previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
   }
 }

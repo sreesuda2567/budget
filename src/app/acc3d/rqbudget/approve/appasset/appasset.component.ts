@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -158,6 +159,9 @@ export class AppassetComponent implements OnInit {
   filerequest: any;
   filespec: any;
   datalistimport: any;
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
+
   constructor(
         private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -166,7 +170,8 @@ export class AppassetComponent implements OnInit {
     private router: Router,
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
-    private Uploadfiles: UploadfileserviceService
+    private Uploadfiles: UploadfileserviceService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -441,7 +446,7 @@ export class AppassetComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.datastatus = data;
-        this.dataAdd.PRSTATUS_CODE = data[0].PRSTATUS_CODE;
+        this.dataAdd.PRSTATUS_CODE = data[1].PRSTATUS_CODE;
       });
     //ปีงบประมาณ
     var Tabletar = {
@@ -776,61 +781,8 @@ export class AppassetComponent implements OnInit {
         this.dataAdd.CITIZEN_IDC1 = data[0].STF_FNAME3;
       });
   }
-  insertdataapp(id: any) {
-    this.dataAdd.PRASSET_RSTATUSA = id;
-    this.dataAdd.opt = "approve";
-    this.apiService
-      .getupdate(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        //console.log(data.status);       
-        if (data.status == 1) {
-          this.fetchdatalistapp();
-          this.fetchdatalist();
-          this.toastr.success("แจ้งเตือน:อนุมัติข้อมูลเรียบร้อยแล้ว");
-        }
-      });
-  }
 
-  // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
-  insertdata() {
-    //console.log(this.dataAdd.PRASSET_COURSET );
-    if (this.dataAdd.checkregis.length == 0) {
-      this.toastr.warning("แจ้งเตือน:กรุณาเลือกทะเบียนครุภัณฑ์");
-    } else {
-      this.dataAdd.opt = "insert";
-      /*  this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("<br>", "<br/>"); 
-        this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("<p>", "<br/>"); 
-        this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("</p>", "");
-        this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("<br>", "<br/>"); 
-        this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("<p>", "<br/>"); 
-        this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("</p>", "");
-        this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("<br>", "<br/>"); 
-        this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("<p>", "<br/>"); 
-        this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("</p>", "");
-        this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("<br>", "<br/>"); 
-        this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("<p>", "<br/>"); 
-        this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("</p>", "");
-        this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("<br>", "<br/>"); 
-        this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("<p>", "<br/>"); 
-        this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("</p>", "");
-        this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("<br>", "<br/>"); 
-        this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("<p>", "<br/>"); 
-        this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("</p>", "");*/
-      this.apiService
-        .getupdate(this.dataAdd, this.url)
-        .pipe(first())
-        .subscribe((data: any) => {
-          //console.log(data.status);       
-          if (data.status == 1) {
-            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-            this.onChangerister();
-            this.fetchdatalist();
-            document.getElementById("ModalClose")?.click();
-          }
-        });
-    }
-  }
+
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   showspec(id: any, name: any, num: any, mon: any) {
     this.dataAdd.PRASSETSPEC_NAME = '';
@@ -1100,63 +1052,15 @@ export class AppassetComponent implements OnInit {
   }
   //แก้ไขข้อมูลfilespec
   updatedata() {
-    //this.Uploadfiles.upload(this.file,'111111')
-    //let id=this.dataAdd.FACULTY_CODE+this.dataAdd.PRYEARASSET_CODE;
-    //console.log(this.file);
-
 
     this.dataAdd.opt = "update";
-    if (this.dataAdd.PRASSET_COURSET != '') {
-      this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("<br>", "<br/>");
-      this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("<p>", "");
-      this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("</p>", "<br/>");
-      this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("&nbsp;", "");
-    }
-    if (this.dataAdd.PRASSET_TARGET != '') {
-      this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("<br>", "<br/>");
-      this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("<p>", "");
-      this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("</p>", "<br/>");
-      this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("&nbsp;", "");
-    }
-    if (this.dataAdd.PRASSET_REASON != '') {
-      this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("<br>", "<br/>");
-      this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("<p>", "");
-      this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("</p>", "<br/>");
-      this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("&nbsp;", "");
-    }
-    if (this.dataAdd.PRASSET_INSIDE != '') {
-      this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("<br>", "<br/>");
-      this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("<p>", "");
-      this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("</p>", "<br/>");
-      this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("&nbsp;", "");
-    }
-    if (this.dataAdd.PRASSET_EXTERNAL != '') {
-      this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("<br>", "<br/>");
-      this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("<p>", "");
-      this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("</p>", "<br/>");
-      this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("&nbsp;", "");
-    }
-    if (this.dataAdd.PRASSET_RESEARCH != '') {
-      this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("<br>", "<br/>");
-      this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("<p>", "");
-      this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("</p>", "<br/>");
-      this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("&nbsp;", "");
-    }
-    /* if(this.dataAdd.PRASSETSPEC_DETAIL !=''){
-     this.dataAdd.PRASSETSPEC_DETAIL = this.dataAdd.PRASSETSPEC_DETAIL.replaceAll("<br>", "<br/>"); 
-     this.dataAdd.PRASSETSPEC_DETAIL = this.dataAdd.PRASSETSPEC_DETAIL.replaceAll("<p>", "<br/>"); 
-     this.dataAdd.PRASSETSPEC_DETAIL = this.dataAdd.PRASSETSPEC_DETAIL.replaceAll("</p>", "");
-     }*/
+
     this.apiService
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
         if (data.status == 1) {
-          this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
-          this.Uploadfiles.uploadassetrq(this.file, this.fileict, this.filerequest, this.filespec, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FACULTY_CODE, this.dataAdd.PRASSET_CODE)
-            .subscribe((event: any) => {
-            }
-            );
+
           this.fetchdatalist();
           this.editdata(this.dataAdd.PRASSET_CODE);
 
@@ -1457,6 +1361,8 @@ export class AppassetComponent implements OnInit {
     this.dataAdd.PRASSET_CODE = code;
     this.dataAdd.htmlStringd = name;
     this.dataAdd.PRASSETFAC_NOTE = '';
+    this.dataAdd.PRASSET_PSTATUS = '0';
+
   }
   insertappfac() {
     this.dataAdd.opt = "approvefac";
@@ -1467,7 +1373,7 @@ export class AppassetComponent implements OnInit {
         //console.log(data.status);       
         if (data.status == 1) {
           this.clickshow = null;
-          this.fetchdatalistapp();
+          document.getElementById("ModalClose")?.click();
           this.fetchdatalist();
           this.toastr.success("แจ้งเตือน:อนุมัติข้อมูลเรียบร้อยแล้ว");
         }
@@ -1543,33 +1449,13 @@ export class AppassetComponent implements OnInit {
     this.setshowbti();
     this.onChangerister();
     this.dataAdd.opt = "readoneapp";
-    //console.log(1);
     this.dataAdd.id = id;
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.onChangedistrict(data[0].PROVINCE_ID);
-        this.onChangesubdistrict(data[0].DISTRICT_ID);
-      });
-    this.apiService
-      .getdata(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        // this.dataAdd  = data;
-        this.dataAdd.RPLINCOME_CODE = data[0].PLINCOME_CODE;
-        this.onChangecrpartrister();
-        this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+
         this.dataAdd.PRASSET_CODE = data[0].PRASSET_CODE;
-        this.dataAdd.FPLINCOME_CODE = data[0].PLINCOME_CODE;
-        this.dataAdd.PRASSET_RSTATUS = 0;
-        this.dataAdd.FCRPART_ID = data[0].CRPART_ID;
-        this.dataAdd.PRASSET_CODE = data[0].PRASSET_CODE;
-        if (data[0].TYPEFACULTY_CODE == 1) {
-          this.dataAdd.TYPEFACULTY = "หลักสูตร/ฝ่าย";
-        } else {
-          this.dataAdd.TYPEFACULTY = "งาน";
-        }
         this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
        
         this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
@@ -1577,6 +1463,7 @@ export class AppassetComponent implements OnInit {
        // this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
         if(data[0].PRREGISASSET_CODE !=data[0].PRREGISASSET_CODEA){
          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODEA;
+       //  console.log(data[0].PRREGISASSET_CODEA);
         }else{
         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODE;
         }
@@ -1612,6 +1499,16 @@ export class AppassetComponent implements OnInit {
     return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
       return '%' + c.charCodeAt(0).toString(16).toUpperCase();
     });
+  }
+
+  previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
   }
 
 }
