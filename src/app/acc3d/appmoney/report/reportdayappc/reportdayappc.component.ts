@@ -4,7 +4,9 @@ import {
   ElementRef,
   HostListener,
   ViewChild,
+  ChangeDetectorRef
 } from '@angular/core';
+import { PDFDocument } from 'pdf-lib';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
@@ -63,7 +65,8 @@ title = 'angular-app';
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -175,6 +178,12 @@ fetchdata() {
       .subscribe((data: any) => {
         if (data.status == '1') {
           this.datalistdetail = data.data;
+          // Count pages for PDFs
+          if (this.datalistdetail && this.datalistdetail.length > 0) {
+            this.datalistdetail.forEach((p: any) => {
+              if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
+            });
+          }
         }
       });
   }
@@ -210,6 +219,12 @@ fetchdata() {
           this.dataAdd.PLINCOME_NAME = data.PLINCOME_NAME;
           this.loading = null;
           this.rownum = 1;
+          // Count pages for PDFs
+          if (this.datalist && this.datalist.length > 0) {
+            this.datalist.forEach((p: any) => {
+              if (p.REPORT_LINK) this.countPdfPages(p.REPORT_LINK, p, 'REPORT_LINK_pages');
+            });
+          }
           for (let i = 0; i < this.datalist.length; i++) {
             this.dataAdd.FNANNALSMAPR_CODE[i] =
               this.datalist[i].FNANNALSMAPR_CODE;
@@ -343,6 +358,20 @@ fetchdata() {
       for (let i = 0; i < this.datalist.length; i++) {
         this.dataAdd.check[i] = true;
       }
+    }
+  }
+
+  async countPdfPages(url: string, item: any, propertyName: string) {
+    if (!url) return;
+    try {
+      if (item[propertyName]) return;
+      const response = await fetch(url);
+      const pdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      item[propertyName] = pdfDoc.getPageCount();
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error counting PDF pages for URL:', url, error);
     }
   }
 }

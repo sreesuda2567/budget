@@ -113,9 +113,13 @@
                     <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
                     <td data-label="รายงาน:" >
-                        <a *ngIf="p.REPORT_LINK" role="button" title="รายงาน" class="btn btn-success text-white"
+                        <a *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงาน" class="btn btn-success text-white"
                             (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
                             </i></a> 
+                            <span *ngIf="p.REPORT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.REPORT_LINK_pages}}
+                            </span>
+                        </a>
                     </td>
                     <td align="center">
                         <a *ngIf="p.REPORT_LINK" role="button" title="ลงนาม" class="btn btn-info text-white"

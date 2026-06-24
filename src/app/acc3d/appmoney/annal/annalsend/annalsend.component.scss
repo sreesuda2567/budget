@@ -1,6 +1,7 @@
 
 table { overflow: auto; font-size: 16px;}
 table thead  { position: sticky; top: 60px; z-index: 1; }
+.modal table thead { position: static; top: auto; }
 @media screen and (max-width: 600px) {
   table {
     border: 0;

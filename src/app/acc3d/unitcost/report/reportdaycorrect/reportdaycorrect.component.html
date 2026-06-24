@@ -155,9 +155,13 @@
                         '1.2-2'}}</td>
                     <td data-label="เลขฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
                     <td align="center">
-                        <a *ngIf="p.REPORT_LINK" role="button" title="รายงาน" class="btn btn-success text-white"
+                        <a *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงาน" class="btn btn-success text-white"
                             (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
                             </i></a>
+                            <span *ngIf="p.REPORT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.REPORT_LINK_pages}}
+                            </span>
+                        </a>
                     </td>
                     <td align="center">
                         <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
@@ -211,10 +215,13 @@
 
                             </td>
                             <td align="center">
-                                <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานวันจ่าย"
+                                <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงานวันจ่าย"
                                         class="btn btn-success text-white" href="{{p.CONTRACT_LINK}}" target="_blank"><i
                                             class="fa-solid fa-file-contract"></i></a>
-                                    &nbsp;</span>
+                                    <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                        {{p.CONTRACT_LINK_pages}}
+                                    </span>
+                                </span>
 
                             </td>
                         </tr>

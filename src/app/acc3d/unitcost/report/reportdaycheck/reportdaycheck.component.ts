@@ -1,4 +1,5 @@
-import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { PDFDocument } from 'pdf-lib';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
@@ -73,7 +74,8 @@ export class ReportdaycheckComponent implements OnInit {
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
     private sanitizer: DomSanitizer,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -240,6 +242,12 @@ fetchdata() {
           this.dataAdd.PLINCOME_NAME = data.PLINCOME_NAME;
           this.loading = null;
           this.rownum = 1;
+          // Count pages for PDFs
+          if (this.datalist && this.datalist.length > 0) {
+            this.datalist.forEach((p: any) => {
+              if (p.REPORT_LINK) this.countPdfPages(p.REPORT_LINK, p, 'REPORT_LINK_pages');
+            });
+          }
           for (let i = 0; i < this.datalist.length; i++) {
             this.dataAdd.FNANNALSMAPR_CODE[i] = this.datalist[i].FNANNALSMAPR_CODE;
             this.dataAdd.FNANNALSMAP_CODE[i] = this.datalist[i].FNANNALSMAP_CODE;
@@ -469,4 +477,18 @@ fetchdata() {
       }
     }
   }   
+
+  async countPdfPages(url: string, item: any, propertyName: string) {
+    if (!url) return;
+    try {
+      if (item[propertyName]) return;
+      const response = await fetch(url);
+      const pdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      item[propertyName] = pdfDoc.getPageCount();
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error counting PDF pages for URL:', url, error);
+    }
+  }
 }

@@ -78,6 +78,7 @@ import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'pdf-annotator';
         useValue: {
           pdfApiUrl: '/acc3d/appmoney',
           signaturesApiUrl: 'https://e-doc.rmutsv.ac.th/api/signatures/signatures.php',
+          stampsApiUrl: 'https://e-doc.rmutsv.ac.th/api/apps/proses_api_webapp.php',
           pdfWorkerSrc: '/assets/pdf.worker.min.js'
         }
       }

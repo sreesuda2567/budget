@@ -1,6 +1,7 @@
-import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { PDFDocument } from 'pdf-lib';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -67,7 +68,8 @@ title = 'angular-app';
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
     private modalCtrl: ModalController,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef
 
   ) { }
 
@@ -174,6 +176,13 @@ title = 'angular-app';
               this.dataAdd.check[i] = true;
             }
           }
+          // Count pages for PDFs
+          if (this.datalistdetail && this.datalistdetail.length > 0) {
+            this.datalistdetail.forEach((p: any) => {
+              if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
+              if (p.clearcheck) this.countPdfPages(p.clearcheck, p, 'clearcheck_pages');
+            });
+          }
         }
       });
   }
@@ -186,6 +195,13 @@ title = 'angular-app';
       .subscribe((data: any) => {
         if (data.status == '1') {
           this.datalistdetail = data.data;
+          // Count pages for PDFs
+          if (this.datalistdetail && this.datalistdetail.length > 0) {
+            this.datalistdetail.forEach((p: any) => {
+              if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
+              if (p.clearcheck) this.countPdfPages(p.clearcheck, p, 'clearcheck_pages');
+            });
+          }
         }
       });
   }
@@ -222,6 +238,13 @@ title = 'angular-app';
           this.dataAdd.PLINCOME_NAME = data.PLINCOME_NAME;
           this.loading = null;
           this.rownum = 1;
+          // Count pages for PDFs
+          if (this.datalist && this.datalist.length > 0) {
+            this.datalist.forEach((p: any) => {
+              if (p.linkreport) this.countPdfPages(p.linkreport, p, 'linkreport_pages');
+              if (p.REPORT_LINK) this.countPdfPages(p.REPORT_LINK, p, 'REPORT_LINK_pages');
+            });
+          }
 
         } else {
           this.rownum = null;
@@ -244,6 +267,13 @@ title = 'angular-app';
         if (data.status == 1) {
           this.datalistdetail = data.data;
           this.loading = null;
+          // Count pages for PDFs
+          if (this.datalistdetail && this.datalistdetail.length > 0) {
+            this.datalistdetail.forEach((p: any) => {
+              if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
+              if (p.clearcheck) this.countPdfPages(p.clearcheck, p, 'clearcheck_pages');
+            });
+          }
         } else {
           this.loading = null;
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
@@ -488,6 +518,20 @@ title = 'angular-app';
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;
       }
+    }
+  }
+
+  async countPdfPages(url: string, item: any, propertyName: string) {
+    if (!url) return;
+    try {
+      if (item[propertyName]) return;
+      const response = await fetch(url);
+      const pdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      item[propertyName] = pdfDoc.getPageCount();
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error counting PDF pages for URL:', url, error);
     }
   }
 }

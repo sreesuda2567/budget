@@ -149,14 +149,20 @@
                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
                     <td data-label="รายงาน:">
                         
-                        <span *ngIf="p.load3d"><a role="button" title="รายงานใบโหลด"
+                        <span *ngIf="p.load3d" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบโหลด"
                                 class="btn btn-secondary text-white" (click)="previewPdf(p.load3d)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>  
-                         <span *ngIf="p.load3df"><a role="button" title="รายงานใบปะหน้า"
+                            <span *ngIf="p.load3d_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.load3d_pages}}
+                            </span>
+                        </span>  
+                         <span *ngIf="p.load3df" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบปะหน้า"
                                 class="btn btn-info text-white" (click)="previewPdf(p.load3df)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>        
+                            <span *ngIf="p.load3df_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.load3df_pages}}
+                            </span>
+                        </span>        
                     </td>
                     <td align="center" data-label="เลือก:">
                         <button type="submit" title="ใบปะหน้า" class="btn btn-success text-white" id="submitupdate"
@@ -236,18 +242,27 @@
                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
                     <td data-label="รายงาน:">
                       
-                         <span *ngIf="p.load3d"><a role="button" title="รายงานใบปะหน้าจ่าย"
+                         <span *ngIf="p.load3d" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบปะหน้าจ่าย"
                                 class="btn btn-success text-white" (click)="previewPdf(p.load3d)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span> 
-                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='5'" ><a role="button" title="รายงานใบปะหน้า"
+                            <span *ngIf="p.load3d_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.load3d_pages}}
+                            </span>
+                        </span> 
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='5'" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบปะหน้า"
                                 class="btn btn-info text-white" (click)="previewPdf(p.load3df)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>  
-                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='5'"><a role="button" title="รายงานใบโหลด"
+                            <span *ngIf="p.load3df_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.load3df_pages}}
+                            </span>
+                        </span>  
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='5'" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบโหลด"
                                 class="btn btn-secondary text-white" (click)="previewPdf(p.load3dl)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>           
+                            <span *ngIf="p.load3dl_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.load3dl_pages}}
+                            </span>
+                        </span>           
                     </td>
                     <td align="center" data-label="เลือก:">
                         <a *ngIf="p.FNANNALSMAP_RSTATUS=='5'" role="button" title="รวมไฟล์ส่งสารบรรณ"
@@ -274,55 +289,50 @@
 <!-- Modal -->
 <div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกใบปะหน้าจ่าย</h5>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="exampleModalToggleLabel"><i class="fa-solid fa-file-invoice-dollar me-2"></i>ออกใบปะหน้าจ่าย</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group col-md-1"></div>
-                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">ผู้รับผิดชอบ</label>
-                        <br>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDD1">
-                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
-                                {{name.STF_FNAME}}
-                            </option>
-                        </select>
+            <div class="modal-body p-4 bg-light">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body bg-white rounded-3 p-4">
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-user-tie me-1"></i>ผู้รับผิดชอบโหลด KTB</label>
+                                <select name="f_code_update" id="f_code_update" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDD1">
+                                    <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
+                                        {{name.STF_FNAME}}
+                                    </option>
+                                </select>
+                            </div>
 
+                            <div class="col-md-9">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-paperclip me-1"></i>แนบไฟล์เอกสาร</label>
+                                <input class="form-control form-control-lg fs-6" type="file" (change)="onChangepdf($event)" [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+                            </div>
+
+                            <div class="col-md-3 d-flex flex-column justify-content-end pb-1" *ngIf="dataAdd.EBOOKREQ_LINK">
+                                <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">ลงนาม</label>
+                                <a (click)="openPdfAnnotator(dataAdd)" class="btn btn-outline-info rounded-pill w-100 fw-bold border-2">
+                                    <i class="fa-solid fa-file-pen me-1"></i> ลงนาม
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-1"></div>
-                    
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-8">
-                        <label for="name">แนบไฟล์เอกสาร</label>
-                        <br>
-                        <input class="form-control" type="file" (change)="onChangepdf($event)"
-                            [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
-
-                    </div>
-                    <div class="col-md-2">
-                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ลงนาม
-                        </label>
-                        <br>
-                         <a *ngIf="dataAdd.EBOOKREQ_LINK" (click)="openPdfAnnotator(dataAdd)"><i
-                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
-                        &nbsp;
-                    </div>
-                    <div class="form-group col-md-1"></div>
-
-
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
-
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-times me-1"></i> ปิด
+                </button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertdata()">
+                    <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
+                </button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+                    <i class="fa-solid fa-save me-1"></i> แก้ไขข้อมูล
+                </button>
             </div>
         </div>
     </div>
@@ -330,35 +340,35 @@
 <!-- Modal -->
 <div class="modal fade" data-bs-focus="false" id="exampleModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกใบปะหน้าจ่าย</h5>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="exampleModalToggleLabel"><i class="fa-solid fa-file-invoice-dollar me-2"></i>ออกใบปะหน้าจ่าย</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">ผู้รับผิดชอบโหลด KTB</label>
-                        <br>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDD1">
-                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
-                                {{name.STF_FNAME}}
-                            </option>
-                        </select>
-
+            <div class="modal-body p-4 bg-light">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body bg-white rounded-3 p-4">
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-user-tie me-1"></i>ผู้รับผิดชอบโหลด KTB</label>
+                                <select name="f_code" id="f_code" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDD1">
+                                    <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
+                                        {{name.STF_FNAME}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button  type="button" class="btn btn-primary"
-                    (click)="insertdataload()">บันทึกข้อมูล</button>
-                
-
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-times me-1"></i> ปิด
+                </button>
+                <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertdataload()">
+                    <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
+                </button>
             </div>
         </div>
     </div>

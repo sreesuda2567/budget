@@ -1,7 +1,8 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { PDFDocument } from 'pdf-lib';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -61,7 +62,8 @@ export class ContractotherComponent implements OnInit {
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
     private sanitizer: DomSanitizer,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -139,6 +141,12 @@ export class ContractotherComponent implements OnInit {
           this.datalist = data.data;
           this.loading = null;
           this.rownum = 'true';
+          // Count pages for PDFs
+          if (this.datalist && this.datalist.length > 0) {
+            this.datalist.forEach((p: any) => {
+              if (p.link3) this.countPdfPages(p.link3, p, 'link3_pages');
+            });
+          }
         } else {
           this.datalist = data.data;
           this.loading = null;
@@ -173,6 +181,12 @@ export class ContractotherComponent implements OnInit {
           this.datalistapp = data.data;
           this.loading = null;
           this.rownum1 = 1;
+          // Count pages for PDFs
+          if (this.datalistapp && this.datalistapp.length > 0) {
+            this.datalistapp.forEach((p: any) => {
+              if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
+            });
+          }
         } else {
           this.rownum1 = null;
           this.loading = null;
@@ -370,5 +384,19 @@ export class ContractotherComponent implements OnInit {
         fileInput.files = dataTransfer.files;
       }
     }
-  }    
+  }
+
+  async countPdfPages(url: string, item: any, propertyName: string) {
+    if (!url) return;
+    try {
+      if (item[propertyName]) return;
+      const response = await fetch(url);
+      const pdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      item[propertyName] = pdfDoc.getPageCount();
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error counting PDF pages for URL:', url, error);
+    }
+  }
 }

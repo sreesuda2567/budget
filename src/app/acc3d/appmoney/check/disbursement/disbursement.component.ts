@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PDFDocument } from 'pdf-lib';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
@@ -73,7 +73,8 @@ export class DisbursementComponent implements OnInit {
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
     private sanitizer: DomSanitizer,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -258,6 +259,13 @@ export class DisbursementComponent implements OnInit {
           this.datalist = data.data;
           this.loading = null;
           this.rownum = 'true';
+          // Count pages for PDFs
+          if (this.datalist && this.datalist.length > 0) {
+            this.datalist.forEach((p: any) => {
+              if (p.linkclear) this.countPdfPages(p.linkclear, p, 'linkclear_pages');
+              if (p.linkreport) this.countPdfPages(p.linkreport, p, 'linkreport_pages');
+            });
+          }
         } else {
           this.datalist = data.data;
           this.loading = null;
@@ -292,6 +300,16 @@ export class DisbursementComponent implements OnInit {
           this.datalistapp = data.data;
           this.loading = null;
           this.rownum1 = 1;
+          // Count pages for PDFs
+          if (this.datalistapp && this.datalistapp.length > 0) {
+            this.datalistapp.forEach((p: any) => {
+              if (p.loadktb) this.countPdfPages(p.loadktb, p, 'loadktb_pages');
+              if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
+              if (p.correct) this.countPdfPages(p.correct, p, 'correct_pages');
+              if (p.linkclear) this.countPdfPages(p.linkclear, p, 'linkclear_pages');
+              if (p.linkreport) this.countPdfPages(p.linkreport, p, 'linkreport_pages');
+            });
+          }
         } else {
           this.rownum1 = null;
           this.loading = null;
@@ -308,6 +326,22 @@ export class DisbursementComponent implements OnInit {
   }
   applyLocale(pop: any) {
     this.localeService.use(this.locale);
+  }
+
+  async countPdfPages(url: string, item: any, propertyName: string) {
+    if (!url) return;
+    try {
+      // Fetch only if not already counted
+      if (item[propertyName]) return;
+      
+      const response = await fetch(url);
+      const pdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      item[propertyName] = pdfDoc.getPageCount();
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error counting PDF pages for URL:', url, error);
+    }
   }
   showinput() {
     this.rowpbi = 1;

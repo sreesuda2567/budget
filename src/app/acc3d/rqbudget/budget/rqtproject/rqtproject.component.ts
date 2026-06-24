@@ -1120,7 +1120,7 @@ export class RqtprojectComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataCrpartregis = data;
-        this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+       // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         //console.log(this.dataSub);
       });
   }

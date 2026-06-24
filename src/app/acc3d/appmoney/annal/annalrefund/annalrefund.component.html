@@ -147,10 +147,13 @@
                     <td data-label="เลขฎีกา:">{{p.datektb}}</td>
                     <td data-label="รายงาน:">
 
-                        <span *ngIf="p.load3df"><a role="button" title="รายงานใบปะหน้าจ่าย"
+                        <span *ngIf="p.load3df" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบปะหน้าจ่าย"
                                 class="btn btn-success text-white" (click)="previewPdf(p.load3df)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>
+                            <span *ngIf="p.load3df_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.load3df_pages}}
+                            </span>
+                        </span>
                     </td>
 
                 </tr>

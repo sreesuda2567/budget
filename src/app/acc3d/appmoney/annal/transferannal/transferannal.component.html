@@ -301,83 +301,80 @@
 <div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ลงเลขสัญญายืมเงิน</h5>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="exampleModalToggleLabel"><i class="fa-solid fa-file-signature me-2"></i>ลงเลขสัญญายืมเงิน</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">การเงินผู้รับผิดชอบ</label>
-                        <br>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDA">
-                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
-                                {{name.STF_FNAME}}
-                            </option>
-                        </select>
+            <div class="modal-body p-4 bg-light">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body bg-white rounded-3 p-4">
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-user-tie me-1"></i>การเงินผู้รับผิดชอบ</label>
+                                <select name="f_code_a" id="f_code_a" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDA">
+                                    <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
+                                        {{name.STF_FNAME}}
+                                    </option>
+                                </select>
+                            </div>
 
-                    </div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-2">
-                        <label for="name">เลขสัญญา</label>
-                        <br>
-                        <input type="text" name="FNANNALS_NUMBER" class="form-control" id="FNANNALS_NUMBER"
-                            placeholder="เลขสัญญา" [(ngModel)]="dataAdd.FNANNALS_NUMBER">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-file-contract me-1"></i>เลขสัญญา</label>
+                                <input type="text" name="FNANNALS_NUMBER" class="form-control form-control-lg fs-6" id="FNANNALS_NUMBER"
+                                    placeholder="เลขสัญญา" [(ngModel)]="dataAdd.FNANNALS_NUMBER">
+                            </div>
 
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="name">จำนวนเงิน</label>
-                        <br>
-                        <input type="text" name="FNANNALS_MONEYC" class="form-control" id="FNANNALS_MONEYC"
-                            placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNANNALS_MONEYC">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-coins me-1"></i>จำนวนเงิน</label>
+                                <input type="text" name="FNANNALS_MONEYC" class="form-control form-control-lg fs-6" id="FNANNALS_MONEYC"
+                                    placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNANNALS_MONEYC">
+                            </div>
 
-                    </div>
-                    <div class="col-md-2 text-secondary">
-                        <label> วันที่จ่าย: </label>
-                        <input placeholder="วันที่" type="text" class="form-control" bsDatepicker #dp3="bsDatepicker"
-                            [(ngModel)]="dataAdd.DATENOWR" readonly>
-                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
-                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp3.toggle()">
-                        </i>
-                    </div>
-                    <div class="col-md-2 text-secondary">
-                        <label> วันที่ครบกำหนด: </label>
-                        <input placeholder="วันที่" type="text" class="form-control" bsDatepicker #dp4="bsDatepicker"
-                            [(ngModel)]="dataAdd.DATENOWE" readonly>
-                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
-                            class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp4.toggle()"></i>
-                    </div>
-                    <div class="form-group col-md-3"></div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-8">
-                        <label for="name">แนบไฟล์เอกสาร</label>
-                        <br>
-                        <input class="form-control" type="file" (change)="onChangepdf($event)"
-                            [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-calendar-days me-1"></i>วันที่จ่าย:</label>
+                                <div class="position-relative">
+                                    <input placeholder="วันที่" type="text" class="form-control form-control-lg fs-6" bsDatepicker #dp3="bsDatepicker"
+                                        [(ngModel)]="dataAdd.DATENOWR" readonly>
+                                    <i class="fa-solid fa-calendar-days cursor-p text-primary position-absolute end-0 top-50 translate-middle-y me-3 fs-5" (click)="dp3.toggle()"></i>
+                                </div>
+                            </div>
 
-                    </div>
-                    <div class="col-md-2">
-                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ลงนาม
-                        </label>
-                        <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" (click)="openPdfAnnotator(dataAdd)"><i
-                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
-                        &nbsp;
-                    </div>
-                    <div class="form-group col-md-1"></div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-calendar-days me-1"></i>วันที่ครบกำหนด:</label>
+                                <div class="position-relative">
+                                    <input placeholder="วันที่" type="text" class="form-control form-control-lg fs-6" bsDatepicker #dp4="bsDatepicker"
+                                        [(ngModel)]="dataAdd.DATENOWE" readonly>
+                                    <i class="fa-solid fa-calendar-days cursor-p text-primary position-absolute end-0 top-50 translate-middle-y me-3 fs-5" (click)="dp4.toggle()"></i>
+                                </div>
+                            </div>
 
+                            <div class="col-md-9">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-paperclip me-1"></i>แนบไฟล์เอกสาร</label>
+                                <input class="form-control form-control-lg fs-6" type="file" (change)="onChangepdf($event)"
+                                    [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+                            </div>
 
+                            <div class="col-md-3 d-flex flex-column justify-content-end pb-1" *ngIf="dataAdd.EBOOKREQ_LINK">
+                                <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">&nbsp;</label>
+                                <a (click)="openPdfAnnotator(dataAdd)" class="btn btn-outline-info rounded-pill w-100 fw-bold border-2">
+                                    <i class="fa-solid fa-file-pen me-1"></i> ลงนามเอกสาร
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
-
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-times me-1"></i> ปิด
+                </button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertdata()">
+                    <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
+                </button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+                    <i class="fa-solid fa-save me-1"></i> แก้ไขข้อมูล
+                </button>
             </div>
         </div>
     </div>

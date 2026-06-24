@@ -163,18 +163,27 @@
                             <a role="button" title="ขออนุมัติเงิน" class="btn btn-success text-white" 
                             (click)="previewPdf(p.link3)"><i class="fas fa-file-alt"></i></a>
                             &nbsp; </span>--> 
-                        <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานสัญญา"
+                        <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงานสัญญา"
                                 class="btn btn-primary text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>
-                        <span *ngIf="p.linkclear"><a role="button" title="รายงานใบเบิก"
+                            <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.CONTRACT_LINK_pages}}
+                            </span>
+                        </span>
+                        <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบเบิก"
                                 class="btn btn-secondary text-white" (click)="previewPdf(p.linkclear)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>
-                        <span *ngIf="p.disbursement"><a role="button" title="รายงานใบปะหน้า"
+                            <span *ngIf="p.linkclear_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.linkclear_pages}}
+                            </span>
+                        </span>
+                        <span *ngIf="p.disbursement" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบปะหน้า"
                                 class="btn btn-warning text-white" (click)="previewPdf(p.disbursement)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>     
+                            <span *ngIf="p.disbursement_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.disbursement_pages}}
+                            </span>
+                        </span>     
                     </td>
                     <td align="center" data-label="เลือก:">
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
@@ -258,18 +267,27 @@
                             <a role="button" title="ขออนุมัติเงิน" class="btn btn-success text-white" href="{{p.link3}}"
                                 target="_blank"><i class="fas fa-file-alt"></i></a>
                             &nbsp; </span>--> 
-                        <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานสัญญา"
+                        <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงานสัญญา"
                                 class="btn btn-primary text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>
-                        <span *ngIf="p.linkclear"><a role="button" title="รายงานใบเบิก"
+                            <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.CONTRACT_LINK_pages}}
+                            </span>
+                        </span>
+                        <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบเบิก"
                                 class="btn btn-secondary text-white" (click)="previewPdf(p.linkclear)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>
-                         <span *ngIf="p.disbursement"><a role="button" title="รายงานใบปะหน้า"
+                            <span *ngIf="p.linkclear_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.linkclear_pages}}
+                            </span>
+                        </span>
+                         <span *ngIf="p.disbursement" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบปะหน้า"
                                 class="btn btn-warning text-white" (click)="previewPdf(p.disbursement)"><i
                                     class="fa-solid fa-file-contract"></i></a>
-                            &nbsp;</span>         
+                            <span *ngIf="p.disbursement_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                {{p.disbursement_pages}}
+                            </span>
+                        </span>         
                     </td>
                     <td align="center" data-label="เลือก:">
                         <button *ngIf="p.FNANNALSMAP_RSTATUS=='1' || p.FNANNALSMAP_RSTATUS=='2' || dataAdd.PRIVILEGE_RSTATUS=='A'  " type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
@@ -292,46 +310,47 @@
 <!-- Modal -->
 <div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">เสนอเขียนเช็ค</h5>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="exampleModalToggleLabel"><i class="fa-solid fa-money-check me-2"></i>เสนอเขียนเช็ค</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">ลงนามเช็คที่คนที่ 1</label>
-                        <br>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDC1">
-                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
-                                {{name.STF_FNAME}}
-                            </option>
-                        </select>
+            <div class="modal-body p-4 bg-light">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body bg-white rounded-3 p-4">
+                        <div class="row g-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-signature me-1"></i>ลงนามเช็คคนที่ 1</label>
+                                <select name="f_code_c1" id="f_code_c1" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDC1">
+                                    <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
+                                        {{name.STF_FNAME}}
+                                    </option>
+                                </select>
+                            </div>
 
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-signature me-1"></i>ลงนามเช็คคนที่ 2</label>
+                                <select name="f_code_c2" id="f_code_c2" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDC2">
+                                    <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
+                                        {{name.STF_FNAME}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group col-md-1"></div>
-                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">ลงนามเช็คที่คนที่ 2</label>
-                        <br>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDC2">
-                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
-                                {{name.STF_FNAME}}
-                            </option>
-                        </select>
-
-                    </div>
-                    <div class="form-group col-md-1"></div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
-
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-times me-1"></i> ปิด
+                </button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertdata()">
+                    <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
+                </button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+                    <i class="fa-solid fa-save me-1"></i> แก้ไขข้อมูล
+                </button>
             </div>
         </div>
     </div>

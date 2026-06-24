@@ -1,0 +1,34 @@
+{
+  "name": "pdf-annotator",
+  "version": "1.3.0",
+  "description": "PDF Annotator Modal for Angular/Ionic apps",
+  "keywords": [
+    "angular",
+    "ionic",
+    "pdf",
+    "annotator",
+    "esign"
+  ],
+  "peerDependencies": {
+    "@angular/common": ">=14.0.0",
+    "@angular/core": ">=14.0.0",
+    "@angular/forms": ">=14.0.0",
+    "@angular/platform-browser": ">=14.0.0",
+    "@ionic/angular": ">=5.0.0 <8.0.0",
+    "pdf-lib": ">=1.17.0",
+    "@pdf-lib/fontkit": ">=1.1.0",
+    "pdfjs-dist": ">=2.16.0",
+    "rxjs": ">=7.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "main": "bundles/pdf-annotator.umd.js",
+  "module": "fesm2015/pdf-annotator.js",
+  "es2015": "fesm2015/pdf-annotator.js",
+  "esm2015": "esm2015/pdf-annotator.js",
+  "fesm2015": "fesm2015/pdf-annotator.js",
+  "typings": "pdf-annotator.d.ts",
+  "metadata": "pdf-annotator.metadata.json"
+}

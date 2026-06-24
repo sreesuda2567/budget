@@ -1,6 +1,7 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { PDFDocument } from 'pdf-lib';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
@@ -61,7 +62,8 @@ export class Load3dannalComponent implements OnInit {
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
     private sanitizer: DomSanitizer,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -178,6 +180,13 @@ export class Load3dannalComponent implements OnInit {
           this.datalist = data.data;
           this.loading = null;
           this.rownum = 'true';
+          // Count pages for PDFs
+          if (this.datalist && this.datalist.length > 0) {
+            this.datalist.forEach((p: any) => {
+              if (p.disbursement) this.countPdfPages(p.disbursement, p, 'disbursement_pages');
+              if (p.load3ddoc) this.countPdfPages(p.load3ddoc, p, 'load3ddoc_pages');
+            });
+          }
         } else {
           this.datalist = data.data;
           this.loading = null;
@@ -212,6 +221,12 @@ export class Load3dannalComponent implements OnInit {
           this.datalistapp = data.data;
           this.loading = null;
           this.rownum1 = 1;
+          // Count pages for PDFs
+          if (this.datalistapp && this.datalistapp.length > 0) {
+            this.datalistapp.forEach((p: any) => {
+              if (p.load3d) this.countPdfPages(p.load3d, p, 'load3d_pages');
+            });
+          }
         } else {
           this.rownum1 = null;
           this.loading = null;
@@ -526,6 +541,22 @@ export class Load3dannalComponent implements OnInit {
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;
       }
+    }
+  }
+
+  async countPdfPages(url: string, item: any, propertyName: string) {
+    if (!url) return;
+    try {
+      // Fetch only if not already counted
+      if (item[propertyName]) return;
+      
+      const response = await fetch(url);
+      const pdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      item[propertyName] = pdfDoc.getPageCount();
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error counting PDF pages for URL:', url, error);
     }
   }
 }

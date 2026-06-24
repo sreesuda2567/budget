@@ -1,7 +1,8 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { PDFDocument } from 'pdf-lib';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -61,7 +62,8 @@ export class LoaddktbComponent implements OnInit {
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
     private sanitizer: DomSanitizer,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -195,6 +197,12 @@ export class LoaddktbComponent implements OnInit {
           this.datalist = data.data;
           this.loading = null;
           this.rownum = 'true';
+          // Count pages for PDFs
+          if (this.datalist && this.datalist.length > 0) {
+            this.datalist.forEach((p: any) => {
+              if (p.load3df) this.countPdfPages(p.load3df, p, 'load3df_pages');
+            });
+          }
         } else {
           this.datalist = data.data;
           this.loading = null;
@@ -229,6 +237,12 @@ export class LoaddktbComponent implements OnInit {
           this.datalistapp = data.data;
           this.loading = null;
           this.rownum1 = 1;
+          // Count pages for PDFs
+          if (this.datalistapp && this.datalistapp.length > 0) {
+            this.datalistapp.forEach((p: any) => {
+              if (p.loadktb) this.countPdfPages(p.loadktb, p, 'loadktb_pages');
+            });
+          }
         } else {
           this.rownum1 = null;
           this.loading = null;
@@ -474,6 +488,20 @@ export class LoaddktbComponent implements OnInit {
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;
       }
+    }
+  }
+
+  async countPdfPages(url: string, item: any, propertyName: string) {
+    if (!url) return;
+    try {
+      if (item[propertyName]) return;
+      const response = await fetch(url);
+      const pdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      item[propertyName] = pdfDoc.getPageCount();
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error counting PDF pages for URL:', url, error);
     }
   }
 }
