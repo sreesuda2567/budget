@@ -95,8 +95,9 @@ export class ClearcheckComponent implements OnInit {
           .pipe(first())
           .subscribe((data: any) => {
             this.dataNameb = data;
-            this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_IA;
-
+            if (data && data.length > 0) {
+              this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_IA;
+            }
           });
 
       });

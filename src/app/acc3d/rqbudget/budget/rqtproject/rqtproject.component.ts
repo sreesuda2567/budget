@@ -193,6 +193,7 @@ export class RqtprojectComponent implements OnInit {
 
   ngOnInit(): void {
     document.getElementById("ModalClose")?.click();
+    this.dataAdd.RPLINCOME_CODE1 ='';
     this.fetchdata();
     this.dataAdd.PLPROJECTTYPE = 1;
     this.dataAdd.FPLPROJECTTYPE = 1;

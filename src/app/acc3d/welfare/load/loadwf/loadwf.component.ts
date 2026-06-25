@@ -13,6 +13,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
 import Swal from 'sweetalert2';
+import { PDFDocument } from 'pdf-lib';
 
 @Component({
   selector: 'app-loadwf',
@@ -327,36 +328,57 @@ fetchdata() {
 
     }
   }
-   sendfile(id: any, link: any, link2: any) {
-       // this.editdata(id);
-        this.dataAdd.FNANNALSMAP_CODE = id;
-        this.dataAdd.link1 = link;
-        this.dataAdd.link2 = link2;
-        Swal.fire({
-          title: 'ต้องการรวมไฟล์ส่งเจ้าหน้าที่ผู้จ่าย',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'ตกลง',
-          cancelButtonText: 'ยกเลิก',
-        }).then((result) => {
-          this.dataAdd.opt = "sendfile";
-          if (result.value) {
-            this.apiService
-              .getdata(this.dataAdd, this.url)
-              .pipe(first())
-              .subscribe((data: any) => {
-                if (data.status == 1) {
-                  this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
-                  this.fetchdatalist();
-    
-                }
-              });
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+  async sendfile(id: any, link: any, link2: any) {
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.link1 = link;
+    this.dataAdd.link2 = link2;
+    Swal.fire({
+      title: 'ต้องการรวมไฟล์ส่งเจ้าหน้าที่ผู้จ่าย',
+      text: 'กำลังรวมไฟล์ PDF...',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(async (result) => {
+      if (result.value) {
+        Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+        try {
+          const pdf1Bytes = await fetch(link).then(res => res.arrayBuffer());
+          const pdf1 = await PDFDocument.load(pdf1Bytes);
+          const mergedPdf = await PDFDocument.create();
+
+          const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+          copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+          if (link2) {
+            const pdf2Bytes = await fetch(link2).then(res => res.arrayBuffer());
+            const pdf2 = await PDFDocument.load(pdf2Bytes);
+            const copiedPages2 = await mergedPdf.copyPages(pdf2, pdf2.getPageIndices());
+            copiedPages2.forEach((page) => mergedPdf.addPage(page));
           }
-        });
-    
+
+          const mergedPdfBytes = await mergedPdf.save();
+          const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
+          const user = this.tokenStorage.getUser();
+
+          // หมายเหตุ: ใช้รหัสอัปโหลด '27' ตามที่ตั้งไว้ในหน้า loadw
+          this.Uploadfiles.uploadcontract(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '32')
+            .subscribe((event: any) => {
+              if (event.type == 4) {
+                Swal.close();
+                this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                this.fetchdatalist();
+              }
+            });
+        } catch (error) {
+          console.error("Error merging PDFs:", error);
+          Swal.fire('ข้อผิดพลาด', 'ไม่สามารถรวมไฟล์ได้ (อาจเกิดจากไฟล์ไม่มีอยู่จริง หรือติดปัญหา Cross-Origin)', 'error');
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
       }
+    });
+  }
   updatedata() {
 
     this.dataAdd.opt = "update";

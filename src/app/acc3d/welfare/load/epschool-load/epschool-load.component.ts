@@ -12,6 +12,8 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
+import { UploadfileserviceService } from '../../../../acc3d/_services/uploadfileservice.service';
+import { PDFDocument } from 'pdf-lib';
 
 @Component({
   selector: 'app-epschool-load',
@@ -61,7 +63,8 @@ export class EpschoolLoadComponent implements OnInit {
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private Uploadfiles: UploadfileserviceService
   ) { }
 
   ngOnInit(): void {
@@ -117,6 +120,7 @@ export class EpschoolLoadComponent implements OnInit {
     this.dataAdd.FEREIM_CODE = [];
     this.dataAdd.FEREIMDT_WMONEY = [];
     this.dataAdd.check = [];
+    this.dataAdd.FEREIMDT_LINK = [];
     this.dataAdd.opt = "viewepschooload";
     this.apiService
       .getdata(this.dataAdd, this.url1)
@@ -348,34 +352,59 @@ export class EpschoolLoadComponent implements OnInit {
     this.rowpbi = null;
     this.rowpbu = true;
   }
-   sendfile(id: any, link: any) {
-      this.editdata(id);
-      this.dataAdd.link2 = link;
-      Swal.fire({
-        title: 'ต้องการรวมไฟล์',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'ตกลง',
-        cancelButtonText: 'ยกเลิก',
-      }).then((result) => {
-        this.dataAdd.opt = "sendfile";
-        if (result.value) {
-          this.apiService
-            .getdata(this.dataAdd, this.url)
-            .pipe(first())
-            .subscribe((data: any) => {
-              if (data.status == 1) {
+  async sendfile(id: any, link: any) {
+    this.editdata(id);
+    this.dataAdd.link2 = link;
+    Swal.fire({
+      title: 'ต้องการรวมไฟล์',
+      text: 'กำลังรวมไฟล์ PDF...',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(async (result) => {
+      if (result.value) {
+        Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+        try {
+          const pdf1Bytes = await fetch(link).then(res => res.arrayBuffer());
+          const pdf1 = await PDFDocument.load(pdf1Bytes);
+          const mergedPdf = await PDFDocument.create();
+
+          const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+          copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+          if (this.dataAdd.FEREIMDT_LINK && this.dataAdd.FEREIMDT_LINK.length > 0) {
+            for (let i = 0; i < this.dataAdd.FEREIMDT_LINK.length; i++) {
+              if (this.dataAdd.FEREIMDT_LINK[i]) {
+                const pdfBytes = await fetch(this.dataAdd.FEREIMDT_LINK[i]).then(res => res.arrayBuffer());
+                const pdfDoc = await PDFDocument.load(pdfBytes);
+                const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+                copiedPages.forEach((page) => mergedPdf.addPage(page));
+              }
+            }
+          }
+
+          const mergedPdfBytes = await mergedPdf.save();
+          const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
+          const user = this.tokenStorage.getUser();
+
+          this.Uploadfiles.uploadcontract(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '122')
+            .subscribe((event: any) => {
+              if (event.type == 4) {
+                Swal.close();
                 this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
                 this.fetchdatalist();
-  
               }
             });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+        } catch (error) {
+          console.error("Error merging PDFs:", error);
+          Swal.fire('ข้อผิดพลาด', 'ไม่สามารถรวมไฟล์ได้ (อาจเกิดจากไฟล์ไม่มีอยู่จริง หรือติดปัญหา Cross-Origin)', 'error');
         }
-      });
-  
-    }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+      }
+    });
+  }
   // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;

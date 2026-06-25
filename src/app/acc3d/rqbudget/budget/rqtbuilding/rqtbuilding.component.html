@@ -22,11 +22,20 @@
           <div class="panel-heading">
             <div class="shadow alert alert-info" role="alert">
               <div class="row">
-                <div class="col-md-10">
+                <div class="col-md-8">
                   <label for="name"><strong>คณะ /หน่วยงาน:</strong> </label>
                   <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
                     (change)="fetchdatalist()">
                     <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="name"><strong>แหล่งเงิน</strong> </label>
+                  <select name="in_come" id="in_come" class="form-select" [(ngModel)]="dataAdd.RPLINCOME_CODE1"
+                    (change)="fetchdatalist()">
+                    <option value="">ทุกประเภท</option>
+                    <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}
+                    </option>
                   </select>
                 </div>
                 <div class="col-md-2">
@@ -149,12 +158,15 @@
                 </td>
                 <td>
                   <span *ngIf="p.PRBUILDING_SLINK"> <a role="button" title="แนบไฟล์แบบเสนอรายการสิ่งก่อสร้าง"
-                      class="btn btn-success text-white" (click)="previewPdf(p.PRBUILDING_SLINK)"  >แบบเสนอ</a>&nbsp;</span>
+                      class="btn btn-success text-white"
+                      (click)="previewPdf(p.PRBUILDING_SLINK)">แบบเสนอ</a>&nbsp;</span>
                   <span *ngIf="p.PRBUILDING_PRICE"> <a role="button" title="รายงาน" class="btn btn-success text-white"
-                      (click)="previewPdf(p.PRBUILDING_PRICE)"  >ราคากลาง</a>&nbsp; </span>
+                      (click)="previewPdf(p.PRBUILDING_PRICE)">ราคากลาง</a>&nbsp; </span>
                   <span *ngIf="p.PRBUILDING_PAT">
-                    <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.PRBUILDING_PAT)"  >แบบรูป</a>&nbsp;</span>
-                  <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"  ><i class="fas fa-file-alt"></i></a>
+                    <a role="button" title="รายงาน" class="btn btn-success text-white"
+                      (click)="previewPdf(p.PRBUILDING_PAT)">แบบรูป</a>&nbsp;</span>
+                  <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"><i
+                      class="fas fa-file-alt"></i></a>
 
                 </td>
 
@@ -178,8 +190,8 @@
 </div>
 <!-- Modal -->
 
-<div class="modal fade" data-bs-focus="false" id="modalEditlistexpen" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-  tabindex="-1">
+<div class="modal fade" data-bs-focus="false" id="modalEditlistexpen" aria-hidden="true"
+  aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header bg-primary">
@@ -1201,8 +1213,8 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" id="modalApp" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="modalApp" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header">
@@ -1339,8 +1351,8 @@
 </div>
 <!-- Modal -->
 
-<div class="modal fade" data-bs-focus="false" id="modalEditregister" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-  tabindex="-1">
+<div class="modal fade" data-bs-focus="false" id="modalEditregister" aria-hidden="true"
+  aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header bg-primary">
@@ -1398,7 +1410,8 @@
     </div>
   </div>
 </div>
-<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -1444,8 +1457,8 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModalimport" aria-hidden="true"
-  aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" data-bs-focus="false" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModalimport"
+  aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header bg-primary">
@@ -1512,18 +1525,18 @@
 <!-- PDF Preview Side Panel -->
 <div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
 <div class="pdf-preview-panel" [class.open]="previewPdfUrl">
-    <div class="pdf-preview-header bg-primary text-white">
-        <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
-        <div>
-            <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
-                <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
-            </a>
-            <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
-                <i class="fa fa-times me-1"></i> ปิด
-            </button>
-        </div>
+  <div class="pdf-preview-header bg-primary text-white">
+    <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+    <div>
+      <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+        <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+      </a>
+      <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+        <i class="fa fa-times me-1"></i> ปิด
+      </button>
     </div>
-    <div class="pdf-preview-body">
-        <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
-    </div>
+  </div>
+  <div class="pdf-preview-body">
+    <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
+  </div>
 </div>

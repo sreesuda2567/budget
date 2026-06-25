@@ -22,12 +22,21 @@
           <div class="panel-heading">
             <div class="shadow alert alert-info" role="alert">
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-8">
                 <label for="name"><strong>คณะ /หน่วยงาน:</strong> </label>
                 <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()">
                   <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
                 </select>
               </div>
+              <div class="col-md-2">
+                  <label for="name"><strong>แหล่งเงิน</strong> </label>
+                  <select name="in_come" id="in_come" class="form-select" [(ngModel)]="dataAdd.RPLINCOME_CODE1"
+                    (change)="fetchdatalist()">
+                    <option value="">ทุกประเภท</option>
+                    <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}
+                    </option>
+                  </select>
+                </div>
               <div class="col-md-2">
                 <label for="name"><strong>ปีงบประมาณ</strong> </label>
                 <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE"
@@ -234,7 +243,7 @@
               <div class="col-md-12">
                 <label for="name" class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-box me-1"></i>ชื่อรายการสิ่งก่อสร้าง</label>
                 <select name="u_code" id="u_code" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PRREGISASSET_CODEA">
-                  <option [value]="p.PRREGISASSET_CODE" *ngFor="let p of datalistregister">{{p.PRREGISASSET_NAME}}
+                  <option [value]="p.PRREGISBUILDING_CODE" *ngFor="let p of datalistregister">{{p.PRREGISBUILDING_NAME}}
                     ตำบล{{p.SUB_DISTRICT_NAME_TH}} อำเภอ{{p.DISTRICT_NAME_TH}} จังหวัด{{p.PROVINCE_TNAME}}
                   </option>
                 </select>

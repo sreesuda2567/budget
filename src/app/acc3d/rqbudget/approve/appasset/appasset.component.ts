@@ -176,6 +176,7 @@ export class AppassetComponent implements OnInit {
 
   ngOnInit(): void {
         document.getElementById("ModalClose")?.click();
+    this.dataAdd.RPLINCOME_CODE1 ='';    
     this.fetchdata();
     this.rowpbi = null;
     this.rowict = '';
@@ -1454,33 +1455,34 @@ export class AppassetComponent implements OnInit {
       .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-
+       
         this.dataAdd.PRASSET_CODE = data[0].PRASSET_CODE;
         this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
        
         this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
         //this.dataAdd.PRREGISASSET_CODE = data[0].PRREGISASSET_CODE;
        // this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
-        if(data[0].PRREGISASSET_CODE !=data[0].PRREGISASSET_CODEA){
+        if(data[0].PRREGISASSET_CODEA !=null){
          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODEA;
        //  console.log(data[0].PRREGISASSET_CODEA);
         }else{
+         
         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODE;
         }
-       if(data[0].PRASSET_NUMBER !=data[0].PRASSET_NUMBERA){
+       if(data[0].PRASSET_NUMBERA !=null){
          this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBERA; 
         }else{
         this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
         }
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
-         if(data[0].PRASSET_MONEY !=data[0].PRASSET_MONEYA){
+         if(data[0].PRASSET_MONEYA !=null){
          this.dataAdd.sum = data[0].PRASSET_NUMBERA * data[0].PRASSET_MONEYA;   
         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEYA).toFixed(2));  
         }else{
         this.dataAdd.sum = data[0].PRASSET_NUMBER * data[0].PRASSET_MONEY;  
         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEY).toFixed(2));
         }
-
+      this.calexpenses();
       });
   }
   // ฟังก์ชัน การแสดงข้อมูลตามต้องการ

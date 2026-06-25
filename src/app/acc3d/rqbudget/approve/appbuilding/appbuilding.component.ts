@@ -177,6 +177,7 @@ export class AppbuildingComponent implements OnInit {
   ngOnInit(): void {
     document.getElementById("ModalClose")?.click();
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
+    this.dataAdd.RPLINCOME_CODE1 ='';
     this.fetchdata();
     this.rowpbi = null;
   }
@@ -509,8 +510,7 @@ export class AppbuildingComponent implements OnInit {
       .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
-        if(data[0].PRREGISBUILDING_CODE !=data[0].PRREGISBUILDING_CODEA && data[0].PRREGISBUILDING_CODEA !=null){
+        if(data[0].PRREGISBUILDING_CODEA !=null){
          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODEA;
         }else{
         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODE;
@@ -518,14 +518,14 @@ export class AppbuildingComponent implements OnInit {
         this.dataAdd.PRBUILDING_CODE = data[0].PRBUILDING_CODE;
         this.dataAdd.PRBUILDING_NAME = data[0].PRREGISBUILDING_NAME;
         //this.dataAdd.PRBUILDING_NUMBER = Number(data[0].PRBUILDING_NUMBER);
-         if(data[0].PRBUILDING_NUMBER !=data[0].PRBUILDING_NUMBERA  && data[0].PRBUILDING_NUMBERA !=null){
+         if( data[0].PRBUILDING_NUMBERA !=null){
          this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBERA);
         }else{
         this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBER);
         }
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
        // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
-       if(data[0].PRBUILDING_MONEY !=data[0].PRBUILDING_MONEYA && data[0].PRBUILDING_MONEYA !=null){
+       if(data[0].PRBUILDING_MONEYA !=null){
          this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEYA).toFixed(2)); 
         }else{
         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
@@ -533,6 +533,7 @@ export class AppbuildingComponent implements OnInit {
 
 
       });
+      this.calexpenses();
   }
    calexpenses() {
     this.dataAdd.sum = this.dataAdd.PRASSET_NUMBER * this.dataAdd.PRASSET_MONEY.replace(/,/g, "");

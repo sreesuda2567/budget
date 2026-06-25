@@ -175,6 +175,7 @@ export class RqtassetComponent implements OnInit {
 
   ngOnInit(): void {
     document.getElementById("ModalClose")?.click();
+    this.dataAdd.RPLINCOME_CODE1 ='';
     this.fetchdata();
     this.rowpbi = null;
     this.rowict = '';

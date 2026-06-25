@@ -194,6 +194,7 @@ public editor = ClassicEditor;
 
   ngOnInit(): void {
      document.getElementById("ModalClose")?.click();
+     this.dataAdd.RPLINCOME_CODE1 ='';
     this.fetchdata();
     this.dataAdd.PLPROJECTTYPE = 1;
     this.dataAdd.FPLPROJECTTYPE = 1;
@@ -859,27 +860,20 @@ applyLocale(pop: any) {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
-        if(data[0].PRREGISBUILDING_CODE !=data[0].PRREGISBUILDING_CODEA && data[0].PRREGISBUILDING_CODEA !=null){
-         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODEA;
+        if( data[0].PRREGISPROJECT_CODEA !=null){
+         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISPROJECT_CODEA;
         }else{
-        this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODE;
+        this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISPROJECT_CODE;
         }
-        this.dataAdd.PRBUILDING_CODE = data[0].PRBUILDING_CODE;
-        this.dataAdd.PRBUILDING_NAME = data[0].PRREGISBUILDING_NAME;
-        //this.dataAdd.PRBUILDING_NUMBER = Number(data[0].PRBUILDING_NUMBER);
-         if(data[0].PRBUILDING_NUMBER !=data[0].PRBUILDING_NUMBERA  && data[0].PRBUILDING_NUMBERA !=null){
-         this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBERA);
-        }else{
-        this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBER);
-        }
-        this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
-       // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
-       if(data[0].PRBUILDING_MONEY !=data[0].PRBUILDING_MONEYA && data[0].PRBUILDING_MONEYA !=null){
-         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEYA).toFixed(2)); 
-        }else{
-        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
-        }
+        this.dataAdd.PRREGISPROJECT_CODE = data[0].PRREGISPROJECT_CODE;
 
+       // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
+       if(data[0].PRPLPROJECT_MONEYA !=null){
+         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRPLPROJECT_MONEYA).toFixed(2)); 
+        }else{
+        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRPLPROJECT_MONEY).toFixed(2));
+        }
+      this.calexpenses();
 
       });
   }

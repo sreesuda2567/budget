@@ -22,11 +22,20 @@
           <div class="panel-heading">
             <div class="shadow alert alert-info" role="alert">
               <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-6">
                   <label for="name"><strong>คณะ /หน่วยงาน</strong> </label>
                   <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
                     (change)="fetchdatalist()">
                     <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="name"><strong>แหล่งเงิน</strong> </label>
+                  <select name="in_come" id="in_come" class="form-select" [(ngModel)]="dataAdd.RPLINCOME_CODE1"
+                    (change)="fetchdatalist()">
+                    <option value="">ทุกประเภท</option>
+                    <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}
+                    </option>
                   </select>
                 </div>
                 <div class="col-md-2">
@@ -39,7 +48,7 @@
                 </div>
                 <div class="col-md-2">
                   <label for="name"><strong>ประเภทโครงการ </strong> </label>
-                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE">
+                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE" (change)="fetchdatalist()">
                     <option [value]="1">โครงการทั่วไป</option>
                     <option [value]="2">โครงการวิจัย</option>
                   </select>
