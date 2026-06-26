@@ -134,8 +134,19 @@
                     <br>
                     ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})
                   </div>
+                  <span *ngIf="p.PRREGISBUILDING_CODE !=p.PRREGISBUILDING_CODEA && p.PRREGISBUILDING_CODEA!=null"
+                    class="text-danger">
+                    <br>
+                    เปลี่ยนแปลง:{{p.PRREGISBUILDING_NAMEC}}
+                  </span>
                 </td>
-                <td width="15%" align="right">{{p.PRBUILDING_MONEY*p.PRBUILDING_NUMBER| number : '1.2-2'}}</td>
+                <td width="15%" align="right">{{p.PRBUILDING_MONEY*p.PRBUILDING_NUMBER| number : '1.2-2'}}
+                  <span *ngIf="p.PRBUILDING_MONEY !=p.PRBUILDING_MONEYA && p.PRBUILDING_MONEYA!=null"
+                    class="text-danger">
+                    <br>
+                    เปลี่ยนแปลง:{{p.PRBUILDING_MONEYA*p.PRBUILDING_NUMBERA| number : '1.2-2'}}
+                  </span>
+                </td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td width="3%">
                   <a *ngIf="(p.PRBUILDING_RSTATUS=='1'  || p.PRBUILDING_RSTATUS=='3'|| (p.PRBUILDING_RSTATUS=='7' && p.PRBUILDING_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)"

@@ -126,8 +126,19 @@
                     <br>
                     ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})
                   </div>
+                  <span *ngIf="p.PRREGISPROJECT_CODE !=p.PRREGISPROJECT_CODEA && p.PRREGISPROJECT_CODEA!=null"
+                    class="text-danger">
+                    <br>
+                    เปลี่ยนแปลง:{{p.PRREGISPROJECT_NAMEC}}
+                  </span>
                 </td>
-                <td  align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
+                <td  align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}
+                  <span *ngIf="p.PRPLPROJECT_MONEY !=p.PRPLPROJECT_MONEYA && p.PRPLPROJECT_MONEYA!=null"
+                    class="text-danger">
+                    <br>
+                    เปลี่ยนแปลง:{{p.PRPLPROJECT_MONEYA| number : '1.2-2'}}
+                  </span>
+                </td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td >
                   <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"><i class="fas fa-file-alt"></i></a>

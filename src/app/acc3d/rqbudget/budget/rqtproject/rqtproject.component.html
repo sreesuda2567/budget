@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-md-2">
                   <label for="name"><strong>ประเภทโครงการ </strong> </label>
-                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE">
+                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE" (change)="fetchdatalist()">
                     <option [value]="0">ทุกประเภท</option>
                     <option [value]="1">โครงการทั่วไป</option>
                     <option [value]="2">โครงการวิจัย</option>
@@ -127,8 +127,19 @@
                     <br>
                     ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})
                   </div>
+                  <span *ngIf="p.PRREGISPROJECT_CODE !=p.PRREGISPROJECT_CODEA && p.PRREGISPROJECT_CODEA!=null"
+                    class="text-danger">
+                    <br>
+                    เปลี่ยนแปลง:{{p.PRREGISPROJECT_NAMEC}}
+                  </span>
                 </td>
-                <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
+                <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}
+                  <span *ngIf="p.PRPLPROJECT_MONEY !=p.PRPLPROJECT_MONEYA && p.PRPLPROJECT_MONEYA!=null"
+                    class="text-danger">
+                    <br>
+                    เปลี่ยนแปลง:{{p.PRPLPROJECT_MONEYA| number : '1.2-2'}}
+                  </span>
+                </td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td >
                   <a *ngIf="(p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3'|| (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)"
@@ -136,8 +147,9 @@
                       (click)="deliver(p.PRPLPROJECT_CODE)" class="fa fa-arrow-right"></i> </a>
                 </td>
                 <td >
-                  <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1') &&(dataAdd.citizen== p.CITIZEN_ID)) || dataAdd.PRIVILEGE_RSTATUS=='A'
-                    ||  (dataAdd.PRIVILEGE_RSTATUS=='2' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='2' || p.PLPROJECT_RSTATUS=='3'))"
+                  <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1') &&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)) 
+                  || dataAdd.PRIVILEGE_RSTATUS=='A'
+                  ||  (dataAdd.PRIVILEGE_RSTATUS=='2' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='2' || p.PLPROJECT_RSTATUS=='3'))"
                     role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
                     (click)="deleteData(p.PRPLPROJECT_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
                   <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3' || (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID))  || dataAdd.PRIVILEGE_RSTATUS=='A'

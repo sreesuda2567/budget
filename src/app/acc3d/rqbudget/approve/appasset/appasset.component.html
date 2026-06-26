@@ -133,8 +133,18 @@
                     <br>
                     ({{p.PRASSET_NOTE}})
                   </div>
+                  <span *ngIf="p.PRREGISASSET_CODEA != p.PRREGISASSET_CODE && p.PRREGISASSET_CODEA!=null"
+                    class="text-danger">
+                    <br>
+                    เปลี่ยนแปลง:{{p.PRREGISASSET_NAMEC}}
+                  </span>
                 </td>
-                <td align="right">{{p.PRASSET_MONEY*p.PRASSET_NUMBER| number : '1.2-2'}}</td>
+                <td align="right">{{p.PRASSET_MONEY*p.PRASSET_NUMBER| number : '1.2-2'}}
+                  <span *ngIf="p.PRASSET_MONEY !=p.PRASSET_MONEYA && p.PRASSET_MONEYA!=null" class="text-danger">
+                    <br>
+                    เปลี่ยนแปลง:{{p.PRASSET_NUMBERA*p.PRASSET_MONEYA| number : '1.2-2'}}
+                  </span>
+                </td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td>
                   <span *ngIf="p.PRASSET_SLINK2"> <a role="button" title="ICT" class="btn btn-success text-white"
