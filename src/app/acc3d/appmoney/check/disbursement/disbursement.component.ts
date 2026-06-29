@@ -390,7 +390,7 @@ export class DisbursementComponent implements OnInit {
     this.rowpbi = true;
   }
     // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapr(id: any, link: any, money: any, mail: any, at: any, name: any) {
+  editdatapr(id: any, link: any, money: any, mail: any, at: any, name: any, linkclear?: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -401,6 +401,7 @@ export class DisbursementComponent implements OnInit {
     this.dataAdd.USERNAME_CISCO = mail;
     this.dataAdd.FNANNALS_BOOK_AT = at;
     this.dataAdd.FSTF_FNAME = name;
+    this.dataAdd.linkclear = linkclear;
     if (money != null) {
       this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
     }

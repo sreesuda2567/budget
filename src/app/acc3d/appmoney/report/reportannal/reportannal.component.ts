@@ -50,8 +50,9 @@ export class ReportannalComponent implements OnInit {
   rowpbu: any;
   file: any;
   dataSeq: any;
-    previewPdfUrl: string = '';
+   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
+  pdfUrlToView: SafeResourceUrl | null = null;
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -114,7 +115,11 @@ export class ReportannalComponent implements OnInit {
       });
 
   }
-
+  exportpdf(link: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
+  }
   fetchdatareport() {
     this.dataNameb = null;
     var varN1 = {

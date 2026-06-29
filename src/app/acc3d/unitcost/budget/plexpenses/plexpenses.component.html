@@ -375,355 +375,324 @@
       </div>
     </div>
   </div>
-  <!-- The Modal -->
-  <div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-      <div class="modal-content">
-        <div class="modal-header bg-primary">
-          <h5 class="modal-title text-white" id="exampleModalLabel">รายละเอียดการขอเบิก</h5>
-          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row card outer " *ngIf="clickshow">
-            <br>
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header">
-                  <div class="row">
-                    <div class="col-md-11">
-                      <div [(innerHTML)]="dataAdd.htmlStringd"></div>
-                    </div>
-                    <div class="col-md-1" align="right">
-                      <button type="button" class="btn-close" (click)="fetchclose()" aria-label="Close"></button>
-                    </div>
-                  </div>
+<!-- The Modal -->
+<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white border-0 shadow-sm" style="border-radius: 0.3rem 0.3rem 0 0;">
+        <h5 class="modal-title fs-5 fw-bold" id="exampleModalLabel">
+            <i class="fa-solid fa-file-invoice-dollar me-2"></i>รายละเอียดการขอเบิก
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 bg-light">
+        <div class="row card outer mb-3" *ngIf="clickshow">
+          <div class="col-md-12 p-3">
+            <div class="card shadow-sm">
+              <div class="card-header bg-white border-0">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div [(innerHTML)]="dataAdd.htmlStringd"></div>
+                  <button type="button" class="btn-close" (click)="fetchclose()" aria-label="Close"></button>
                 </div>
-                <div class="card-body ">
-                  <iframe src="/acc3d/budget/creditor" height="700" width="1000" title="Iframe Example"></iframe>
-                  <div class="row">
-                    <div class="col-md-11">
-                    </div>
-                    <div class="col-md-1"><button type="button" class="btn btn-secondary"
-                        (click)="fetchclose()">ปิด</button> </div>
-                  </div>
-
+              </div>
+              <div class="card-body p-0 text-center">
+                <iframe src="/acc3d/budget/creditor" height="700" width="100%" style="border: none;" title="Creditor Iframe"></iframe>
+                <div class="p-3 text-end bg-light border-top">
+                  <button type="button" class="btn btn-outline-secondary rounded-pill px-4" (click)="fetchclose()">ปิด</button>
                 </div>
               </div>
             </div>
           </div>
-          <table width="100%" class="table">
-            <tbody>
-              <tr>
-                <td colspan="2" width="22%" align="left">
-                  <div class="row">
-                    <div class="col-md-4 text-secondary" style="font-size: 10pt"> ประเภทงบ </div>
-                    <div class="col-md-5 text-secondary" style="font-size: 10pt">หมวดรายจ่ายย่อย </div>
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt">ผลผลิต </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4 text-secondary">
-                      <input name="FNEXPENSES_CODE" type="hidden" id="FNEXPENSES_CODE"
-                        [(ngModel)]="dataAdd.FNEXPENSES_CODE">
-                      <select name="PLMONEYPAY_CODE1" id="PLMONEYPAY_CODE1" class="form-select"
-                        (change)="fetchdatalistsubm()" [(ngModel)]="dataAdd.PLMONEYPAY_CODE">
-                        <option value="" >กรุณาเลือก</option>
-                        <option [value]="pl.PLMONEYPAY_CODE" *ngFor="let pl of dataPlmoneypay">
-                          {{pl.PLMONEYPAY_NAME}}</option>
-                      </select>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-layer-group text-primary me-1"></i>ประเภทงบ</label>
+                        <select name="PLMONEYPAY_CODE1" id="PLMONEYPAY_CODE1" class="form-select"
+                          (change)="fetchdatalistsubm()" [(ngModel)]="dataAdd.PLMONEYPAY_CODE">
+                          <option value="">กรุณาเลือก</option>
+                          <option [value]="pl.PLMONEYPAY_CODE" *ngFor="let pl of dataPlmoneypay">{{pl.PLMONEYPAY_NAME}}</option>
+                        </select>
                     </div>
-                    <div class="col-md-5 text-secondary">
-                      <select name="PLSUBMONEYPAY_CODE1" id="PLSUBMONEYPAY_CODE1" class="form-select"
-                        [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE" (change)="fetchdatalistpl()">
-                        <option value="" >กรุณาเลือก</option>
-                        <option [value]="sub.PLSUBMONEYPAY_CODE" *ngFor="let sub of dataESubplmoneypay">
-                          {{sub.PLSUBMONEYPAY_NAME}}</option>
-                      </select>
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-list-ul text-success me-1"></i>หมวดรายจ่ายย่อย</label>
+                        <select name="PLSUBMONEYPAY_CODE1" id="PLSUBMONEYPAY_CODE1" class="form-select"
+                          [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE" (change)="fetchdatalistpl()">
+                          <option value="">กรุณาเลือก</option>
+                          <option [value]="sub.PLSUBMONEYPAY_CODE" *ngFor="let sub of dataESubplmoneypay">{{sub.PLSUBMONEYPAY_NAME}}</option>
+                        </select>
                     </div>
                     <div class="col-md-3">
-                      <select name="pln" id="pln" class="form-select" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
-                        <option value="" >กรุณาเลือก</option>
-                        <option [value]="pl.PLGPRODUCT_CODE" *ngFor="let pl of dataPlproduct">
-                          {{pl.PLGPRODUCT_SHORTNAME}}</option>
-                      </select>
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-box text-warning me-1"></i>ผลผลิต</label>
+                        <select name="pln" id="pln" class="form-select" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
+                          <option value="">กรุณาเลือก</option>
+                          <option [value]="pl.PLGPRODUCT_CODE" *ngFor="let pl of dataPlproduct">{{pl.PLGPRODUCT_SHORTNAME}}</option>
+                        </select>
                     </div>
-  
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" align="left">
-                  <div class="row">
-                    <div class="col-md-6 text-secondary" style="font-size: 10pt"> เลขที่หนังสือ </div>
-                    <div  class="col-md-6 text-secondary" style="font-size: 10pt">เลขฎีกา </div>
-                  </div>
-                  <div class="row">
+
                     <div class="col-md-6">
-                      <input name="FNEXPENSES_NUMBOOK" id="FNEXPENSES_NUMBOOK" type="text" class="form-control"
-                        placeholder="เลขที่หนังสือ" [(ngModel)]="dataAdd.FNEXPENSES_NUMBOOK">
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-book text-info me-1"></i>เลขที่หนังสือ</label>
+                        <input name="FNEXPENSES_NUMBOOK" id="FNEXPENSES_NUMBOOK" type="text" class="form-control"
+                          placeholder="ระบุเลขที่หนังสือ" [(ngModel)]="dataAdd.FNEXPENSES_NUMBOOK">
                     </div>
-                    <div  class="col-md-6">
-                      <input name="FNEXPENSES_DEKA" id="FNEXPENSES_DEKA" type="text" class="form-control"
-                        placeholder="เลขฎีกา" [(ngModel)]="dataAdd.FNEXPENSES_DEKA" >
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-file-invoice text-secondary me-1"></i>เลขฎีกา</label>
+                        <input name="FNEXPENSES_DEKA" id="FNEXPENSES_DEKA" type="text" class="form-control"
+                          placeholder="ระบุเลขฎีกา" [(ngModel)]="dataAdd.FNEXPENSES_DEKA">
                     </div>
-                  </div>
-  
-                </td>
-              </tr>
-              <tr >
-                <td colspan="2" align="left">
-                  <div class="row">
-                    <div class="col-md-12 text-secondary" style="font-size: 10pt">
-                      ชื่อโครงการ/ครุภัณฑ์/สิ่งก่อสร้าง</div>
-                  </div>
-                  <div class="row">
+
                     <div class="col-md-12">
-                      <select name="p_code" id="p_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECT_CODE">
-                        <option [value]="pl.id" *ngFor="let pl of dataEpl">{{pl.name}}</option>
-                      </select>
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-building text-primary me-1"></i>ชื่อโครงการ/ครุภัณฑ์/สิ่งก่อสร้าง</label>
+                        <select name="p_code" id="p_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECT_CODE">
+                          <option [value]="pl.id" *ngFor="let pl of dataEpl">{{pl.name}}</option>
+                        </select>
                     </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" align="left">
-                  <div class="row">
-                    <div class="col-md-8 text-secondary" style="font-size: 10pt"> ชื่อเรื่อง </div>
-                    <div class="col-md-4 text-secondary" style="font-size: 10pt">วันที่ดำเนินการ </div>
-                  </div>
-                  <div class="row">
+
                     <div class="col-md-8">
-                      <input name="FNEXPENSES_TITLE"  id="FNEXPENSES_TITLE" type="text" class="form-control"
-                        placeholder="ชื่อโครงการ/ชื่อเรื่อง" [(ngModel)]="dataAdd.FNEXPENSES_TITLE">
-                        
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-heading text-success me-1"></i>ชื่อเรื่อง</label>
+                        <input name="FNEXPENSES_TITLE" id="FNEXPENSES_TITLE" type="text" class="form-control"
+                          placeholder="ระบุชื่อโครงการ/ชื่อเรื่อง" [(ngModel)]="dataAdd.FNEXPENSES_TITLE">
                     </div>
                     <div class="col-md-4">
-                      <input name="FNEXPENSES_CCDATE" id="FNEXPENSES_CCDATE" type="text" class="form-control"
-                        placeholder="วันที่ดำเนินการ" [(ngModel)]="dataAdd.FNEXPENSES_CCDATE">
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-calendar-day text-danger me-1"></i>วันที่ดำเนินการ</label>
+                        <input name="FNEXPENSES_CCDATE" id="FNEXPENSES_CCDATE" type="text" class="form-control"
+                          placeholder="ระบุวันที่ดำเนินการ" [(ngModel)]="dataAdd.FNEXPENSES_CCDATE">
                     </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" align="left">
-                  <div class="row">
-                    <div class="col-md-10 text-secondary" style="font-size: 10pt">ผู้รับเงิน/ร้านค้า</div>
-                  </div>
-                  <div class="row">
+
                     <div class="col-md-10">
-                      <input name="FNCREDITOR_CODE" type="hidden" id="FNCREDITOR_CODE"
-                        [(ngModel)]="dataAdd.FNCREDITOR_CODE" />
-                      <div class="ng-autocomplete">
-                        <ng-autocomplete style="width:100%;" [(ngModel)]="dataFAdd.FNCREDITOR_CODE1"
-                          [data]="datacomplete" [searchKeyword]="keyword" placeholder="ผู้รับเงิน/ร้านค้า"
-                          (selected)='selectEvent1($event)' (inputChanged)='onChangeSearch1($event)'
-                          [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
-                        </ng-autocomplete>
-                        <ng-template #itemTemplate let-item>
-                          <a [innerHTML]="item.name"></a>
-                        </ng-template>
-                        <ng-template #notFoundTemplate let-notFound>
-                          <div [innerHTML]="notFound"></div>
-                        </ng-template>
-                      </div>
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-shop text-primary me-1"></i>ผู้รับเงิน/ร้านค้า</label>
+                        <input name="FNCREDITOR_CODE" type="hidden" id="FNCREDITOR_CODE" [(ngModel)]="dataAdd.FNCREDITOR_CODE" />
+                        <div class="ng-autocomplete">
+                          <ng-autocomplete style="width:100%;" [(ngModel)]="dataFAdd.FNCREDITOR_CODE1"
+                            [data]="datacomplete" [searchKeyword]="keyword" placeholder="ระบุผู้รับเงิน/ร้านค้า"
+                            (selected)='selectEvent1($event)' (inputChanged)='onChangeSearch1($event)'
+                            [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                          </ng-autocomplete>
+                          <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.name"></a>
+                          </ng-template>
+                          <ng-template #notFoundTemplate let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                          </ng-template>
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                      <button type="submit" class="btn btn-success" id="submit" (click)="showapp()"><i
-                          class="fa fa-plus-circle"></i>&nbsp;ผู้รับเงิน/ร้านค้า</button>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-success w-100 shadow-sm" id="submit" (click)="showapp()">
+                            <i class="fa fa-plus-circle me-1"></i> ผู้รับเงิน/ร้านค้า
+                        </button>
                     </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td align="left">
-                  <div class="row">
-                    <div class="col-md-6 text-secondary" style="font-size: 10pt"> สาขา </div>
-                    <div class="col-md-6 text-secondary" style="font-size: 10pt">หลักสูตร </div>
-                  </div>
-                  <div class="row">
+
                     <div class="col-md-6">
-                      <select name="DEPARTMENT_CODE" id="DEPARTMENT_CODE" class="form-select"
-                        (change)="fetchdatalistsub()" [(ngModel)]="dataAdd.DEPARTMENT_CODE">
-                        <option [value]="de.DEPARTMENT_CODE" *ngFor="let de of dataEDepartment">
-                          {{de.DEPARTMENT_TNAME}}</option>
-                      </select>
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-code-branch text-success me-1"></i>สาขา</label>
+                        <select name="DEPARTMENT_CODE" id="DEPARTMENT_CODE" class="form-select"
+                          (change)="fetchdatalistsub()" [(ngModel)]="dataAdd.DEPARTMENT_CODE">
+                          <option [value]="de.DEPARTMENT_CODE" *ngFor="let de of dataEDepartment">{{de.DEPARTMENT_TNAME}}</option>
+                        </select>
                     </div>
                     <div class="col-md-6">
-                      <select name="SECTION_CODE" id="SECTION_CODE" class="form-select"
-                        [(ngModel)]="dataAdd.SECTION_CODE">
-                        <option [value]="sec.SECTION_CODE" *ngFor="let sec of dataESection">{{sec.SECTION_TNAME}}
-                        </option>
-                      </select>
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-graduation-cap text-warning me-1"></i>หลักสูตร</label>
+                        <select name="SECTION_CODE" id="SECTION_CODE" class="form-select" [(ngModel)]="dataAdd.SECTION_CODE">
+                          <option [value]="sec.SECTION_CODE" *ngFor="let sec of dataESection">{{sec.SECTION_TNAME}}</option>
+                        </select>
                     </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" align="left">
-                  <div class="row">
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> ขอเบิกเงินจำนวน </div>
-                    <div  class="col-md-3 text-secondary" style="font-size: 10pt">
-                      จำนวนเงินที่อนุมัติ </div>
-                    <div  class="col-md-3 text-secondary" style="font-size: 10pt">
-                      เงินผูกพัน </div>
-                    <div  class="col-md-3 text-secondary" style="font-size: 10pt">
-                      จำนวนเงินที่จ่ายจริง </div>
-                  </div>
-                  <div class="row">
+                </div>
+            </div>
+        </div>
+
+        <!-- Money Summary -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4 bg-light rounded">
+                <div class="row g-3">
                     <div class="col-md-3">
-                      <input name="FNEXPENSES_OMONEY" id="FNEXPENSES_OMONEY" type="text" class="form-control"
-                        placeholder="ขอเบิกเงินจำนวน " (keypress)="CheckNum($event)" style="font-size: 19pt; "
-                        [(ngModel)]="dataAdd.FNEXPENSES_OMONEY" disabled>
+                        <label class="form-label fw-bold text-secondary">ขอเบิกเงินจำนวน</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-money-bill-wave text-primary"></i></span>
+                            <input name="FNEXPENSES_OMONEY" id="FNEXPENSES_OMONEY" type="text" class="form-control text-end fw-bold"
+                              placeholder="0.00" (keypress)="CheckNum($event)" style="font-size: 16pt; background-color: #e9ecef;"
+                              [(ngModel)]="dataAdd.FNEXPENSES_OMONEY" disabled>
+                        </div>
                     </div>
-                    <div class="col-md-3" >
-                      <input name="FNEXPENSES_AMONEY" id="FNEXPENSES_AMONEY" type="text" class="form-control"
-                        placeholder="จำนวนที่อนุมัติ " (keypress)="CheckNum($event)" style="font-size: 19pt;"
-                        [(ngModel)]="dataAdd.FNEXPENSES_AMONEY" disabled>
-                      <input name="FNEXPENSES_SBMONEY" id="FNEXPENSES_SBMONEY" type="hidden" class="form-control"
-                        placeholder="จำนวนเงิน " disabled>
-                    </div>
-                    <div class="col-md-3" >
-                      <input name="FNEXPENSES_CMONEY" id="FNEXPENSES_CMONEY" type="text" class="form-control"
-                        placeholder="เงินผูกพัน " (keypress)="CheckNum($event)" style="font-size: 19pt;"
-                        [(ngModel)]="dataAdd.FNEXPENSES_CMONEY" disabled>
-                    </div>
-                    <div class="col-md-3" >
-                      <input name="FNEXPENSES_RMONEY" id="FNEXPENSES_RMONEY" type="text" class="form-control"
-                        placeholder="จำนวนที่จ่ายจริง " (keypress)="CheckNum($event)" style="font-size: 19pt; "
-                        [(ngModel)]="dataAdd.FNEXPENSES_RMONEY" disabled>
-                    </div>
-                  </div>
-                </td>
-  
-              </tr>
-              <tr>
-                <td colspan="2" align="left">
-                  <div class="row">
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> วันที่ขอเบิก </div>
-                    <div  class="col-md-3 text-secondary" style="font-size: 10pt">
-                      วันที่อนุมัติเงิน </div>
-                    <div  class="col-md-3 text-secondary" style="font-size: 10pt">
-                      วันที่ผูกพัน </div>
-                    <div  class="col-md-3 text-secondary" style="font-size: 10pt">
-                      วันที่ผ่านเอกสารเบิก </div>
-                  </div>
-                  <div class="row">
                     <div class="col-md-3">
-                      <input name="FNEXPENSES_CDATE" id="FNEXPENSES_CDATE" type="text" class="form-control" bsDatepicker
-                        #dp3="bsDatepicker" placeholder="วันที่อนุมัติเงิน " [(ngModel)]="dataAdd.FNEXPENSES_CDATE"
-                        readonly>
-                      <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
-                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp3.toggle()">
-                      </i>
+                        <label class="form-label fw-bold text-secondary">จำนวนเงินที่อนุมัติ</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-check-double text-success"></i></span>
+                            <input name="FNEXPENSES_AMONEY" id="FNEXPENSES_AMONEY" type="text" class="form-control text-end fw-bold"
+                              placeholder="0.00" (keypress)="CheckNum($event)" style="font-size: 16pt; background-color: #e9ecef;"
+                              [(ngModel)]="dataAdd.FNEXPENSES_AMONEY" disabled>
+                            <input name="FNEXPENSES_SBMONEY" id="FNEXPENSES_SBMONEY" type="hidden" class="form-control" disabled>
+                        </div>
                     </div>
-                    <div class="col-md-3" >
-                      <input name="FNEXPENSES_ADATE" id="FNEXPENSES_ADATE" type="text" class="form-control" bsDatepicker
-                        #dp4="bsDatepicker" placeholder="วันที่อนุมัติเงิน " [(ngModel)]="dataAdd.FNEXPENSES_ADATE"
-                        readonly>
-                      <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
-                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp4.toggle()">
-                      </i>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">เงินผูกพัน</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-link text-warning"></i></span>
+                            <input name="FNEXPENSES_CMONEY" id="FNEXPENSES_CMONEY" type="text" class="form-control text-end fw-bold"
+                              placeholder="0.00" (keypress)="CheckNum($event)" style="font-size: 16pt; background-color: #e9ecef;"
+                              [(ngModel)]="dataAdd.FNEXPENSES_CMONEY" disabled>
+                        </div>
                     </div>
-                    <div class="col-md-3" >
-                      <input name="FNEXPENSES_MDATE" id="FNEXPENSES_MDATE" type="text" class="form-control" bsDatepicker
-                        #dp5="bsDatepicker" placeholder="วันที่ผูกพัน "
-                        [(ngModel)]="dataAdd.FNEXPENSES_CMDATE" readonly>
-                      <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
-                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp5.toggle()">
-                      </i>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">จำนวนเงินที่จ่ายจริง</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-coins text-info"></i></span>
+                            <input name="FNEXPENSES_RMONEY" id="FNEXPENSES_RMONEY" type="text" class="form-control text-end fw-bold"
+                              placeholder="0.00" (keypress)="CheckNum($event)" style="font-size: 16pt; background-color: #e9ecef;"
+                              [(ngModel)]="dataAdd.FNEXPENSES_RMONEY" disabled>
+                        </div>
                     </div>
-                    <div class="col-md-3" >
-                      <input name="FNEXPENSES_MDATE" id="FNEXPENSES_MDATE" type="text" class="form-control" bsDatepicker
-                        #dp6="bsDatepicker" placeholder="วันที่ผ่านเอกสารเบิก "
-                        [(ngModel)]="dataAdd.FNEXPENSES_MDATE" readonly>
-                      <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
-                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp6.toggle()">
-                      </i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dates Section -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">วันที่ขอเบิก</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-calendar-day text-primary"></i></span>
+                            <input name="FNEXPENSES_CDATE" id="FNEXPENSES_CDATE" type="text" class="form-control" bsDatepicker
+                              #dp3="bsDatepicker" placeholder="เลือกวันที่" [(ngModel)]="dataAdd.FNEXPENSES_CDATE" readonly container="body">
+                            <button class="btn btn-outline-secondary" type="button" (click)="dataAdd.FNEXPENSES_CDATE = null" title="ล้างวันที่">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <button class="btn btn-outline-primary" type="button" (click)="dp3.toggle()">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </button>
+                        </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" align="left">
-                  <div class="row">
-                    <div class="col-md-12 text-secondary" style="font-size: 10pt">หมายเหตุ</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <input name="FNEXPENSES_EXTEND" id="FNEXPENSES_EXTEND" type="text" class="form-control"
-                        placeholder="หมายเหตุ " [(ngModel)]="dataAdd.FNEXPENSES_EXTEND">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">วันที่อนุมัติเงิน</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-calendar-day text-success"></i></span>
+                            <input name="FNEXPENSES_ADATE" id="FNEXPENSES_ADATE" type="text" class="form-control" bsDatepicker
+                              #dp4="bsDatepicker" placeholder="เลือกวันที่" [(ngModel)]="dataAdd.FNEXPENSES_ADATE" readonly container="body">
+                            <button class="btn btn-outline-secondary" type="button" (click)="dataAdd.FNEXPENSES_ADATE = null" title="ล้างวันที่">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <button class="btn btn-outline-primary" type="button" (click)="dp4.toggle()">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </button>
+                        </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" align="left">
-                  <div class="row" >
-                    <div class="col-md-6 text-secondary" style="font-size: 10pt">บัญชีแยกประเภท </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <table width="100%" id="table2" >
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">วันที่ผูกพัน</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-calendar-day text-warning"></i></span>
+                            <input name="FNEXPENSES_MDATE" id="FNEXPENSES_MDATE" type="text" class="form-control" bsDatepicker
+                              #dp5="bsDatepicker" placeholder="เลือกวันที่" [(ngModel)]="dataAdd.FNEXPENSES_CMDATE" readonly container="body">
+                            <button class="btn btn-outline-secondary" type="button" (click)="dataAdd.FNEXPENSES_CMDATE = null" title="ล้างวันที่">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <button class="btn btn-outline-primary" type="button" (click)="dp5.toggle()">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold text-secondary">วันที่ผ่านเอกสารเบิก</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-calendar-day text-info"></i></span>
+                            <input name="FNEXPENSES_MDATE" id="FNEXPENSES_MDATE_DOC" type="text" class="form-control" bsDatepicker
+                              #dp6="bsDatepicker" placeholder="เลือกวันที่" [(ngModel)]="dataAdd.FNEXPENSES_MDATE" readonly container="body">
+                            <button class="btn btn-outline-secondary" type="button" (click)="dataAdd.FNEXPENSES_MDATE = null" title="ล้างวันที่">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <button class="btn btn-outline-primary" type="button" (click)="dp6.toggle()">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12 mt-3">
+                        <label class="form-label fw-bold text-secondary"><i class="fa-solid fa-comment-dots text-secondary me-1"></i>หมายเหตุ</label>
+                        <input name="FNEXPENSES_EXTEND" id="FNEXPENSES_EXTEND" type="text" class="form-control"
+                          placeholder="ระบุหมายเหตุเพิ่มเติม" [(ngModel)]="dataAdd.FNEXPENSES_EXTEND">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- บัญชีแยกประเภท Section -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom">
+                <h6 class="mb-0 fw-bold text-primary"><i class="fa-solid fa-list me-2"></i>บัญชีแยกประเภท</h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-striped align-middle mb-0" id="table2">
                         <tbody>
-                          <tr *ngFor="let p of number;let i = index">
-                            <td width="30%">
-                              <input name="FRACCCODEC" type="hidden" id="FRACCCODEC"
-                              [(ngModel)]="dataAdd.FRACCCODE[i]" />
-                            <div class="ng-autocomplete">
-                              <ng-autocomplete [(ngModel)]="dataAdd.FRACC1[i]" [data]="datacomplete"
-                                [searchKeyword]="keyword" placeholder="เลขบัญชีแยกประเภท {{i+1}} "
-                                (selected)='selectEvent($event,i)' (inputChanged)='onChangeSearch($event)'
-                                [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate" >
-                              </ng-autocomplete>
-                              <ng-template #itemTemplate let-item>
-                                <a [innerHTML]="item.name"></a>
-                              </ng-template>
-                              <ng-template #notFoundTemplate let-notFound>
-                                <div [innerHTML]="notFound"></div>
-                              </ng-template>
-                            </div>
-                              <input type="hidden" name="fneacc[0]" class="form-control"
-                                [(ngModel)]="dataAdd.FNEXACCCODE[i]">
-                            </td>
-                            <td width="10%" align="right">
-                              <select name="FNEXACREGIS_TYPE" id="FNEXACREGIS_TYPE" class="form-select"
-                                [(ngModel)]="dataAdd.FNEXACC_TYPE[i]" >
-                                <option value="">ประเภทเอกสาร</option>
-                                <option [value]="type.TYPE_CODE" *ngFor="let type of dataType">{{type.TYPE_CODE}}
-                                </option>
-                              </select>
-                            </td>
-                            <td width="10%" align="right"><input placeholder="เลขเอกสาร" type="text" name="FNEXACC_NUMBER[0]"
-                                class="form-control" [(ngModel)]="dataAdd.FNEXACC_NUMBER[i]" ></td> 
-                            <td width="15%"><input placeholder="วันที่ผ่านรายการจ่าย" type="text" name="fneacc[0]" class="form-control" bsDatepicker
-                                #dp="bsDatepicker" [(ngModel)]="dataAdd.FNEXACCRDATE[i]" readonly >
-                              <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
-                                class="fa fa-calendar text-primary"></i>
-                            </td>
-                            <td width="15%"><input type="text" name="fneacc[0]" class="form-control" placeholder="เลขฎีกา"
-                                [(ngModel)]="dataAdd.FNEXACCDEKA[i]" ></td>
-                            <td width="20%" align="right"><input type="text" name="frm" class="form-control"
-                                [(ngModel)]="dataAdd.FNEXACCMONEY[i]" 
-                                placeholder="จำนวนเงิน" (keyup)="sumdatafr()" ></td>
-                          </tr>
+                            <tr *ngFor="let p of number;let i = index">
+                                <td width="25%" class="px-3">
+                                  <input name="FRACCCODEC" type="hidden" id="FRACCCODEC" [(ngModel)]="dataAdd.FRACCCODE[i]" />
+                                  <div class="ng-autocomplete">
+                                      <ng-autocomplete [(ngModel)]="dataAdd.FRACC1[i]" [data]="datacomplete"
+                                        [searchKeyword]="keyword" placeholder="เลขบัญชีแยกประเภท {{i+1}}"
+                                        (selected)='selectEvent($event,i)' (inputChanged)='onChangeSearch($event)'
+                                        [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                                      </ng-autocomplete>
+                                      <ng-template #itemTemplate let-item>
+                                        <a [innerHTML]="item.name"></a>
+                                      </ng-template>
+                                      <ng-template #notFoundTemplate let-notFound>
+                                        <div [innerHTML]="notFound"></div>
+                                      </ng-template>
+                                  </div>
+                                  <input type="hidden" name="fneacc[0]" class="form-control" [(ngModel)]="dataAdd.FNEXACCCODE[i]">
+                                </td>
+                                <td width="14%">
+                                  <select name="FNEXACREGIS_TYPE" id="FNEXACREGIS_TYPE" class="form-select"
+                                    [(ngModel)]="dataAdd.FNEXACC_TYPE[i]">
+                                    <option value="">ประเภทเอกสาร</option>
+                                    <option [value]="type.TYPE_CODE" *ngFor="let type of dataType">{{type.TYPE_CODE}}</option>
+                                  </select>
+                                </td>
+                                <td width="14%">
+                                    <input placeholder="เลขเอกสาร" type="text" name="FNEXACC_NUMBER[0]"
+                                    class="form-control" [(ngModel)]="dataAdd.FNEXACC_NUMBER[i]">
+                                </td> 
+                                <td width="15%">
+                                    <div class="input-group">
+                                        <input placeholder="วันที่" type="text" name="fneacc[0]" class="form-control form-control-sm" bsDatepicker
+                                            #dp="bsDatepicker" [(ngModel)]="dataAdd.FNEXACCRDATE[i]" readonly container="body">
+                                        <button class="btn btn-outline-primary btn-sm" type="button" (click)="dp.toggle()">
+                                            <i class="fa-solid fa-calendar-days"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td width="12%">
+                                    <input type="text" name="fneacc[0]" class="form-control" placeholder="เลขฎีกา"
+                                    [(ngModel)]="dataAdd.FNEXACCDEKA[i]">
+                                </td>
+                                <td width="20%" class="pe-3">
+                                    <div class="input-group">
+                                        <input type="text" name="frm" class="form-control text-end"
+                                        [(ngModel)]="dataAdd.FNEXACCMONEY[i]" placeholder="0.00" (keyup)="sumdatafr()">
+                                        <span class="input-group-text bg-white">บาท</span>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
-                      </table>
-  
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <br><br><br><br>
-  
-  
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-          <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                      (click)="insertdata()">บันทึกข้อมูล</button>
-                  <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
-        </div>
+
+      </div>
+      <div class="modal-footer bg-light border-0 pb-4 pe-4" style="border-radius: 0 0 0.3rem 0.3rem;">
+        <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">
+            <i class="fa-solid fa-xmark me-1"></i> ปิด
+        </button>
+        <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 rounded-pill shadow-sm" (click)="insertdata()">
+            <i class="fa-solid fa-floppy-disk me-1"></i> บันทึกข้อมูล
+        </button>
+        <button *ngIf="rowpbu" type="button" class="btn btn-warning text-white px-4 rounded-pill shadow-sm" (click)="updatedata()">
+            <i class="fa-solid fa-pen-to-square me-1"></i> แก้ไขข้อมูล
+        </button>
       </div>
     </div>
   </div>
+</div>

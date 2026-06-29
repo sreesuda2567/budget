@@ -6,6 +6,7 @@ import {
   ViewChild,
   ChangeDetectorRef
 } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PDFDocument } from 'pdf-lib';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
@@ -56,6 +57,8 @@ title = 'angular-app';
   rowpbi: any;
   rowpbu: any;
   file: any;
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -66,7 +69,8 @@ title = 'angular-app';
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -373,5 +377,14 @@ fetchdata() {
     } catch (error) {
       console.error('Error counting PDF pages for URL:', url, error);
     }
+  }
+
+  previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
   }
 }

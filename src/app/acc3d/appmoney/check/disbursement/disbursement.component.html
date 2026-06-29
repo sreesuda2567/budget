@@ -142,17 +142,20 @@
                     <td align="center" data-label="ประมาณการ:">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
                     <td data-label="รายงาน:">
                         <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2">
-                            <a role="button" title="รายงานใบเบิกค่าใช้จ่าย"
-                                class="btn btn-secondary text-white" (click)="previewPdf(p.linkclear)"><i
-                                    class="fa-solid fa-file-contract"></i></a>
-                            <span *ngIf="p.linkclear_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                            <a role="button" title="รายงานใบเบิกค่าใช้จ่าย" class="btn btn-secondary text-white"
+                                (click)="previewPdf(p.linkclear)"><i class="fa-solid fa-file-contract"></i></a>
+                            <span *ngIf="p.linkclear_pages"
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                style="font-size: 0.65rem; z-index: 10;">
                                 {{p.linkclear_pages}}
                             </span>
                         </span>
                         <span *ngIf="p.linkreport" class="position-relative d-inline-block">
                             <a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
                                 (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
-                            <span *ngIf="p.linkreport_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                            <span *ngIf="p.linkreport_pages"
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                style="font-size: 0.65rem; z-index: 10;">
                                 {{p.linkreport_pages}}
                             </span>
                         </span>
@@ -161,9 +164,9 @@
                         <a *ngIf="p.linkclear" role="button" title="ลงนาม" class="btn btn-info text-white"
                             (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
                             </i></a> &nbsp;
-                        <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white" id="submitupdate"
-                            data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
+                        <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white"
+                            id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear)"
                             (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
                         <a *ngIf="p.linkreport" role="button" title="รวมไฟล์ส่งสารบรรณ"
                             class="btn btn-secondary text-white"
@@ -244,20 +247,24 @@
                             (click)="fetchdataloadshow(p.FNANNALSMAP_CODE)">
                             <i class="fa-solid fa-eye"></i></button>
                         &nbsp;
-                        <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><button role="button" title="รายงานใบปะหน้า"
-                                class="btn btn-success text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
-                                    class="fa-solid fa-file-contract"></i></button>
-                            <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                        <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><button
+                                role="button" title="รายงานใบปะหน้า" class="btn btn-success text-white"
+                                (click)="previewPdf(p.CONTRACT_LINK)"><i class="fa-solid fa-file-contract"></i></button>
+                            <span *ngIf="p.CONTRACT_LINK_pages"
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                style="font-size: 0.65rem; z-index: 10;">
                                 {{p.CONTRACT_LINK_pages}}
                             </span>
-                            </span>
-                        <span *ngIf="p.correct" class="position-relative d-inline-block me-2"><button role="button" title="รายงานใบปะหน้า(แก้ไข)"
-                                class="btn btn-danger text-white" (click)="previewPdf(p.correct)"><i
-                                    class="fa-solid fa-file-contract"></i></button>
-                            <span *ngIf="p.correct_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                        </span>
+                        <span *ngIf="p.correct" class="position-relative d-inline-block me-2"><button role="button"
+                                title="รายงานใบปะหน้า(แก้ไข)" class="btn btn-danger text-white"
+                                (click)="previewPdf(p.correct)"><i class="fa-solid fa-file-contract"></i></button>
+                            <span *ngIf="p.correct_pages"
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                style="font-size: 0.65rem; z-index: 10;">
                                 {{p.correct_pages}}
                             </span>
-                            </span>
+                        </span>
                     </td>
                     <td align="center" data-label="เลือก:">
                         <!-- <button type="submit" title="สถานะใบเสร็จ" class="btn btn-secondary" id="submitupdate"
@@ -267,32 +274,35 @@
                                 class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;-->
                         <span *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'">
                             <span class="position-relative d-inline-block me-2">
-                                <a role="button" title="รายงานใบเบิกค่าใช้จ่าย"
-                                    class="btn btn-secondary text-white" (click)="previewPdf(p.linkclear)"><i
-                                        class="fa-solid fa-file-contract"></i></a>
-                                <span *ngIf="p.linkclear_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                <a role="button" title="รายงานใบเบิกค่าใช้จ่าย" class="btn btn-secondary text-white"
+                                    (click)="previewPdf(p.linkclear)"><i class="fa-solid fa-file-contract"></i></a>
+                                <span *ngIf="p.linkclear_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
                                     {{p.linkclear_pages}}
                                 </span>
                             </span>
                             <span class="position-relative d-inline-block me-2">
                                 <a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
                                     (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
-                                <span *ngIf="p.linkreport_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                <span *ngIf="p.linkreport_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
                                     {{p.linkreport_pages}}
                                 </span>
                             </span>
-                         <a    role="button" title="รวมไฟล์ส่งสารบรรณ"
-                            class="btn btn-secondary text-white"
-                            (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
-                                class="fa-solid fa-file-arrow-up"></i>
-                        </a>&nbsp;  </span>  
+                            <a role="button" title="รวมไฟล์ส่งสารบรรณ" class="btn btn-secondary text-white"
+                                (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
+                                    class="fa-solid fa-file-arrow-up"></i>
+                            </a>&nbsp; </span>
                         <button type="submit" *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'"
                             title="ใบเบิก" class="btn btn-success text-white" id="submitupdate" data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
-                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
+                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear)"
                             (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
-                        <button *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' || dataAdd.PRIVILEGE_RSTATUS=='A' " type="submit"
-                            class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                        <button
+                            *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' || dataAdd.PRIVILEGE_RSTATUS=='A' "
+                            type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
                             (click)="editdatapp(p.FNANNALSMAP_CODE,p.CONTRACT_LINK,p.CITIZEN_IDB,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALS_MONEYC,p.FNANNALSMAP_STATUS,p.FNRESTATUS_CODE)"><i
                                 class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
@@ -310,34 +320,41 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
-    aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static"
+    data-bs-keyboard="false" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content shadow-lg border-0 rounded-3">
             <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
-                <h5 class="modal-title fw-bold" id="exampleModalToggleLabel"><i class="fa-solid fa-file-invoice me-2"></i>ตรวจสอบหลักฐานการเบิกจ่าย</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold" id="exampleModalToggleLabel"><i
+                        class="fa-solid fa-file-invoice me-2"></i>ตรวจสอบหลักฐานการเบิกจ่าย</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 bg-light">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body bg-white rounded-3 p-4">
                         <div class="row g-4">
                             <div class="col-md-9">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-money-bill-wave me-1"></i>ประเภทเงิน</label>
-                                <select name="f_code" id="f_code" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.FNANNALSMAP_RSTATUS">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-money-bill-wave me-1"></i>ประเภทเงิน</label>
+                                <select name="f_code" id="f_code" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.FNANNALSMAP_RSTATUS">
                                     <option value="3">ใช้เงินทดรองจ่าย</option>
                                     <option value="6">ใช้เงินอื่นๆ</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-coins me-1"></i>จำนวนเงิน</label>
-                                <input type="text" name="FNANNALS_MONEYC" class="form-control form-control-lg fs-6" id="FNANNALS_MONEYC"
-                                    placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNANNALS_MONEYC">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-coins me-1"></i>จำนวนเงิน</label>
+                                <input type="text" name="FNANNALS_MONEYC" class="form-control form-control-lg fs-6"
+                                    id="FNANNALS_MONEYC" placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNANNALS_MONEYC">
                             </div>
 
                             <div *ngIf="dataAdd.FNANNALSMAP_RSTATUS=='3'" class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-user-pen me-1"></i>ผู้เสนอเขียนเช็ค</label>
-                                <select name="f_code_chk" id="f_code_chk" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDB">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-user-pen me-1"></i>ผู้เสนอเขียนเช็ค</label>
+                                <select name="f_code_chk" id="f_code_chk" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.CITIZEN_IDB">
                                     <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
                                         {{name.STF_FNAME}}
                                     </option>
@@ -345,28 +362,37 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-user-tie me-1"></i>เรียน</label>
-                                <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CHIEF_CODE">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-user-tie me-1"></i>เรียน</label>
+                                <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.CHIEF_CODE">
                                     <option value="">กรุณาเลือก</option>
-                                    <option [value]="fac.CHIEF_CODE" *ngFor="let fac of datachief">{{fac.CHIEF_NAME2}}</option>
+                                    <option [value]="fac.CHIEF_CODE" *ngFor="let fac of datachief">{{fac.CHIEF_NAME2}}
+                                    </option>
                                 </select>
                             </div>
 
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-envelope-open-text me-1"></i>ส่งเข้าสารบรรณ</label>
-                                <select name="EBOOKTYPE_CODE" id="EBOOKTYPE_CODE" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.DEPARTMENT_CODE">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-envelope-open-text me-1"></i>ส่งเข้าสารบรรณ</label>
+                                <select name="EBOOKTYPE_CODE" id="EBOOKTYPE_CODE"
+                                    class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.DEPARTMENT_CODE">
                                     <option value="">กรุณาเลือก</option>
-                                    <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}</option>
+                                    <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}
+                                    </option>
                                 </select>
                             </div>
 
                             <div class="col-md-9">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-paperclip me-1"></i>แนบไฟล์เอกสาร</label>
-                                <input class="form-control form-control-lg fs-6" type="file" (change)="onChangepdf($event)"
-                                    [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-paperclip me-1"></i>แนบไฟล์เอกสาร</label>
+                                <input class="form-control form-control-lg fs-6" type="file"
+                                    (change)="onChangepdf($event)" [(ngModel)]="dataAdd.EBOOKREQ_FILE"
+                                    accept="application/pdf" />
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-bold text-secondary mb-2" *ngIf="dataAdd.EBOOKREQ_LINK"><i class="fa-solid fa-file-pdf me-1"></i>ไฟล์</label>
+                                <label class="form-label fw-bold text-secondary mb-2" *ngIf="dataAdd.EBOOKREQ_LINK"><i
+                                        class="fa-solid fa-file-pdf me-1"></i>ไฟล์</label>
                                 <br>
                                 <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank">
                                     <i class="fa-solid fa-file-pdf" style="color: green; font-size: 30px;"></i>
@@ -374,7 +400,8 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-receipt me-1"></i>รายละเอียดใบเสร็จ</label>
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-receipt me-1"></i>รายละเอียดใบเสร็จ</label>
                                 <div *ngFor="let detail of dataReceiptdetail" class="mb-2 text-primary fw-bold">
                                     {{detail.FNREDT_NAME}}
                                 </div>
@@ -393,13 +420,16 @@
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
-                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+                    data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-1"></i> ปิด
                 </button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertdata()">
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm"
+                    (click)="insertdata()">
                     <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
                 </button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm"
+                    (click)="updatedata()">
                     <i class="fa-solid fa-save me-1"></i> แก้ไขข้อมูล
                 </button>
             </div>
@@ -408,11 +438,12 @@
 </div>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" data-bs-backdrop="static"
-    aria-labelledby="offcanvasRightLabel" [style.width]="pdfUrlToView ? '90vw' : '400px'" style="transition: width 0.3s ease;">
+    aria-labelledby="offcanvasRightLabel" [style.width]="pdfUrlToView ? '90vw' : '400px'"
+    style="transition: width 0.3s ease;">
     <div class="offcanvas-header bg-primary text-white">
         <h5 id="offcanvasRightLabel">สถานะดำเนินการ</h5>
-        <button type="button" class="btn-close text-reset bg-white" data-bs-dismiss="offcanvas"
-            aria-label="Close" (click)="pdfUrlToView = null"></button>
+        <button type="button" class="btn-close text-reset bg-white" data-bs-dismiss="offcanvas" aria-label="Close"
+            (click)="pdfUrlToView = null"></button>
     </div>
     <div class="offcanvas-body p-0">
         <div class="row m-0 h-100">
@@ -421,8 +452,10 @@
                 <div class="p-2 d-flex justify-content-between align-items-center bg-white">
                     <span class="fw-bold"><i class="fa-solid fa-file-pdf text-danger"></i> ดูเอกสาร</span>
                     <div>
-                        <a [href]="pdfUrlToView" target="_blank" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-external-link-alt"></i></a>
-                        <button type="button" class="btn btn-outline-secondary btn-sm ms-1" (click)="pdfUrlToView = null"><i class="fa-solid fa-times"></i></button>
+                        <a [href]="pdfUrlToView" target="_blank" class="btn btn-outline-primary btn-sm"><i
+                                class="fa-solid fa-external-link-alt"></i></a>
+                        <button type="button" class="btn btn-outline-secondary btn-sm ms-1"
+                            (click)="pdfUrlToView = null"><i class="fa-solid fa-times"></i></button>
                     </div>
                 </div>
                 <div class="flex-grow-1">
@@ -444,8 +477,7 @@
                         </p>
                         <p *ngIf="item.FNANNALSSEQ_LINK" class="text-muted">
                             ไฟล์ : <button type="button" class="btn btn-success"
-                                (click)="exportpdf(item.FNANNALSSEQ_LINK)"><i
-                                    class="fa-solid fa-file-pdf"></i></button>
+                                (click)="exportpdf(item.FNANNALSSEQ_LINK)"><i class="fa-solid fa-file-pdf"></i></button>
                         </p>
                         <p *ngIf="item.FNANNALSSEQ_DETAIL" class="text-muted">
                             หมายเหตุ : {{item.FNANNALSSEQ_DETAIL}}
@@ -457,25 +489,28 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" id="modalEditreceipt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="modalEditreceipt" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content shadow-lg border-0 rounded-3">
             <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
-                <h5 class="modal-title fw-bold" id="staticBackdropLabel"><i class="fa-solid fa-file-invoice me-2"></i>สถานะใบเสร็จ</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold" id="staticBackdropLabel"><i
+                        class="fa-solid fa-file-invoice me-2"></i>สถานะใบเสร็จ</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 bg-light">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body bg-white rounded-3 p-4">
                         <div class="row g-4">
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-receipt me-1"></i>รายละเอียดใบเสร็จ</label>
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-receipt me-1"></i>รายละเอียดใบเสร็จ</label>
                                 <div *ngFor="let detail of dataReceiptdetail" class="mb-2 text-primary fw-bold">
                                     {{detail.FNREDT_NAME}}
                                 </div>
                             </div>
-                            
+
                             <div *ngIf="dataAdd.FNRESTATUS==2" class="col-md-12">
                                 <div class="d-flex flex-column gap-2 mt-2">
                                     <div class="form-check" *ngFor="let type of datareceipt; let r2 = index">
@@ -487,24 +522,29 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-comment-dots me-1"></i>หมายเหตุ</label>
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-comment-dots me-1"></i>หมายเหตุ</label>
                                 <textarea id="FNEXACCTD_NOTE" name="FNEXACCTD_NOTE" [(ngModel)]="dataAdd.FNEXACCTD_NOTE"
-                                    rows="4" class="form-control bg-light border-0" placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
+                                    rows="4" class="form-control bg-light border-0"
+                                    placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
-                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+                    data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-1"></i> ปิด
                 </button>
-                <button *ngIf="dataAdd.FNRESTATUS==2" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatereceipt()">
+                <button *ngIf="dataAdd.FNRESTATUS==2" type="button"
+                    class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatereceipt()">
                     <i class="fa-solid fa-save me-1"></i> บันทึก
                 </button>
-                <button *ngIf="dataAdd.FNRESTATUS==1 || dataAdd.FNRESTATUS==2" type="button" class="btn btn-danger px-4 fw-bold rounded-pill shadow-sm" (click)="sendemail()">
+                <button *ngIf="dataAdd.FNRESTATUS==1 || dataAdd.FNRESTATUS==2" type="button"
+                    class="btn btn-danger px-4 fw-bold rounded-pill shadow-sm" (click)="sendemail()">
                     <i class="fa-solid fa-envelope me-1"></i> ส่งอีเมล
                 </button>
             </div>
@@ -533,33 +573,42 @@
     </div>
 </div>
 <!-- The Modal -->
-<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl modal-xxl">
         <div class="modal-content shadow-lg border-0 rounded-3">
             <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
-                <h5 class="modal-title fw-bold" id="exampleModalLabel"><i class="fa-solid fa-file-invoice me-2"></i>ใบปะหน้าเบิก</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold" id="exampleModalLabel"><i
+                        class="fa-solid fa-file-invoice me-2"></i>ใบปะหน้าเบิก</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 bg-light">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body bg-white rounded-3 p-4">
                         <div class="row g-4">
                             <div class="col-md-9">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-money-bill-wave me-1"></i>ประเภทเงิน</label>
-                                <select name="f_code_type" id="f_code_type" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.FNANNALSMAP_RSTATUS">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-money-bill-wave me-1"></i>ประเภทเงิน</label>
+                                <select name="f_code_type" id="f_code_type" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.FNANNALSMAP_RSTATUS">
                                     <option value="3">ใช้เงินทดรองจ่าย</option>
                                     <option value="6">ใช้เงินอื่นๆ</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-coins me-1"></i>จำนวนเงิน</label>
-                                <input type="text" name="FNANNALS_MONEYC_MAIN" class="form-control form-control-lg fs-6" id="FNANNALS_MONEYC_MAIN"
-                                    placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNANNALS_MONEYC">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-coins me-1"></i>จำนวนเงิน</label>
+                                <input type="text" name="FNANNALS_MONEYC_MAIN" class="form-control form-control-lg fs-6"
+                                    id="FNANNALS_MONEYC_MAIN" placeholder="จำนวนเงิน"
+                                    [(ngModel)]="dataAdd.FNANNALS_MONEYC">
                             </div>
 
                             <div *ngIf="dataAdd.FNANNALSMAP_RSTATUS=='3'" class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-user-pen me-1"></i>ผู้เสนอเขียนเช็ค</label>
-                                <select name="f_code_chk_main" id="f_code_chk_main" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDB">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-user-pen me-1"></i>ผู้เสนอเขียนเช็ค</label>
+                                <select name="f_code_chk_main" id="f_code_chk_main"
+                                    class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDB">
                                     <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
                                         {{name.STF_FNAME}}
                                     </option>
@@ -567,40 +616,52 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-user-tie me-1"></i>เรียน</label>
-                                <select name="CHIEF_CODE_MAIN" id="CHIEF_CODE_MAIN" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CHIEF_CODE">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-user-tie me-1"></i>เรียน</label>
+                                <select name="CHIEF_CODE_MAIN" id="CHIEF_CODE_MAIN"
+                                    class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CHIEF_CODE">
                                     <option value="">กรุณาเลือก</option>
-                                    <option [value]="fac.CHIEF_CODE" *ngFor="let fac of datachief">{{fac.CHIEF_NAME2}}</option>
+                                    <option [value]="fac.CHIEF_CODE" *ngFor="let fac of datachief">{{fac.CHIEF_NAME2}}
+                                    </option>
                                 </select>
                             </div>
 
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-envelope-open-text me-1"></i>ส่งเข้าสารบรรณ</label>
-                                <select name="EBOOKTYPE_CODE_MAIN" id="EBOOKTYPE_CODE_MAIN" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.DEPARTMENT_CODE">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-envelope-open-text me-1"></i>ส่งเข้าสารบรรณ</label>
+                                <select name="EBOOKTYPE_CODE_MAIN" id="EBOOKTYPE_CODE_MAIN"
+                                    class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.DEPARTMENT_CODE">
                                     <option value="">กรุณาเลือก</option>
-                                    <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}</option>
+                                    <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}
+                                    </option>
                                 </select>
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-sack-dollar me-1"></i>ประเภทเงิน (PLINCOME)</label>
-                                <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PLINCOME_CODE">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-sack-dollar me-1"></i>ประเภทเงิน (PLINCOME)</label>
+                                <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.PLINCOME_CODE">
                                     <option [value]="item.PLINCOME_CODE" *ngFor="let item of dataIncome">
                                         {{item.PLINCOME_NAME}}
                                     </option>
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-box-open me-1"></i>ผลผลิต</label>
-                                <select name="PLGPRODUCT_CODE" id="PLGPRODUCT_CODE" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-box-open me-1"></i>ผลผลิต</label>
+                                <select name="PLGPRODUCT_CODE" id="PLGPRODUCT_CODE"
+                                    class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
                                     <option [value]="item.PLGPRODUCT_CODE" *ngFor="let item of dataProduct">
                                         {{item.PLGPRODUCT_SHORTNAME}}
                                     </option>
                                 </select>
                             </div>
                             <div *ngIf="dataAdd.FNANNALSMAP_RSTATUS=='6'" class="col-md-4">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-building me-1"></i>หน่วยเบิกจ่าย</label>
-                                <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CAMPUS_CODE">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-building me-1"></i>หน่วยเบิกจ่าย</label>
+                                <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.CAMPUS_CODE">
                                     <option [value]="item.CAMPUS_CODE" *ngFor="let item of datacampus">
                                         {{item.CAMPUS_TNAME}}
                                     </option>
@@ -608,36 +669,44 @@
                             </div>
 
                             <div class="col-md-3">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 1</label>
-                                <select name="f_code_p1" id="f_code_p1" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDP1">
-                                    <option value="" >--เลือก--</option>
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 1</label>
+                                <select name="f_code_p1" id="f_code_p1" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.CITIZEN_IDP1">
+                                    <option value="">--เลือก--</option>
                                     <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                         {{name.STF_FNAME}}
                                     </option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 2</label>
-                                <select name="f_code_p2" id="f_code_p2" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDP2">
-                                    <option value="" >--เลือก--</option>
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 2</label>
+                                <select name="f_code_p2" id="f_code_p2" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.CITIZEN_IDP2">
+                                    <option value="">--เลือก--</option>
                                     <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                         {{name.STF_FNAME}}
                                     </option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 3</label>
-                                <select name="f_code_p3" id="f_code_p3" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDP3">
-                                    <option value="" >--เลือก--</option>
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 3</label>
+                                <select name="f_code_p3" id="f_code_p3" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.CITIZEN_IDP3">
+                                    <option value="">--เลือก--</option>
                                     <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                         {{name.STF_FNAME}}
                                     </option>
                                 </select>
                             </div>
                             <div *ngIf="dataAdd.FNANNALSMAP_RSTATUS=='6'" class="col-md-3">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 4</label>
-                                <select name="f_code_p4" id="f_code_p4" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDP4">
-                                    <option value="" >--เลือก--</option>
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 4</label>
+                                <select name="f_code_p4" id="f_code_p4" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.CITIZEN_IDP4">
+                                    <option value="">--เลือก--</option>
                                     <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                         {{name.STF_FNAME}}
                                     </option>
@@ -646,10 +715,19 @@
                         </div>
 
                         <hr class="my-4">
-                        <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-list-ol me-2 text-primary"></i>บัญชีแยกประเภท</h6>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold text-dark mb-0"><i
+                                    class="fa-solid fa-list-ol me-2 text-primary"></i>บัญชีแยกประเภท</h6>
+                            <a *ngIf="dataAdd.linkclear" role="button"
+                                class="text-danger fw-bold text-decoration-underline"
+                                (click)="previewPdf(dataAdd.linkclear)" style="cursor: pointer;">
+                                <i class="fa-solid fa-file-pdf me-1"></i>ใบเบิก
+                            </a>
+                        </div>
                         <div class="row g-3 align-items-center mb-3" *ngFor="let i of number;">
                             <div class="col-md-8">
-                                <select name="SECTION_CODE_{{i}}" id="SECTION_CODE_{{i}}" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.FRACCCODE[i]">
+                                <select name="SECTION_CODE_{{i}}" id="SECTION_CODE_{{i}}"
+                                    class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.FRACCCODE[i]">
                                     <option [value]=""></option>
                                     <option [value]="sec.FRACC_CODE" *ngFor="let sec of dataAcc">
                                         {{sec.FRACC_TNAME}}-->{{sec.FRACC_CODE}}
@@ -657,20 +735,40 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <input type="number" class="form-control form-control-lg fs-6" placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FRACCMONEY[i]">
+                                <input type="number" class="form-control form-control-lg fs-6" placeholder="จำนวนเงิน"
+                                    [(ngModel)]="dataAdd.FRACCMONEY[i]">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold text-secondary mb-2"><i
+                                    class="fa-solid fa-receipt me-1"></i>รายละเอียดใบเสร็จ</label>
+                            <div *ngFor="let detail of dataReceiptdetail" class="mb-2 text-primary fw-bold">
+                                {{detail.FNREDT_NAME}}
+                            </div>
+                            <div class="d-flex flex-column gap-2 mt-2">
+                                <div class="form-check" *ngFor="let type of datareceipt; let r = index">
+                                    <input class="form-check-input" name="p_radio" id="radio_{{r}}" type="radio"
+                                        value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE">
+                                    <label class="form-check-label" for="radio_{{r}}">
+                                        {{type.FNRESTATUS_NAME}}
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
-                <button id="ModalCloseb" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                <button id="ModalCloseb" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+                    data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-1"></i> ปิด
                 </button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertdataapp()">
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm"
+                    (click)="insertdataapp()">
                     <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
                 </button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm"
+                    (click)="updatedata()">
                     <i class="fa-solid fa-save me-1"></i> แก้ไขข้อมูล
                 </button>
             </div>

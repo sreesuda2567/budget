@@ -11,6 +11,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
 import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-approveacc',
@@ -285,7 +286,6 @@ export class ApproveaccComponent implements OnInit {
       });
   }
   submitData(status: any) {
-    this.loading = true;
     this.dataAdd.opt = 'UPDATE';
     this.dataAdd.STATUS = status;
     let num = 0;
@@ -297,20 +297,30 @@ export class ApproveaccComponent implements OnInit {
     }
     //console.log(this.dataAdd.check);
     if (num == 0) {
-      this.loading = null;
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูลรายการที่อนุมัติ");
     } else {
-      this.apiService
-        .getdata(this.dataAdd, this.url)
-        .pipe(first())
-        .subscribe(
-          (data: any) => {
-            if (data.status == '1') {
-              this.loading = null;
-              this.toastr.success("แจ้งเตือน:อนุมัติข้อมูลเรียบร้อย ");
-              this.fetchdatalist();
-            }
-          });
+      Swal.fire({
+        title: 'คุณต้องการอนุมัติข้อมูลที่เลือกใช่หรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        if (result.value) {
+          this.loading = true;
+          this.apiService
+            .getdata(this.dataAdd, this.url)
+            .pipe(first())
+            .subscribe(
+              (data: any) => {
+                if (data.status == '1') {
+                  this.loading = null;
+                  this.toastr.success("แจ้งเตือน:อนุมัติข้อมูลเรียบร้อย ");
+                  this.fetchdatalist();
+                }
+              });
+        }
+      });
     }
   }
   returnData(status: any) {

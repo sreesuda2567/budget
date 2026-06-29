@@ -136,13 +136,14 @@
                         '1.2-2'}}</td>
                     <td data-label="เลขฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
                     <td align="center">
-                        <a *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงาน" class="btn btn-success text-white"
-                            href="{{p.REPORT_LINK}}" target="_blank"><i class="fas fa-file-alt">
-                            </i></a>
+                        <span *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2">
+                            <a role="button" title="รายงาน" class="btn btn-success text-white"
+                                (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
+                                </i></a>
                             <span *ngIf="p.REPORT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
                                 {{p.REPORT_LINK_pages}}
                             </span>
-                        </a>
+                        </span>
                     </td>
                 </tr>
                 <tr *ngIf="!rownum">
@@ -249,5 +250,24 @@
                 <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="submitData('1')">อนุมัติ</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- PDF Preview Side Panel -->
+<div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
+<div class="pdf-preview-panel" [class.open]="previewPdfUrl">
+    <div class="pdf-preview-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+        <div>
+            <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+                <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+            </a>
+            <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+                <i class="fa fa-times me-1"></i> ปิด
+            </button>
+        </div>
+    </div>
+    <div class="pdf-preview-body">
+        <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
     </div>
 </div>
