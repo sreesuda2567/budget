@@ -352,7 +352,7 @@ export class FinancecheckComponent implements OnInit {
     this.rowpbu = 1;
   }
    // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapr(id: any, id2: any, money: any, mail: any, bookdate: any, name: any) {
+  editdatapr(id: any, id2: any, money: any, mail: any, bookdate: any, name: any, linkclear: any = null) {
  
     this.setshowbti();
     this.onChangeedoc();
@@ -365,6 +365,7 @@ export class FinancecheckComponent implements OnInit {
     this.dataAdd.USERNAME_CISCO = mail;
     this.dataAdd.FNANNALS_BOOK_AT = bookdate;
     this.dataAdd.FSTF_FNAME = name;
+    this.dataAdd.linkclear = linkclear;
     this.rowpbi = true;
     
     this.apiService

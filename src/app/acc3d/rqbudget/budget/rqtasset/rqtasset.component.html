@@ -2,7 +2,9 @@
   <div class="card-header">
     <div class="row">
       <div class="col-md-9">
-        <h5 class="card-title">คำขอรายการครุภัณฑ์</h5>
+        <h5 class="card-title">
+          <i class="fa-solid fa-boxes-stacked me-2 text-primary"></i>คำขอรายการครุภัณฑ์
+        </h5>
       </div>
       <div class="col-md-3" align="right">
         <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-danger text-white" data-bs-toggle="modal"
@@ -198,10 +200,12 @@
 <div class="modal fade" data-bs-focus="false" id="modalEditlistexpen" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <h5 class="modal-title text-white" id="staticBackdropLabel">รายละเอียดครุภัณฑ์</h5>
-        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+        <h5 class="modal-title fw-bold" id="staticBackdropLabel">
+          <i class="fa-solid fa-boxes-stacked me-2"></i>รายละเอียดครุภัณฑ์
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
@@ -993,10 +997,14 @@
 
       </div>
 
-      <div class="modal-footer">
-        <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+      <div class="modal-footer bg-light border-top-0 py-3">
+        <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm fw-bold" data-bs-dismiss="modal">
+            <i class="fa-solid fa-xmark me-1"></i>ปิด
+        </button>
         <!--   <button *ngIf="rowpbi" type="button" class="btn btn-primary" (click)="insertdata()">บันทึกข้อมูล</button>-->
-        <button type="button" class="btn btn-primary" (click)="updatedata()">บันทึกข้อมูล</button>
+        <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" (click)="updatedata()">
+            <i class="fa-solid fa-floppy-disk me-1"></i>บันทึกข้อมูล
+        </button>
       </div>
     </div>
   </div>

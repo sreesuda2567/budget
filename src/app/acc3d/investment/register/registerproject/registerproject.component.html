@@ -2,7 +2,9 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-10">
-                <h5 class="card-title">ทะเบียนโครงการ</h5>
+                <h5 class="card-title">
+                  <i class="fa-solid fa-folder-tree me-2 text-primary"></i>ทะเบียนโครงการ
+                </h5>
             </div>
             <div class="col-md-2" align="right">
                 <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
@@ -129,10 +131,12 @@
 
 <div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">รายละเอียดทะเบียนโครงการ</h5>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="exampleModalToggleLabel">
+                  <i class="fa-solid fa-list-ul me-2"></i>รายละเอียดทะเบียนโครงการ
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -140,7 +144,7 @@
                     <div class="form-group col-md-6">
                         <input name="PRREGISPROJECT_CODE" type="hidden" id="PRREGISPROJECT_CODE"
                             [(ngModel)]="dataAdd.PRREGISPROJECT_CODE" />
-                        <label for="name">ประเภทโครงการ</label>
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-project-diagram text-secondary me-1"></i>ประเภทโครงการ</label>
                         <select name="provice_code" id="provice_code" class="form-select"
                             [(ngModel)]="dataAdd.PLPROJECTTYPE_CODE">
                             <option [value]="assettype.PLPROJECTTYPE_CODE" *ngFor="let assettype of dataAssettype">
@@ -178,7 +182,7 @@
                     <div class="form-group col-md-1"></div>--> 
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                        <label for="name">ชื่อโครงการ</label>
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-tags text-secondary me-1"></i>ชื่อโครงการ</label>
                         <!--<textarea id="PRREGISPROJECT_NAME" name="PRREGISPROJECT_NAME"
                             [(ngModel)]="dataAdd.PRREGISPROJECT_NAME" rows="4" cols="50" class="form-control"></textarea>-->
                         <input name="PRREGISPROJECT_NAME" list="list-timezone" id="PRREGISPROJECT_NAME" type="text"
@@ -191,7 +195,7 @@
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-2">
-                        <label for="name">สถานะ</label>
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-list-check text-secondary me-1"></i>สถานะ</label>
                         <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE">
                             <option [value]="1">โครงการทั่วไป</option>
                             <option [value]="2">โครงการวิจัย</option>
@@ -199,11 +203,16 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            <div class="modal-footer bg-light border-top-0 py-3">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm fw-bold" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark me-1"></i>ปิด
+                </button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" (click)="insertdata()">
+                    <i class="fa-solid fa-floppy-disk me-1"></i>บันทึกข้อมูล
+                </button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" (click)="updatedata()">
+                    <i class="fa-solid fa-pen-to-square me-1"></i>แก้ไขข้อมูล
+                </button>
             </div>
         </div>
     </div>

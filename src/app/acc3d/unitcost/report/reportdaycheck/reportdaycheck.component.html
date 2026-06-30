@@ -185,18 +185,20 @@
 <div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h1 class="modal-title fs-5 text-white" id="staticBackdropLabel">รายละเอียด</h1>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="staticBackdropLabel">
+                  <i class="fa-solid fa-circle-info me-2"></i>รายละเอียด
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
                     <div class="spinner-border " role="status" id="loadingdetail"></div>
                 </div>
                 <div class="row">
-                    <div *ngIf="dataAdd.type==0"  class="form-group col-md-12">
-                        <label for="name">ส่งกลับแก้ไข</label>
+                    <div *ngIf="dataAdd.type==0"  class="form-group col-md-12 mb-3">
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-reply text-secondary me-1"></i>ส่งกลับแก้ไข</label>
                         <br>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDA">
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
@@ -205,43 +207,45 @@
                         </select>
 
                     </div>
-                    <div *ngIf="dataAdd.type==0" class="form-group col-md-12">
-                        <label for="name">หมายเหตุ</label>
+                    <div *ngIf="dataAdd.type==0" class="form-group col-md-12 mb-3">
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-comment-dots text-secondary me-1"></i>หมายเหตุ</label>
                         <textarea id="FNEXACCTD_NOTE" name="FNEXACCTD_NOTE" [(ngModel)]="dataAdd.FNEXACCTD_NOTE"
                             rows="4" cols="50" class="form-control"></textarea>
                     </div>
-                    <div *ngIf="dataAdd.type==1" class="form-group col-md-10">
-                       <label for="name">แนบไฟล์เอกสาร</label>
+                    <div *ngIf="dataAdd.type==1" class="form-group col-md-12 mb-3">
+                       <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-file-arrow-up text-secondary me-1"></i>แนบไฟล์เอกสาร</label>
                         <br>
                         <input class="form-control" type="file" (change)="onChangepdf($event)"
                             [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
                     </div>
-                    <div *ngIf="dataAdd.type==1" class="form-group col-md-2">
-                       <label for="name">ลงนาม</label>
-                        <br>
-                         <a  (click)="openPdfAnnotator(dataAdd)"><i
-                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
-                        &nbsp;
-                    </div>
-                    <div *ngIf="dataAdd.type==1" class="form-group col-md-12">
-                        <div class="row" *ngFor="let type of datareceipt">
-                            <div class="form-group col-md-12">
-                                <input class="form-check-input filled-in" name="p_radio2" id="radio2" type="radio"
-                                    value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE">
-                                {{type.FNRESTATUS_NAME}}
+                    <div *ngIf="dataAdd.type==1" class="form-group col-md-12 mt-2">
+                        <div class="row" *ngFor="let type of datareceipt; let i = index">
+                            <div class="form-check col-md-12 ms-3 mb-2">
+                                <input class="form-check-input" name="p_radio2" id="radio2_{{i}}" type="radio"
+                                    value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE" style="cursor: pointer;">
+                                <label class="form-check-label" for="radio2_{{i}}" style="cursor: pointer;">
+                                    {{type.FNRESTATUS_NAME}}
+                                </label>
                             </div>
                         </div>
-
+                    </div>
+                    <div *ngIf="dataAdd.type==1" class="form-group col-md-12 mt-3 text-end">
+                       <label for="name" class="fw-bold mb-1 me-3"><i class="fa-solid fa-signature text-secondary me-1"></i>ลงนาม</label>
+                         <a (click)="openPdfAnnotator(dataAdd)"><i
+                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi"   type="button" class="btn btn-primary"
-                    (click)="returnData('0')">ส่งกลับแก้ไข</button>
-                 <button  *ngIf="rowpbu"  type="button" class="btn btn-primary"
-                     (click)="submitData('1')">บันทึกข้อมูล</button>    
-
+            <div class="modal-footer bg-light border-top-0 py-3">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm fw-bold" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark me-1"></i>ปิด
+                </button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-warning text-dark rounded-pill px-4 shadow-sm fw-bold" (click)="returnData('0')">
+                    <i class="fa-solid fa-reply me-1"></i>ส่งกลับแก้ไข
+                </button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" (click)="submitData('1')">
+                    <i class="fa-solid fa-floppy-disk me-1"></i>บันทึกข้อมูล
+                </button>    
             </div>
         </div>
     </div>

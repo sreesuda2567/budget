@@ -2,7 +2,9 @@
   <div class="card-header">
     <div class="row">
       <div class="col-md-9">
-        <h5 class="card-title">วางแผนงบประมาณรายการครุภัณฑ์</h5>
+        <h5 class="card-title">
+          <i class="fa-solid fa-boxes-stacked me-2 text-primary"></i>วางแผนงบประมาณรายการครุภัณฑ์
+        </h5>
       </div>
       <div class="col-md-3" align="right">
         <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-danger text-white" data-bs-toggle="modal"
@@ -199,35 +201,35 @@
 <div class="modal fade" data-bs-focus="false" id="modalEditlistexpen" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
   aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <h5 class="modal-title text-white" id="staticBackdropLabel">รายละเอียดครุภัณฑ์</h5>
-        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+        <h5 class="modal-title fw-bold" id="staticBackdropLabel"><i class="fa-solid fa-pen-to-square me-2"></i>รายละเอียดครุภัณฑ์</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body bg-white">
         <ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button (click)="showinputinnull()" class="nav-link active" id="home-tab" data-bs-toggle="tab"
               data-bs-target="#money" type="button" role="tab" aria-controls="home" aria-selected="true">
-              ส่วนที่ 1 แหล่งงบประมาณ/ผลผลิต/โครงการ
+              <i class="fa-solid fa-sack-dollar me-2"></i>ส่วนที่ 1 แหล่งงบประมาณ/ผลผลิต/โครงการ
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button (click)="showinputinnull()" class="nav-link" id="profile-tab" data-bs-toggle="tab"
               data-bs-target="#policy" type="button" role="tab" aria-controls="profile" aria-selected="false">
-              ส่วนที่ 2 ความสอดคล้องระดับนโยบายประเทศ/มหาวิทยาลัย
+              <i class="fa-solid fa-clipboard-check me-2"></i>ส่วนที่ 2 ความสอดคล้องระดับนโยบายประเทศ/มหาวิทยาลัย
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button (click)="showinputinnull()" class="nav-link" id="contact-tab" data-bs-toggle="tab"
               data-bs-target="#details" type="button" role="tab" aria-controls="contact" aria-selected="false">
-              ส่วนที่ 3 รายละเอียดครุภัณฑ์
+              <i class="fa-solid fa-list me-2"></i>ส่วนที่ 3 รายละเอียดครุภัณฑ์
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button (click)="showinputin()" class="nav-link" id="contact-tab" data-bs-toggle="tab"
               data-bs-target="#spec" type="button" role="tab" aria-controls="contact" aria-selected="false">
-              ส่วนที่ 4 คุณลักษณะเฉพาะครุภัณฑ์
+              <i class="fa-solid fa-cogs me-2"></i>ส่วนที่ 4 คุณลักษณะเฉพาะครุภัณฑ์
             </button>
           </li>
         </ul>
@@ -239,14 +241,14 @@
                 <div class="col-md-12">
                   <div class="card">
                     <div class="card-header bg-info">
-                      แหล่งงบประมาณ/ผลผลิต/โครงการ
+                      <i class="fa-solid fa-sack-dollar me-2"></i>แหล่งงบประมาณ/ผลผลิต/โครงการ
                     </div>
                     <div class="card-body">
-                      <label for="name"><strong>แหล่งเงิน/ภาค <span class="text-danger">*</span></strong> </label>
+                      <label for="name"><strong><i class="fa-solid fa-wallet text-secondary me-1"></i>แหล่งเงิน/ภาค <span class="text-danger">*</span></strong> </label>
                       <div class="row">
-                        <div class="col-md-4 text-secondary" style="font-size: 10pt">แหล่งเงิน: </div>
-                        <div class="col-md-4 text-secondary" style="font-size: 10pt">ภาค: </div>
-                        <div class="col-md-4 text-secondary" style="font-size: 10pt">ปีงบประมาณ: </div>
+                        <div class="col-md-4 text-secondary" style="font-size: 10pt"><i class="fa-solid fa-money-bill me-1"></i>แหล่งเงิน: </div>
+                        <div class="col-md-4 text-secondary" style="font-size: 10pt"><i class="fa-solid fa-map-location-dot me-1"></i>ภาค: </div>
+                        <div class="col-md-4 text-secondary" style="font-size: 10pt"><i class="fa-solid fa-calendar-days me-1"></i>ปีงบประมาณ: </div>
                       </div>
                       <div class="row">
                         <div class="col-md-4">
@@ -270,7 +272,7 @@
                           </select>
                         </div>
                       </div>
-                      <label for="name"><strong>ผลผลิต/โครงการ <span class="text-danger">*</span></strong> </label>
+                      <label for="name"><strong><i class="fa-solid fa-diagram-project text-secondary me-1"></i>ผลผลิต/โครงการ <span class="text-danger">*</span></strong> </label>
                       <table width="100%" border="0">
                         <tr *ngFor="let product of dataProduct;let i = index">
                           <td width="2%" align="left" valign="top">
@@ -335,7 +337,7 @@
             <div class="card-body">
               <div class="card">
                 <div class="card-header bg-info">
-                  ความสอดคล้องระดับนโยบายประเทศ/มหาวิทยาลัย
+                  <i class="fa-solid fa-clipboard-check me-2"></i>ความสอดคล้องระดับนโยบายประเทศ/มหาวิทยาลัย
                 </div>
                 <div class="card-body">
                   <label for="name"><strong>1. รายการครุภัณฑ์ตอบสนองภารกิจ <span
@@ -406,7 +408,7 @@
             <div class="card-body">
               <div class="card">
                 <div class="card-header bg-info">
-                  รายละเอียดครุภัณฑ์
+                  <i class="fa-solid fa-list me-2"></i>รายละเอียดครุภัณฑ์
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -418,12 +420,12 @@
                   </div>
                   <div class="row">
                     <div class="col-md-1">
-                      <label for="name"><strong>จำนวน<span class="text-danger">*</span></strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-cubes text-secondary me-1"></i>จำนวน<span class="text-danger">*</span></strong></label>
                       <input type="text" name="p_number" id="p_number" class="form-control" placeholder="จำนวน"
                         [(ngModel)]="dataAdd.PRASSET_NUMBER" (keyup)="calexpenses()">
                     </div>
                     <div class="col-md-2">
-                      <label for="name"><strong>หน่วยนับ</strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-tag text-secondary me-1"></i>หน่วยนับ</strong></label>
                       <select name="u_code" id="u_code" class="form-select" [(ngModel)]="dataAdd.GCUNIT_CODE"
                         disabled="">
                         <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
@@ -431,14 +433,20 @@
                       </select>
                     </div>
                     <div class="col-md-2">
-                      <label for="name"><strong>ราคาต่อหน่วย <span class="text-danger">*</span></strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-money-bill-wave text-secondary me-1"></i>ราคาต่อหน่วย <span class="text-danger">*</span></strong></label>
                       <input type="text" name="p_money" id="p_money" class="form-control" (keypress)="CheckNum($event)"
                         placeholder="ราคาต่อหน่วย" [(ngModel)]="dataAdd.PRASSET_MONEY" (keyup)="calexpenses()">
                     </div>
-                    <div class="form-group col-md-2 text-danger">
-                      <label for="name"><strong>งบประมาณทั้งหมด</strong></label>
-                      <br>
-                      <div style="font-size: 18pt"> {{dataAdd.sum| number : '1.2-2'}} </div>
+                    <div class="form-group col-md-5">
+                      <div class="p-3 rounded-4 shadow-sm" style="background-color: #fdf2f2; border: 1px solid #f8d7da; width: fit-content;">
+                        <div class="fw-bold text-danger mb-1" style="font-size: 13pt;">
+                          <i class="fa-solid fa-coins me-2"></i>งบประมาณทั้งหมด
+                        </div>
+                        <div class="text-danger fw-bold d-flex align-items-baseline">
+                          <span style="font-size: 22pt;">{{dataAdd.sum | number : '1.2-2'}}</span>
+                          <span class="ms-2" style="font-size: 13pt;">บาท</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="row">
@@ -890,7 +898,7 @@
             <div class="card-body">
               <div class="card">
                 <div class="card-header bg-info">
-                  คุณลักษณะเฉพาะครุภัณฑ์
+                  <i class="fa-solid fa-cogs me-2"></i>คุณลักษณะเฉพาะครุภัณฑ์
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -912,78 +920,85 @@
                         [(ngModel)]="dataAdd.PRASSETSPEC_NOTE"></textarea>
                     </div>
                   </div>-->
-                  <div class="row">
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> ผู้ออกรายละเอียดคนที่ 1 <span
-                        class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span></div>
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> ผู้ออกรายละเอียดคนที่ 2 <span
-                        class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span></div>
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> ผู้ออกรายละเอียดคนที่ 3 <span
-                        class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span></div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3 text-secondary">
+                  <div class="row mb-3">
+                    <div class="col-md-4 text-secondary">
+                      <label class="form-label" style="font-size: 10pt">
+                        <strong><i class="fa-solid fa-user-pen me-1"></i>ผู้ออกรายละเอียดคนที่ 1</strong> <span class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span>
+                      </label>
                       <input name="FNCREDITOR_CODE" type="hidden" id="CITIZEN_IDA" [(ngModel)]="dataAdd.CITIZEN_IDA" />
                       <div class="ng-autocomplete">
                         <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_IDA1" [data]="datacomplete"
                           [searchKeyword]="keyword" placeholder="ผู้ออกรายละเอียดคนที่ 1 "
                           (selected)='selectEvent($event,1)' (inputChanged)='onChangeSearch($event)'
-                          [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                          [itemTemplate]="itemTemplate1" [notFoundTemplate]="notFoundTemplate1">
                         </ng-autocomplete>
-                        <ng-template #itemTemplate let-item>
+                        <ng-template #itemTemplate1 let-item>
                           <a [innerHTML]="item.name"></a>
                         </ng-template>
-                        <ng-template #notFoundTemplate let-notFound>
+                        <ng-template #notFoundTemplate1 let-notFound>
                           <div [innerHTML]="notFound"></div>
                         </ng-template>
                       </div>
                     </div>
-                    <div class="col-md-3 text-secondary">
+                    <div class="col-md-4 text-secondary">
+                      <label class="form-label" style="font-size: 10pt">
+                        <strong><i class="fa-solid fa-user-pen me-1"></i>ผู้ออกรายละเอียดคนที่ 2</strong> <span class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span>
+                      </label>
                       <input name="FNCREDITOR_CODE" type="hidden" id="CITIZEN_IDB" [(ngModel)]="dataAdd.CITIZEN_IDB" />
                       <div class="ng-autocomplete">
                         <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_IDB1" [data]="datacomplete"
                           [searchKeyword]="keyword" placeholder="ผู้ออกรายละเอียดคนที่ 2 "
                           (selected)='selectEvent($event,2)' (inputChanged)='onChangeSearch($event)'
-                          [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                          [itemTemplate]="itemTemplate2" [notFoundTemplate]="notFoundTemplate2">
                         </ng-autocomplete>
-                        <ng-template #itemTemplate let-item>
+                        <ng-template #itemTemplate2 let-item>
                           <a [innerHTML]="item.name"></a>
                         </ng-template>
-                        <ng-template #notFoundTemplate let-notFound>
+                        <ng-template #notFoundTemplate2 let-notFound>
                           <div [innerHTML]="notFound"></div>
                         </ng-template>
                       </div>
                     </div>
-                    <div class="col-md-3 text-secondary">
+                    <div class="col-md-4 text-secondary">
+                      <label class="form-label" style="font-size: 10pt">
+                        <strong><i class="fa-solid fa-user-pen me-1"></i>ผู้ออกรายละเอียดคนที่ 3</strong> <span class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span>
+                      </label>
                       <input name="CITIZEN_IDC" type="hidden" id="CITIZEN_IDC" [(ngModel)]="dataAdd.CITIZEN_IDC" />
                       <div class="ng-autocomplete">
                         <ng-autocomplete [(ngModel)]="dataAdd.CITIZEN_IDC1" [data]="datacomplete"
                           [searchKeyword]="keyword" placeholder="ผู้ออกรายละเอียดคนที่ 3 "
                           (selected)='selectEvent($event,3)' (inputChanged)='onChangeSearch($event)'
-                          [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                          [itemTemplate]="itemTemplate3" [notFoundTemplate]="notFoundTemplate3">
                         </ng-autocomplete>
-                        <ng-template #itemTemplate let-item>
+                        <ng-template #itemTemplate3 let-item>
                           <a [innerHTML]="item.name"></a>
                         </ng-template>
-                        <ng-template #notFoundTemplate let-notFound>
+                        <ng-template #notFoundTemplate3 let-notFound>
                           <div [innerHTML]="notFound"></div>
                         </ng-template>
                       </div>
                     </div>
+                  </div>
+                  <div class="row">
                     <div class="col-md-8">
-                      <label for="name">แนบไฟล์แบบรายละเอียดคุณลักษณะเฉพาะครุภัณฑ์(Spec) (ไฟล์สกุล .pdf)
+                      <label class="form-label text-secondary" style="font-size: 10pt">
+                        <strong><i class="fa-solid fa-file-pdf me-1"></i>แนบไฟล์แบบรายละเอียดคุณลักษณะเฉพาะครุภัณฑ์(Spec)</strong> <span class="text-danger">(ไฟล์สกุล .pdf)</span>
                       </label>
                       <input type="hidden" name="p_sto2" class="form-control" id="p_sto2" placeholder="">
                       <input class="form-control" type="file" (change)="onChangespec($event)"
                         [(ngModel)]="dataAdd.PRASSET_SLINK4" accept="application/pdf" />
                     </div>
                     <div class="col-md-4">
-                      <label for="name">ไฟล์สกุล .pdf
-                      </label>
-                      <br>
-                      <a *ngIf="dataAdd.SLINK4" href="{{dataAdd.SLINK4}}" target="_blank">Spec<i class="fa fa-file"
-                          style='color: blue'></i></a>
-                      &nbsp;<span (click)="updatefile(dataAdd.PRASSET_CODE,'PRASSET_SLINK4')" *ngIf="dataAdd.SLINK4"
-                        class="fa fa-trash" style="color:red;cursor:pointer;"></span>
+                      <label class="form-label text-secondary" style="font-size: 10pt"><strong>ไฟล์ที่อัปโหลด</strong></label>
+                      <div class="mt-1">
+                        <a *ngIf="dataAdd.SLINK4" href="{{dataAdd.SLINK4}}" target="_blank" class="btn btn-sm btn-outline-primary me-2">
+                          <i class="fa-solid fa-file-pdf me-1"></i> Spec
+                        </a>
+                        <button *ngIf="dataAdd.SLINK4" (click)="updatefile(dataAdd.PRASSET_CODE,'PRASSET_SLINK4')" class="btn btn-sm btn-outline-danger">
+                          <i class="fa-solid fa-trash me-1"></i> ลบ
+                        </button>
+                        <span *ngIf="!dataAdd.SLINK4" class="text-muted" style="font-size: 10pt;">ยังไม่มีไฟล์</span>
+                      </div>
                     </div>
                   </div>
                   <br>
@@ -995,10 +1010,14 @@
 
       </div>
 
-      <div class="modal-footer">
-        <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+      <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-white">
+        <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+          <i class="fa-solid fa-times me-1"></i> ปิด
+        </button>
         <!--   <button *ngIf="rowpbi" type="button" class="btn btn-primary" (click)="insertdata()">บันทึกข้อมูล</button>-->
-        <button type="button" class="btn btn-primary" (click)="updatedata()">บันทึกข้อมูล</button>
+        <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+          <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
+        </button>
       </div>
     </div>
   </div>

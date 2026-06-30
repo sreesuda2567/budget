@@ -635,7 +635,7 @@ export class ApprovebuildingComponent implements OnInit {
         this.dataAdd.RPLINCOME_CODE = data[0].PLINCOME_CODE;
         this.onChangecrpartrister();
         this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
-        if(data[0].PRREGISBUILDING_CODE !=data[0].PRREGISBUILDING_CODEA && data[0].PRREGISBUILDING_CODEA !=null){
+        if(data[0].PRREGISBUILDING_CODEA !=null){
          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODEA;
         }else{
         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODE;
@@ -644,16 +644,18 @@ export class ApprovebuildingComponent implements OnInit {
         this.dataAdd.PRBUILDING_CODE = data[0].PRBUILDING_CODE;
         this.dataAdd.PRBUILDING_NAME = data[0].PRREGISBUILDING_NAME;
         //this.dataAdd.PRBUILDING_NUMBER = Number(data[0].PRBUILDING_NUMBER);
-         if(data[0].PRBUILDING_NUMBER !=data[0].PRBUILDING_NUMBERA  && data[0].PRBUILDING_NUMBERA !=null){
+         if(data[0].PRBUILDING_NUMBERA !=null){
          this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBERA);
         }else{
         this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBER);
         }
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
        // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
-       if(data[0].PRBUILDING_MONEY !=data[0].PRBUILDING_MONEYA && data[0].PRBUILDING_MONEYA !=null){
+       if(data[0].PRBUILDING_MONEYA !=null){
+         this.dataAdd.sum = Number(data[0].PRBUILDING_NUMBERA) * Number(data[0].PRBUILDING_MONEYA);
          this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEYA).toFixed(2)); 
         }else{
+         this.dataAdd.sum = Number(data[0].PRBUILDING_NUMBER) * Number(data[0].PRBUILDING_MONEY);
         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
         }
         this.dataAdd.PRBUILDING_REASON = data[0].PRBUILDING_REASON;
@@ -803,6 +805,14 @@ export class ApprovebuildingComponent implements OnInit {
   }
   keymon() {
     this.dataAdd.PRBUILDING_SMONEY = this.dataAdd.PRBUILDING_MONEY;
+  }
+  calexpenses() {
+    if (this.dataAdd.PRASSET_NUMBER && this.dataAdd.PRASSET_MONEY) {
+      let money = String(this.dataAdd.PRASSET_MONEY).replace(/,/g, '');
+      this.dataAdd.sum = Number(this.dataAdd.PRASSET_NUMBER) * Number(money);
+    } else {
+      this.dataAdd.sum = 0;
+    }
   }
   showapp(code: any, name: any) {
     this.clickshow = true;

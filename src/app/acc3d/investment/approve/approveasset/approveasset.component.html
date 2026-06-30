@@ -389,58 +389,62 @@ s
 <div class="modal fade" data-bs-focus="false" id="modalEditlistexpen" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true"
   aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <h5 class="modal-title text-white" id="exampleModalToggleLabel">แก้ไขรายการครุภัณฑ์</h5>
-        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+        <h5 class="modal-title fw-bold" id="exampleModalToggleLabel"><i class="fa-solid fa-pen-to-square me-2"></i>แก้ไขรายการครุภัณฑ์</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body p-4 bg-light">
         <div class="row justify-content-center center-screen" *ngIf="loadingapp">
-          <div class="spinner-border " role="status" id="loading"></div>
+          <div class="spinner-border text-primary" role="status" id="loading"></div>
         </div>
-        <div class="card-body ">
-          <div class="row">
-            <div class="col-md-12">
-              <label for="name"><strong>ชื่อรายการครุภัณฑ์ </strong></label>
-
-              <select name="u_code" id="u_code" class="form-select" [(ngModel)]="dataAdd.PRREGISASSET_CODEA">
-                <option [value]="p.PRREGISASSET_CODE" *ngFor="let p of datalistregister">{{p.PRREGISASSET_NAME}}
-                  ตำบล{{p.SUB_DISTRICT_NAME_TH}} อำเภอ{{p.DISTRICT_NAME_TH}}
-                  จังหวัด{{p.PROVINCE_TNAME}}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label for="name"><strong>ปีงบประมาณ</strong></label>
-              <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRYEARASSET_CODEA">
-                <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
-                  {{year.PLYEARBUDGET_NAME}}
-                </option>
-              </select>
-            </div>
-            <div class="col-md-1">
-              <label for="name"><strong>จำนวน</strong></label>
-              <input type="text" name="p_number" id="p_number" class="form-control" placeholder="จำนวน"
-                [(ngModel)]="dataAdd.PRASSET_NUMBER" (keyup)="calexpenses()">
-            </div>
-
-            <div class="col-md-2">
-              <label for="name"><strong>ราคาต่อหน่วย</strong></label>
-              <input type="text" name="p_money" id="p_money" class="form-control" (keypress)="CheckNum($event)"
-                placeholder="ราคาต่อหน่วย" [(ngModel)]="dataAdd.PRASSET_MONEY" (keyup)="calexpenses()">
-            </div>
-            <div class="form-group col-md-2 text-danger">
-              <label for="name"><strong>งบประมาณทั้งหมด</strong></label>
-              <br>
-              <div style="font-size: 18pt"> {{dataAdd.sum| number : '1.2-2'}} </div>
+        
+        <div class="card border-0 shadow-sm">
+          <div class="card-body bg-white rounded-3 p-4">
+            <div class="row g-4">
+              <div class="col-md-12">
+                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-box-open me-1"></i>ชื่อรายการครุภัณฑ์</label>
+                <select name="u_code" id="u_code" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PRREGISASSET_CODEA">
+                  <option [value]="p.PRREGISASSET_CODE" *ngFor="let p of datalistregister">{{p.PRREGISASSET_NAME}}
+                    ตำบล{{p.SUB_DISTRICT_NAME_TH}} อำเภอ{{p.DISTRICT_NAME_TH}} จังหวัด{{p.PROVINCE_TNAME}}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-calendar-days me-1"></i>ปีงบประมาณ</label>
+                <select name="y_code" id="y_code" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PRYEARASSET_CODEA">
+                  <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                    {{year.PLYEARBUDGET_NAME}}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-hashtag me-1"></i>จำนวน</label>
+                <input type="text" name="p_number" id="p_number" class="form-control form-control-lg fs-6" placeholder="จำนวน"
+                  [(ngModel)]="dataAdd.PRASSET_NUMBER" (keyup)="calexpenses()">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-tag me-1"></i>ราคาต่อหน่วย</label>
+                <input type="text" name="p_money" id="p_money" class="form-control form-control-lg fs-6" (keypress)="CheckNum($event)"
+                  placeholder="ราคาต่อหน่วย" [(ngModel)]="dataAdd.PRASSET_MONEY" (keyup)="calexpenses()">
+              </div>
+              <div class="col-md-3">
+                <div class="p-3 rounded-3 border h-100 d-flex flex-column justify-content-center" style="background-color: #fff1f2; border-color: #fecdd3;">
+                  <label class="form-label fw-bold mb-1" style="color: #be123c;"><i class="fa-solid fa-coins me-1"></i>งบประมาณทั้งหมด</label>
+                  <div class="fw-bold fs-4" style="color: #be123c;">{{dataAdd.sum| number : '1.2-2'}} <span class="fs-6 fw-normal">บาท</span></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="modal-footer">
-        <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-        <button type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+      <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
+        <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+            <i class="fa-solid fa-times me-1"></i> ปิด
+        </button>
+        <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+            <i class="fa-solid fa-save me-1"></i> แก้ไขข้อมูล
+        </button>
       </div>
     </div>
   </div>

@@ -2,7 +2,9 @@
   <div class="card-header">
     <div class="row">
       <div class="col-md-9">
-        <h5 class="card-title">พิจารณารายการครุภัณฑ์</h5>
+        <h5 class="card-title">
+          <i class="fa-solid fa-boxes-stacked me-2 text-primary"></i>พิจารณารายการครุภัณฑ์
+        </h5>
       </div>
       <div class="col-md-3" align="right">
 
@@ -145,9 +147,6 @@
                       (click)="showapp(p.PRASSET_CODE,p.PRREGISASSET_NAME,p.USERNAME_CISCO)"><i
                         class="fa fa-edit">พิจารณา</i></a>
 
-                    <a *ngIf="p.PRASSET_RSTATUS=='7' && p.PRASSET_SSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' "
-                      role="button" title="อนุมัติ" class="btn btn-primary text-white"
-                      (click)="returnedit(p.PRASSET_CODE,p.PRREGISASSET_NAME)"><i class="fa fa-reply"> ส่งคืน</i></a>
                   </td>
                   <!--  <td width="5%" align="center">
                     <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
@@ -172,11 +171,13 @@
 
   <div class="modal fade" data-bs-focus="false" id="modalapprove" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header bg-primary">
-          <h5 class="modal-title text-white" id="exampleModalToggleLabel">พิจารณารายการครุภัณฑ์</h5>
-          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content shadow-lg border-0 rounded-3">
+        <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+          <h5 class="modal-title fw-bold" id="exampleModalToggleLabel">
+            <i class="fa-solid fa-file-signature me-2"></i>พิจารณารายการครุภัณฑ์
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="row justify-content-center center-screen" *ngIf="loadingapp">
@@ -189,12 +190,24 @@
               [(ngModel)]="dataAdd.USERNAME_CISCO">
             <div class="row">
               <div class="form-group col-md-1"></div>
-              <div class="form-group col-md-11 txt-font text-danger">{{dataAdd.htmlStringd}}</div>
+              <div class="form-group col-md-10 mb-4">
+                <div class="d-flex align-items-center p-3 border rounded-3 bg-white shadow-sm" style="border-color: #e2e8f0 !important;">
+                  <div class="flex-shrink-0">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                      <i class="fa-solid fa-box-open fs-4"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h6 class="mb-0 fw-bold text-dark" style="line-height: 1.5;">{{dataAdd.htmlStringd}}</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-1"></div>
             </div>
             <div class="row">
               <div class="form-group col-md-1"></div>
               <div class="form-group col-md-6">
-                <label for="name">สถานะ</label>
+                <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-list-check text-secondary me-1"></i>สถานะ</label>
                 <select name="PRSTATUS_CODE" id="PRSTATUS_CODE" class="form-select" [(ngModel)]="dataAdd.PRSTATUS_CODE">
                   <option [value]="status.PRSTATUS_CODE" *ngFor="let status of datastatus">
                     {{status.PRSTATUS_NAME}}</option>
@@ -202,8 +215,8 @@
               </div>
               <div class="form-group col-md-5"></div>
               <div class="form-group col-md-1"></div>
-              <div class="form-group col-md-10">
-                <label for="name">หมายเหตุ</label>
+              <div class="form-group col-md-10 mt-3">
+                <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-comment-dots text-secondary me-1"></i>หมายเหตุ</label>
                 <textarea id="PRASSETFAC_NOTE" name="PRASSETFAC_NOTE" [(ngModel)]="dataAdd.PRASSETFAC_NOTE" rows="4"
                   cols="50" class="form-control"></textarea>
               </div>
@@ -220,9 +233,13 @@
           </div>
         </div>
 
-        <div class="modal-footer">
-          <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-          <button type="button" class="btn btn-primary" (click)="insertappfac()">บันทึกข้อมูล</button>
+        <div class="modal-footer bg-light border-top-0 py-3">
+          <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm fw-bold" data-bs-dismiss="modal">
+            <i class="fa-solid fa-xmark me-1"></i>ปิด
+          </button>
+          <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" (click)="insertappfac()">
+            <i class="fa-solid fa-floppy-disk me-1"></i>บันทึกข้อมูล
+          </button>
         </div>
       </div>
     </div>

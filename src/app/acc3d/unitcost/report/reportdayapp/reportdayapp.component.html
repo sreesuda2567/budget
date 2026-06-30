@@ -78,14 +78,15 @@
                         รวมยอดเงินที่เลือก: {{ totalAmount | number : '1.2-2' }} บาท
                     </h4>
                 </div>
-                <div class="col-md-4" *ngIf="rownum" align="right">
-                    <button type="submit" class="btn btn-danger" id="submitupdate" data-bs-toggle="modal"
-                        data-bs-target="#modalEdit" (click)="showinput('0')"><i
-                            class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ส่งกลับ</button>
-                    &nbsp;
-                    <button type="submit" class="btn btn-success" id="submitupdate" data-bs-toggle="modal"
-                        data-bs-target="#modalEdit" (click)="showinput('1')"><i
-                            class="fa fa-edit"></i>&nbsp;อนุมัติ</button>
+                <div class="col-md-4 text-end" *ngIf="rownum">
+                    <div class="btn-group shadow-sm" role="group">
+                        <button type="submit" class="btn btn-danger" id="submitupdate" data-bs-toggle="modal"
+                            data-bs-target="#modalEdit" (click)="showinput('0')"><i
+                                class="fa-solid fa-arrow-rotate-left me-1"></i>ส่งกลับ</button>
+                        <button type="submit" class="btn btn-success" id="submitupdate" data-bs-toggle="modal"
+                            data-bs-target="#modalEdit" (click)="showinput('1')"><i
+                                class="fa fa-edit me-1"></i>อนุมัติ</button>
+                    </div>
                 </div>
 
             </div>
@@ -230,18 +231,20 @@
 <div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h1 class="modal-title fs-5 text-white" id="staticBackdropLabel">รายละเอียด</h1>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="staticBackdropLabel">
+                  <i class="fa-solid fa-circle-info me-2"></i>รายละเอียด
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
                     <div class="spinner-border " role="status" id="loadingdetail"></div>
                 </div>
                 <div class="row">
-                    <div *ngIf="dataAdd.type==1" class="form-group col-md-12">
-                        <label for="name">ผู้ตรวจเอกสาร</label>
+                    <div *ngIf="dataAdd.type==1" class="form-group col-md-12 mb-3">
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-user-check text-secondary me-1"></i>ผู้ตรวจเอกสาร</label>
                         <br>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDA">
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
@@ -250,18 +253,23 @@
                         </select>
 
                     </div>
-                    <div *ngIf="dataAdd.type==0" class="form-group col-md-12">
-                        <label for="name">หมายเหตุ</label>
+                    <div *ngIf="dataAdd.type==0" class="form-group col-md-12 mb-3">
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-comment-dots text-secondary me-1"></i>หมายเหตุ</label>
                         <textarea id="FNEXACCTD_NOTE" name="FNEXACCTD_NOTE" [(ngModel)]="dataAdd.FNEXACCTD_NOTE"
                             rows="4" cols="50" class="form-control"></textarea>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="returnData('0')">ส่งกลับแก้ไข</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="submitData('1')">อนุมัติ</button>
+            <div class="modal-footer bg-light border-top-0 py-3">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm fw-bold" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark me-1"></i>ปิด
+                </button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-warning text-dark rounded-pill px-4 shadow-sm fw-bold" (click)="returnData('0')">
+                    <i class="fa-solid fa-reply me-1"></i>ส่งกลับแก้ไข
+                </button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" (click)="submitData('1')">
+                    <i class="fa-solid fa-floppy-disk me-1"></i>อนุมัติ
+                </button>
             </div>
         </div>
     </div>

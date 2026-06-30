@@ -95,43 +95,52 @@
 
   <div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
     tabindex="-1">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header bg-primary">
-          <h5 class="modal-title text-white" id="exampleModalToggleLabel">รายละเอียดผลผลิต/โครงการ</h5>
-          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content shadow-lg border-0 rounded-3">
+        <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+          <h5 class="modal-title fw-bold" id="exampleModalToggleLabel">รายละเอียดผลผลิต/โครงการ</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label for="name">รหัสผลผลิต/โครงการ</label>
-                    <input type="text" name="PRPRODUCT_CODE" id="PRPRODUCT_CODE" class="form-control"
-                            [(ngModel)]="dataAdd.PRPRODUCT_CODE" >
+        <div class="modal-body p-4 bg-light">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body bg-white rounded-3 p-4">
+              <div class="row g-4">
+                <div class="col-md-12">
+                  <label class="form-label fw-bold text-secondary mb-2">รหัสผลผลิต/โครงการ</label>
+                  <input type="text" name="PRPRODUCT_CODE" id="PRPRODUCT_CODE" class="form-control form-control-lg fs-6"
+                          [(ngModel)]="dataAdd.PRPRODUCT_CODE" >
                 </div>
-                <div class="form-group col-md-12">
-                    <label for="name">ชื่อรายการ</label>
-                    <input type="text" name="PRPRODUCT_NAME" id="PRPRODUCT_NAME" class="form-control"
-                            [(ngModel)]="dataAdd.PRPRODUCT_NAME" >
+                <div class="col-md-12">
+                  <label class="form-label fw-bold text-secondary mb-2">ชื่อรายการ</label>
+                  <input type="text" name="PRPRODUCT_NAME" id="PRPRODUCT_NAME" class="form-control form-control-lg fs-6"
+                          [(ngModel)]="dataAdd.PRPRODUCT_NAME" >
                 </div>
-                <div class="form-group col-md-12">
-                  <label for="name">ชื่อรายการ(แบบย่อ)</label>
-                  <input type="text" name="PRPRODUCT_SHORTNAME" id="PRPRODUCT_SHORTNAME" class="form-control"
+                <div class="col-md-12">
+                  <label class="form-label fw-bold text-secondary mb-2">ชื่อรายการ(แบบย่อ)</label>
+                  <input type="text" name="PRPRODUCT_SHORTNAME" id="PRPRODUCT_SHORTNAME" class="form-control form-control-lg fs-6"
                           [(ngModel)]="dataAdd.PRPRODUCT_SHORTNAME" >
-              </div>
-                <div class="form-group col-md-12">
-                    <label for="name">สถานะ</label>
-                    <select class="form-select" [(ngModel)]="dataAdd.PRPRODUCT_RSTATUS">
-                        <option [value]="1" >ใช้งาน</option>
-                        <option [value]="0" >ไม่ใช้งาน</option>
-                      </select>
                 </div>
-
+                <div class="col-md-12">
+                  <label class="form-label fw-bold text-secondary mb-2">สถานะ</label>
+                  <select class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PRPRODUCT_RSTATUS">
+                    <option [value]="1" >ใช้งาน</option>
+                    <option [value]="0" >ไม่ใช้งาน</option>
+                  </select>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-          <button *ngIf="rowpbi" type="button" class="btn btn-primary" (click)="insertdata()">บันทึกข้อมูล</button>
-          <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+        <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
+          <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+            ปิด
+          </button>
+          <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="insertdata()">
+            บันทึกข้อมูล
+          </button>
+          <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+            แก้ไขข้อมูล
+          </button>
         </div>
       </div>
     </div>

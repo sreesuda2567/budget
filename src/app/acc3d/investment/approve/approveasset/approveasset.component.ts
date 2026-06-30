@@ -718,18 +718,18 @@ export class ApproveassetComponent implements OnInit {
         this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
         //this.dataAdd.PRREGISASSET_CODE = data[0].PRREGISASSET_CODE;
        // this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
-        if(data[0].PRREGISASSET_CODE !=data[0].PRREGISASSET_CODEA){
+        if(data[0].PRREGISASSET_CODEA !=null){
          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODEA;
         }else{
         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODE;
         }
-       if(data[0].PRASSET_NUMBER !=data[0].PRASSET_NUMBERA){
+       if(data[0].PRASSET_NUMBERA !=null){
          this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBERA; 
         }else{
         this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
         }
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
-         if(data[0].PRASSET_MONEY !=data[0].PRASSET_MONEYA){
+         if(data[0].PRASSET_MONEYA !=null){
          this.dataAdd.sum = data[0].PRASSET_NUMBERA * data[0].PRASSET_MONEYA;   
         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEYA).toFixed(2));  
         }else{

@@ -2,7 +2,9 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-10">
-                <h5 class="card-title">ทะเบียนสิ่งก่อสร้าง</h5>
+                <h5 class="card-title">
+                  <i class="fa-solid fa-city me-2 text-primary"></i>ทะเบียนสิ่งก่อสร้าง
+                </h5>
             </div>
             <div class="col-md-2" align="right">
                 <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
@@ -108,10 +110,12 @@
 <!-- Modal -->
 <div class="modal fade" data-bs-focus="false" id="modalEdit" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">รายละเอียดทะเบียนสิ่งก่อสร้าง</h5>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="exampleModalToggleLabel">
+                  <i class="fa-solid fa-list-ul me-2"></i>รายละเอียดทะเบียนสิ่งก่อสร้าง
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -119,7 +123,7 @@
                     <div class="form-group col-md-6">
                         <input name="PRREGISBUILDING_CODE" type="hidden" id="PRREGISBUILDING_CODE"
                             [(ngModel)]="dataAdd.PRREGISBUILDING_CODE" />
-                        <label for="name">ประเภทสิ่งก่อสร้าง</label>
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-building text-secondary me-1"></i>ประเภทสิ่งก่อสร้าง</label>
                         <select name="provice_code" id="provice_code" class="form-select"
                             [(ngModel)]="dataAdd.PLBUILDINGTYPE_CODE">
                             <option [value]="assettype.PLBUILDINGTYPE_CODE" *ngFor="let assettype of dataAssettype">
@@ -129,7 +133,7 @@
                     <div class="form-group col-md-5"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-3">
-                        <label for="name">พื้นที่ติดตั้ง จังหวัด</label>
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-map-location-dot text-secondary me-1"></i>พื้นที่ติดตั้ง จังหวัด</label>
                         <select name="provice_code" id="provice_code" class="form-select"
                             (change)="onChangedistrict('')" [(ngModel)]="dataAdd.PROVINCE_ID">
                             <option [value]="provice.PROVINCE_ID" *ngFor="let provice of dataProvince">
@@ -137,7 +141,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="name">อำเภอ</label>
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-map-pin text-secondary me-1"></i>อำเภอ</label>
                         <select name="district_code" id="district_code" class="form-select"
                             (change)="onChangesubdistrict('')" [(ngModel)]="dataAdd.DISTRICT_ID">
                             <option [value]="" >กรุณาเลือก</option>
@@ -146,7 +150,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="name">ตำบล</label>
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-location-dot text-secondary me-1"></i>ตำบล</label>
                         <select name="subdistrict_code" id="subdistrict_code" class="form-select"
                             [(ngModel)]="dataAdd.SUB_DISTRICT_ID">
                             <option [value]="" >กรุณาเลือก</option>
@@ -157,7 +161,7 @@
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                       <label for="name">ชื่อสิ่งก่อสร้าง</label>
+                       <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-tags text-secondary me-1"></i>ชื่อสิ่งก่อสร้าง</label>
                        <!--  &nbsp;&nbsp;<button type="button" class="btn btn-primary"
                             (click)="setnameasset()">คัดลอกพื้นที่</button>
                         <textarea id="PRREGISBUILDING_NAME" name="PRREGISBUILDING_NAME"
@@ -172,7 +176,7 @@
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-2">
-                        <label for="name">หน่วยนับ</label>
+                        <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-ruler-combined text-secondary me-1"></i>หน่วยนับ</label>
                         <select name="u_code" id="u_code" class="form-select" [(ngModel)]="dataAdd.GCUNIT_CODE">
                             <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
                             </option>
@@ -181,11 +185,16 @@
 
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            <div class="modal-footer bg-light border-top-0 py-3">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm fw-bold" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-xmark me-1"></i>ปิด
+                </button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" (click)="insertdata()">
+                    <i class="fa-solid fa-floppy-disk me-1"></i>บันทึกข้อมูล
+                </button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" (click)="updatedata()">
+                    <i class="fa-solid fa-pen-to-square me-1"></i>แก้ไขข้อมูล
+                </button>
             </div>
         </div>
     </div>
