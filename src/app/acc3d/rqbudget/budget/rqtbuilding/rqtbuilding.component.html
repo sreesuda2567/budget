@@ -2,7 +2,7 @@
   <div class="card-header">
     <div class="row">
       <div class="col-md-9">
-        <h5 class="card-title">คำขอรายการสิ่งก่อสร้าง</h5>
+        <h5 class="card-title fw-bold"><i class="fa-solid fa-building me-2 text-primary"></i>คำขอรายการสิ่งก่อสร้าง</h5>
       </div>
       <div class="col-md-3" align="right">
         <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-danger text-white" data-bs-toggle="modal"
@@ -205,22 +205,24 @@
   aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
-      <div class="modal-header bg-primary">
-        <h5 class="modal-title text-white" id="exampleModalToggleLabel">รายละเอียดสิ่งก่อสร้าง</h5>
-        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+        <h5 class="modal-title fw-bold" id="exampleModalToggleLabel">
+          <i class="fa-solid fa-building me-2"></i>รายละเอียดสิ่งก่อสร้าง
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button (click)="showinputinnull()" class="nav-link active" id="home-tab" data-bs-toggle="tab"
               data-bs-target="#money" type="button" role="tab" aria-controls="home" aria-selected="true">
-              ส่วนที่ 1 แหล่งงบประมาณ/ผลผลิต/โครงการ
+              <i class="fa-solid fa-coins me-2"></i>ส่วนที่ 1 แหล่งงบประมาณ/ผลผลิต/โครงการ
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button (click)="showinputin()" class="nav-link" id="profile-tab" data-bs-toggle="tab"
               data-bs-target="#details" type="button" role="tab" aria-controls="profile" aria-selected="false">
-              ส่วนที่ 2 รายละเอียดสิ่งก่อสร้าง
+              <i class="fa-solid fa-building me-2"></i>ส่วนที่ 2 รายละเอียดสิ่งก่อสร้าง
             </button>
           </li>
         </ul>
@@ -231,10 +233,10 @@
                 <div class="col-md-12">
                   <div class="card">
                     <div class="card-header bg-info">
-                      แหล่งงบประมาณ/ผลผลิต/โครงการ
+                      <i class="fa-solid fa-coins me-2"></i>แหล่งงบประมาณ/ผลผลิต/โครงการ
                     </div>
                     <div class="card-body">
-                      <label for="name"><strong>แหล่งเงิน/ภาค<span class="text-danger">*</span></strong> </label>
+                      <label for="name"><strong><i class="fa-solid fa-money-bill-wave me-2 text-danger"></i>แหล่งเงิน/ภาค<span class="text-danger">*</span></strong> </label>
                       <div class="row">
                         <div class="col-md-4 text-secondary" style="font-size: 10pt">แหล่งเงิน: </div>
                         <div class="col-md-4 text-secondary" style="font-size: 10pt">ภาค: </div>
@@ -255,7 +257,7 @@
                           </select>
                         </div>
                       </div>
-                      <label for="name"><strong>ผลผลิต/โครงการ<span class="text-danger">*</span></strong> </label>
+                      <label for="name"><strong><i class="fa-solid fa-diagram-project me-2 text-danger"></i>ผลผลิต/โครงการ<span class="text-danger">*</span></strong> </label>
                       <table width="100%" border="0">
                         <tr *ngFor="let product of dataProduct;let i = index">
                           <td width="2%" align="left" valign="top">
@@ -317,7 +319,7 @@
             <div class="card-body">
               <div class="card">
                 <div class="card-header bg-info">
-                  รายละเอียดสิ่งก่อสร้าง
+                  <i class="fa-solid fa-building me-2"></i>รายละเอียดสิ่งก่อสร้าง
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -330,20 +332,20 @@
 
                   </div>
                   <div class="row">
-                    <div class="col-md-1">
-                      <label for="name"><strong>จำนวน<span class="text-danger">*</span></strong></label>
+                    <div class="col-md-2">
+                      <label for="name"><strong><i class="fa-solid fa-hashtag me-2 text-danger"></i>จำนวน<span class="text-danger">*</span></strong></label>
                       <input type="text" name="p_number" id="p_number" class="form-control" placeholder="จำนวน"
                         [(ngModel)]="dataAdd.PRBUILDING_NUMBER">
                     </div>
                     <div class="col-md-2">
-                      <label for="name"><strong>หน่วยนับ</strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong></label>
                       <select name="u_code" id="u_code" class="form-select" [(ngModel)]="dataAdd.GCUNIT_CODE"
                         disabled="">
                         <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}</option>
                       </select>
                     </div>
-                    <div class="col-md-2">
-                      <label for="name"><strong>ราคาต่อหน่วย<span class="text-danger">*</span></strong></label>
+                    <div class="col-md-3">
+                      <label for="name"><strong><i class="fa-solid fa-tag me-2 text-danger"></i>ราคาต่อหน่วย<span class="text-danger">*</span></strong></label>
                       <input type="text" name="p_money" id="p_money" class="form-control" (keypress)="CheckNum($event)"
                         (keyup)="keymon()" placeholder="ราคาต่อหน่วย" [(ngModel)]="dataAdd.PRBUILDING_MONEY">
                     </div>

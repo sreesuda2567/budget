@@ -2,12 +2,12 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-10">
-                <h5 class="card-title">ขออนุมัติเงินการรักษาพยาบาล</h5>
+                <h5 class="card-title fw-bold"><i class="fa-solid fa-file-medical me-2 text-primary"></i>หนังสือเข้าการรักษาพยาบาล</h5>
             </div>
             <div class="col-md-2" align="right">
-                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                <a class="btn btn-primary text-white px-3 shadow-sm " data-bs-toggle="modal" data-bs-target="#exampleModal"
                     (click)="showinput()" (click)="setshowbti()" (click)="fetchdataload()">
-                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+                    <i class="fa-solid fa-plus-circle me-1"></i> เพิ่มข้อมูล</a>
             </div>
         </div>
     </div>
@@ -149,8 +149,8 @@
 <div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-xxl">
         <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title  text-white" id="exampleModalLabel">หน้างบใบสำคัญการรักษาพยาบาล</h5>
+            <div class="modal-header bg-primary border-0">
+                <h5 class="modal-title fw-bold text-white" id="exampleModalLabel"><i class="fa-solid fa-file-medical me-2"></i>หนังสือเข้าการรักษาพยาบาล</h5>
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -159,114 +159,88 @@
                 </div>
                 <input type="hidden" class="form-control" name="FNANNALSMAP_CODE" id="FNANNALSMAP_CODE"
                     [(ngModel)]="dataAdd.FNANNALSMAP_CODE">
-                <div class="row">
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">เรียน</label>
-                        <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select" [(ngModel)]="dataAdd.CHIEF_CODE">
+                <div class="row px-3 pt-3">
+                    <div class="form-group col-md-11 mb-3 mx-auto">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-user-tie me-2 text-info"></i>เรียน</strong></label>
+                        <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select rounded-3" [(ngModel)]="dataAdd.CHIEF_CODE">
                             <option value="">กรุณาเลือก</option>
                             <option [value]="fac.CHIEF_CODE" *ngFor="let fac of datachief">{{fac.CHIEF_NAME2}}
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="col-md-10">
-                        <div class="form-group">
-                            <label class="form-label">ส่งเข้าสารบรรณ</label>
-                            <select name="EBOOKTYPE_CODE" id="EBOOKTYPE_CODE" class="form-select"
-                                [(ngModel)]="dataAdd.DEPARTMENT_CODE">
-                                <option value="">กรุณาเลือก</option>
-                                <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}
-                                </option>
-                            </select>
-                        </div>
+                    <div class="form-group col-md-11 mb-3 mx-auto">
+                        <label class="form-label mb-2"><strong><i class="fa-solid fa-envelope-open-text me-2 text-success"></i>ส่งเข้าสารบรรณ</strong></label>
+                        <select name="EBOOKTYPE_CODE" id="EBOOKTYPE_CODE" class="form-select rounded-3"
+                            [(ngModel)]="dataAdd.DEPARTMENT_CODE">
+                            <option value="">กรุณาเลือก</option>
+                            <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}
+                            </option>
+                        </select>
                     </div>
-                    <div class="form-group col-md-1"></div>
-                 <!--   <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-8">
-                        <label for="name">แนบไฟล์เอกสาร</label>
-                        <br>
-                        <input class="form-control" type="file" (change)="onChangepdf($event)"
-                            [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
-
-                    </div>
-                    <div class="col-md-2">
-                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
-                        </label>
-                        <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i
-                                class="fa-solid fa-file-pdf " style="color: green; font-size: 30px;"></i></a>
-                        &nbsp;
-                    </div>
-                    <div class="form-group col-md-1"></div>-->
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-2">
-                        <label for="name">ประเภทเงิน</label>
-                        <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select"
+                </div>
+                <div class="row px-3">
+                    <div class="form-group col-md-2 mb-3 ms-auto">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-coins me-2 text-warning"></i>ประเภทเงิน</strong></label>
+                        <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select rounded-3"
                             [(ngModel)]="dataAdd.PLINCOME_CODE">
                             <option [value]="item.PLINCOME_CODE" *ngFor="let item of dataIncome">
                                 {{item.PLINCOME_NAME}}
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-2">
-                        <label for="name">ประเภทบุคลากร</label>
-                        <select name="FNANNALSMAPTS_CODE" id="FNANNALSMAPTS_CODE" class="form-select"
+                    <div class="form-group col-md-3 mb-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-users me-2 text-primary"></i>ประเภทบุคลากร</strong></label>
+                        <select name="FNANNALSMAPTS_CODE" id="FNANNALSMAPTS_CODE" class="form-select rounded-3"
                             [(ngModel)]="dataAdd.FNANNALSMAPTS_CODE">
                             <option [value]="item.FNANNALSMAPTS_CODE" *ngFor="let item of dataStafftype">
                                 {{item.FNANNALSMAPTS_NAME}}
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="name">หน่วยเบิกจ่าย</label>
-                        <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select"
+                    <div class="form-group col-md-3 mb-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-building-columns me-2 text-secondary"></i>หน่วยเบิกจ่าย</strong></label>
+                        <select name="CAMPUS_CODE" id="CAMPUS_CODE" class="form-select rounded-3"
                             [(ngModel)]="dataAdd.CAMPUS_CODE">
                             <option [value]="item.CAMPUS_CODE" *ngFor="let item of datacampus">
                                 {{item.CAMPUS_TNAME}}
                             </option>
                         </select>
                     </div>
-        
-                    <div class="form-group col-md-3">
-                        <label for="name">ผู้ผ่านรายการ</label>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDC1">
+                    <div class="form-group col-md-3 mb-3 me-auto">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-user-check me-2 text-info"></i>ผู้ผ่านรายการ</strong></label>
+                        <select name="f_code" id="f_code" class="form-select rounded-3" [(ngModel)]="dataAdd.CITIZEN_IDC1">
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
                                 {{name.STF_FNAME}}
                             </option>
                         </select>
-
                     </div>
-                    <div class="form-group col-md-1"></div>
                 </div>
-                <div class="row" >
-                <div class="form-group col-md-1"></div>
-                <div class="form-group col-md-3"><label for="name">บัญชีแยกประเภท</label></div>
+                <div class="row px-3">
+                    <div class="form-group col-md-11 mb-2 mx-auto">
+                        <label for="name"><strong><i class="fa-solid fa-file-invoice-dollar me-2 text-success"></i>บัญชีแยกประเภท</strong></label>
+                    </div>
                 </div>
-                <div class="row" *ngFor="let i of number;">
-                    <div class="form-group col-md-1"></div>
-                    <div class="col-md-6">
-                        <select name="SECTION_CODE" id="SECTION_CODE" class="form-select"
+                <div class="row px-3" *ngFor="let i of number;">
+                    <div class="col-md-11 mb-2 mx-auto">
+                        <select name="SECTION_CODE" id="SECTION_CODE" class="form-select rounded-3"
                                   [(ngModel)]="dataAdd.FRACCCODE[i]" >
                                   <option [value]=""></option>
                                   <option [value]="sec.FRACC_CODE" *ngFor="let sec of dataAcc">
                                     {{sec.FRACC_TNAME}}-->{{sec.FRACC_CODE}}</option>
-                                </select>
+                        </select>
                     </div>
-                    
                 </div>
                 <br>
                 <table width="100%" border="1" cellpadding="0" cellspacing="0"
-                    class="table table-bordered table-striped">
+                    class="table table-bordered table-striped table-hover">
                     <thead>
-                        <tr style="background-color:rgb(131, 187, 243);">
-                            <td width="3%"><strong>ลำดับ</strong></td>
-                            <td align="center"><strong>วันที่ทำรายการ</strong></td>
-                            <td align="center"><strong>หน่วยงาน</strong></td>
-                            <td align="center"><strong>จำนวนเงิน</strong></td>
-                            <td align="center"><strong>รายงาน</strong></td>
-                            <td align="center"><strong>เลือก</strong></td>
+                        <tr class="text-center" style="background-color: rgb(131, 187, 243);">
+                            <td width="5%" class="align-middle"><strong>ลำดับ</strong></td>
+                            <td class="align-middle"><strong>วันที่ทำรายการ</strong></td>
+                            <td class="align-middle"><strong>หน่วยงาน</strong></td>
+                            <td class="align-middle"><strong>จำนวนเงิน</strong></td>
+                            <td class="align-middle"><strong>รายงาน</strong></td>
+                            <td class="align-middle"><strong>เลือก</strong></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -294,11 +268,11 @@
 
                 </table>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            <div class="modal-footer border-0 pt-0">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm"
+                    (click)="insertdata()"><i class="fa-solid fa-save me-2"></i>บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="updatedata()"><i class="fa-solid fa-save me-2"></i>แก้ไขข้อมูล</button>
             </div>
         </div>
     </div>

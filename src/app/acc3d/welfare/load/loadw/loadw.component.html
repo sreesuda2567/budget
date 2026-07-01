@@ -2,14 +2,14 @@
     <div class="card-header">
         <div class="row">
             <div class="col">
-                <h5 class="card-title mb-0">ออกใบโหลดสวัสดิการ(ขบ)</h5>
+                <h5 class="card-title fw-bold mb-0 mt-1"><i class="fa-solid fa-file-export me-2 text-primary"></i>ออกใบโหลดสวัสดิการ(ขบ)</h5>
             </div>
             <div class="col-auto">
-                <div class="btn-group" role="group">
+                <div class="btn-group shadow-sm rounded-3" role="group">
                     <a class="btn btn-danger text-white" (click)="fetchdatalist()">
-                        <i class="fa fa-plus-circle"></i> ออกใบโหลด</a>
-                    <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalistapp()"><i
-                            class="fa fa-search"></i>&nbsp;รายการใบโหลด</button>
+                        <i class="fa-solid fa-plus-circle me-1"></i> ออกใบโหลด</a>
+                    <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalistapp()">
+                        <i class="fa-solid fa-search me-1"></i> รายการใบโหลด</button>
                 </div>
             </div>
         </div>
@@ -235,82 +235,67 @@
 <div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกใบโหลด</h5>
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-primary border-0">
+                <h5 class="modal-title fw-bold text-white" id="exampleModalToggleLabel"><i class="fa-solid fa-file-export me-2"></i>ออกใบโหลด</h5>
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-3">
-                        <label for="name">เลขฎีกา</label>
-                        <input type="text" name="FNANNALSMAP_DEKA" class="form-control" id="FNANNALSMAP_DEKA"
+                <div class="row px-3 pt-3">
+                    <div class="form-group col-md-5 mb-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-hashtag me-2 text-warning"></i>เลขฎีกา</strong></label>
+                        <input type="text" name="FNANNALSMAP_DEKA" class="form-control rounded-3" id="FNANNALSMAP_DEKA"
                             placeholder="เลขฎีกา" [(ngModel)]="dataAdd.FNANNALSMAP_DEKA">
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="name">เลขเอกสาร</label>
-                        <input type="text" name="FNANNALSMAP_DOC" class="form-control" id="FNANNALSMAP_DOC"
+                    <div class="form-group col-md-4 mb-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-file-lines me-2 text-info"></i>เลขเอกสาร</strong></label>
+                        <input type="text" name="FNANNALSMAP_DOC" class="form-control rounded-3" id="FNANNALSMAP_DOC"
                             placeholder="เลขเอกสาร" [(ngModel)]="dataAdd.FNANNALSMAP_DOC">
                     </div>
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt">
-                        <label> วันที่ผ่านรายการเบิก: </label>
-                        <input placeholder="วันที่ผ่านรายการเบิก" type="text" class="form-control" bsDatepicker
+                    <div class="col-md-3 mb-3 text-secondary" style="font-size: 10pt">
+                        <label class="mb-2"><strong><i class="fa-solid fa-calendar-check me-2 text-success"></i>วันที่ผ่านรายการเบิก:</strong> </label>
+                        <input placeholder="วันที่ผ่านรายการเบิก" type="text" class="form-control rounded-3" bsDatepicker
                             #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
-                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                        <i style="margin-top: -1.8rem;float: right;font-size:15px; margin-right: 12px;"
                             class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
                         </i>
                     </div>
-                    <div class="form-group col-md-2"></div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">เรียน</label>
-                        <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select" [(ngModel)]="dataAdd.CHIEF_CODE">
+                </div>
+                <div class="row px-3">
+                    <div class="form-group col-md-11 mb-3 mx-auto">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-user-tie me-2 text-info"></i>เรียน</strong></label>
+                        <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select rounded-3" [(ngModel)]="dataAdd.CHIEF_CODE">
                             <option value="">กรุณาเลือก</option>
                             <option [value]="fac.CHIEF_CODE" *ngFor="let fac of datachief">{{fac.CHIEF_NAME2}}
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="col-md-10">
-                        <div class="form-group">
-                            <label class="form-label">ส่งเข้าสารบรรณ</label>
-                            <select name="EBOOKTYPE_CODE" id="EBOOKTYPE_CODE" class="form-select"
-                                [(ngModel)]="dataAdd.DEPARTMENT_CODE">
-                                <option value="">กรุณาเลือก</option>
-                                <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}
-                                </option>
-                            </select>
+                    <div class="form-group col-md-11 mb-3 mx-auto">
+                        <label class="form-label mb-2"><strong><i class="fa-solid fa-envelope-open-text me-2 text-success"></i>ส่งเข้าสารบรรณ</strong></label>
+                        <select name="EBOOKTYPE_CODE" id="EBOOKTYPE_CODE" class="form-select rounded-3"
+                            [(ngModel)]="dataAdd.DEPARTMENT_CODE">
+                            <option value="">กรุณาเลือก</option>
+                            <option [value]="type.mapSectionCode" *ngFor="let type of dataEdoc">{{type.Name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row px-3 pb-3">
+                    <div class="form-group col-md-11 mb-3 mx-auto">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-paperclip me-2 text-primary"></i>แนบไฟล์เอกสาร</strong></label>
+                        <div class="d-flex align-items-center">
+                            <input class="form-control rounded-3" type="file" (change)="onChangepdf($event)"
+                                [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
+                            <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank" class="ms-3" title="ดูไฟล์เอกสาร"><i class="fa-solid fa-file-pdf" style="color: #e3342f; font-size: 30px;"></i></a>
                         </div>
                     </div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-8">
-                        <label for="name">แนบไฟล์เอกสาร</label>
-                        <br>
-                        <input class="form-control" type="file" (change)="onChangepdf($event)"
-                            [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
-
-                    </div>
-                    <div class="col-md-2">
-                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ไฟล์
-                        </label>
-                        <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"><i class="fa-solid fa-file-pdf "
-                                            style="color: green; font-size: 30px;"></i></a>
-                        &nbsp;
-                    </div>
-                    <div class="form-group col-md-1"></div>
-
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
-
+            <div class="modal-footer border-0 pt-0">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm"
+                    (click)="insertdata()"><i class="fa-solid fa-save me-2"></i>บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="updatedata()"><i class="fa-solid fa-save me-2"></i>แก้ไขข้อมูล</button>
             </div>
         </div>
     </div>

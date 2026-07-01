@@ -2,12 +2,12 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-10">
-                <h5 class="card-title">หน้างบใบสำคัญการศึกษาของบุตร</h5>
+                <h5 class="card-title fw-bold"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>หน้างบใบสำคัญการศึกษาของบุตร</h5>
             </div>
             <div class="col-md-2" align="right">
-                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                <a class="btn btn-primary text-white px-3 shadow-sm " data-bs-toggle="modal" data-bs-target="#exampleModal"
                     (click)="showinput()" (click)="setshowbti()" (click)="fetchdataload()">
-                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+                    <i class="fa-solid fa-plus-circle me-1"></i> เพิ่มข้อมูล</a>
             </div>
         </div>
     </div>
@@ -134,10 +134,10 @@
 <!-- The Modal -->
 <div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-xxl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title " id="exampleModalLabel">หน้างบใบสำคัญการศึกษาของบุตร</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-primary border-0">
+                <h5 class="modal-title fw-bold text-white" id="exampleModalLabel"><i class="fa-solid fa-graduation-cap me-2"></i>หน้างบใบสำคัญการศึกษาของบุตร</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
@@ -145,45 +145,45 @@
                 </div>
                 <input type="hidden" class="form-control" name="FEPSTATE_CODE" id="FEPSTATE_CODE"
                     [(ngModel)]="dataAdd.FEPSTATE_CODE">
-                <div class="row">
-                    <div class="col-md-12 text-secondary" style="font-size: 10pt">
-                        <label> คณะ /หน่วยงาน: </label>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
+                <div class="row px-3 pt-3">
+                    <div class="col-md-12 mb-3 text-secondary" style="font-size: 10pt">
+                        <label class="mb-2"><strong><i class="fa-solid fa-building me-2 text-info"></i>คณะ /หน่วยงาน:</strong> </label>
+                        <select name="f_code" id="f_code" class="form-select rounded-3" [(ngModel)]="dataAdd.FACULTY_CODE"
                             (change)="fetchdataload()">
                             <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}
                             </option>
                         </select>
                     </div>
-                    <div *ngIf="rowpbu" class="col-md-3 text-secondary" style="font-size: 10pt">
-                        <label> วันที่โอนเงินเข้าบัญชี: </label>
-                        <input placeholder="วันที่โอนเงิน" type="text" class="form-control" bsDatepicker
+                    <div *ngIf="rowpbu" class="col-md-6 mb-3 text-secondary" style="font-size: 10pt">
+                        <label class="mb-2"><strong><i class="fa-solid fa-calendar-day me-2 text-success"></i>วันที่โอนเงินเข้าบัญชี:</strong> </label>
+                        <input placeholder="วันที่โอนเงิน" type="text" class="form-control rounded-3" bsDatepicker
                             #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
-                        <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                        <i style="margin-top: -1.8rem;float: right;font-size:15px; margin-right: 12px;"
                             class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
                         </i>
                     </div>
-                    <div *ngIf="rowpbu" class="col-md-3 text-secondary" style="font-size: 10pt">
-                        <label> เลขฎีกา: </label>
-                        <input type="text" name="FEPSTATE_NDEKA" class="form-control" id="FEPSTATE_NDEKA"
+                    <div *ngIf="rowpbu" class="col-md-6 mb-3 text-secondary" style="font-size: 10pt">
+                        <label class="mb-2"><strong><i class="fa-solid fa-hashtag me-2 text-warning"></i>เลขฎีกา:</strong> </label>
+                        <input type="text" name="FEPSTATE_NDEKA" class="form-control rounded-3" id="FEPSTATE_NDEKA"
                             placeholder="เลขฎีกา" [(ngModel)]="dataAdd.FEPSTATE_NDEKA">
                     </div>
                 </div>
                 <br>
                 <table width="100%" border="1" cellpadding="0" cellspacing="0"
-                    class="table table-bordered table-striped">
+                    class="table table-bordered table-striped table-hover">
                     <thead>
-                        <tr style="background-color:rgb(131, 187, 243);">
-                            <td width="3%"><strong>ลำดับ</strong></td>
-                            <td align="center"><strong>ชื่อ-สกุล</strong></td>
-                            <td align="center"><strong>ประเภทบุคลากร</strong></td>
-                            <td align="center"><strong>สำหรับ</strong></td>
-                            <td align="center"><strong>ระดับ</strong></td>
-                            <td align="center"><strong>เป็นของ</strong></td>
-                            <td align="center"><strong>เทอม</strong></td>
-                            <td align="center"><strong>จำนวนเงินตามใบเสร็จ</strong></td>
-                            <td align="center"><strong>จำนวนเงินที่เบิกได้</strong></td>
-                            <td align="center"><strong>รายงาน</strong></td>
-                            <td align="center"><strong>เลือก</strong></td>
+                        <tr class="text-center" style="background-color: rgb(131, 187, 243);">
+                            <td width="5%" class="align-middle"><strong>ลำดับ</strong></td>
+                            <td class="align-middle"><strong>ชื่อ-สกุล</strong></td>
+                            <td class="align-middle"><strong>ประเภทบุคลากร</strong></td>
+                            <td class="align-middle"><strong>สำหรับ</strong></td>
+                            <td class="align-middle"><strong>ระดับ</strong></td>
+                            <td class="align-middle"><strong>เป็นของ</strong></td>
+                            <td class="align-middle"><strong>เทอม</strong></td>
+                            <td class="align-middle"><strong>จำนวนเงินตามใบเสร็จ</strong></td>
+                            <td class="align-middle"><strong>จำนวนเงินที่เบิกได้</strong></td>
+                            <td class="align-middle"><strong>รายงาน</strong></td>
+                            <td class="align-middle"><strong>เลือก</strong></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -213,14 +213,13 @@
                             </td>
                         </tr>
                     </tbody>
-
                 </table>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            <div class="modal-footer border-0 pt-0">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm"
+                    (click)="insertdata()"><i class="fa-solid fa-save me-2"></i>บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="updatedata()"><i class="fa-solid fa-save me-2"></i>แก้ไขข้อมูล</button>
             </div>
         </div>
     </div>

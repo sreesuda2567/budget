@@ -2,12 +2,12 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-10">
-                <h5 class="card-title">หมวดเงิน</h5>
+                <h5 class="card-title fw-bold"><i class="fa-solid fa-coins me-2 text-primary"></i>หมวดเงิน</h5>
             </div>
             <div class="col-md-2" align="right">
-                <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                <a  class="btn btn-primary text-white px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalEdit"
                     (click)="showinput()" (click)="setshowbti()">
-                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+                    <i class="fa-solid fa-plus-circle me-1"></i> เพิ่มข้อมูล</a>
             </div>
         </div>
     </div>
@@ -99,33 +99,33 @@
 <!-- Modal -->
 
 <div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-primary border-0">
+                <h5 class="modal-title fw-bold text-white" id="exampleModalToggleLabel"><i class="fa-solid fa-coins me-2"></i>{{htmlStringd}}</h5>
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-4">
 
                 <div class="row">
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                        <label for="name">รหัสหมวดเงิน</label>
-                        <input type="text" name="PLMONEYTYPE_CODE" class="form-control" id="PLMONEYTYPE_CODE"
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-barcode me-2 text-secondary"></i>รหัสหมวดเงิน</strong></label>
+                        <input type="text" name="PLMONEYTYPE_CODE" class="form-control rounded-3" id="PLMONEYTYPE_CODE"
                             placeholder="รหัสหมวดเงิน" [(ngModel)]="dataAdd.PLMONEYTYPE_CODE">
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">ชื่อหมวดเงิน</label>
-                        <input type="text" name="PLMONEYTYPE_NAME" class="form-control" id="PLMONEYTYPE_NAME"
+                    <div class="form-group col-md-10 mt-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-coins me-2 text-primary"></i>ชื่อหมวดเงิน</strong></label>
+                        <input type="text" name="PLMONEYTYPE_NAME" class="form-control rounded-3" id="PLMONEYTYPE_NAME"
                             placeholder="ชื่อหมวดเงิน" [(ngModel)]="dataAdd.PLMONEYTYPE_NAME">
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">สถานะ</label>
-                        <select name="PLMONEYTYPE_ASTATUS" id="PLMONEYTYPE_ASTATUS" class="form-select" [(ngModel)]="dataAdd.PLMONEYTYPE_ASTATUS" >
+                    <div class="form-group col-md-10 mt-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-toggle-on me-2 text-success"></i>สถานะ</strong></label>
+                        <select name="PLMONEYTYPE_ASTATUS" id="PLMONEYTYPE_ASTATUS" class="form-select rounded-3" [(ngModel)]="dataAdd.PLMONEYTYPE_ASTATUS" >
                             <option value="1" >ใช้งาน</option>
                             <option value="0" >ไม่ใช้งาน</option>
                           </select>
@@ -133,11 +133,11 @@
                     <div class="form-group col-md-1"></div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            <div class="modal-footer border-0 pt-0">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm"
+                    (click)="insertdata()"><i class="fa-solid fa-save me-2"></i>บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="updatedata()"><i class="fa-solid fa-save me-2"></i>แก้ไขข้อมูล</button>
             </div>
         </div>
     </div>

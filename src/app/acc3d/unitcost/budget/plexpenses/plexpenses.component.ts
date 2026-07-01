@@ -53,7 +53,7 @@ export class PlexpensesComponent implements OnInit {
   rownum: any;
   dataMoneypay: any;
   element: any;
-  number: any = [1, 2, 3, 4, 5];
+  number: any = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   //apstatus: any;
   datafrc: any;
   dataEDepartment: any;
@@ -732,7 +732,7 @@ export class PlexpensesComponent implements OnInit {
     this.dataAdd.PLPROJECT_CODE = '';
     this.dataAdd.FNCREDITOR_CODE1 = '';
     this.dataAdd.FNCREDITOR_CODE = '';
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       this.dataAdd.FNEXACCCODE[i] = '';
       this.dataAdd.FRACCCODE[i] = '';
       this.dataAdd.FNEXACCRDATE[i] = '';

@@ -2,14 +2,14 @@
     <div class="card-header">
         <div class="row">
             <div class="col">
-                <h5 class="card-title mb-0">ออกใบปะหน้าจ่ายเงินสวัสดิการ</h5>
+                <h5 class="card-title fw-bold mb-0 mt-1"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ออกใบปะหน้าจ่ายเงินสวัสดิการ</h5>
             </div>
             <div class="col-auto">
-                <div class="btn-group" role="group">
+                <div class="btn-group shadow-sm rounded-3" role="group">
                     <a class="btn btn-danger text-white" (click)="fetchdatalist()">
-                        <i class="fa fa-plus-circle"></i> ออกใบปะหน้าจ่าย</a>
-                    <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalistapp()"><i
-                            class="fa fa-search"></i>&nbsp;รายการใบปะหน้าจ่าย</button>
+                        <i class="fa-solid fa-plus-circle me-1"></i> ออกใบปะหน้าจ่าย</a>
+                    <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalistapp()">
+                        <i class="fa-solid fa-search me-1"></i> รายการใบปะหน้าจ่าย</button>
                 </div>
             </div>
         </div>
@@ -234,26 +234,22 @@
 <div class="modal fade" data-bs-focus="false" id="exampleModalupdate" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">ออกใบปะหน้าจ่ายเงินสวัสดิการ</h5>
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-primary border-0">
+                <h5 class="modal-title fw-bold text-white" id="exampleModalToggleLabel"><i class="fa-solid fa-file-invoice-dollar me-2"></i>ออกใบปะหน้าจ่ายเงินสวัสดิการ</h5>
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
-               
-                    <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">ผู้รับผิดชอบ</label>
-                        <br>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.CITIZEN_IDD1">
+                <div class="row px-3 pt-3 pb-3">
+                    <div class="form-group col-md-11 mb-3 mx-auto">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-user-tie me-2 text-info"></i>ผู้รับผิดชอบ</strong></label>
+                        <select name="f_code" id="f_code" class="form-select rounded-3" [(ngModel)]="dataAdd.CITIZEN_IDD1">
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataName">
                                 {{name.STF_FNAME}}
                             </option>
                         </select>
-
                     </div>
-                    <div class="form-group col-md-1"></div>
               <!--    <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
                         <label for="name">เรียน</label>
@@ -297,12 +293,11 @@
 
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
-
+            <div class="modal-footer border-0 pt-0">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm"
+                    (click)="insertdata()"><i class="fa-solid fa-save me-2"></i>บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="updatedata()"><i class="fa-solid fa-save me-2"></i>แก้ไขข้อมูล</button>
             </div>
         </div>
     </div>

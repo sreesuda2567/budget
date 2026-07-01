@@ -2,12 +2,12 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-10">
-                <h5 class="card-title">หมวดรายจ่าย</h5>
+                <h5 class="card-title fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>หมวดรายจ่าย</h5>
             </div>
             <div class="col-md-2" align="right">
-                <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                <a  class="btn btn-primary text-white px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalEdit"
                     (click)="showinput()" (click)="setshowbti()">
-                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
+                    <i class="fa-solid fa-plus-circle me-1"></i> เพิ่มข้อมูล</a>
             </div>
         </div>
     </div>
@@ -101,19 +101,19 @@
 <!-- Modal -->
 
 <div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-primary border-0">
+                <h5 class="modal-title fw-bold text-white" id="exampleModalToggleLabel"><i class="fa-solid fa-file-invoice-dollar me-2"></i>{{htmlStringd}}</h5>
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-4">
 
                 <div class="row">
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                        <label for="name">หมวดเงิน</label>
-                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLMONEYTYPE_CODE" >
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-coins me-2 text-secondary"></i>หมวดเงิน</strong></label>
+                        <select name="y_code" id="y_code" class="form-select rounded-3" [(ngModel)]="dataAdd.PLMONEYTYPE_CODE" >
                             <option value="" >กรุณาเลือก</option>
                             <option [value]="type.PLMONEYTYPE_CODE" *ngFor="let type of dataplmoneytype">{{type.PLMONEYTYPE_NAME}}
                             </option>
@@ -121,30 +121,30 @@
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">รหัสหมวดรายจ่าย</label>
-                        <input type="text" name="PLMONEYPAY_CODE" class="form-control" id="PLMONEYPAY_CODE"
+                    <div class="form-group col-md-10 mt-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-barcode me-2 text-info"></i>รหัสหมวดรายจ่าย</strong></label>
+                        <input type="text" name="PLMONEYPAY_CODE" class="form-control rounded-3" id="PLMONEYPAY_CODE"
                             placeholder="รหัสหมวดรายจ่าย" [(ngModel)]="dataAdd.PLMONEYPAY_CODE">
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">ชื่อหมวดรายจ่าย</label>
-                        <input type="text" name="PLMONEYPAY_NAME" class="form-control" id="PLMONEYPAY_NAME"
+                    <div class="form-group col-md-10 mt-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ชื่อหมวดรายจ่าย</strong></label>
+                        <input type="text" name="PLMONEYPAY_NAME" class="form-control rounded-3" id="PLMONEYPAY_NAME"
                             placeholder="ชื่อหมวดรายจ่าย" [(ngModel)]="dataAdd.PLMONEYPAY_NAME">
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">ลำดับ</label>
-                        <input type="text" name="PLMONEYPAY_ORDER" class="form-control" id="PLMONEYPAY_ORDER"
+                    <div class="form-group col-md-10 mt-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-list-ol me-2 text-warning"></i>ลำดับ</strong></label>
+                        <input type="text" name="PLMONEYPAY_ORDER" class="form-control rounded-3" id="PLMONEYPAY_ORDER"
                             placeholder="ลำดับ" [(ngModel)]="dataAdd.PLMONEYPAY_ORDER">
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
-                    <div class="form-group col-md-10">
-                        <label for="name">สถานะ</label>
-                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLMONEYPAY_ASTATUS" >
+                    <div class="form-group col-md-10 mt-3">
+                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-toggle-on me-2 text-success"></i>สถานะ</strong></label>
+                        <select name="y_code" id="y_code" class="form-select rounded-3" [(ngModel)]="dataAdd.PLMONEYPAY_ASTATUS" >
                             <option value="" >กรุณาเลือก</option>
                             <option [value]="type.SASTATUS_CODE" *ngFor="let type of datastatus">{{type.SASTATUS_NAME}}
                             </option>
@@ -153,11 +153,11 @@
                     <div class="form-group col-md-1"></div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+            <div class="modal-footer border-0 pt-0">
+                <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm"
+                    (click)="insertdata()"><i class="fa-solid fa-save me-2"></i>บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="updatedata()"><i class="fa-solid fa-save me-2"></i>แก้ไขข้อมูล</button>
             </div>
         </div>
     </div>

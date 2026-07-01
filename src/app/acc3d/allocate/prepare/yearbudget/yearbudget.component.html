@@ -2,7 +2,7 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-10">
-                <h5 class="card-title">ปีงบประมาณ</h5>
+                <h5 class="card-title fw-bold"><i class="fa-solid fa-calendar-days me-2 text-primary"></i>ปีงบประมาณ</h5>
             </div>
             <div class="col-md-2" align="right">
                 <a  class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit"
@@ -47,8 +47,9 @@
                                 </div>
                             </div>
                         </div>
-                        <table width="100%" id="example"
-                            class="shadow-lg table table-bordered  table-striped table-hover tableFixHead btn-font3">
+                        <div class="table-responsive-lg">
+                            <table width="100%" id="example"
+                                class="shadow-lg table table-bordered  table-striped table-hover tableFixHead btn-font3">
                             <thead>
                                 <tr class="bg-primary text-white">
                                     <th> <div align="center">ที่</div></th>
@@ -88,7 +89,8 @@
                                     <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
                                 </tr>
                             </tbody>
-                        </table>
+                            </table>
+                        </div>
                         <div class="d-flex justify-content-left">
                             <pagination-controls previousLabel="Prev" nextLabel="Next"
                                 (pageChange)="onTableDataChange($event)">
@@ -103,51 +105,56 @@
 <!-- Modal -->
 
 <div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalToggleLabel">{{htmlStringd}}</h5>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold text-white" id="exampleModalToggleLabel"><i class="fa-solid fa-calendar-check me-2"></i>{{htmlStringd}}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
                 <div class="row">
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                        <label for="name">รหัสปีงบประมาณ</label>
+                        <label for="name"><strong><i class="fa-solid fa-barcode me-2 text-secondary"></i>รหัสปีงบประมาณ</strong></label>
                         <input type="text" name="PLYEARBUDGET_CODE" class="form-control" id="PLYEARBUDGET_CODE"
                             placeholder="รหัสหมวดรายจ่าย" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                        <label for="name">ชื่อปีงบประมาณ</label>
+                        <label for="name"><strong><i class="fa-solid fa-file-signature me-2 text-secondary"></i>ชื่อปีงบประมาณ</strong></label>
                         <input type="text" name="PLYEARBUDGET_NAME" class="form-control" id="PLYEARBUDGET_NAME"
                             placeholder="ชื่อหมวดรายจ่าย" [(ngModel)]="dataAdd.PLYEARBUDGET_NAME">
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                        <label for="name">ตั้งแต่วันที่</label>
+                        <label for="name"><strong><i class="fa-regular fa-calendar-days me-2 text-secondary"></i>ตั้งแต่วันที่</strong></label>
+                        <div class="input-group">
                             <input type="text" name="PLYEARBUDGET_SDATE" id="PLYEARBUDGET_SDATE" bsDatepicker #dp="bsDatepicker" class="form-control"
-                    placeholder="ตั้งแต่" [(ngModel)]="dataAdd.PLYEARBUDGET_SDATE">
-                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
-                class="fa-solid fa-calendar-days cursor-p text-primary"  (click)="dp.toggle()">
-              </i>
+                            placeholder="ตั้งแต่" [(ngModel)]="dataAdd.PLYEARBUDGET_SDATE">
+                            <button class="btn btn-outline-primary" type="button" (click)="dp.toggle()">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                        <label for="name">ถึงวันที่</label>
-                        <input type="text" name="PLYEARBUDGET_EDATE" id="PLYEARBUDGET_EDATE" bsDatepicker #dp2="bsDatepicker" class="form-control"
-                    placeholder="ถึงวันที่" [(ngModel)]="dataAdd.PLYEARBUDGET_EDATE">
-                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
-                    class="fa-solid fa-calendar-days cursor-p text-primary"  (click)="dp2.toggle()"></i>
+                        <label for="name"><strong><i class="fa-regular fa-calendar-check me-2 text-secondary"></i>ถึงวันที่</strong></label>
+                        <div class="input-group">
+                            <input type="text" name="PLYEARBUDGET_EDATE" id="PLYEARBUDGET_EDATE" bsDatepicker #dp2="bsDatepicker" class="form-control"
+                            placeholder="ถึงวันที่" [(ngModel)]="dataAdd.PLYEARBUDGET_EDATE">
+                            <button class="btn btn-outline-primary" type="button" (click)="dp2.toggle()">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-1"></div>
                     <div class="form-group col-md-10">
-                        <label for="name">สถานะ</label>
+                        <label for="name"><strong><i class="fa-solid fa-toggle-on me-2 text-secondary"></i>สถานะ</strong></label>
                         <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_RSTATUS" >
                             <option value="A" >ใช้งาน</option>
                             <option value="D" >ไม่ใช้งาน</option>
@@ -157,10 +164,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
+                <button *ngIf="rowpbi" type="button" class="btn btn-primary rounded-pill px-4"
+                    (click)="insertdata()"><i class="fa-solid fa-save me-2"></i>บันทึกข้อมูล</button>
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary rounded-pill px-4" (click)="updatedata()"><i class="fa-solid fa-save me-2"></i>แก้ไขข้อมูล</button>
             </div>
         </div>
     </div>

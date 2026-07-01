@@ -212,25 +212,25 @@
           <li class="nav-item" role="presentation">
             <button (click)="showinputinnull()" class="nav-link active" id="home-tab" data-bs-toggle="tab"
               data-bs-target="#money" type="button" role="tab" aria-controls="home" aria-selected="true">
-              ส่วนที่ 1 แหล่งงบประมาณ/ผลผลิต/โครงการ
+              <i class="fa-solid fa-coins me-2"></i>ส่วนที่ 1 แหล่งงบประมาณ/ผลผลิต/โครงการ
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button (click)="showinputinnull()" class="nav-link" id="profile-tab" data-bs-toggle="tab"
               data-bs-target="#policy" type="button" role="tab" aria-controls="profile" aria-selected="false">
-              ส่วนที่ 2 ความสอดคล้องระดับนโยบายประเทศ/มหาวิทยาลัย
+              <i class="fa-solid fa-handshake me-2"></i>ส่วนที่ 2 ความสอดคล้องระดับนโยบายประเทศ/มหาวิทยาลัย
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button (click)="showinputinnull()" class="nav-link" id="contact-tab" data-bs-toggle="tab"
               data-bs-target="#details" type="button" role="tab" aria-controls="contact" aria-selected="false">
-              ส่วนที่ 3 รายละเอียดครุภัณฑ์
+              <i class="fa-solid fa-list me-2"></i>ส่วนที่ 3 รายละเอียดครุภัณฑ์
             </button>
           </li>
           <li class="nav-item" role="presentation">
             <button (click)="showinputin()" class="nav-link" id="contact-tab" data-bs-toggle="tab"
               data-bs-target="#spec" type="button" role="tab" aria-controls="contact" aria-selected="false">
-              ส่วนที่ 4 คุณลักษณะเฉพาะครุภัณฑ์
+              <i class="fa-solid fa-clipboard-list me-2"></i>ส่วนที่ 4 คุณลักษณะเฉพาะครุภัณฑ์
             </button>
           </li>
         </ul>
@@ -242,10 +242,10 @@
                 <div class="col-md-12">
                   <div class="card">
                     <div class="card-header bg-info">
-                      แหล่งงบประมาณ/ผลผลิต/โครงการ
+                      <i class="fa-solid fa-coins me-2"></i>แหล่งงบประมาณ/ผลผลิต/โครงการ
                     </div>
                     <div class="card-body">
-                      <label for="name"><strong>แหล่งเงิน/ภาค <span class="text-danger">*</span></strong> </label>
+                      <label for="name"><strong><i class="fa-solid fa-money-bill-wave me-2 text-danger"></i>แหล่งเงิน/ภาค <span class="text-danger">*</span></strong> </label>
                       <div class="row">
                         <div class="col-md-4 text-secondary" style="font-size: 10pt">แหล่งเงิน: </div>
                         <div class="col-md-4 text-secondary" style="font-size: 10pt">ภาค: </div>
@@ -273,7 +273,7 @@
                           </select>
                         </div>
                       </div>
-                      <label for="name"><strong>ผลผลิต/โครงการ <span class="text-danger">*</span></strong> </label>
+                      <label for="name"><strong><i class="fa-solid fa-diagram-project me-2 text-danger"></i>ผลผลิต/โครงการ <span class="text-danger">*</span></strong> </label>
                       <table width="100%" border="0">
                         <tr *ngFor="let product of dataProduct;let i = index">
                           <td width="2%" align="left" valign="top">
@@ -338,7 +338,7 @@
             <div class="card-body">
               <div class="card">
                 <div class="card-header bg-info">
-                  ความสอดคล้องระดับนโยบายประเทศ/มหาวิทยาลัย
+                  <i class="fa-solid fa-handshake me-2"></i>ความสอดคล้องระดับนโยบายประเทศ/มหาวิทยาลัย
                 </div>
                 <div class="card-body">
                   <label for="name"><strong>1. รายการครุภัณฑ์ตอบสนองภารกิจ <span
@@ -409,7 +409,7 @@
             <div class="card-body">
               <div class="card">
                 <div class="card-header bg-info">
-                  รายละเอียดครุภัณฑ์
+                  <i class="fa-solid fa-list me-2"></i>รายละเอียดครุภัณฑ์
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -420,28 +420,31 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-1">
-                      <label for="name"><strong>จำนวน<span class="text-danger">*</span></strong></label>
+                    <div class="col-md-2">
+                      <label for="name"><strong><i class="fa-solid fa-hashtag me-2 text-danger"></i>จำนวน<span class="text-danger">*</span></strong></label>
                       <input type="text" name="p_number" id="p_number" class="form-control" placeholder="จำนวน"
                         [(ngModel)]="dataAdd.PRASSET_NUMBER" (keyup)="calexpenses()">
                     </div>
                     <div class="col-md-2">
-                      <label for="name"><strong>หน่วยนับ</strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong></label>
                       <select name="u_code" id="u_code" class="form-select" [(ngModel)]="dataAdd.GCUNIT_CODE"
                         disabled="">
                         <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
                         </option>
                       </select>
                     </div>
-                    <div class="col-md-2">
-                      <label for="name"><strong>ราคาต่อหน่วย <span class="text-danger">*</span></strong></label>
+                    <div class="col-md-3">
+                      <label for="name"><strong><i class="fa-solid fa-tag me-2 text-danger"></i>ราคาต่อหน่วย <span class="text-danger">*</span></strong></label>
                       <input type="text" name="p_money" id="p_money" class="form-control" (keypress)="CheckNum($event)"
                         placeholder="ราคาต่อหน่วย" [(ngModel)]="dataAdd.PRASSET_MONEY" (keyup)="calexpenses()">
                     </div>
-                    <div class="form-group col-md-2 text-danger">
-                      <label for="name"><strong>งบประมาณทั้งหมด</strong></label>
-                      <br>
-                      <div style="font-size: 18pt"> {{dataAdd.sum| number : '1.2-2'}} </div>
+                    <div class="col-md-5">
+                      <div class="p-3 rounded-4 shadow-sm" style="background-color: #fdf2f2; color: #c0392b; border: 1px solid #fadbd8; display: inline-block; min-width: 250px;">
+                        <label for="name" class="mb-1 d-block" style="font-size: 1.1rem;"><strong><i class="fa-solid fa-coins me-1"></i> งบประมาณทั้งหมด</strong></label>
+                        <div style="font-size: 22pt; font-weight: bold; line-height: 1;">
+                          {{dataAdd.sum| number : '1.2-2'}} <span style="font-size: 14pt; font-weight: normal;">บาท</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="row">
@@ -892,7 +895,7 @@
             <div class="card-body">
               <div class="card">
                 <div class="card-header bg-info">
-                  คุณลักษณะเฉพาะครุภัณฑ์
+                  <i class="fa-solid fa-clipboard-list me-2"></i>คุณลักษณะเฉพาะครุภัณฑ์
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -915,11 +918,11 @@
                     </div>
                   </div>-->
                   <div class="row">
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> ผู้ออกรายละเอียดคนที่ 1 <span
+                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> <i class="fa-solid fa-user-pen me-2"></i>ผู้ออกรายละเอียดคนที่ 1 <span
                         class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span></div>
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> ผู้ออกรายละเอียดคนที่ 2 <span
+                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> <i class="fa-solid fa-user-pen me-2"></i>ผู้ออกรายละเอียดคนที่ 2 <span
                         class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span></div>
-                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> ผู้ออกรายละเอียดคนที่ 3 <span
+                    <div class="col-md-3 text-secondary" style="font-size: 10pt"> <i class="fa-solid fa-user-pen me-2"></i>ผู้ออกรายละเอียดคนที่ 3 <span
                         class="text-danger">*(ค้นหาชื่อไม่ต้องใส่คำนำหน้า)</span></div>
                   </div>
                   <div class="row">
@@ -972,7 +975,7 @@
                       </div>
                     </div>
                     <div class="col-md-8">
-                      <label for="name">แนบไฟล์แบบรายละเอียดคุณลักษณะเฉพาะครุภัณฑ์(Spec) (ไฟล์สกุล .pdf)
+                      <label for="name"><i class="fa-solid fa-file-pdf me-2 text-danger"></i>แนบไฟล์แบบรายละเอียดคุณลักษณะเฉพาะครุภัณฑ์(Spec) (ไฟล์สกุล .pdf)
                       </label>
                       <input type="hidden" name="p_sto2" class="form-control" id="p_sto2" placeholder="">
                       <input class="form-control" type="file" (change)="onChangespec($event)"
