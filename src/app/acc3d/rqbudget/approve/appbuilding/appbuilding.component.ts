@@ -865,10 +865,8 @@ export class AppbuildingComponent implements OnInit {
           this.fetchdatalist();
           this.editdata(this.dataAdd.PRBUILDING_CODE);
           this.rowpbi = null;
-          //document.getElementById("ModalClose")?.click();
-        } else if (data.status == 0) {
-          this.toastr.warning("แจ้งเตือน:กรุณากรอกเหตุผลความจำเป็นอย่างน้อย 1 หน้ากระดาษ");
-        }
+          document.getElementById("ModalCloseupdate")?.click();
+        } 
       });
     // }
   }

@@ -109,7 +109,7 @@
                   <div *ngIf="p.PRASSET_NOTE" class="text-danger">
                     <br>
                  ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})</div>
-                 <span *ngIf="p.PRREGISBUILDING_CODE !=p.PRREGISBUILDING_CODEA && p.PRREGISBUILDING_CODEA!=null"  class="text-danger">
+                 <span *ngIf="(p.PRREGISBUILDING_CODE !=p.PRREGISBUILDING_CODEA) && (p.PRREGISBUILDING_CODEA !=null)"  class="text-danger">
                       <br>
                       เปลี่ยนแปลง:{{p.PRREGISBUILDING_NAMEC}}
                     </span> 
@@ -288,7 +288,7 @@
       </div>
 
       <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
-        <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+        <button id="ModalCloseupdate" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
           <i class="fa-solid fa-times me-1"></i> ปิด
         </button>
         <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">

@@ -1067,7 +1067,7 @@ export class AppassetComponent implements OnInit {
 
 
           this.rowpbi = null;
-          // document.getElementById("ModalClose")?.click();
+           document.getElementById("ModalCloseupdate")?.click();
         } else if (data.status == 0) {
           this.toastr.warning("แจ้งเตือน:กรุณากรอกเหตุผลความจำเป็นอย่างน้อย 1 หน้ากระดาษ");
         }

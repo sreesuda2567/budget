@@ -308,7 +308,7 @@ export class PlexpensesComponent implements OnInit {
   sumdatafr() {
     let summoney = 0;
     let fr = 0;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       //console.log(this.dataFAdd.FNEXACCMONEY[i]+'..'+this.dataFAdd.FRACCCODE[i]);
       if ((this.dataAdd.FNEXACCMONEY[i] > 0 || this.dataAdd.FNEXACCMONEY[i] < 0) && this.dataAdd.FRACCCODE[i] != '2116010104') {
         summoney += parseFloat(this.dataAdd.FNEXACCMONEY[i]);

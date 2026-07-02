@@ -1470,10 +1470,8 @@ applyLocale(pop: any) {
           this.editdata(this.dataAdd.PRPLPROJECT_CODE);
           //console.log(this.dataAdd.PRASSET_CODE);
           this.rowpbu = null;
-          // document.getElementById("ModalClose")?.click();
-        } else if (data.status == 0) {
-          this.toastr.warning("แจ้งเตือน:กรุณากรอกเหตุผลความจำเป็นอย่างน้อย 1 หน้ากระดาษ");
-        }
+           document.getElementById("ModalCloseupdate")?.click();
+        } 
       });
     // } 
   }

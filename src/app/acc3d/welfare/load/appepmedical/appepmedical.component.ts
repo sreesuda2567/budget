@@ -60,6 +60,7 @@ export class AppepmedicalComponent implements OnInit {
   datachief: any;
   dataIncome: any;
   dataAcc: any;
+  dataProduct: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   constructor(
@@ -161,6 +162,17 @@ export class AppepmedicalComponent implements OnInit {
         this.dataAcc = data;
         //console.log(data);
       });
+      //รายการผลผลิต
+    var Tablein = {
+      "opt": "viewPLGPRODUCT"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataProduct = data;
+       // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
+      }); 
   }
   fetchdatareport() {
     this.dataNameb = null;
@@ -345,7 +357,11 @@ export class AppepmedicalComponent implements OnInit {
         this.dataAdd.PLINCOME_CODE = data.data[0].PLINCOME_CODE;
         this.dataAdd.FNANNALSMAPTS_CODE = data.data[0].FNANNALSMAPTS_CODE;
         this.dataAdd.CAMPUS_CODE = data.data[0].CAMPUS_CODE;
-        this.dataAdd.CITIZEN_IDC1 = data.data[0].CITIZEN_IDC1;
+        this.dataAdd.CITIZEN_IDP1 = data.data[0].CITIZEN_IDP1;
+        this.dataAdd.CITIZEN_IDP2 = data.data[0].CITIZEN_IDP2;
+        this.dataAdd.CITIZEN_IDP3 = data.data[0].CITIZEN_IDP3;
+        this.dataAdd.CITIZEN_IDP4 = data.data[0].CITIZEN_IDP4;
+        this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
           for (let i = 0; i < data.data2.length; i++) {
            
             this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
@@ -367,7 +383,12 @@ export class AppepmedicalComponent implements OnInit {
     this.dataAdd.PLINCOME_CODE = '01';
     this.dataAdd.FNANNALSMAPTS_CODE = '';
     this.dataAdd.CAMPUS_CODE = '';
-    this.dataAdd.CITIZEN_IDC1 = '';
+    this.dataAdd.CITIZEN_IDP1 = '';
+    this.dataAdd.CITIZEN_IDP2 = '';
+    this.dataAdd.CITIZEN_IDP3 = '';
+    this.dataAdd.CITIZEN_IDP4 = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
+
      for (let i = 0; i < this.number.length; i++) {
       this.dataAdd.FRACCCODE[i] = '';
      }

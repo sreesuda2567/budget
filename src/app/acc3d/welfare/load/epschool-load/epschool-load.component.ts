@@ -141,6 +141,7 @@ export class EpschoolLoadComponent implements OnInit {
           }
           for (let i = 0; i < this.datalistlink.length; i++) {
             this.dataAdd.FEREIMDT_LINK[i] = this.datalistlink[i].link;
+           // console.log(this.dataAdd.FEREIMDT_LINK[i]);
 
           }
         }

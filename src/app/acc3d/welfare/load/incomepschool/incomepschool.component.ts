@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
@@ -43,6 +44,8 @@ export class IncomepschoolComponent implements OnInit {
    datareceipt: any;
   url = "/acc3d/welfare/load/incomepschool.php";
   url1 = "/acc3d/welfare/userpermission.php";
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -52,6 +55,7 @@ export class IncomepschoolComponent implements OnInit {
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -93,7 +97,7 @@ export class IncomepschoolComponent implements OnInit {
     this.dataAdd.FEREIM_WMONEY = money;
   }
   setshowbti() {
-    this.dataAdd.FNRESTATUS_CODE ='';
+    this.dataAdd.FNRESTATUS_CODE ='4';
     this.dataAdd.FNEXACCTD_NOTE ='';
   }
     fetchdataCam() {
@@ -173,5 +177,15 @@ export class IncomepschoolComponent implements OnInit {
         }
       });
     }
+  }
+
+  previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
   }
 }

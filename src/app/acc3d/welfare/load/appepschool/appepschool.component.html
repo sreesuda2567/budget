@@ -2,7 +2,7 @@
     <div class="card-header">
         <div class="row">
             <div class="col-md-10">
-                <h5 class="card-title fw-bold"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>หนังสือเข้าการศึกษาของบุตร</h5>
+                <h5 class="card-title fw-bold"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>ขออนุมัติการศึกษาของบุตร</h5>
             </div>
             <div class="col-md-2" align="right">
                 <a class="btn btn-primary text-white px-3 shadow-sm " data-bs-toggle="modal" data-bs-target="#exampleModal"
@@ -148,7 +148,7 @@
     <div class="modal-dialog modal-xl modal-xxl">
         <div class="modal-content">
             <div class="modal-header bg-primary border-0">
-                <h5 class="modal-title fw-bold text-white" id="exampleModalLabel"><i class="fa-solid fa-graduation-cap me-2"></i>หนังสือเข้าการศึกษาของบุตร</h5>
+                <h5 class="modal-title fw-bold text-white" id="exampleModalLabel"><i class="fa-solid fa-graduation-cap me-2"></i>ขออนุมัติการศึกษาของบุตร</h5>
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -158,7 +158,7 @@
                 <input type="hidden" class="form-control" name="FNANNALSMAP_CODE" id="FNANNALSMAP_CODE"
                     [(ngModel)]="dataAdd.FNANNALSMAP_CODE">
                 <div class="row px-3 pt-3">
-                    <div class="form-group col-md-11 mb-3 mx-auto">
+                    <div class="form-group col-md-12 mb-3">
                         <label for="name" class="mb-2"><strong><i class="fa-solid fa-user-tie me-2 text-info"></i>เรียน</strong></label>
                         <select name="CHIEF_CODE" id="CHIEF_CODE" class="form-select rounded-3" [(ngModel)]="dataAdd.CHIEF_CODE">
                             <option value="">กรุณาเลือก</option>
@@ -166,7 +166,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-11 mb-3 mx-auto">
+                    <div class="form-group col-md-12 mb-3">
                         <label class="form-label mb-2"><strong><i class="fa-solid fa-envelope-open-text me-2 text-success"></i>ส่งเข้าสารบรรณ</strong></label>
                         <select name="EBOOKTYPE_CODE" id="EBOOKTYPE_CODE" class="form-select rounded-3"
                             [(ngModel)]="dataAdd.DEPARTMENT_CODE">
@@ -177,12 +177,22 @@
                     </div>
                 </div>
                 <div class="row px-3">
-                    <div class="form-group col-md-2 mb-3 ms-auto">
+                    <div class="form-group col-md-3 mb-3">
                         <label for="name" class="mb-2"><strong><i class="fa-solid fa-coins me-2 text-warning"></i>ประเภทเงิน</strong></label>
                         <select name="PLINCOME_CODE" id="PLINCOME_CODE" class="form-select rounded-3"
                             [(ngModel)]="dataAdd.PLINCOME_CODE">
                             <option [value]="item.PLINCOME_CODE" *ngFor="let item of dataIncome">
                                 {{item.PLINCOME_NAME}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3 mb-3">
+                        <label class="form-label fw-bold text-secondary mb-2"><i
+                                class="fa-solid fa-box-open me-1"></i>ผลผลิต</label>
+                        <select name="PLGPRODUCT_CODE" id="PLGPRODUCT_CODE" class="form-select form-select-lg fs-6"
+                            [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
+                            <option [value]="item.PLGPRODUCT_CODE" *ngFor="let item of dataProduct">
+                                {{item.PLGPRODUCT_SHORTNAME}}
                             </option>
                         </select>
                     </div>
@@ -204,22 +214,59 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-3 mb-3 me-auto">
-                        <label for="name" class="mb-2"><strong><i class="fa-solid fa-user-check me-2 text-info"></i>ผู้ผ่านรายการ</strong></label>
-                        <select name="f_code" id="f_code" class="form-select rounded-3" [(ngModel)]="dataAdd.CITIZEN_IDC1">
+                 <div class="col-md-3">
+                        <label class="form-label fw-bold  mb-2"><i
+                                class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 1</label>
+                        <select name="f_code_p1" id="f_code_p1" class="form-select form-select-lg fs-6"
+                            [(ngModel)]="dataAdd.CITIZEN_IDP1">
+                            <option value="">--เลือก--</option>
                             <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
                                 {{name.STF_FNAME}}
                             </option>
                         </select>
                     </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold  mb-2"><i
+                                class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 2</label>
+                        <select name="f_code_p2" id="f_code_p2" class="form-select form-select-lg fs-6"
+                            [(ngModel)]="dataAdd.CITIZEN_IDP2">
+                            <option value="">--เลือก--</option>
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold  mb-2"><i
+                                class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 3</label>
+                        <select name="f_code_p3" id="f_code_p3" class="form-select form-select-lg fs-6"
+                            [(ngModel)]="dataAdd.CITIZEN_IDP3">
+                            <option value="">--เลือก--</option>
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold  mb-2"><i
+                                class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 4</label>
+                        <select name="f_code_p4" id="f_code_p4" class="form-select form-select-lg fs-6"
+                            [(ngModel)]="dataAdd.CITIZEN_IDP4">
+                            <option value="">--เลือก--</option>
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+                    </div>   
+                    
                 </div>
                 <div class="row px-3">
-                    <div class="form-group col-md-11 mb-2 mx-auto">
+                    <div class="form-group col-md-12 mb-2">
                         <label for="name"><strong><i class="fa-solid fa-file-invoice-dollar me-2 text-success"></i>บัญชีแยกประเภท</strong></label>
                     </div>
                 </div>
                 <div class="row px-3" *ngFor="let i of number;">
-                    <div class="col-md-11 mb-2 mx-auto">
+                    <div class="col-md-12 mb-2">
                         <select name="SECTION_CODE" id="SECTION_CODE" class="form-select rounded-3"
                                   [(ngModel)]="dataAdd.FRACCCODE[i]" >
                                   <option [value]=""></option>
@@ -249,8 +296,8 @@
                             <td align="right">{{p.FEPSTATE_TMONEY| number : '1.2-2'}}</td>
                             <td align="right">
                                 <span *ngIf="p.link">
-                            <a role="button" title="รายงาน" class="btn btn-success text-white" href="{{p.link}}"
-                                target="_blank"><i class="fas fa-file-alt"></i></a>
+                            <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)">
+                                <i class="fas fa-file-alt"></i></a>
                             &nbsp; </span>
                             </td>
                             <td align="center">

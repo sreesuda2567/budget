@@ -344,13 +344,14 @@ export class AnnalsendmComponent implements OnInit {
     // console.log(this.dataAdd.FNANNALSMAP_CODE1);
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapr(id: any, id2: any, money: any, mail: any, at: any, name: any, mail2: any) {
+  editdatapr(id: any,id1: any, id2: any, money: any, mail: any, at: any, name: any, mail2: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
     this.onChangeReceiptdetail(id2);
     this.fetchdatareportnamea();
     this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.FNANNALSMAP_CODE1 = id1;
     this.dataAdd.FNANNALS_CODE = id2;
     this.dataAdd.USERNAME_CISCO = mail;
     this.dataAdd.USERNAME_CISCOA = mail2;
@@ -360,7 +361,7 @@ export class AnnalsendmComponent implements OnInit {
     this.rowpbi = true;
     // console.log(this.dataAdd.FNANNALSMAP_CODE1);
     this.apiService
-      .getById(id2, this.url)
+      .getById(id1, this.url)
       .pipe(first())
       .subscribe((data: any) => {
        // this.dataSeq = data.data2;
