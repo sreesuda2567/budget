@@ -14,7 +14,8 @@ import { UploadfileserviceService } from '../../../../acc3d/_services/uploadfile
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
 import { PDFDocument } from 'pdf-lib';
-
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 
 @Component({
   selector: 'app-appepmedical',
@@ -73,7 +74,8 @@ export class AppepmedicalComponent implements OnInit {
     private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
     private Uploadfiles: UploadfileserviceService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -353,6 +355,7 @@ export class AppepmedicalComponent implements OnInit {
         this.dataAdd.FACULTY_CODE = data.data[0].FACULTY_CODE;
         this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
         this.dataAdd.DEPARTMENT_CODE = data.data[0].DEPARTMENT_CODE;
+        this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
         this.dataAdd.CHIEF_CODE = data.data[0].CHIEF_CODE;
         this.dataAdd.PLINCOME_CODE = data.data[0].PLINCOME_CODE;
         this.dataAdd.FNANNALSMAPTS_CODE = data.data[0].FNANNALSMAPTS_CODE;
@@ -471,9 +474,9 @@ export class AppepmedicalComponent implements OnInit {
     this.rowpbi = null;
     this.rowpbu = true;
   }
-  async sendfile(id: any, link: any, link3: any) {
+  async sendfile(id: any, link3: any) {
     this.editdata(id);
-    this.dataAdd.link2 = link;
+   // this.dataAdd.link2 = link;
     this.dataAdd.link3 = link3;
     Swal.fire({
       title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
@@ -486,19 +489,14 @@ export class AppepmedicalComponent implements OnInit {
       if (result.value) {
         Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
         try {
-          const pdf1Bytes = await fetch(link).then(res => res.arrayBuffer());
+          const pdf1Bytes = await fetch(link3).then(res => res.arrayBuffer());
           const pdf1 = await PDFDocument.load(pdf1Bytes);
           const mergedPdf = await PDFDocument.create();
 
           const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
           copiedPages1.forEach((page) => mergedPdf.addPage(page));
 
-          if (link3) {
-            const pdf3Bytes = await fetch(link3).then(res => res.arrayBuffer());
-            const pdf3 = await PDFDocument.load(pdf3Bytes);
-            const copiedPages3 = await mergedPdf.copyPages(pdf3, pdf3.getPageIndices());
-            copiedPages3.forEach((page) => mergedPdf.addPage(page));
-          }
+         
 
           if (this.dataAdd.FEREIMDT_LINK && this.dataAdd.FEREIMDT_LINK.length > 0) {
             for (let i = 0; i < this.dataAdd.FEREIMDT_LINK.length; i++) {
@@ -564,4 +562,35 @@ export class AppepmedicalComponent implements OnInit {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
   }
+  async openPdfAnnotator(p: any) {
+        const cacheBuster = new Date().getTime();
+        const reportLink = p.link + (p.link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+        const user = this.tokenStorage.getUser();
+    
+        const modal = await this.modalCtrl.create({
+          component: PdfAnnotatorModalComponent,
+          componentProps: {
+            pdfUrl: reportLink,
+            userId: user.citizen,
+            userName: user.fullname || user.username
+          },
+          cssClass: 'pdf-modal-right-side'
+        });
+        await modal.present();
+    
+        const { data } = await modal.onDidDismiss();
+        if (data && data.saved && data.blob) {
+          // Create a File object from the blob
+          const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+                 
+              this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '117')
+                .subscribe((event: any) => {
+                  if (event.type == 4) { // HttpEventType.Response
+                     this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยพร้อมส่งสารบรรณ");
+                     this.fetchdatalist();
+                  }
+                });
+        
+        }
+      }
 }

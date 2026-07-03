@@ -106,14 +106,12 @@
                     <td>{{p.PLINCOME_NAME}}</td>
                     <td align="right">{{p.FEPSTATE_TMONEY| number : '1.2-2'}}</td>
                     <td align="center">
-                        <a role="button" title="รวมไฟล์ส่งสารบรรณ" class="btn btn-primary text-white"
-                           (click)="sendfile(p.FNANNALSMAP_CODE,p.link,p.link3)"><i class="fa-solid fa-file-arrow-up"></i>
+                        <a  *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button" title="รวมไฟล์ส่งสารบรรณ" class="btn btn-primary text-white"
+                           (click)="sendfile(p.FNANNALSMAP_CODE,p.link3)"><i class="fa-solid fa-file-arrow-up"></i>
                         </a>&nbsp;
-                         <span *ngIf="p.FEPSTATE_LINK">   
-                        <a role="button" title="รายงาน" class="btn btn-info text-white" (click)="previewPdf(p.FEPSTATE_LINK)"
-                            ><i class="fas fa-file-alt">
+                        <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button" title="ลงนาม" class="btn btn-info text-white"
+                            (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
                             </i></a> &nbsp;
-                        </span>
                         <span *ngIf="p.link"> 
                         <a  role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"
                             ><i class="fas fa-file-alt">

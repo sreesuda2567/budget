@@ -24,6 +24,7 @@ import { IncomepmedicalComponent } from './load/incomepmedical/incomepmedical.co
 import { IncomepschoolComponent } from './load/incomepschool/incomepschool.component';
 import { EpmedicalSummonthComponent } from './report/epmedical-summonth/epmedical-summonth.component';
 import { EpschoolSummonthComponent } from './report/epschool-summonth/epschool-summonth.component';
+import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'pdf-annotator';
 @NgModule({
   declarations: [MenuwelfareComponent, EpmedicalControlComponent, EpschoolControlComponent, MemberretireComponent, EpmedicalretireComponent, EpschoolLoadComponent, EpmedicalLoadComponent, EpschoolretireComponent, AppepschoolComponent, AppepmedicalComponent, LoadwfComponent, LoadwComponent, WfdashboardComponent, IncomepmedicalComponent, IncomepschoolComponent, EpmedicalSummonthComponent, EpschoolSummonthComponent],
   imports: [
@@ -34,7 +35,19 @@ import { EpschoolSummonthComponent } from './report/epschool-summonth/epschool-s
     AutocompleteLibModule,
     BsDatepickerModule,
     Ng2SearchPipeModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    PdfAnnotatorModule
+  ],
+  providers: [
+    {
+      provide: PDF_ANNOTATOR_CONFIG,
+      useValue: {
+        pdfApiUrl: '/acc3d/welfare',
+        signaturesApiUrl: 'https://e-doc.rmutsv.ac.th/api/signatures/signatures.php',
+        stampsApiUrl: 'https://e-doc.rmutsv.ac.th/api/apps/proses_api_webapp.php',
+        pdfWorkerSrc: '/assets/pdf.worker.min.js'
+      }
+    }
   ]
 })
 export class WelfareModule { }
