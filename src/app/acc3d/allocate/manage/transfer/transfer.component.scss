@@ -91,3 +91,8 @@
   .ng-autocomplete {
     width: 501px;
 }
+  @media (max-width: 991.98px) {
+  .tableFixHead thead {
+    position: static;
+  }
+}

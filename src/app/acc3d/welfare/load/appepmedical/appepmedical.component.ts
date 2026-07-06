@@ -46,6 +46,8 @@ export class AppepmedicalComponent implements OnInit {
   locale = 'th-be';
   locales = listLocales();
   rownum: any;
+  dataSeq: any;
+  pdfUrlToView: any;
   url = "/acc3d/welfare/load/appepmedical.php";
   url1 = "/acc3d/welfare/userpermission.php";
   page = 1;
@@ -593,4 +595,23 @@ export class AppepmedicalComponent implements OnInit {
         
         }
       }
+     fetchdataloadshow(id: any) {
+    this.pdfUrlToView = null;
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.opt = "viewshow";
+
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == '1') {
+          this.dataSeq = data.data;
+        }
+      });
+  } 
+  exportpdf(link: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
+  }      
 }

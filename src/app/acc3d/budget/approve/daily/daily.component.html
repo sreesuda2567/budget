@@ -1,12 +1,11 @@
-<div class="card border-light mx-4 mt-4">
-  <div class="card-header">
-    <div class="row">
-      <div class="col-md-10">
-        <h5 class="card-title">อนุมัติผลการเบิกจ่ายประจำวัน</h5>
-      </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+  <div class="row mb-3">
+    <div class="col-md-10">
+      <h5 class="fw-bold"><i class="fa-solid fa-clipboard-check me-2 text-primary"></i>อนุมัติผลการเบิกจ่ายประจำวัน</h5>
     </div>
   </div>
-  <div class="card-body">
+  
+  <div>
     <div class="row">
       <div class="col">
         <!-- BASIC TABLE -->
@@ -93,6 +92,7 @@
         </div>
       </div>
     </div>
+    <div class="table-responsive-lg">
     <table *ngIf="rownum" id="excel-table" class="table btn-font3" width="150%"
       class="table table-bordered table-striped table-hover tableFixHead btn-font3">
       <thead>
@@ -188,7 +188,7 @@
         </tr>
       </tbody>
     </table>
-
+   </div>
   </div>
 </div>
 <!-- Modal -->

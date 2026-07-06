@@ -1,12 +1,11 @@
-<div class="card border-light mx-4 mt-4">
-  <div class="card-header">
-    <div class="row">
-      <div class="col-md-10">
-        <h5 class="card-title">เงินที่ได้รับจัดสรร </h5>
-      </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+  <div class="row mb-3">
+    <div class="col-md-10">
+      <h5 class="fw-bold"><i class="fa-solid fa-coins me-2 text-warning"></i>เงินที่ได้รับจัดสรร </h5>
     </div>
   </div>
-  <div class="card-body">
+
+  <div>
     <div class="row">
       <div class="col">
         <!-- BASIC TABLE -->
@@ -14,7 +13,7 @@
           <div class="panel-heading">
             <div class="shadow alert alert-info" role="alert">
               <div class="row">
-                <div class="col-md-3 text-secondary" style="font-size: 10pt"> คณะ /หน่วยงาน: </div>
+                <div class="col-md-3 text-secondary" style="font-size: 10pt"><i class="fa-solid fa-building-user me-1 text-primary"></i> คณะ /หน่วยงาน: </div>
               </div>
               <div class="row">
                 <div class="col-md-12">
@@ -26,9 +25,9 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-3 text-secondary" style="font-size: 10pt">แหล่งเงิน: </div>
-                <div class="col-md-3 text-secondary" style="font-size: 10pt">ภาค: </div>
-                <div class="col-md-3 text-secondary" style="font-size: 10pt">ปีงบประมาณ: </div>
+                <div class="col-md-3 text-secondary" style="font-size: 10pt"><i class="fa-solid fa-sack-dollar me-1 text-primary"></i> แหล่งเงิน: </div>
+                <div class="col-md-3 text-secondary" style="font-size: 10pt"><i class="fa-solid fa-layer-group me-1 text-primary"></i> ภาค: </div>
+                <div class="col-md-3 text-secondary" style="font-size: 10pt"><i class="fa-solid fa-calendar-days me-1 text-primary"></i> ปีงบประมาณ: </div>
               </div>
               <div class="row">
                 <div class="col-md-3">
@@ -53,8 +52,8 @@
                   </select>
                 </div>
                 <div class="col-md-2">
-                  <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalist()"><i
-                      class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                  <button type="submit" class="btn btn-primary rounded-pill px-4" id="submitinsert"
+                    (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
                   <input type="hidden" class="form-control" name="c_citizen" id="c_citizen"
                     [(ngModel)]="dataAdd.citizen">
                   <input type="hidden" class="form-control" name="c_satatus" id="c_satatus"
@@ -69,7 +68,7 @@
                 <div class="col-md-2">
                   <div class="row" *ngIf="rownum">
                     <div align="right" class="col-md-12">
-                      <button type="button" class="btn btn-success" (click)="exportexcel()">Export Excel</button>
+                      <button type="button" class="btn btn-success rounded-pill px-4" (click)="exportexcel()"><i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export Excel</button>
                     </div>
                   </div>
                 </div>
@@ -82,165 +81,166 @@
             <div class="spinner-border " role="status" id="loading"></div>
           </div>
 
+          <div class="table-responsive-lg">
+            <table id="excel-table" width="100%" class="table card-table table-bordered table-vcenter tableFixHead ">
+              <thead>
+                <tr class="bg-primary   text-white">
+                  <th width="20%">
+                    <div align="center">หมวดรายจ่าย</div>
+                  </th>
+                  <th *ngFor="let p of dataPlproduct">
+                    <div align="center">{{p.PLGPRODUCT_SHORTNAME}}</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody *ngFor="let item of datalist; let i = index">
+                <tr class="table-active" bgcolor="#91DBFF">
+                  <td width="40%"><strong>{{i+1}}.{{item.NAME[i].PLMONEYPAY_NAME}}</strong></td>
+                  <td *ngIf="item.NAME[i].product0">
+                    <div align="center"><strong>{{item.NAME[i].product0| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product1">
+                    <div align="center"><strong>{{item.NAME[i].product1| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product2">
+                    <div align="center"><strong>{{item.NAME[i].product2| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product3">
+                    <div align="center"><strong>{{item.NAME[i].product3| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product4">
+                    <div align="center"><strong>{{item.NAME[i].product4| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product5">
+                    <div align="center"><strong>{{item.NAME[i].product5| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product6">
+                    <div align="center"><strong>{{item.NAME[i].product6| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product7">
+                    <div align="center"><strong>{{item.NAME[i].product7| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product8">
+                    <div align="center"><strong>{{item.NAME[i].product8| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product9">
+                    <div align="center"><strong>{{item.NAME[i].product9| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product10">
+                    <div align="center"><strong>{{item.NAME[i].product10| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product11">
+                    <div align="center"><strong>{{item.NAME[i].product11| number : '1.2-2'}}</strong></div>
+                  </td>
+                  <td *ngIf="item.NAME[i].product12">
+                    <div align="center"><strong>{{item.NAME[i].product12| number : '1.2-2'}}</strong></div>
+                  </td>
+                </tr>
+                <tr *ngFor="let item2 of item.PLMONEYPAY_DATA;let j =index;"
+                  [ngStyle]="{'background-color':item2.PLSUBMONEYPAY_LEVEL=='1' ? '#d2faf9':item2.PLSUBMONEYPAY_LEVEL=='2' ? '#fff2f9':item2.PLSUBMONEYPAY_LEVEL=='3' ? '#faf7e6':item2.PLSUBMONEYPAY_LEVEL=='4' ? '#e8fae6':''}">
+                  <td width="40%">&nbsp;
+                    <span *ngIf="item2.PLSUBMONEYPAY_LEVEL=='2'">&nbsp;</span>
+                    <span *ngIf="item2.PLSUBMONEYPAY_LEVEL=='3'">&nbsp;&nbsp;</span>
+                    <span *ngIf="item2.PLSUBMONEYPAY_LEVEL=='4'">&nbsp;&nbsp;&nbsp;-</span>
+                    <span *ngIf="item2.PLSUBMONEYPAY_NAME"> {{item2.PLSUBMONEYPAY_NAME}}</span>
+                    <span *ngIf="item2.name">&nbsp;&nbsp;&nbsp;{{item2.name}}</span>
+                  </td>
 
-          <table id="excel-table" width="100%" class="table card-table table-bordered table-vcenter tableFixHead ">
-            <thead>
-              <tr class="bg-primary   text-white">
-                <th width="20%">
-                  <div align="center">หมวดรายจ่าย</div>
-                </th>
-                <th *ngFor="let p of dataPlproduct">
-                  <div align="center">{{p.PLGPRODUCT_SHORTNAME}}</div>
-                </th>
+                  <td *ngIf="item2.product0">
+                    <div align="center">{{item2.product0| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product1">
+                    <div align="center">{{item2.product1| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product2">
+                    <div align="center">{{item2.product2| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product3">
+                    <div align="center">{{item2.product3| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product4">
+                    <div align="center">{{item2.product4| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product5">
+                    <div align="center">{{item2.product5| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product6">
+                    <div align="center">{{item2.product6| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product7">
+                    <div align="center">{{item2.product7| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product8">
+                    <div align="center">{{item2.product8| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product9">
+                    <div align="center">{{item2.product9| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product10">
+                    <div align="center">{{item2.product10| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product11">
+                    <div align="center">{{item2.product11| number : '1.2-2'}}</div>
+                  </td>
+                  <td *ngIf="item2.product12">
+                    <div align="center">{{item2.product12| number : '1.2-2'}}</div>
+                  </td>
+                </tr>
+
+
+
+                <tr *ngIf="!rownum">
+                  <td colspan="19">ไม่มีข้อมูล{{rownum}}</td>
+                </tr>
+              </tbody>
+              <tr *ngFor="let item3 of datalistto;let k =index;" bgcolor="#ffc491">
+                <td width="40%" align="right">&nbsp;
+                  <span>&nbsp;&nbsp;&nbsp;<strong>{{item3.name}}</strong></span>
+                </td>
+
+                <td *ngIf="item3.product0">
+                  <div align="center"><strong>{{item3.product0| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product1">
+                  <div align="center"><strong>{{item3.product1| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product2">
+                  <div align="center"><strong>{{item3.product2| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product3">
+                  <div align="center"><strong>{{item3.product3| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product4">
+                  <div align="center"><strong>{{item3.product4| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product5">
+                  <div align="center"><strong>{{item3.product5| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product6">
+                  <div align="center"><strong>{{item3.product6| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product7">
+                  <div align="center"><strong>{{item3.product7| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product8">
+                  <div align="center"><strong>{{item3.product8| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product9">
+                  <div align="center"><strong>{{item3.product9| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product10">
+                  <div align="center"><strong>{{item3.product10| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product11">
+                  <div align="center"><strong>{{item3.product11| number : '1.2-2'}}</strong></div>
+                </td>
+                <td *ngIf="item3.product12">
+                  <div align="center"><strong>{{item3.product12| number : '1.2-2'}}</strong></div>
+                </td>
               </tr>
-            </thead>
-            <tbody *ngFor="let item of datalist; let i = index">
-              <tr class="table-active" bgcolor="#91DBFF">
-                <td width="40%"><strong>{{i+1}}.{{item.NAME[i].PLMONEYPAY_NAME}}</strong></td>
-                <td *ngIf="item.NAME[i].product0">
-                  <div align="center"><strong>{{item.NAME[i].product0| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product1">
-                  <div align="center"><strong>{{item.NAME[i].product1| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product2">
-                  <div align="center"><strong>{{item.NAME[i].product2| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product3">
-                  <div align="center"><strong>{{item.NAME[i].product3| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product4">
-                  <div align="center"><strong>{{item.NAME[i].product4| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product5">
-                  <div align="center"><strong>{{item.NAME[i].product5| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product6">
-                  <div align="center"><strong>{{item.NAME[i].product6| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product7">
-                  <div align="center"><strong>{{item.NAME[i].product7| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product8">
-                  <div align="center"><strong>{{item.NAME[i].product8| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product9">
-                  <div align="center"><strong>{{item.NAME[i].product9| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product10">
-                  <div align="center"><strong>{{item.NAME[i].product10| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product11">
-                  <div align="center"><strong>{{item.NAME[i].product11| number : '1.2-2'}}</strong></div>
-                </td>
-                <td *ngIf="item.NAME[i].product12">
-                  <div align="center"><strong>{{item.NAME[i].product12| number : '1.2-2'}}</strong></div>
-                </td>
-              </tr>
-              <tr *ngFor="let item2 of item.PLMONEYPAY_DATA;let j =index;"
-                [ngStyle]="{'background-color':item2.PLSUBMONEYPAY_LEVEL=='1' ? '#d2faf9':item2.PLSUBMONEYPAY_LEVEL=='2' ? '#fff2f9':item2.PLSUBMONEYPAY_LEVEL=='3' ? '#faf7e6':item2.PLSUBMONEYPAY_LEVEL=='4' ? '#e8fae6':''}">
-                <td width="40%">&nbsp;
-                  <span *ngIf="item2.PLSUBMONEYPAY_LEVEL=='2'">&nbsp;</span>
-                  <span *ngIf="item2.PLSUBMONEYPAY_LEVEL=='3'">&nbsp;&nbsp;</span>
-                  <span *ngIf="item2.PLSUBMONEYPAY_LEVEL=='4'">&nbsp;&nbsp;&nbsp;-</span>
-                  <span *ngIf="item2.PLSUBMONEYPAY_NAME"> {{item2.PLSUBMONEYPAY_NAME}}</span>
-                  <span *ngIf="item2.name">&nbsp;&nbsp;&nbsp;{{item2.name}}</span>
-                </td>
 
-                <td *ngIf="item2.product0">
-                  <div align="center">{{item2.product0| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product1">
-                  <div align="center">{{item2.product1| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product2">
-                  <div align="center">{{item2.product2| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product3">
-                  <div align="center">{{item2.product3| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product4">
-                  <div align="center">{{item2.product4| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product5">
-                  <div align="center">{{item2.product5| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product6">
-                  <div align="center">{{item2.product6| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product7">
-                  <div align="center">{{item2.product7| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product8">
-                  <div align="center">{{item2.product8| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product9">
-                  <div align="center">{{item2.product9| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product10">
-                  <div align="center">{{item2.product10| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product11">
-                  <div align="center">{{item2.product11| number : '1.2-2'}}</div>
-                </td>
-                <td *ngIf="item2.product12">
-                  <div align="center">{{item2.product12| number : '1.2-2'}}</div>
-                </td>
-              </tr>
-
-
-
-              <tr *ngIf="!rownum">
-                <td colspan="19">ไม่มีข้อมูล{{rownum}}</td>
-              </tr>
-            </tbody>
-            <tr *ngFor="let item3 of datalistto;let k =index;" bgcolor="#ffc491">
-              <td width="40%" align="right">&nbsp;
-                <span>&nbsp;&nbsp;&nbsp;<strong>{{item3.name}}</strong></span>
-              </td>
-
-              <td *ngIf="item3.product0">
-                <div align="center"><strong>{{item3.product0| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product1">
-                <div align="center"><strong>{{item3.product1| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product2">
-                <div align="center"><strong>{{item3.product2| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product3">
-                <div align="center"><strong>{{item3.product3| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product4">
-                <div align="center"><strong>{{item3.product4| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product5">
-                <div align="center"><strong>{{item3.product5| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product6">
-                <div align="center"><strong>{{item3.product6| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product7">
-                <div align="center"><strong>{{item3.product7| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product8">
-                <div align="center"><strong>{{item3.product8| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product9">
-                <div align="center"><strong>{{item3.product9| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product10">
-                <div align="center"><strong>{{item3.product10| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product11">
-                <div align="center"><strong>{{item3.product11| number : '1.2-2'}}</strong></div>
-              </td>
-              <td *ngIf="item3.product12">
-                <div align="center"><strong>{{item3.product12| number : '1.2-2'}}</strong></div>
-              </td>
-            </tr>
-
-          </table>
+            </table>
+          </div>
         </div>
       </div>
     </div>

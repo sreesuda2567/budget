@@ -1,12 +1,11 @@
-<div class="card border-light  mx-4 mt-4">
-  <div class="card-header">
-    <div class="row">
-      <div class="col-md-10">
-        <h5 class="card-title">อนุมัติขอใช้งบกลาง</h5>
-      </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+  <div class="row mb-3">
+    <div class="col-md-10">
+      <h5 class="fw-bold"><i class="fa-solid fa-check-circle me-2 text-success"></i>อนุมัติขอใช้งบกลาง</h5>
     </div>
   </div>
-  <div class="card-body">
+
+  <div>
     <div class="shadow alert alert-info" role="alert">
       <div class="row">
         <div class="col">
@@ -21,7 +20,7 @@
                 <div class="col-md-9">
                   <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
                     (change)="fetchdatalist()">
-                    <option value="" >ทุกหน่วยงาน</option>
+                    <option value="">ทุกหน่วยงาน</option>
                     <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
                   </select>
                 </div>
@@ -60,44 +59,59 @@
         </div>
       </div>
     </div>
+    <div class="table-responsive-lg">
+      <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+        <thead>
+          <tr class="bg-primary text-white">
+            <th>
+              <div align="center">ที่</div>
+            </th>
+            <th>
+              <div align="center">ชื่อเรื่อง</div>
+            </th>
+            <th>
+              <div align="center">หมวดรายจ่ายย่อย</div>
+            </th>
+            <th>
+              <div align="center">ขอเบิก</div>
+            </th>
+            <th>
+              <div align="center">อนุมัติ</div>
+            </th>
+            <th>
+              <div align="center">วันที่อนุมัติ</div>
+            </th>
+            <th>
+              <div align="center">เลือก</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
 
-    <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
-      <thead>
-        <tr class="bg-primary text-white">
-          <th><div align="center">ที่</div></th>
-          <th><div align="center">ชื่อเรื่อง</div></th>
-          <th><div align="center">หมวดรายจ่ายย่อย</div></th>
-          <th><div align="center">ขอเบิก</div></th>
-          <th><div align="center">อนุมัติ</div></th>
-          <th><div align="center">วันที่อนุมัติ</div></th>
-          <th><div align="center">เลือก</div></th>
-        </tr>
-      </thead>
-      <tbody>
-
-        <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+          <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
             itemsPerPage: tableSize,
             currentPage: page,
             totalItems: count
             } ; let i = index">
-          <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
-          <td width="40%">{{p.PLMIDDLEBUDGET_NAME}}</td>
-          <td>{{p.PLSUBMONEYPAY_NAME}}</td>
-          <td align="right">{{p.PLMIDDLEBUDGET_MONEY| number : '1.2-2'}}</td>
-          <td align="right">{{p.PLMIDDLEBUDGET_AMONEY| number : '1.2-2'}}</td>
-          <td>{{p.PLMIDDLEBUDGET_ADATE1}}</td>
-          <td width="8%">
-            <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-              data-bs-target="#modalEditlist" (click)="editdata(p.PLMIDDLEBUDGET_CODE)"><i
-                class="fa fa-arrow-circle-right"></i>&nbsp;อนุมัติ</button>
-          </td>
-        </tr>
+            <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+            <td width="40%">{{p.PLMIDDLEBUDGET_NAME}}</td>
+            <td>{{p.PLSUBMONEYPAY_NAME}}</td>
+            <td align="right">{{p.PLMIDDLEBUDGET_MONEY| number : '1.2-2'}}</td>
+            <td align="right">{{p.PLMIDDLEBUDGET_AMONEY| number : '1.2-2'}}</td>
+            <td>{{p.PLMIDDLEBUDGET_ADATE1}}</td>
+            <td width="8%">
+              <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                data-bs-target="#modalEditlist" (click)="editdata(p.PLMIDDLEBUDGET_CODE)"><i
+                  class="fa fa-arrow-circle-right"></i>&nbsp;อนุมัติ</button>
+            </td>
+          </tr>
 
-        <tr *ngIf="!rownum">
-          <td colspan="7">ไม่มีข้อมูล{{rownum}}</td>
-        </tr>
-      </tbody>
-    </table>
+          <tr *ngIf="!rownum">
+            <td colspan="7">ไม่มีข้อมูล{{rownum}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="d-flex justify-content-left">
       <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
       </pagination-controls>
@@ -108,7 +122,8 @@
 
 <!-- Modal -->
 
-<div class="modal fade" data-bs-focus="false" id="modalEditlist" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" data-bs-focus="false" id="modalEditlist" data-bs-backdrop="static" data-bs-keyboard="false"
+  aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header bg-primary">

@@ -1,17 +1,16 @@
-<div class="card border-light mx-4 mt-4">
-  <div class="card-header">
-    <div class="row">
-      <div class="col-md-10">
-        <h5 class="card-title">ประมาณการรายรับ</h5>
-      </div>
-      <div class="col-md-2" align="right">
-        <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
-          (click)="showinput()" (click)="setshowbti()">
-          <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
-      </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+  <div class="row mb-3">
+    <div class="col-md-10">
+      <h5 class="fw-bold"><i class="fa-solid fa-chart-line me-2 text-primary"></i>ประมาณการรายรับ</h5>
+    </div>
+    <div class="col-md-2" align="right">
+      <a class="btn btn-primary text-white rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
+        data-bs-target="#modalrqvehicle" (click)="showinput()" (click)="setshowbti()">
+        <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
     </div>
   </div>
-  <div class="card-body">
+
+  <div>
     <div class="shadow alert alert-info" role="alert">
       <div class="row">
         <div class="col-md-10">
@@ -29,65 +28,67 @@
     <div class="row justify-content-center center-screen" *ngIf="loading">
       <div class="spinner-border " role="status" id="loading"></div>
     </div>
-    <table id="excel-table" class="shadow-lg table table-bordered table-striped table-hover">
-      <thead>
-        <tr class="bg-primary  text-white">
-          <th>
-            <div align="center">ที่</div>
-          </th>
-          <th>
-            <div align="center">คณะหน่วยงาน</div>
-          </th>
-          <th>
-            <div align="center">ระดับการศึกษา</div>
-          </th>
-          <th>
-            <div align="center">ภาค</div>
-          </th>
-          <th>
-            <div align="center">เทอม1</div>
-          </th>
-          <th>
-            <div align="center">เทอม2</div>
-          </th>
-          <th>
-            <div align="center">เทอม3</div>
-          </th>
-         
-          <th>
-            <div align="center">จัดการข้อมูล</div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let p of datalist;let i = index">
-          <td width="5%" align="center">{{i+1}}</td>
-          <td>{{p.FACULTY_TNAME}}</td>
-          <td>{{p.CRCOURSE_TNAME}}</td>
-          <td>{{p.CRPART_TNAME}}</td>
-          <td align="right">{{p.REVEVUE_N1| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_N2| number : '1.2-2'}}</td>
-          <td align="right">{{p.REVEVUE_N3| number : '1.2-2'}}</td>
+    <div class="table-responsive-lg">
+      <table id="excel-table" class="shadow-lg table table-bordered table-striped table-hover">
+        <thead>
+          <tr class="bg-primary  text-white">
+            <th>
+              <div align="center">ที่</div>
+            </th>
+            <th>
+              <div align="center">คณะหน่วยงาน</div>
+            </th>
+            <th>
+              <div align="center">ระดับการศึกษา</div>
+            </th>
+            <th>
+              <div align="center">ภาค</div>
+            </th>
+            <th>
+              <div align="center">เทอม1</div>
+            </th>
+            <th>
+              <div align="center">เทอม2</div>
+            </th>
+            <th>
+              <div align="center">เทอม3</div>
+            </th>
 
-          <td width="8%" align="center">
-            <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white" (click)="deleteData(p.REVEVUE_CODE)"><i
-                class="fa fa-trash"></i>
-            </a>&nbsp;
-            <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
-              class="btn btn-warning text-white" (click)="editdata(p.REVEVUE_CODE)"><i class="fa fa-edit"></i></a>
+            <th>
+              <div align="center">จัดการข้อมูล</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of datalist;let i = index">
+            <td width="5%" align="center">{{i+1}}</td>
+            <td>{{p.FACULTY_TNAME}}</td>
+            <td>{{p.CRCOURSE_TNAME}}</td>
+            <td>{{p.CRPART_TNAME}}</td>
+            <td align="right">{{p.REVEVUE_N1| number : '1.2-2'}}</td>
+            <td align="right">{{p.REVEVUE_N2| number : '1.2-2'}}</td>
+            <td align="right">{{p.REVEVUE_N3| number : '1.2-2'}}</td>
 
-          </td>
-        </tr>
-        <tr *ngIf="!rownum">
-          <td colspan="15">ไม่มีข้อมูล{{rownum}}</td>
-        </tr>
-      </tbody>
-    </table>
+            <td width="8%" align="center">
+              <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                (click)="deleteData(p.REVEVUE_CODE)"><i class="fa fa-trash"></i>
+              </a>&nbsp;
+              <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
+                class="btn btn-warning text-white" (click)="editdata(p.REVEVUE_CODE)"><i class="fa fa-edit"></i></a>
+
+            </td>
+          </tr>
+          <tr *ngIf="!rownum">
+            <td colspan="15">ไม่มีข้อมูล{{rownum}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" id="modalrqvehicle" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false"
-  aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" data-bs-focus="false" id="modalrqvehicle" aria-hidden="true" data-bs-backdrop="static"
+  data-bs-keyboard="false" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header bg-primary">
@@ -120,18 +121,18 @@
         <div class="row">
           <div class="form-group col-md-12">
             <label for="name"><strong>ประมาณการเทอม1 : </strong></label>
-            <input class="form-control" placeholder="ประมาณการเทอม1" name="REVEVUE_N1" type="text"
-              id="REVEVUE_N1" size="10" [(ngModel)]="dataAdd.REVEVUE_N1" />
+            <input class="form-control" placeholder="ประมาณการเทอม1" name="REVEVUE_N1" type="text" id="REVEVUE_N1"
+              size="10" [(ngModel)]="dataAdd.REVEVUE_N1" />
           </div>
           <div class="form-group col-md-12">
             <label for="name"><strong>ประมาณการเทอม2 : </strong></label>
-            <input class="form-control" placeholder="ประมาณการเทอม2" name="REVEVUE_N2" type="text"
-              id="REVEVUE_N2" size="10" [(ngModel)]="dataAdd.REVEVUE_N2" />
+            <input class="form-control" placeholder="ประมาณการเทอม2" name="REVEVUE_N2" type="text" id="REVEVUE_N2"
+              size="10" [(ngModel)]="dataAdd.REVEVUE_N2" />
           </div>
           <div class="form-group col-md-12">
             <label for="name"><strong>ประมาณการเทอม3 : </strong></label>
-            <input class="form-control" placeholder="ประมาณการเทอม3" name="REVEVUE_N3" type="text"
-              id="REVEVUE_N3" size="10" [(ngModel)]="dataAdd.REVEVUE_N3" />
+            <input class="form-control" placeholder="ประมาณการเทอม3" name="REVEVUE_N3" type="text" id="REVEVUE_N3"
+              size="10" [(ngModel)]="dataAdd.REVEVUE_N3" />
           </div>
           <!--
           <div class="form-group col-md-12">
@@ -151,61 +152,61 @@
           </div>-->
           <div class="form-group col-md-12">
             <label for="name"><strong>สมทบค่าไฟฟ้ามหาวิทยาลัย : </strong></label>
-            <input class="form-control" placeholder="สมทบค่าไฟฟ้า" name="REVEVUE_ELE" type="text"
-              id="REVEVUE_ELE" size="10" [(ngModel)]="dataAdd.REVEVUE_ELE" />
+            <input class="form-control" placeholder="สมทบค่าไฟฟ้า" name="REVEVUE_ELE" type="text" id="REVEVUE_ELE"
+              size="10" [(ngModel)]="dataAdd.REVEVUE_ELE" />
           </div>
           <div class="form-group col-md-12">
             <label for="name"><strong>สมทบจัดการศึกษามหาวิทยาลัย : </strong></label>
-            <input class="form-control" placeholder="สมทบจัดการศึกษา" name="REVEVUE_EDT" type="text"
-              id="REVEVUE_EDT" size="10" [(ngModel)]="dataAdd.REVEVUE_EDT" />
+            <input class="form-control" placeholder="สมทบจัดการศึกษา" name="REVEVUE_EDT" type="text" id="REVEVUE_EDT"
+              size="10" [(ngModel)]="dataAdd.REVEVUE_EDT" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>สมทบส่วนกลางสงขลา/วิทยาเขตฯ  : </strong></label>
+            <label for="name"><strong>สมทบส่วนกลางสงขลา/วิทยาเขตฯ : </strong></label>
             <input class="form-control" placeholder="สมทบส่วนกลางสงขลา/วิทยาเขตฯ" name="REVEVUE_CEN" type="text"
               id="REVEVUE_CEN" size="10" [(ngModel)]="dataAdd.REVEVUE_CEN" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>งบประมาณเพื่อส่งฯและสวัสดิการ นศ.  : </strong></label>
+            <label for="name"><strong>งบประมาณเพื่อส่งฯและสวัสดิการ นศ. : </strong></label>
             <input class="form-control" placeholder="งบประมาณเพื่อส่งฯและสวัสดิการ นศ." name="REVEVUE_BE" type="text"
               id="REVEVUE_BE" size="10" [(ngModel)]="dataAdd.REVEVUE_BE" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>ค่าบำรุงห้องสมุด  : </strong></label>
+            <label for="name"><strong>ค่าบำรุงห้องสมุด : </strong></label>
             <input class="form-control" placeholder="ค่าบำรุงห้องสมุด" name="REVEVUE_LIBRARY" type="text"
               id="REVEVUE_LIBRARY" size="10" [(ngModel)]="dataAdd.REVEVUE_LIBRARY" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>ค่าบริการคอมพิวเตอร์และเครือข่าย  : </strong></label>
-            <input class="form-control" placeholder="ค่าบริการคอมพิวเตอร์และเครือข่าย" name="REVEVUE_NETWORK" type="text"
-              id="REVEVUE_NETWORK" size="10" [(ngModel)]="dataAdd.REVEVUE_NETWORK" />
+            <label for="name"><strong>ค่าบริการคอมพิวเตอร์และเครือข่าย : </strong></label>
+            <input class="form-control" placeholder="ค่าบริการคอมพิวเตอร์และเครือข่าย" name="REVEVUE_NETWORK"
+              type="text" id="REVEVUE_NETWORK" size="10" [(ngModel)]="dataAdd.REVEVUE_NETWORK" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>งบประมาณส่งเสริมและพัฒนางานวิจัยของส่วนราชการ  : </strong></label>
+            <label for="name"><strong>งบประมาณส่งเสริมและพัฒนางานวิจัยของส่วนราชการ : </strong></label>
             <input class="form-control" placeholder="สมทบกองทุนฯหน่วยงาน" name="REVEVUE_FRESD" type="text"
               id="REVEVUE_FRESD" size="10" [(ngModel)]="dataAdd.REVEVUE_FRESD" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>งบประมาณพัฒนางานวิจัย  : </strong></label>
+            <label for="name"><strong>งบประมาณพัฒนางานวิจัย : </strong></label>
             <input class="form-control" placeholder="งบประมาณพัฒนางานวิจัย" name="REVEVUE_RES" type="text"
               id="REVEVUE_RES" size="10" [(ngModel)]="dataAdd.REVEVUE_RES" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>งบประมาณเพื่อพัฒนาบุคลากร  : </strong></label>
+            <label for="name"><strong>งบประมาณเพื่อพัฒนาบุคลากร : </strong></label>
             <input class="form-control" placeholder="สมทบกองทุนพัฒนาบุคลากร" name="REVEVUE_FPER" type="text"
               id="REVEVUE_FPER" size="10" [(ngModel)]="dataAdd.REVEVUE_FPER" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>งบกลาง  : </strong></label>
-            <input class="form-control" placeholder="งบกลาง" name="REVEVUE_MB" type="text"
-              id="REVEVUE_MB" size="10" [(ngModel)]="dataAdd.REVEVUE_MB" />
+            <label for="name"><strong>งบกลาง : </strong></label>
+            <input class="form-control" placeholder="งบกลาง" name="REVEVUE_MB" type="text" id="REVEVUE_MB" size="10"
+              [(ngModel)]="dataAdd.REVEVUE_MB" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>สมทบส่วนราชการ  : </strong></label>
-            <input class="form-control" placeholder="สมทบหน่วยงาน" name="REVEVUE_FAC" type="text"
-              id="REVEVUE_FAC" size="10" [(ngModel)]="dataAdd.REVEVUE_FAC" />
+            <label for="name"><strong>สมทบส่วนราชการ : </strong></label>
+            <input class="form-control" placeholder="สมทบหน่วยงาน" name="REVEVUE_FAC" type="text" id="REVEVUE_FAC"
+              size="10" [(ngModel)]="dataAdd.REVEVUE_FAC" />
           </div>
           <div class="form-group col-md-12">
-            <label for="name"><strong>ค่าธรรมเนียมอื่น  : </strong></label>
+            <label for="name"><strong>ค่าธรรมเนียมอื่น : </strong></label>
             <input class="form-control" placeholder="ค่าธรรมเนียมอื่น" name="REVEVUE_OTHER" type="text"
               id="REVEVUE_OTHER" size="10" [(ngModel)]="dataAdd.REVEVUE_OTHER" />
           </div>

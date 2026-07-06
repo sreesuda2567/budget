@@ -63,6 +63,8 @@ title = 'angular-app';
   datacampus: any;
   dataAcc: any;
   dataProduct: any;
+  dataSeq: any;
+  pdfUrlToView: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   constructor(
@@ -210,6 +212,20 @@ fetchdata() {
       .subscribe((data: any) => {
         this.dataFac = data;
         this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
+      });
+  }
+    fetchdataloadshow(id: any) {
+    this.pdfUrlToView = null;
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.opt = "viewshow";
+
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == '1') {
+          this.dataSeq = data.data;
+        }
       });
   }
   fetchdataload() {
@@ -595,4 +611,9 @@ fetchdata() {
       
       }
     }
+  exportpdf(link: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
+  }   
 }

@@ -14,6 +14,8 @@ import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
 import Swal from 'sweetalert2';
 import { PDFDocument } from 'pdf-lib';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 
 @Component({
   selector: 'app-loadw',
@@ -51,7 +53,7 @@ datalist: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   constructor(
-        private tokenStorage: TokenStorageService,
+    private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -60,7 +62,8 @@ datalist: any;
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -243,19 +246,20 @@ datalist: any;
     this.dataAdd.DATENOWS = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, id2: any) {
+  editdata(id: any, id2: any,link: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
     this.dataAdd.FNANNALS_CODE = id;
     this.dataAdd.FNANNALSMAP_CODE = id2;
+    this.dataAdd.EBOOKREQ_LINK = link;
     /*this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.CITIZEN_IDA = ciz;
     this.dataAdd.FNANNALS_BOOK_SUB = sub;*/
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any, deka: any) {
+  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any, deka: any,load3d:any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -266,6 +270,7 @@ datalist: any;
     this.dataAdd.FNANNALS_CODE = code;
     this.dataAdd.CHIEF_CODE = chief;
     this.dataAdd.FNANNALSMAP_DEKA = deka;
+    this.dataAdd.EBOOKREQ_LINK = load3d;
     this.dataAdd.code = id;
     this.rowpbi = '';
     this.rowpbu = 1;
@@ -301,7 +306,7 @@ datalist: any;
           //console.log(data.status);   uploadbook    
           if (data.status == 1) {
 
-            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '118')
+            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '27')
               .subscribe((event: any) => {
                 // 
                 if (event.type == 4) {
@@ -381,7 +386,7 @@ datalist: any;
       .subscribe((data: any) => {
         //console.log(data.status);       
         if (data.status == 1) {
-          this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '118')
+          this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '27')
             .subscribe((event: any) => {
               // 
               if (event.type == 4) {
@@ -430,9 +435,48 @@ datalist: any;
     previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+    setTimeout(() => {
+      const panel = this.eRef.nativeElement.querySelector('.pdf-preview-panel');
+      if (panel) panel.classList.add('open');
+    }, 50);
   }
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+    const panel = this.eRef.nativeElement.querySelector('.pdf-preview-panel');
+    if (panel) panel.classList.remove('open');
   }
+   async openPdfAnnotator(p: any) {
+      //  console.log(p.EBOOKREQ_LINK);
+      const cacheBuster = new Date().getTime();
+      const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+      const user = this.tokenStorage.getUser();
+  
+      const modal = await this.modalCtrl.create({
+        component: PdfAnnotatorModalComponent,
+        componentProps: {
+          pdfUrl: reportLink,
+          userId: user.citizen,
+          userName: user.fullname || user.username
+        },
+        cssClass: 'pdf-modal-right-side'
+      });
+      await modal.present();
+  
+      const { data } = await modal.onDidDismiss();
+      if (data && data.saved && data.blob) {
+        // Create a File object from the blob
+        const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+        
+        this.file = file;
+        this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+        
+        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+        if (fileInput) {
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          fileInput.files = dataTransfer.files;
+        }
+      }
+    }
 }

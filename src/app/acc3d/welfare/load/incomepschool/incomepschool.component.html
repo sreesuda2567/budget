@@ -1,12 +1,11 @@
-<div class="card border-light mx-4 mt-4">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-md-10">
-                <h5 class="card-title fw-bold mt-1"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>หนังสือเข้าการศึกษาของบุตร</h5>
-            </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+    <div class="row mb-3">
+        <div class="col-md-10">
+            <h5 class="fw-bold mt-1"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>หนังสือเข้าการศึกษาของบุตร</h5>
         </div>
     </div>
-    <div class="card-body">
+    
+    <div>
         <div class="row">
             <div class="col">
                 <!-- BASIC TABLE -->
@@ -40,10 +39,11 @@
                 </div>
             </div>
         </div>
+        <div class="table-responsive-lg">
         <table id="excel-table" width="100%"
-            class="table table-bordered table-striped table-hover">
+            class="table table-bordered table-striped table-hover table-vcenter tableFixHead">
             <thead>
-                <tr class="text-center" style="background-color: rgb(131, 187, 243);">
+                <tr class="bg-primary text-white text-center">
                     <td class="align-middle"><strong>ที่</strong></td>
                     <td class="align-middle"><strong>วันที่ทำรายการ</strong></td>
                     <td class="align-middle"><strong>คณะ/หน่วยงาน</strong></td>
@@ -83,6 +83,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 <!-- The Modal -->
@@ -98,10 +99,11 @@
                 <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
                     <div class="spinner-border " role="status" id="loadingdetail"></div>
                 </div>
+                <div class="table-responsive-lg">
                 <table width="100%" border="1" cellpadding="0" cellspacing="0"
                     class="table table-bordered table-striped table-hover">
                     <thead>
-                        <tr class="text-center" style="background-color: rgb(131, 187, 243);">
+                        <tr class="bg-primary text-white text-center">
                             <td width="5%" class="align-middle"><strong>ลำดับ</strong></td>
                             <td class="align-middle"><strong>เบิกสำหรับ</strong></td>
                             <td class="align-middle"><strong>ชื่อ-สกุล</strong></td>
@@ -130,6 +132,7 @@
                     </tbody>
 
                 </table>
+                </div>
             </div>
             <div class="modal-footer border-0 pt-0">
                 <button type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
@@ -148,16 +151,15 @@
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div  class="row">
-                    <div class="form-group col-md-12">
-                        <div class="row" *ngFor="let type of datareceipt">
-                            <div class="form-group col-md-12">
-                                <input class="form-check-input filled-in" name="p_radio2" id="radio2" type="radio"
-                                    value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE">
+                <div class="row px-3 pt-3">
+                    <div class="col-md-12">
+                        <div class="form-check mb-2" *ngFor="let type of datareceipt; let i = index">
+                            <input class="form-check-input filled-in" name="p_radio2" id="radio_{{i}}" type="radio"
+                                value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE">
+                            <label class="form-check-label" for="radio_{{i}}">
                                 {{type.FNRESTATUS_NAME}}
-                            </div>
+                            </label>
                         </div>
-
                     </div>
                 </div>
                 <div class="row mt-3 px-3">
@@ -170,7 +172,7 @@
             </div>
             <div class="modal-footer border-0 pt-0">
                 <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill px-4 shadow-sm" data-bs-dismiss="modal"><i class="fa-solid fa-xmark me-2"></i>ปิด</button>
-                <button  type="button" class="btn btn-danger rounded-pill px-4 shadow-sm" (click)="sendemail()"><i class="fa-solid fa-envelope me-2"></i>ส่งอีเมล</button>
+                <button  type="button" class="btn btn-danger rounded-pill px-4 shadow-sm" (click)="sendemail()"><i class="fa-solid fa-envelope me-2"></i>ส่งคืนพร้อมส่งอีเมล</button>
                 <button  type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="updatereceipt()"><i class="fa-solid fa-save me-2"></i>บันทึก</button>
             </div>
         </div>

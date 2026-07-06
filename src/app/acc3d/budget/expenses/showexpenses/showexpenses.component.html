@@ -1,12 +1,11 @@
-<div class="card border-light mx-4 mt-4">
-  <div class="card-header">
-    <div class="row">
-      <div class="col-md-10">
-        <h5 class="card-title">แสดงรายการขอเบิก</h5>
-      </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+  <div class="row mb-3">
+    <div class="col-md-10">
+      <h5 class="fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>แสดงรายการขอเบิก</h5>
     </div>
   </div>
-  <div class="card-body">
+
+  <div>
     <div class="shadow alert alert-info" role="alert">
       <div class="row">
         <div class="col">
@@ -77,8 +76,8 @@
             <div class="row">
 
               <div class="col-md-6">
-                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE" >
-                  <option value="" >ทุกหมวดรายจ่ายย่อย</option>
+                <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE">
+                  <option value="">ทุกหมวดรายจ่ายย่อย</option>
                   <option [value]="fac.PLSUBMONEYPAY_CODE" *ngFor="let fac of dataSubplmoneypay">
                     {{fac.PLSUBMONEYPAY_NAME}}</option>
                 </select>
@@ -99,8 +98,8 @@
               </div>
 
               <div class="col-md-2">
-                <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalist()"><i
-                    class="fa fa-search"></i>&nbsp;ค้นหา</button>
+                <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm" id="submitinsert"
+                  (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
                 <input type="hidden" class="form-control" name="c_citizen" id="c_citizen" [(ngModel)]="dataAdd.citizen">
                 <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS" id="PRIVILEGE_RSTATUS"
                   [(ngModel)]="dataFAdd.PRIVILEGE_RSTATUS">
@@ -150,93 +149,94 @@
     <div class="row justify-content-center center-screen" *ngIf="loading">
       <div class="spinner-border " role="status" id="loading"></div>
     </div>
+    <div class="table-responsive-lg">
+      <table class="table btn-font3" width="100%" id="example"
+        class="shadow-lg table table-bordered  table-striped table-hover tableFixHead">
+        <thead>
+          <tr class="bg-primary  text-white">
+            <th>
+              <div align="center">ที่</div>
+            </th>
+            <th>
+              <div align="center">ชื่อโครงการ/ชื่อเรื่อง</div>
+            </th>
+            <th>
+              <div align="center">หมวดรายจ่าย</div>
+            </th>
+            <th>
+              <div align="center">ขอเบิก</div>
+            </th>
+            <th>
+              <div align="center">อนุมัติ</div>
+            </th>
+            <th>
+              <div align="center">ผูกพัน</div>
+            </th>
+            <th>
+              <div align="center">จ่ายจริง</div>
+            </th>
+            <th>
+              <div align="center">วันที่ผ่านรายการ</div>
+            </th>
+            <th>
+              <div align="center">เลข3ดี</div>
+            </th>
+            <th>
+              <div align="center">เลขฎีกา</div>
+            </th>
+            <th>
+              <div align="center">จัดการข้อมูล</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
-    <table class="table btn-font3" width="100%" id="example"
-      class="shadow-lg table table-bordered  table-striped table-hover tableFixHead">
-      <thead>
-        <tr class="bg-primary  text-white">
-          <th>
-            <div align="center">ที่</div>
-          </th>
-          <th>
-            <div align="center">ชื่อโครงการ/ชื่อเรื่อง</div>
-          </th>
-          <th>
-            <div align="center">หมวดรายจ่าย</div>
-          </th>
-          <th>
-            <div align="center">ขอเบิก</div>
-          </th>
-          <th>
-            <div align="center">อนุมัติ</div>
-          </th>
-          <th>
-            <div align="center">ผูกพัน</div>
-          </th>
-          <th>
-            <div align="center">จ่ายจริง</div>
-          </th>
-          <th>
-            <div align="center">วันที่ผ่านรายการ</div>
-          </th>
-          <th>
-            <div align="center">เลข3ดี</div>
-          </th>
-          <th>
-            <div align="center">เลขฎีกา</div>
-          </th>
-          <th>
-            <div align="center">จัดการข้อมูล</div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
-
-        <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+          <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
                 itemsPerPage: tableSize,
                 currentPage: page,
                 totalItems: count
                 } ; let i = index">
-          <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
-          <td>{{p.FNEXPENSES_TITLE}}</td>
-          <td>{{p.PLSUBMONEYPAY_NAME}}</td>
-          <td align="right">{{p.FNEXPENSES_OMONEY| number : '1.2-2'}}</td>
-          <td align="right">{{p.FNEXPENSES_AMONEY| number : '1.2-2'}}</td>
-          <td align="right">{{p.FNEXPENSES_CMONEY| number : '1.2-2'}}</td>
-          <td align="right">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
-          <td align="center">{{p.FNEXPENSES_MDATE1}}</td>
-          <td align="center">{{p.FNEXPENSES_STEP}}</td>
-          <td align="center">{{p.FNEXPENSES_DEKA}}</td>
-          <td align="center" width="12%">
-            <a role="button" class="btn btn-primary text-white" data-bs-toggle="modal"
-              data-bs-target="#exampleModalSearch" (click)="editdata(p.FNEXPENSES_CODE)"><i class="fa fa-search"></i>
-            </a>&nbsp;
-            <a role="button" *ngIf="p.FNEXPENSES_RSTATUS==0 || dataAdd.PRIVILEGE_RSTATUS =='A'|| dataAdd.PRIVILEGE_RSTATUS=='3'
+            <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+            <td>{{p.FNEXPENSES_TITLE}}</td>
+            <td>{{p.PLSUBMONEYPAY_NAME}}</td>
+            <td align="right">{{p.FNEXPENSES_OMONEY| number : '1.2-2'}}</td>
+            <td align="right">{{p.FNEXPENSES_AMONEY| number : '1.2-2'}}</td>
+            <td align="right">{{p.FNEXPENSES_CMONEY| number : '1.2-2'}}</td>
+            <td align="right">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+            <td align="center">{{p.FNEXPENSES_MDATE1}}</td>
+            <td align="center">{{p.FNEXPENSES_STEP}}</td>
+            <td align="center">{{p.FNEXPENSES_DEKA}}</td>
+            <td align="center" width="12%">
+              <a role="button" class="btn btn-primary text-white" data-bs-toggle="modal"
+                data-bs-target="#exampleModalSearch" (click)="editdata(p.FNEXPENSES_CODE)"><i class="fa fa-search"></i>
+              </a>&nbsp;
+              <a role="button" *ngIf="p.FNEXPENSES_RSTATUS==0 || dataAdd.PRIVILEGE_RSTATUS =='A'|| dataAdd.PRIVILEGE_RSTATUS=='3'
             || dataAdd.PRIVILEGE_RSTATUS=='5' || dataAdd.PRIVILEGE_RSTATUS=='9'" class="btn btn-danger text-white"
-              (click)="deleteData(p.FNEXPENSES_CODE)"><i class="fa fa-trash"></i>
-            </a>&nbsp;
-            <a role="button" *ngIf="p.FNEXPENSES_RSTATUS==0 || dataAdd.PRIVILEGE_RSTATUS =='A' || dataAdd.PRIVILEGE_RSTATUS=='3'
-            || dataAdd.PRIVILEGE_RSTATUS=='5' || dataAdd.PRIVILEGE_RSTATUS=='9'|| dataAdd.PRIVILEGE_RSTATUS=='M'" class="btn btn-warning text-white"
-              data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="editdata(p.FNEXPENSES_CODE)"><i
-                class="fa fa-edit"></i></a>&nbsp;
-          </td>
+                (click)="deleteData(p.FNEXPENSES_CODE)"><i class="fa fa-trash"></i>
+              </a>&nbsp;
+              <a role="button" *ngIf="p.FNEXPENSES_RSTATUS==0 || dataAdd.PRIVILEGE_RSTATUS =='A' || dataAdd.PRIVILEGE_RSTATUS=='3'
+            || dataAdd.PRIVILEGE_RSTATUS=='5' || dataAdd.PRIVILEGE_RSTATUS=='9'|| dataAdd.PRIVILEGE_RSTATUS=='M'"
+                class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                (click)="editdata(p.FNEXPENSES_CODE)"><i class="fa fa-edit"></i></a>&nbsp;
+            </td>
 
-        </tr>
-        <tr>
-          <td colspan="3" align="center">รวมทั้งหมด</td>
-          <td align="right">{{Momoney| number : '1.2-2'}}</td>
-          <td align="right">{{Mamoney| number : '1.2-2'}}</td>
-          <td align="right">{{Mcmoney| number : '1.2-2'}}</td>
-          <td align="right">{{Mrmoney| number : '1.2-2'}}</td>
-          <td align="center"></td>
-          <td></td>
-          <td></td>
-          <td width="12%">
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+          <tr>
+            <td colspan="3" align="center">รวมทั้งหมด</td>
+            <td align="right">{{Momoney| number : '1.2-2'}}</td>
+            <td align="right">{{Mamoney| number : '1.2-2'}}</td>
+            <td align="right">{{Mcmoney| number : '1.2-2'}}</td>
+            <td align="right">{{Mrmoney| number : '1.2-2'}}</td>
+            <td align="center"></td>
+            <td></td>
+            <td></td>
+            <td width="12%">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="d-flex justify-content-left">
       <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
       </pagination-controls>
@@ -246,11 +246,13 @@
 
 
   <!-- The Modal -->
-  <div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
       <div class="modal-content">
         <div class="modal-header bg-primary">
-          <h5 class="modal-title text-white" id="exampleModalLabel">รายละเอียดการขอเบิก</h5>
+          <h5 class="modal-title text-white fw-bold" id="exampleModalLabel"><i
+              class="fa-solid fa-file-invoice-dollar me-2"></i>รายละเอียดการขอเบิก</h5>
           <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -259,11 +261,15 @@
               <tbody>
                 <tr>
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-3 text-secondary" style="font-size: 10pt"> แหล่งเงิน </div>
-                      <div class="col-md-3 text-secondary" style="font-size: 10pt">ภาค </div>
-                      <div class="col-md-3 text-secondary" style="font-size: 10pt"> ปีงบประมาณ </div>
-                      <div class="col-md-3 text-secondary" style="font-size: 10pt">ผลผลิต </div>
+                    <div class="row mb-1">
+                      <div class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-sack-dollar me-1 text-primary"></i> แหล่งเงิน </div>
+                      <div class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-map-location-dot me-1 text-info"></i> ภาค </div>
+                      <div class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-calendar-alt me-1 text-success"></i> ปีงบประมาณ </div>
+                      <div class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-boxes-stacked me-1 text-warning"></i> ผลผลิต </div>
                     </div>
                     <div class="row">
                       <div class="col-md-3">
@@ -301,9 +307,11 @@
                 </tr>
                 <tr>
                   <td colspan="2" width="22%" align="left">
-                    <div class="row">
-                      <div class="col-md-4 text-secondary" style="font-size: 10pt"> ประเภทงบ </div>
-                      <div class="col-md-8 text-secondary" style="font-size: 10pt">หมวดรายจ่ายย่อย </div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-4 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-money-check-dollar me-1 text-primary"></i> ประเภทงบ </div>
+                      <div class="col-md-8 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-list-ul me-1 text-info"></i> หมวดรายจ่ายย่อย </div>
                     </div>
                     <div class="row">
                       <div class="col-md-4 text-secondary">
@@ -325,8 +333,9 @@
                 </tr>
                 <tr>
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-12 text-secondary" style="font-size: 10pt"> คณะ/หน่วยงาน </div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-12 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-building-user me-1 text-primary"></i> คณะ/หน่วยงาน </div>
                     </div>
                     <div class="row">
                       <div class="col-md-12">
@@ -339,11 +348,12 @@
                     </div>
                   </td>
                 </tr>
-                <tr ><!--*ngIf="dataFAdd.PLPROJECT_CODE || dataAdd.PRIVILEGE_RSTATUS=='A'"-->
+                <tr><!--*ngIf="dataFAdd.PLPROJECT_CODE || dataAdd.PRIVILEGE_RSTATUS=='A'"-->
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-12 text-secondary" style="font-size: 10pt">
-                        ชื่อโครงการ/ครุภัณฑ์/สิ่งก่อสร้าง</div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-12 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-diagram-project me-1 text-success"></i> ชื่อโครงการ/ครุภัณฑ์/สิ่งก่อสร้าง
+                      </div>
                     </div>
                     <div class="row">
                       <div class="col-md-12">
@@ -356,8 +366,9 @@
                 </tr>
                 <tr *ngIf="dataFAdd.PLMONEYPAY_CODE==26">
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-12 text-secondary" style="font-size: 10pt">ขอใช้งบกลาง</div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-12 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-hand-holding-dollar me-1 text-warning"></i> ขอใช้งบกลาง</div>
                     </div>
                     <div class="row">
                       <div class="col-md-12">
@@ -371,12 +382,13 @@
                 </tr>
                 <tr>
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-4 text-secondary" style="font-size: 10pt"> เลขที่หนังสือ </div>
-                      <div *ngIf="element == true" class="col-md-4 text-secondary" style="font-size: 10pt">เลขฎีกา
-                      </div>
-                      <div *ngIf="element == true" class="col-md-4 text-secondary" style="font-size: 10pt">เลขที่ขอเบิก
-                      </div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-4 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-file-lines me-1 text-info"></i> เลขที่หนังสือ </div>
+                      <div *ngIf="element == true" class="col-md-4 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-file-invoice me-1 text-primary"></i> เลขฎีกา</div>
+                      <div *ngIf="element == true" class="col-md-4 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-file-signature me-1 text-success"></i> เลขที่ขอเบิก</div>
                     </div>
                     <div class="row">
                       <div class="col-md-4">
@@ -398,9 +410,11 @@
 
                 <tr>
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-8 text-secondary" style="font-size: 10pt"> ชื่อเรื่อง </div>
-                      <div class="col-md-4 text-secondary" style="font-size: 10pt">วันที่ดำเนินการ </div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-8 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-heading me-1 text-primary"></i> ชื่อเรื่อง </div>
+                      <div class="col-md-4 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-calendar-check me-1 text-success"></i> วันที่ดำเนินการ </div>
                     </div>
                     <div class="row">
                       <div class="col-md-8">
@@ -416,8 +430,9 @@
                 </tr>
                 <tr>
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-12 text-secondary" style="font-size: 10pt">ผู้รับเงิน/ร้านค้า</div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-12 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-shop me-1 text-warning"></i> ผู้รับเงิน/ร้านค้า</div>
                     </div>
                     <div class="row">
                       <div class="col-md-12">
@@ -442,9 +457,11 @@
                 </tr>
                 <tr>
                   <td align="left">
-                    <div class="row">
-                      <div class="col-md-6 text-secondary" style="font-size: 10pt"> สาขา </div>
-                      <div class="col-md-6 text-secondary" style="font-size: 10pt">หลักสูตร </div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-6 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-code-branch me-1 text-info"></i> สาขา </div>
+                      <div class="col-md-6 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-graduation-cap me-1 text-primary"></i> หลักสูตร </div>
                     </div>
                     <div class="row">
                       <div class="col-md-6">
@@ -467,14 +484,15 @@
                 </tr>
                 <tr>
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-3 text-secondary" style="font-size: 10pt"> ขอเบิกเงินจำนวน </div>
-                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt">
-                        จำนวนเงินที่อนุมัติ </div>
-                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt">
-                        เงินผูกพัน </div>
-                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt">
-                        จำนวนเงินที่จ่ายจริง </div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-coins me-1 text-primary"></i> ขอเบิกเงินจำนวน </div>
+                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-check-double me-1 text-success"></i> จำนวนเงินที่อนุมัติ </div>
+                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-link me-1 text-warning"></i> เงินผูกพัน </div>
+                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-money-bill-wave me-1 text-info"></i> จำนวนเงินที่จ่ายจริง </div>
                     </div>
                     <div class="row">
                       <div class="col-md-3">
@@ -485,7 +503,7 @@
                       <div class="col-md-3" *ngIf="element == true">
                         <input name="FNEXPENSES_AMONEY" id="FNEXPENSES_AMONEY" type="text" class="form-control"
                           placeholder="จำนวนที่อนุมัติ " (keypress)="CheckNum($event)" style="font-size: 19pt;"
-                          [(ngModel)]="dataFAdd.FNEXPENSES_AMONEY" >
+                          [(ngModel)]="dataFAdd.FNEXPENSES_AMONEY">
                         <input name="FNEXPENSES_SBMONEY" id="FNEXPENSES_SBMONEY" type="hidden" class="form-control"
                           placeholder="จำนวนเงิน " disabled>
                       </div>
@@ -505,14 +523,15 @@
                 </tr>
                 <tr>
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-3 text-secondary" style="font-size: 10pt"> วันที่ขอเบิก </div>
-                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt">
-                        วันที่อนุมัติเงิน </div>
-                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt">
-                        วันที่ผูกพัน </div>
-                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt">
-                        วันที่โหลด </div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-calendar-day me-1 text-primary"></i> วันที่ขอเบิก </div>
+                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-calendar-check me-1 text-success"></i> วันที่อนุมัติเงิน </div>
+                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-calendar-plus me-1 text-warning"></i> วันที่ผูกพัน </div>
+                      <div *ngIf="element == true" class="col-md-3 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-calendar-arrow-down me-1 text-info"></i> วันที่โหลด </div>
                     </div>
                     <div class="row">
                       <div class="col-md-3">
@@ -552,8 +571,9 @@
                 </tr>
                 <tr>
                   <td colspan="2" align="left">
-                    <div class="row">
-                      <div class="col-md-12 text-secondary" style="font-size: 10pt">หมายเหตุ</div>
+                    <div class="row mt-2 mb-1">
+                      <div class="col-md-12 text-secondary" style="font-size: 10pt"><i
+                          class="fa-solid fa-note-sticky me-1 text-primary"></i> หมายเหตุ</div>
                     </div>
                     <div class="row">
                       <div class="col-md-12">
@@ -604,9 +624,9 @@
                               <td width="10%" align="right"><input placeholder="เลขที่ใบส่งของ" type="text"
                                   name="FNEXPENSES_DELIVERRY" class="form-control"
                                   [(ngModel)]="dataFAdd.FNEXPENSES_DELIVERRY[i]" [disabled]="dataFAdd.apstatus[i]"></td>
-                              <td width="10%"><input type="text" name="FRACCDATEC" placeholder="วันที่" class="form-control" bsDatepicker
-                                  #dp="bsDatepicker" [(ngModel)]="dataFAdd.FRACCDATEC[i]" readonly
-                                  [disabled]="dataFAdd.apstatus[i]"><i
+                              <td width="10%"><input type="text" name="FRACCDATEC" placeholder="วันที่"
+                                  class="form-control" bsDatepicker #dp="bsDatepicker"
+                                  [(ngModel)]="dataFAdd.FRACCDATEC[i]" readonly [disabled]="dataFAdd.apstatus[i]"><i
                                   style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
                                   class="fa fa-calendar text-primary"></i></td>
                               <td width="10%"><input type="text" name="FRACCDEKAC[0]" class="form-control"
@@ -660,9 +680,9 @@
                                   placeholder="เลขฎีกา" [(ngModel)]="dataFAdd.FNEXACCDEKA[i]"
                                   [disabled]="dataFAdd.apstatus[i]"></td>
                               <td width="15%" align="right"><input type="text" name="frm" class="form-control"
-                                  [(ngModel)]="dataFAdd.FNEXACCMONEY[i]" 
-                                  placeholder="จำนวนเงิน" (keyup)="sumdatafr()" [disabled]="dataFAdd.apstatus[i]"></td>
-                             <!-- <td width="1%" align="right">
+                                  [(ngModel)]="dataFAdd.FNEXACCMONEY[i]" placeholder="จำนวนเงิน" (keyup)="sumdatafr()"
+                                  [disabled]="dataFAdd.apstatus[i]"></td>
+                              <!-- <td width="1%" align="right">
                                 <i *ngIf="dataFAdd.FNEXACCMONEY[i]>0" (click)="canceldata(i,dataFAdd.FNEXACCMONEY[i])"
                                   class="fa-solid fa-ban" style="color:rgb(221, 15, 15);cursor:pointer;"
                                   title="ยกเลิก"></i>
@@ -687,19 +707,23 @@
 
         </div>
         <div class="modal-footer">
-          <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-          <button type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+          <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal"><i
+              class="fa-solid fa-xmark"></i> ปิด</button>
+          <button type="button" class="btn btn-primary rounded-pill" (click)="updatedata()"><i
+              class="fa-solid fa-save"></i> แก้ไขข้อมูล</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 <!-- The Modal -->
-<div class="modal fade" data-bs-focus="false" id="exampleModalSearch" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModalSearch" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header bg-primary">
-        <h5 class="modal-title text-white" id="exampleModalLabel">รายละเอียดการขอเบิก</h5>
+        <h5 class="modal-title text-white fw-bold" id="exampleModalLabel"><i
+            class="fa-solid fa-file-invoice-dollar me-2"></i>รายละเอียดการขอเบิก</h5>
         <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -846,7 +870,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal"><i
+            class="fa-solid fa-xmark"></i> ปิด</button>
       </div>
     </div>
   </div>

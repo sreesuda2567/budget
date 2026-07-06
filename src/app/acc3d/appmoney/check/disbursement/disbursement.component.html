@@ -1,21 +1,20 @@
-<div class="card border-light mx-4 mt-4">
-    <div class="card-header">
-        <div class="row">
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+    <div class="row mb-3">
 
-            <div class="col">
-                <h5 class="card-title mb-0">ตรวจสอบหลักฐานการเบิกจ่าย</h5>
-            </div>
-            <div class="col-auto">
-                <div class="btn-group" role="group">
-                    <a class="btn btn-danger text-white" (click)="fetchdatalist()">
-                        <i class="fa fa-plus-circle"></i> ออกใบปะหน้าเบิก</a>
-                    <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalistapp()"><i
-                            class="fa fa-search"></i>&nbsp;รายการใบปะหน้าเบิก</button>
-                </div>
+        <div class="col">
+            <h5 class="fw-bold mb-0 mt-1"><i class="fa-solid fa-clipboard-check me-2 text-primary"></i>ตรวจสอบหลักฐานการเบิกจ่าย</h5>
+        </div>
+        <div class="col-auto">
+            <div class="btn-group shadow-sm rounded-3" role="group">
+                <a class="btn btn-danger text-white" (click)="fetchdatalist()">
+                    <i class="fa-solid fa-plus-circle me-1"></i> ออกใบปะหน้าเบิก</a>
+                <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalistapp()"><i
+                        class="fa-solid fa-search me-1"></i> รายการใบปะหน้าเบิก</button>
             </div>
         </div>
     </div>
-    <div class="card-body">
+    
+    <div>
         <div class="shadow alert alert-info" role="alert">
             <div class="row">
                 <div class="col">
@@ -730,7 +729,7 @@
                                     class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.FRACCCODE[i]">
                                     <option [value]=""></option>
                                     <option [value]="sec.FRACC_CODE" *ngFor="let sec of dataAcc">
-                                        {{sec.FRACC_TNAME}}-->{{sec.FRACC_CODE}}
+                                       {{sec.FRACC_TNAME}}-->{{sec.FRACC_CODE}}
                                     </option>
                                 </select>
                             </div>

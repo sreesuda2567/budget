@@ -1,21 +1,20 @@
-<div class="card border-light mx-4 mt-4">
-    <div class="card-header">
-        <div class="row align-items-center">
-            <div class="col">
-                <h5 class="card-title mb-0">ล้างลูกหนี้</h5>
-            </div>
-            <div class="col-auto">
-                <div class="btn-group" role="group">
-                    <a class="btn btn-danger text-white" (click)="fetchdatalist()">
-                        <i class="fa fa-plus-circle"></i> ล้างลูกหนี้</a>
-                    <button type="submit" class="btn btn-primary" id="submitinsert"
-                        (click)="fetchdatalistapp()"><i
-                                class="fa fa-search"></i>&nbsp;รายการล้างลูกหนี้</button>
-                </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+    <div class="row mb-3 align-items-center">
+        <div class="col">
+            <h5 class="fw-bold mb-0 mt-1"><i class="fa-solid fa-eraser me-2 text-primary"></i>ล้างลูกหนี้</h5>
+        </div>
+        <div class="col-auto">
+            <div class="btn-group shadow-sm rounded-3" role="group">
+                <a class="btn btn-danger text-white" (click)="fetchdatalist()">
+                    <i class="fa-solid fa-plus-circle me-1"></i> ล้างลูกหนี้</a>
+                <button type="submit" class="btn btn-primary" id="submitinsert"
+                    (click)="fetchdatalistapp()"><i
+                            class="fa-solid fa-search me-1"></i> รายการล้างลูกหนี้</button>
             </div>
         </div>
     </div>
-    <div class="card-body">
+    
+    <div>
         <div class="shadow alert alert-info" role="alert">
             <div class="row">
                 <div class="col">

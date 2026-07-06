@@ -1,17 +1,16 @@
-<div class="card border-light mx-4 mt-4">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-md-10">
-                <h5 class="card-title">หน่วยนับ</h5>
-            </div>
-            <div class="col-md-2" align="right">
-                <a class="btn btn-primary text-white" data-bs-toggle="modal" data-bs-target="#modalEdit" 
-                (click)="showinput()" (click)=" setshowbti()">
-                    <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
-            </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+    <div class="row mb-3">
+        <div class="col-md-10">
+            <h5 class="fw-bold"><i class="fa-solid fa-scale-balanced me-2 text-primary"></i>หน่วยนับ</h5>
+        </div>
+        <div class="col-md-2" align="right">
+            <a class="btn btn-primary text-white rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalEdit" 
+            (click)="showinput()" (click)=" setshowbti()">
+                <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
         </div>
     </div>
-    <div class="card-body">
+    
+    <div>
         <div class="row">
             <div class="col">
                 <!-- BASIC TABLE -->

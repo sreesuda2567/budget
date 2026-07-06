@@ -2,7 +2,7 @@
     <div class="card-header">
         <div class="row">
             <div class="col">
-                <h5 class="card-title mb-0">ลงวันที่จ่าย</h5>
+                <h5 class="card-title mb-0 fw-bold"><i class="fa-solid fa-calendar-check me-2 text-primary"></i>ลงวันที่จ่าย</h5>
             </div>
             <div class="col-auto">
                 <div class="btn-group" role="group">
@@ -374,45 +374,64 @@
     <div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <h1 class="modal-title fs-5 text-white" id="staticBackdropLabel">ลงวันที่จ่าย</h1>
-                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white border-0">
+                    <h5 class="modal-title fw-bold" id="staticBackdropLabel"><i class="fa-solid fa-calendar-check me-2"></i>ลงวันที่จ่าย</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
-                        <div class="spinner-border " role="status" id="loadingdetail"></div>
+                <div class="modal-body bg-light p-4">
+                    <div class="row justify-content-center center-screen mb-3" *ngIf="loadingdetail">
+                        <div class="spinner-border text-primary" role="status" id="loadingdetail"></div>
                     </div>
-                    <input type="hidden" class="form-control" name="FNEXACCPAYDATE_CODE" id="FNEXACCPAYDATE_CODE"
-                        [(ngModel)]="dataAdd.FNEXACCPAYDATE_CODE">
-                    <label> วันที่จ่าย: </label>
-                    <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker #dp3="bsDatepicker"
-                        [(ngModel)]="dataAdd.DATENOWP" readonly>
-                    <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
-                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp3.toggle()">
-                    </i>
-                    <label for="name">ประเภทเอกสาร</label>
-                    <select name="FNEXACCPAYDATE_TYPE" id="FNEXACCPAYDATE_TYPE" class="form-select"
-                        [(ngModel)]="dataAdd.FNEXACCPAYDATE_TYPE">
-                        <option value="PM">PM</option>
-                    </select>
-                    <label for="name">เลขเอกสาร</label>
-                    <input type="text" name="FNEXACCPAYDATE_NUMBER" id="FNEXACCPAYDATE_NUMBER" class="form-control"
-                        placeholder="เลขเอกสาร" [(ngModel)]="dataAdd.FNEXACCPAYDATE_NUMBER">
-                    <label *ngIf="rowpbu" for="name">จำนวนเงิน</label>
-                    <input *ngIf="rowpbu" type="text" name="FNEXACCPAYDATE_MONEY" id="FNEXACCPAYDATE_MONEY" class="form-control"
-                        placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNEXACCPAYDATE_MONEY"
-                        (keypress)="CheckNum($event)">
-                    <label for="name">หมายเหตุ</label>
-                    <textarea id="FNEXACCPAYDATE_NOTE" name="FNEXACCPAYDATE_NOTE"
-                        [(ngModel)]="dataAdd.FNEXACCPAYDATE_NOTE" rows="4" cols="50" class="form-control"></textarea>
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <input type="hidden" class="form-control" name="FNEXACCPAYDATE_CODE" id="FNEXACCPAYDATE_CODE"
+                                [(ngModel)]="dataAdd.FNEXACCPAYDATE_CODE">
+                            
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold mb-1"><i class="fa-solid fa-calendar-day text-primary me-1"></i>วันที่จ่าย:</label>
+                                <div class="input-group">
+                                    <input placeholder="ดด/วว/ปปปป" type="text" class="form-control bg-white" bsDatepicker #dp3="bsDatepicker"
+                                        [(ngModel)]="dataAdd.DATENOWP" readonly>
+                                    <span class="input-group-text bg-white" style="cursor: pointer;" (click)="dp3.toggle()"><i class="fa-solid fa-calendar-days text-primary"></i></span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="FNEXACCPAYDATE_TYPE" class="form-label text-muted small fw-bold mb-1"><i class="fa-solid fa-file-lines text-primary me-1"></i>ประเภทเอกสาร</label>
+                                <select name="FNEXACCPAYDATE_TYPE" id="FNEXACCPAYDATE_TYPE" class="form-select"
+                                    [(ngModel)]="dataAdd.FNEXACCPAYDATE_TYPE">
+                                    <option value="PM">PM</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="FNEXACCPAYDATE_NUMBER" class="form-label text-muted small fw-bold mb-1"><i class="fa-solid fa-hashtag text-primary me-1"></i>เลขเอกสาร</label>
+                                <input type="text" name="FNEXACCPAYDATE_NUMBER" id="FNEXACCPAYDATE_NUMBER" class="form-control"
+                                    placeholder="เลขเอกสาร" [(ngModel)]="dataAdd.FNEXACCPAYDATE_NUMBER">
+                            </div>
+
+                            <div class="mb-3" *ngIf="rowpbu">
+                                <label for="FNEXACCPAYDATE_MONEY" class="form-label text-muted small fw-bold mb-1"><i class="fa-solid fa-money-bill-wave text-primary me-1"></i>จำนวนเงิน</label>
+                                <input type="text" name="FNEXACCPAYDATE_MONEY" id="FNEXACCPAYDATE_MONEY" class="form-control text-end"
+                                    placeholder="0.00" [(ngModel)]="dataAdd.FNEXACCPAYDATE_MONEY"
+                                    (keypress)="CheckNum($event)">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="FNEXACCPAYDATE_NOTE" class="form-label text-muted small fw-bold mb-1"><i class="fa-solid fa-note-sticky text-primary me-1"></i>หมายเหตุ</label>
+                                <textarea id="FNEXACCPAYDATE_NOTE" name="FNEXACCPAYDATE_NOTE"
+                                    [(ngModel)]="dataAdd.FNEXACCPAYDATE_NOTE" rows="3" class="form-control" placeholder="ระบุหมายเหตุ (ถ้ามี)"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button id="ModalClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                    <button *ngIf="rowpbi" type="button" class="btn btn-primary"
-                    (click)="insertdata()">บันทึกข้อมูล</button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary" (click)="updatedata()">แก้ไขข้อมูล</button>
+                <div class="modal-footer bg-light border-0">
+                    <button id="ModalClose" type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">ปิด</button>
+                    <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 rounded-pill shadow-sm"
+                        (click)="insertdata()"><i class="fa-solid fa-floppy-disk me-2"></i>บันทึกข้อมูล</button>
+                    <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 rounded-pill shadow-sm" (click)="updatedata()"><i class="fa-solid fa-floppy-disk me-2"></i>แก้ไขข้อมูล</button>
                 </div>
             </div>
         </div>

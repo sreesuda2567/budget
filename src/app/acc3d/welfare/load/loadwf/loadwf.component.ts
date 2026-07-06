@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef  } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
@@ -14,14 +14,15 @@ import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
 import Swal from 'sweetalert2';
 import { PDFDocument } from 'pdf-lib';
-
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 @Component({
   selector: 'app-loadwf',
   templateUrl: './loadwf.component.html',
   styleUrls: ['./loadwf.component.scss']
 })
 export class LoadwfComponent implements OnInit {
-datalist: any;
+ datalist: any;
   loading: any;
   rownum: any;
   file: any;
@@ -29,7 +30,6 @@ datalist: any;
   dataYear: any;
   datarstatus: any;
   dataName: any;
-  dataNameb: any;
   url = "/acc3d/welfare/load/load3wf.php";
   url1 = "/acc3d/welfare/userpermission.php";
   dataProvince: any;
@@ -42,11 +42,11 @@ datalist: any;
   datalistapp: any;
   dataEdoc: any;
   datachief: any;
-     page = 1;
+  page = 1;
   count = 0;
   number = 0;
   tableSize = 20;
-  tableSizes = [20, 30,40,100,200];
+  tableSizes = [20, 30, 40, 100, 200];
   searchTerm: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
@@ -60,7 +60,9 @@ datalist: any;
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -85,7 +87,7 @@ fetchdata() {
         this.dataAdd.UFACULTY_CODE = data[0].FACULTY_CODE;
         this.dataAdd.UCAMPUS_CODE = data[0].CAMPUS_CODE;
         var varN1 = {
-          "opt": "viewnamecheckc1",
+          "opt": "viewnamereport",
           "citizen": this.tokenStorage.getUser().citizen,
           "FACULTY_CODE": data[0].FACULTY_CODE
         }
@@ -94,7 +96,7 @@ fetchdata() {
           .pipe(first())
           .subscribe((data: any) => {
             this.dataName = data;
-
+            this.dataAdd.CITIZEN_IDD1 = data[0].CITIZEN_ID;
           });
 
       });
@@ -108,7 +110,6 @@ fetchdata() {
       .subscribe((data: any) => {
         this.datarstatus = data;
         this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
-        //รายการปี
         var Table = {
           "opt": "viewyear"
         }
@@ -135,14 +136,15 @@ fetchdata() {
               });
 
           });
-
       });
 
+
+
   }
-    fetchdatareport() {
+  fetchdatareportnamea() {
     this.dataName = null;
     var varN1 = {
-      "opt": "viewnamereportf",
+      "opt": "viewnamereport",
       "citizen": this.tokenStorage.getUser().citizen,
       "FACULTY_CODE": this.dataAdd.FACULTY_CODE
     }
@@ -151,20 +153,6 @@ fetchdata() {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataName = data;
-       // this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
-       // this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
-
-      });
-  }
-  fetchdataFac() {
-    this.dataFac = null;
-    this.dataAdd.opt = "viewfacreport";
-    this.apiService
-      .getdata(this.dataAdd, this.url1)
-      .pipe(first())
-      .subscribe((data: any) => {
-        this.dataFac = data;
-        this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
       });
   }
   fetchdatalist() {
@@ -190,6 +178,13 @@ fetchdata() {
           this.datalist = data.data;
           this.loading = null;
           this.rownum = 'true';
+          // Count pages for PDFs
+          if (this.datalist && this.datalist.length > 0) {
+            this.datalist.forEach((p: any) => {
+              if (p.load3d) this.countPdfPages(p.load3d, p, 'load3d_pages');
+              if (p.load3df) this.countPdfPages(p.load3df, p, 'load3df_pages');
+            });
+          }
         } else {
           this.datalist = data.data;
           this.loading = null;
@@ -224,6 +219,14 @@ fetchdata() {
           this.datalistapp = data.data;
           this.loading = null;
           this.rownum1 = 1;
+          // Count pages for PDFs
+          if (this.datalistapp && this.datalistapp.length > 0) {
+            this.datalistapp.forEach((p: any) => {
+              if (p.load3d) this.countPdfPages(p.load3d, p, 'load3d_pages');
+              if (p.load3df) this.countPdfPages(p.load3df, p, 'load3df_pages');
+              if (p.load3dl) this.countPdfPages(p.load3dl, p, 'load3dl_pages');
+            });
+          }
         } else {
           this.rownum1 = null;
           this.loading = null;
@@ -231,6 +234,76 @@ fetchdata() {
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
         }
       });
+  }
+  async sendfile(id: any, link: any, link3: any) {
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    //  this.editdata(id);
+    this.dataAdd.link2 = link;
+    this.dataAdd.link3 = link3;
+    Swal.fire({
+      title: 'ต้องการรวมไฟล์ส่งเบิกจ่าย',
+      text: 'กำลังรวมไฟล์ PDF...',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(async (result) => {
+      if (result.value) {
+        Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+        try {
+          // 1. โหลดไฟล์ PDF ทั้งสองไฟล์จาก URL
+          const pdf1Bytes = await fetch(link).then(res => res.arrayBuffer());
+          const pdf2Bytes = await fetch(link3).then(res => res.arrayBuffer());
+
+          // 2. อ่านข้อมูลไฟล์ PDF
+          const pdf1 = await PDFDocument.load(pdf1Bytes);
+          const pdf2 = await PDFDocument.load(pdf2Bytes);
+
+          // 3. สร้างไฟล์ PDF ใหม่เพื่อนำหน้ากระดาษมารวมกัน
+          const mergedPdf = await PDFDocument.create();
+
+          // นำหน้าทั้งหมดจากไฟล์ที่ 1 มาใส่
+          const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+          copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+          // นำหน้าทั้งหมดจากไฟล์ที่ 2 มาใส่
+          const copiedPages2 = await mergedPdf.copyPages(pdf2, pdf2.getPageIndices());
+          copiedPages2.forEach((page) => mergedPdf.addPage(page));
+
+          // 4. บันทึกไฟล์ใหม่และแปลงเป็น File Object
+          const mergedPdfBytes = await mergedPdf.save();
+          const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
+          const user = this.tokenStorage.getUser();
+
+          // 5. อัปโหลดไฟล์ที่รวมแล้ว (ใช้ code 32 แบบเดียวกับการแนบไฟล์)
+          this.Uploadfiles.uploadcontract(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '32')
+            .subscribe((event: any) => {
+              if (event.type == 4) {
+                 // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ
+                 this.dataAdd.opt = "sendfile";
+                 this.apiService.getdata(this.dataAdd, this.url)
+                   .pipe(first())
+                   .subscribe((data: any) => {
+                     if (data.status == 1) {
+                       Swal.close();
+                       this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                       this.fetchdatalist();
+                     } else {
+                       Swal.fire('ข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ', 'error');
+                     }
+                   });
+              }
+            });
+
+        } catch (error) {
+          console.error("Error merging PDFs:", error);
+          Swal.fire('ข้อผิดพลาด', 'ไม่สามารถรวมไฟล์ได้ (อาจเกิดจากไฟล์ไม่มีอยู่จริง หรือติดปัญหา Cross-Origin)', 'error');
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+      }
+    });
+
   }
   datenow(datenow: any) {
     const yyyy = datenow.getFullYear();
@@ -247,39 +320,31 @@ fetchdata() {
   }
   setshowbti() {
     this.dataAdd.EBOOKREQ_FILE = '';
-    this.dataAdd.DEPARTMENT_CODE = '';
-    this.dataAdd.FNANNALS_CODE = '';
     this.dataAdd.FNANNALSMAP_CODE = '';
-    this.dataAdd.CITIZEN_IDC1 = '';
-    this.dataAdd.CITIZEN_IDC2 = '';
+    this.dataAdd.CITIZEN_IDD1 = '';
+    this.dataAdd.DEPARTMENT_CODE = '';
     this.dataAdd.CHIEF_CODE = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, id2: any) {
+  editdata(id: any, link: any) {
     this.setshowbti();
-    this.onChangechief();
-    this.fetchdatareport();
     this.onChangeedoc();
-    this.dataAdd.FNANNALS_CODE = id;
-    this.dataAdd.FNANNALSMAP_CODE = id2;
-    /*this.dataAdd.EBOOKREQ_LINK = link;
-    this.dataAdd.CITIZEN_IDA = ciz;
-    this.dataAdd.FNANNALS_BOOK_SUB = sub;*/
+    this.onChangechief();
+    this.fetchdatareportnamea();
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.EBOOKREQ_LINK = link;
     this.rowpbi = true;
+    this.rowpbu = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any) {
+  editdatapp(id: any, link: any, ciz: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
-    this.fetchdatareport();
+    this.fetchdatareportnamea();
     this.dataAdd.FNANNALSMAP_CODE = id;
-    this.dataAdd.CITIZEN_IDC1 = ciz1;
-    this.dataAdd.CITIZEN_IDC2 = ciz2;
-    this.dataAdd.DEPARTMENT_CODE = edoc;
-    this.dataAdd.FNANNALS_CODE = code;
-    this.dataAdd.CHIEF_CODE = chief;
-    this.dataAdd.code = id;
+    this.dataAdd.EBOOKREQ_LINK = link;
+    this.dataAdd.CITIZEN_IDD1 = ciz;
     this.rowpbi = '';
     this.rowpbu = 1;
   }
@@ -289,15 +354,16 @@ fetchdata() {
 
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
-    if (this.dataAdd.EBOOKREQ_FILE == '' || this.dataAdd.CITIZEN_IDD1 == '' ) {
+    if (this.dataAdd.EBOOKREQ_FILE == '' || this.dataAdd.CHIEF_CODE == '' || this.dataAdd.DEPARTMENT_CODE == '') {
       if (this.dataAdd.EBOOKREQ_FILE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
       }
-
-      if (this.dataAdd.CITIZEN_IDD1 == '') {
-        this.toastr.warning("แจ้งเตือน:กรุณาเลือกผู้รับผิดชอบ");
+      if (this.dataAdd.CHIEF_CODE == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกเรียน");
       }
-
+      if (this.dataAdd.DEPARTMENT_CODE == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกสารบรรณ");
+      }
 
     } else {
       this.dataAdd.opt = "insert";
@@ -307,8 +373,7 @@ fetchdata() {
         .subscribe((data: any) => {
           //console.log(data.status);   uploadbook    
           if (data.status == 1) {
-
-            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '119')
+            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '32')
               .subscribe((event: any) => {
                 // 
                 if (event.type == 4) {
@@ -317,6 +382,16 @@ fetchdata() {
               }
               );
 
+            this.dataAdd.opt = "sendemail";
+            this.apiService
+              .getupdate(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                //console.log(data.status);       
+                if (data.status == 1) {
+                  // this.toastr.success("แจ้งเตือน:ส่งอีเรียบร้อยแล้ว");
+                }
+              });
             this.fetchdatalist();
             this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
             document.getElementById("ModalClose")?.click();
@@ -328,56 +403,51 @@ fetchdata() {
 
     }
   }
-  async sendfile(id: any, link: any, link2: any) {
-    this.dataAdd.FNANNALSMAP_CODE = id;
-    this.dataAdd.link1 = link;
-    this.dataAdd.link2 = link2;
-    Swal.fire({
-      title: 'ต้องการรวมไฟล์ส่งเจ้าหน้าที่ผู้จ่าย',
-      text: 'กำลังรวมไฟล์ PDF...',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'ตกลง',
-      cancelButtonText: 'ยกเลิก',
-    }).then(async (result) => {
-      if (result.value) {
-        Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-        try {
-          const pdf1Bytes = await fetch(link).then(res => res.arrayBuffer());
-          const pdf1 = await PDFDocument.load(pdf1Bytes);
-          const mergedPdf = await PDFDocument.create();
-
-          const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
-          copiedPages1.forEach((page) => mergedPdf.addPage(page));
-
-          if (link2) {
-            const pdf2Bytes = await fetch(link2).then(res => res.arrayBuffer());
-            const pdf2 = await PDFDocument.load(pdf2Bytes);
-            const copiedPages2 = await mergedPdf.copyPages(pdf2, pdf2.getPageIndices());
-            copiedPages2.forEach((page) => mergedPdf.addPage(page));
-          }
-
-          const mergedPdfBytes = await mergedPdf.save();
-          const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
-          const user = this.tokenStorage.getUser();
-
-          // หมายเหตุ: ใช้รหัสอัปโหลด '27' ตามที่ตั้งไว้ในหน้า loadw
-          this.Uploadfiles.uploadcontract(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '32')
-            .subscribe((event: any) => {
-              if (event.type == 4) {
-                Swal.close();
-                this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
-                this.fetchdatalist();
-              }
-            });
-        } catch (error) {
-          console.error("Error merging PDFs:", error);
-          Swal.fire('ข้อผิดพลาด', 'ไม่สามารถรวมไฟล์ได้ (อาจเกิดจากไฟล์ไม่มีอยู่จริง หรือติดปัญหา Cross-Origin)', 'error');
-        }
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+  // ฟังก์ขันสำหรับการเพิ่มข้อมูล
+  insertdataload() {
+    if (this.dataAdd.CITIZEN_IDD1 == '') {
+      if (this.dataAdd.CITIZEN_IDD1 == '') {
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกผู้รับผิดชอบโหลด KTB");
       }
-    });
+
+
+    } else {
+      this.dataAdd.opt = "insertload";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);   uploadbook    
+          if (data.status == 1) {
+            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '32')
+              .subscribe((event: any) => {
+                // 
+                if (event.type == 4) {
+                  this.fetchdatalist();
+                }
+              }
+              );
+
+            this.dataAdd.opt = "sendemail";
+            this.apiService
+              .getupdate(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                //console.log(data.status);       
+                if (data.status == 1) {
+                  // this.toastr.success("แจ้งเตือน:ส่งอีเรียบร้อยแล้ว");
+                }
+              });
+            this.fetchdatalist();
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            document.getElementById("ModalClose")?.click();
+          } else {
+            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+          }
+        });
+
+
+    }
   }
   updatedata() {
 
@@ -388,7 +458,7 @@ fetchdata() {
       .subscribe((data: any) => {
         //console.log(data.status);       
         if (data.status == 1) {
-          this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '119')
+          this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '32')
             .subscribe((event: any) => {
               // 
               if (event.type == 4) {
@@ -410,7 +480,7 @@ fetchdata() {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataEdoc = data.data;
-         this.dataAdd.DEPARTMENT_CODE = data.data[0].mapSectionCode;
+        this.dataAdd.DEPARTMENT_CODE = data.data[0].mapSectionCode;
       });
   }
   onChangechief() {
@@ -424,7 +494,7 @@ fetchdata() {
         this.dataAdd.CHIEF_CODE = data[0].CHIEF_CODE;
       });
   }
-        // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
     this.fetchdatalistapp();
@@ -433,13 +503,60 @@ fetchdata() {
     this.tableSize = event.target.value;
     this.page = 1;
     this.fetchdatalistapp();
-  }  
-    previewPdf(url: string) {
+  }
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+  }
+  async openPdfAnnotator(p: any) {
+    //console.log(p.EBOOKREQ_LINK);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      }
+    }
+  }
+
+  async countPdfPages(url: string, item: any, propertyName: string) {
+    if (!url) return;
+    try {
+      if (item[propertyName]) return;
+      const response = await fetch(url);
+      const pdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+      item[propertyName] = pdfDoc.getPageCount();
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error counting PDF pages for URL:', url, error);
+    }
   }
 }

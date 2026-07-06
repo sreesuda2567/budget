@@ -118,3 +118,9 @@ p.a-half {
 
   .tableFixHead1          { overflow: auto; }
   .tableFixHead1 thead  { position: sticky; top: 60px; z-index: 1; }
+
+  @media (max-width: 991.98px) {
+  .tableFixHead thead {
+    position: static;
+  }
+}

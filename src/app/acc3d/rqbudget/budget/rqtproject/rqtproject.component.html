@@ -1,20 +1,20 @@
-<div class="card border-light mx-4 mt-4">
-  <div class="card-header">
-    <div class="row">
-      <div class="col-md-9">
-        <h5 class="card-title fw-bold"><i class="fa-solid fa-diagram-project me-2 text-primary"></i>คำขอรายการโครงการทั่วไป/โครงการวิจัย</h5>
-      </div>
-      <div class="col-md-3" align="right">
-       <!-- <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-danger text-white" data-bs-toggle="modal"
-          data-bs-target="#exampleModalimport" (click)="fetchdatalistimport()">
-          <i class="fa fa-repeat" aria-hidden="true"></i> นำเข้าข้อมูล</a>&nbsp;-->
-        <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-primary text-white" data-bs-toggle="modal"
-          data-bs-target="#modalEditregister" (click)=" setshowbti()" (click)="onChangerister()">
-          <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
-      </div>
+<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <h5 class="fw-bold"><i
+          class="fa-solid fa-diagram-project me-2 text-primary"></i>คำขอรายการโครงการทั่วไป/โครงการวิจัย</h5>
+    </div>
+    <div class="col-md-4" align="right">
+      <!-- <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-danger text-white rounded-pill px-3 shadow-sm" data-bs-toggle="modal"
+        data-bs-target="#exampleModalimport" (click)="fetchdatalistimport()">
+        <i class="fa fa-repeat" aria-hidden="true"></i> นำเข้าข้อมูล</a>&nbsp;-->
+      <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-primary text-white rounded-pill px-3 shadow-sm"
+        data-bs-toggle="modal" data-bs-target="#modalEditregister" (click)=" setshowbti()" (click)="onChangerister()">
+        <i class="fa fa-plus-circle"></i> เพิ่มข้อมูล</a>
     </div>
   </div>
-  <div class="card-body">
+
+  <div>
     <div class="row">
       <div class="col">
         <!-- BASIC TABLE -->
@@ -31,13 +31,13 @@
                 </div>
                 <div class="col-md-2">
                   <label for="name"><strong>แหล่งเงิน</strong> </label>
-                          <select name="in_come" id="in_come" class="form-select" [(ngModel)]="dataAdd.RPLINCOME_CODE1"
-                             (change)="fetchdatalist()">
-                             <option value="" >ทุกประเภท</option>
-                            <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}
-                            </option>
-                          </select>
-               </div>
+                  <select name="in_come" id="in_come" class="form-select" [(ngModel)]="dataAdd.RPLINCOME_CODE1"
+                    (change)="fetchdatalist()">
+                    <option value="">ทุกประเภท</option>
+                    <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}
+                    </option>
+                  </select>
+                </div>
                 <div class="col-md-2">
                   <label for="name"><strong>ปีงบประมาณ</strong> </label>
                   <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRYEARASSET_CODE"
@@ -48,7 +48,8 @@
                 </div>
                 <div class="col-md-2">
                   <label for="name"><strong>ประเภทโครงการ </strong> </label>
-                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE" (change)="fetchdatalist()">
+                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE"
+                    (change)="fetchdatalist()">
                     <option [value]="0">ทุกประเภท</option>
                     <option [value]="1">โครงการทั่วไป</option>
                     <option [value]="2">โครงการวิจัย</option>
@@ -78,121 +79,122 @@
               </div>
             </div>
           </div>
-          <table width="100%" id="example"
-            class="shadow-lg table table-bordered  table-striped table-hover tableFixHead btn-font3">
-            <thead>
-              <tr class="bg-primary text-white">
-                <th>
-                  <div align="center">ที่</div>
-                </th>
-                <th>
-                  <div align="center"></div>วันที่เพิ่มรายการ
-                </th>
-                <th *ngIf="dataAdd.PLINCOME_CODE ==''">
-                  <div align="center">แหล่งเงิน</div>
-                </th>
-                <th>
-                  <div align="center">ชื่อโครงการ</div>
-                </th>
-                <th>
-                  <div align="center">จำนวนเงิน</div>
-                </th>
-                <th>
-                  <div align="center">สถานะ</div>
-                </th>
-                <th>
-                  <div align="center">นำส่ง</div>
-                </th>
-                <th>
-                  <div align="center">จัดการข้อมูล</div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
-              <tr style="background-color:rgb(131, 187, 243);">
-                <td colspan="9">โครงการทั่วไป</td>
-              </tr>
-              <tr *ngFor="let p of datalist|filter:searchTerm ; let i = index">
-                <td width="5%" align="center">{{i+1}}</td>
-                <td align="center">{{p.PRPLPROJECT_DATE1}}
-                <td *ngIf="dataAdd.PLINCOME_CODE ==''">{{p.PLINCOME_NAME}}</td>
-                <td (click)="showstep(p.PRSTATUS_PSTATUS)" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                  onmouseover="this.style.backgroundColor='#FFFFCC';" onmouseout="this.style.backgroundColor=''"
-                  style="cursor:pointer">
-                  {{p.PRREGISPROJECT_NAME}}
-                  <br>
-                  <i class="text-secondary">[{{p.STF_FNAME}}]</i>
-                  <div *ngIf="p.PRASSET_NOTE" class="text-danger">
+          <div class="table-responsive-lg">
+            <table width="100%" id="example"
+              class="shadow-lg table table-bordered  table-striped table-hover tableFixHead btn-font3">
+              <thead>
+                <tr class="bg-primary text-white">
+                  <th>
+                    <div align="center">ที่</div>
+                  </th>
+                  <th>
+                    <div align="center"></div>วันที่เพิ่มรายการ
+                  </th>
+                  <th *ngIf="dataAdd.PLINCOME_CODE ==''">
+                    <div align="center">แหล่งเงิน</div>
+                  </th>
+                  <th>
+                    <div align="center">ชื่อโครงการ</div>
+                  </th>
+                  <th>
+                    <div align="center">จำนวนเงิน</div>
+                  </th>
+                  <th>
+                    <div align="center">สถานะ</div>
+                  </th>
+                  <th>
+                    <div align="center">นำส่ง</div>
+                  </th>
+                  <th>
+                    <div align="center">จัดการข้อมูล</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+                <tr style="background-color:rgb(131, 187, 243);">
+                  <td colspan="9">โครงการทั่วไป</td>
+                </tr>
+                <tr *ngFor="let p of datalist|filter:searchTerm ; let i = index">
+                  <td width="5%" align="center">{{i+1}}</td>
+                  <td align="center">{{p.PRPLPROJECT_DATE1}}
+                  <td *ngIf="dataAdd.PLINCOME_CODE ==''">{{p.PLINCOME_NAME}}</td>
+                  <td (click)="showstep(p.PRSTATUS_PSTATUS)" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    onmouseover="this.style.backgroundColor='#FFFFCC';" onmouseout="this.style.backgroundColor=''"
+                    style="cursor:pointer">
+                    {{p.PRREGISPROJECT_NAME}}
                     <br>
-                    ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})
-                  </div>
-                  <span *ngIf="p.PRREGISPROJECT_CODE !=p.PRREGISPROJECT_CODEA && p.PRREGISPROJECT_CODEA!=null"
-                    class="text-danger">
-                    <br>
-                    เปลี่ยนแปลง:{{p.PRREGISPROJECT_NAMEC}}
-                  </span>
-                </td>
-                <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}
-                  <span *ngIf="p.PRPLPROJECT_MONEY !=p.PRPLPROJECT_MONEYA && p.PRPLPROJECT_MONEYA!=null"
-                    class="text-danger">
-                    <br>
-                    เปลี่ยนแปลง:{{p.PRPLPROJECT_MONEYA| number : '1.2-2'}}
-                  </span>
-                </td>
-                <td align="center">{{p.PRSTATUS_NAME}}</td>
-                <td >
-                  <a *ngIf="(p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3'|| (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)"
-                    role="button" title="spec" class="btn btn-primary text-white"><i
-                      (click)="deliver(p.PRPLPROJECT_CODE)" class="fa fa-arrow-right"></i> </a>
-                </td>
-                <td >
-                  <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1') &&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)) 
+                    <i class="text-secondary">[{{p.STF_FNAME}}]</i>
+                    <div *ngIf="p.PRASSET_NOTE" class="text-danger">
+                      <br>
+                      ({{p.PRASSET_NOTE}} :{{p.PRASSETFAC_DATE}})
+                    </div>
+                    <span *ngIf="p.PRREGISPROJECT_CODE !=p.PRREGISPROJECT_CODEA && p.PRREGISPROJECT_CODEA!=null"
+                      class="text-danger">
+                      <br>
+                      เปลี่ยนแปลง:{{p.PRREGISPROJECT_NAMEC}}
+                    </span>
+                  </td>
+                  <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}
+                    <span *ngIf="p.PRPLPROJECT_MONEY !=p.PRPLPROJECT_MONEYA && p.PRPLPROJECT_MONEYA!=null"
+                      class="text-danger">
+                      <br>
+                      เปลี่ยนแปลง:{{p.PRPLPROJECT_MONEYA| number : '1.2-2'}}
+                    </span>
+                  </td>
+                  <td align="center">{{p.PRSTATUS_NAME}}</td>
+                  <td>
+                    <a *ngIf="(p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3'|| (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)"
+                      role="button" title="spec" class="btn btn-primary text-white"><i
+                        (click)="deliver(p.PRPLPROJECT_CODE)" class="fa fa-arrow-right"></i> </a>
+                  </td>
+                  <td>
+                    <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1') &&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)) 
                   || dataAdd.PRIVILEGE_RSTATUS=='A'
                   ||  (dataAdd.PRIVILEGE_RSTATUS=='2' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='2' || p.PLPROJECT_RSTATUS=='3'))"
-                    role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
-                    (click)="deleteData(p.PRPLPROJECT_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
-                  <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3' || (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID))  || dataAdd.PRIVILEGE_RSTATUS=='A'
+                      role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                      (click)="deleteData(p.PRPLPROJECT_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
+                    <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3' || (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID))  || dataAdd.PRIVILEGE_RSTATUS=='A'
                     ||  (dataAdd.PRIVILEGE_RSTATUS=='2' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='2' || p.PLPROJECT_RSTATUS=='3'))"
-                    role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
-                    class="btn btn-warning text-white" (click)="editdata(p.PRPLPROJECT_CODE)"><i
-                      class="fa fa-edit"></i></a>&nbsp;
-                  <a role="button" title="รายงาน" class="btn btn-success text-white"
-                    (click)="previewPdf(p.link)" ><i class="fas fa-file-alt"></i></a>
-                </td>
+                      role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
+                      class="btn btn-warning text-white" (click)="editdata(p.PRPLPROJECT_CODE)"><i
+                        class="fa fa-edit"></i></a>&nbsp;
+                    <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"><i
+                        class="fas fa-file-alt"></i></a>
+                  </td>
 
-              </tr>
-              <tr style="background-color:rgb(225, 248, 163);">
-                <td colspan="9">โครงการวิจัย</td>
-              </tr>
-              <tr *ngFor="let p of datalistresearch|filter:searchTerm ; let i = index">
-                <td width="5%" align="center">{{i+1}}</td>
-                <td>{{p.PRPLPROJECT_DATE1}}
-                <td>{{p.PRREGISPROJECT_NAME}}</td>
-                <td  align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
-                <td align="center">{{p.PRSTATUS_NAME}}</td>
-                <td >
-                  <a *ngIf="p.status=='0'" role="button" title="spec" class="btn btn-primary text-white disabled"><i
-                      class="fa fa-arrow-right"></i> </a>
-                  <a *ngIf="p.status=='1' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1')" role="button"
-                    title="spec" class="btn btn-primary text-white"><i (click)="deliver(p.PRPLPROJECT_CODE)"
-                      class="fa fa-arrow-right"></i> </a>
-                </td>
-                <td  align="center">
-                  <a *ngIf="p.PLPROJECT_RSTATUS=='0'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
-                    (click)="deleteData(p.PRPLPROJECT_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
-                  <a *ngIf="p.PLPROJECT_RSTATUS=='0'|| p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3' || p.PRASSET_RSTATUS=='7' || dataAdd.PLPROJECT_RSTATUS=='A'"
-                    role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
-                    class="btn btn-warning text-white" (click)="editdata(p.PRPLPROJECT_CODE)"><i
-                      class="fa fa-edit"></i></a>&nbsp;
-                  <a role="button" title="รายงาน" class="btn btn-success text-white"
-                 (click)="previewPdf(p.link)"    
-                    ><i class="fas fa-file-alt"></i></a>
-                </td>
+                </tr>
+                <tr style="background-color:rgb(225, 248, 163);">
+                  <td colspan="9">โครงการวิจัย</td>
+                </tr>
+                <tr *ngFor="let p of datalistresearch|filter:searchTerm ; let i = index">
+                  <td width="5%" align="center">{{i+1}}</td>
+                  <td>{{p.PRPLPROJECT_DATE1}}
+                  <td>{{p.PRREGISPROJECT_NAME}}</td>
+                  <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
+                  <td align="center">{{p.PRSTATUS_NAME}}</td>
+                  <td>
+                    <a *ngIf="p.status=='0'" role="button" title="spec" class="btn btn-primary text-white disabled"><i
+                        class="fa fa-arrow-right"></i> </a>
+                    <a *ngIf="p.status=='1' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1')" role="button"
+                      title="spec" class="btn btn-primary text-white"><i (click)="deliver(p.PRPLPROJECT_CODE)"
+                        class="fa fa-arrow-right"></i> </a>
+                  </td>
+                  <td align="center">
+                    <a *ngIf="p.PLPROJECT_RSTATUS=='0'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                      (click)="deleteData(p.PRPLPROJECT_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
+                    <a *ngIf="p.PLPROJECT_RSTATUS=='0'|| p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3' || p.PRASSET_RSTATUS=='7' || dataAdd.PLPROJECT_RSTATUS=='A'"
+                      role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
+                      class="btn btn-warning text-white" (click)="editdata(p.PRPLPROJECT_CODE)"><i
+                        class="fa fa-edit"></i></a>&nbsp;
+                    <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"><i
+                        class="fas fa-file-alt"></i></a>
+                  </td>
 
-              </tr>
-            </tbody>
-          </table>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -200,8 +202,8 @@
 </div>
 <!-- Modal -->
 
-<div class="modal fade" data-bs-focus="false" id="modalEditlistexpen" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-  tabindex="-1">
+<div class="modal fade" data-bs-focus="false" id="modalEditlistexpen" aria-hidden="true"
+  aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
@@ -254,7 +256,8 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i class="fa-solid fa-money-bill-wave me-2 text-danger"></i>แหล่งเงิน/ภาค</strong> </label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-money-bill-wave me-2 text-danger"></i>แหล่งเงิน/ภาค</strong> </label>
                       <div class="row">
                         <div class="col-md-4 text-secondary" style="font-size: 10pt">แหล่งเงิน: </div>
                         <div class="col-md-4 text-secondary" style="font-size: 10pt">ภาค: </div>
@@ -275,7 +278,8 @@
                           </select>
                         </div>
                       </div>
-                      <label for="name"><strong><i class="fa-solid fa-diagram-project me-2 text-danger"></i>ผลผลิต/โครงการ</strong> </label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-diagram-project me-2 text-danger"></i>ผลผลิต/โครงการ</strong> </label>
                       <table width="100%" border="0">
                         <tr *ngFor="let product of dataProduct;let i = index">
                           <td width="2%" align="left" valign="top">
@@ -371,13 +375,15 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i class="fa-solid fa-folder-open me-2 text-danger"></i>ชื่อโครงการ </strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-folder-open me-2 text-danger"></i>ชื่อโครงการ
+                        </strong></label>
                       <textarea id="p_name" name="p_name" rows="2" cols="50" class="form-control"
                         [(ngModel)]="dataAdd.PRPLPROJECT_NAME" disabled></textarea>
                     </div>
 
                     <div class="col-md-12 mb-2" *ngIf="ptype">
-                      <label for="name"><strong><i class="fa-solid fa-list-ol me-2 text-danger"></i>จำนวนกิจกรรมย่อย</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-list-ol me-2 text-danger"></i>จำนวนกิจกรรมย่อย</strong></label>
                       <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PRPLPROJECT_TIME"
                         (change)="showact()">
                         <option [value]="1">ไม่มีกิจกรรมย่อย</option>
@@ -400,14 +406,15 @@
                     </div>
 
                     <div class="col-md-3">
-                      <label for="name"><strong><i class="fa-solid fa-tags me-2 text-danger"></i>ประเภทโครงการ</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-tags me-2 text-danger"></i>ประเภทโครงการ</strong></label>
                       <select name="cr_code" id="cr_code" class="form-select" (change)="projecttype()"
                         [(ngModel)]="dataAdd.FPLPROJECTTYPE" disabled="">
                         <option [value]="1">โครงการทั่วไป</option>
                         <option [value]="2">โครงการวิจัย</option>
                       </select>
                     </div>
-                 <!--    <div class="col-md-2">
+                    <!--    <div class="col-md-2">
                       <label for="name"><strong>ประเภทงบ </strong></label>
                       <select name="PLMONEYPAY_CODE" id="PLMONEYPAY_CODE" class="form-select"
                         (change)="fetchdatalistsubm()" [(ngModel)]="dataAdd.PLMONEYPAY_CODE">
@@ -424,7 +431,8 @@
                       </select>
                     </div>-->
                     <div class="col-md-7">
-                      <label for="name"><strong><i class="fa-solid fa-clipboard-list me-2 text-danger"></i>ลักษณะโครงการ</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-clipboard-list me-2 text-danger"></i>ลักษณะโครงการ</strong></label>
                       <select name="PLPROJECTTYPE_CODE" id="PLPROJECTTYPE_CODE" class="form-select"
                         (change)="fetchdataPLINDICATOR()" [(ngModel)]="dataAdd.PLPROJECTTYPE_CODE" disabled="">
                         <option [value]="sub.PLPROJECTTYPE_CODE" *ngFor="let sub of dataEProjecttype">
@@ -447,7 +455,8 @@
                   <div class="shadow alert " role="alert">
                     <div class="row">
                       <div class="col-md-3">
-                        <label for="name"><strong><i class="fa-solid fa-user-tie me-2 text-danger"></i>ผู้รับผิดชอบโครงการ </strong></label>
+                        <label for="name"><strong><i
+                              class="fa-solid fa-user-tie me-2 text-danger"></i>ผู้รับผิดชอบโครงการ </strong></label>
                         <input name="PRPLPROJECT_HEADER" type="hidden" id="PRPLPROJECT_HEADER"
                           [(ngModel)]="dataAdd.PRPLPROJECT_HEADER" />
                         <input name="PRPLPROJECT_HCITIZEN" type="hidden" id="PRPLPROJECT_HCITIZEN"
@@ -467,12 +476,14 @@
                         </div>
                       </div>
                       <div class="col-md-2">
-                        <label for="name"><strong><i class="fa-solid fa-phone me-2 text-danger"></i>เบอร์โทร</strong></label>
+                        <label for="name"><strong><i
+                              class="fa-solid fa-phone me-2 text-danger"></i>เบอร์โทร</strong></label>
                         <input type="text" name="p_number" id="p_number" class="form-control" placeholder="เบอร์โทร"
                           [(ngModel)]="dataAdd.PRPLPROJECT_HPHONE">
                       </div>
                       <div class="col-md-2">
-                        <label for="name"><strong><i class="fa-solid fa-users-gear me-2 text-danger"></i>ประเภท</strong></label>
+                        <label for="name"><strong><i
+                              class="fa-solid fa-users-gear me-2 text-danger"></i>ประเภท</strong></label>
                         <select name="PRPLPROJECTHEAD_TYPE" id="PRPLPROJECTHEAD_TYPE" class="form-select"
                           [(ngModel)]="dataAdd.PRPLPROJECTHEAD_TYPE">
                           <option value="1">ผู้รับผิดชอบหลัก</option>
@@ -481,9 +492,9 @@
                       </div>
                       <div class="col-md-2">
                         <br>
-                        <a  id="insertdt" class="btn btn-success text-white"
-                          (click)="insertdatahead()"><i class="fa fa-plus-circle"></i> เพิ่ม</a>
-                        
+                        <a id="insertdt" class="btn btn-success text-white" (click)="insertdatahead()"><i
+                            class="fa fa-plus-circle"></i> เพิ่ม</a>
+
                       </div>
                       <div class="col-md-12">
                         <br>
@@ -492,35 +503,40 @@
                             {{i+1}}. {{p.PRPLPROJECTHEAD_NAME}} โทร : {{p.PRPLPROJECTHEAD_PHONE}}
                             ({{p.PRPLPROJECTHEAD_TYPE}})
                             <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
-                            (click)="deleteDatahead(p.PRPLPROJECTHEAD_CODE)"><i class="fa fa-trash"></i> </a>
+                              (click)="deleteDatahead(p.PRPLPROJECTHEAD_CODE)"><i class="fa fa-trash"></i> </a>
                           </div>
                         </div>
-                        
+
                       </div>
                     </div>
                   </div>
                   <div *ngFor="let p of number1;let i = index" class="row"><!--*ngIf="ptype"-->
                     <div class="col-md-4">
-                      <label for="name"><strong><i class="fa-solid fa-user-graduate me-2 text-danger"></i>จำนวนผู้เข้าร่วม นักศึกษา <span
+                      <label for="name"><strong><i
+                            class="fa-solid fa-user-graduate me-2 text-danger"></i>จำนวนผู้เข้าร่วม นักศึกษา <span
                             *ngIf="dataAdd.PRPLPROJECT_TIME>1"><strong>กิจกรรมที่
                               {{i+1}}</strong></span></strong></label>
                       <input type="text" name="p_bname" id="p_bname" class="form-control" placeholder="นักศึกษา"
                         [(ngModel)]="dataAdd.PRPLPROJECT_PERSONS[i]" (keypress)="CheckNum($event)">
                     </div>
                     <div class="col-md-4">
-                      <label for="name"><strong><i class="fa-solid fa-user-tie me-2 text-danger"></i>จำนวนผู้เข้าร่วม บุคลากร</strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-user-tie me-2 text-danger"></i>จำนวนผู้เข้าร่วม
+                          บุคลากร</strong></label>
                       <input type="text" name="p_number" id="p_number" class="form-control" placeholder="บุคลากร"
                         [(ngModel)]="dataAdd.PRPLPROJECT_PERSONP[i]" (keypress)="CheckNum($event)">
                     </div>
                     <div class="col-md-4">
-                      <label for="name"><strong><i class="fa-solid fa-users me-2 text-danger"></i>จำนวนผู้เข้าร่วม บุคคลภายนอก</strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-users me-2 text-danger"></i>จำนวนผู้เข้าร่วม
+                          บุคคลภายนอก</strong></label>
                       <input type="text" name="p_number" id="p_number" class="form-control" placeholder="บุคคลภายนอก"
                         [(ngModel)]="dataAdd.PRPLPROJECT_PERSONO[i]" (keypress)="CheckNum($event)">
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-3">
-                      <label for="name"><strong><i class="fa-regular fa-calendar-days me-2 text-danger"></i>ระยะเวลาดำเนินโครงการ ตั้งแต่ </strong></label>
+                      <label for="name"><strong><i
+                            class="fa-regular fa-calendar-days me-2 text-danger"></i>ระยะเวลาดำเนินโครงการ ตั้งแต่
+                        </strong></label>
                       <input type="text" name="p_bname" id="p_bname" bsDatepicker #dp="bsDatepicker"
                         class="form-control" placeholder="ตั้งแต่" [(ngModel)]="dataAdd.PRPLPROJECT_SDATE">
                       <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
@@ -528,7 +544,8 @@
                       </i>
                     </div>
                     <div class="col-md-3">
-                      <label for="name"><strong><i class="fa-regular fa-calendar-check me-2 text-danger"></i>ถึงวันที่</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-regular fa-calendar-check me-2 text-danger"></i>ถึงวันที่</strong></label>
                       <input type="text" name="p_number" id="p_number" bsDatepicker #dp2="bsDatepicker"
                         class="form-control" placeholder="ถึงวันที่" [(ngModel)]="dataAdd.PRPLPROJECT_EDATE">
                       <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
@@ -536,14 +553,18 @@
                       </i>
                     </div>
                     <div class="col-md-6">
-                      <label for="name"><strong><i class="fa-solid fa-location-dot me-2 text-danger"></i>สถานที่ดำเนินโครงการ ณ</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-location-dot me-2 text-danger"></i>สถานที่ดำเนินโครงการ
+                          ณ</strong></label>
                       <input type="text" name="PRPLPROJECT_LOCATION" id="PRPLPROJECT_LOCATION" class="form-control"
                         placeholder="สถานที่ดำเนินโครงการ ณ" [(ngModel)]="dataAdd.PRPLPROJECT_LOCATION">
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i class="fa-solid fa-book-open me-2 text-danger"></i>หลักการและเหตุผล<span class="text-danger">(อย่างน้อย 1
+                      <label for="name"><strong><i
+                            class="fa-solid fa-book-open me-2 text-danger"></i>หลักการและเหตุผล<span
+                            class="text-danger">(อย่างน้อย 1
                             หน้ากระดาษ)</span> </strong></label>
                       <!-- <angular-editor [(ngModel)]="dataAdd.PLPROJECTMORE_PRINCIPLE" [config]="config"></angular-editor>-->
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PLPROJECTMORE_PRINCIPLE">
@@ -552,7 +573,8 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12 mb-2" *ngFor="let p of number1;let i = index">
-                      <label for="name"><strong><i class="fa-solid fa-chart-line me-2 text-danger"></i>แนวทาง/กิจกรรมในการดำเนินโครงการ <span
+                      <label for="name"><strong><i
+                            class="fa-solid fa-chart-line me-2 text-danger"></i>แนวทาง/กิจกรรมในการดำเนินโครงการ <span
                             *ngIf="dataAdd.PRPLPROJECT_TIME>1"><strong>กิจกรรมที่
                               {{i+1}}</strong></span></strong></label>
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PRPLPROJECTACT_ACT[i]">
@@ -567,7 +589,8 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i class="fa-solid fa-bullseye me-2 text-danger"></i>วัตถุประสงค์</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-bullseye me-2 text-danger"></i>วัตถุประสงค์</strong></label>
                       <!--  <angular-editor [(ngModel)]="dataAdd.PRPLPROJECT_OBJECT" [config]="config"></angular-editor>-->
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PRPLPROJECT_OBJECT">
                       </ckeditor>
@@ -575,7 +598,8 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i class="fa-solid fa-award me-2 text-danger"></i>ผลที่คาดว่าจะได้รับ</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-award me-2 text-danger"></i>ผลที่คาดว่าจะได้รับ</strong></label>
                       <!--  <angular-editor [(ngModel)]="dataAdd.PLPROJECTMORE_RESULT" [config]="config"></angular-editor>-->
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PLPROJECTMORE_RESULT">
                       </ckeditor>
@@ -583,7 +607,8 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i class="fa-solid fa-square-poll-vertical me-2 text-danger"></i>การประเมินผลโครงการ</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-square-poll-vertical me-2 text-danger"></i>การประเมินผลโครงการ</strong></label>
                       <!--<angular-editor [(ngModel)]="dataAdd.PLPROJECTMORE_ESTIMATE" [config]="config"></angular-editor>-->
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PLPROJECTMORE_ESTIMATE">
                       </ckeditor>
@@ -591,7 +616,8 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i class="fa-solid fa-magnifying-glass-chart me-2 text-danger"></i>การติดตามผล(ถ้ามี)</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-magnifying-glass-chart me-2 text-danger"></i>การติดตามผล(ถ้ามี)</strong></label>
                       <!-- <angular-editor [(ngModel)]="dataAdd.PLPROJECTMORE_FOLLOW" [config]="config"></angular-editor>-->
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PLPROJECTMORE_FOLLOW">
                       </ckeditor>
@@ -727,7 +753,8 @@
                         </select>
                       </div>
                       <div class="col-md-12">
-                        <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>รายการ</strong> </label>
+                        <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>รายการ</strong>
+                        </label>
                         <select name="PLPROJECTGROUPDT_CODE" id="PLPROJECTGROUPDT_CODE" class="form-select"
                           [(ngModel)]="dataAdd.PLPROJECTGROUPDT_CODE" (change)="showestimate()">
                           <option [value]="d.PLPROJECTGROUPDT_CODE" *ngFor="let d of dataProjectdt">
@@ -752,13 +779,16 @@
                       <div class="col-md-12">
                         <div class="row">
                           <div class="col-md-1">
-                            <label for="name"><strong><i class="fa-solid fa-users me-2 text-danger"></i>จำนวน{{dataAdd.PLPT1}}</strong> </label>
+                            <label for="name"><strong><i
+                                  class="fa-solid fa-users me-2 text-danger"></i>จำนวน{{dataAdd.PLPT1}}</strong>
+                            </label>
                             <input type="text" name="PLPROJECTGROUPDT_NUMA" id="PLPROJECTGROUPDT_NUMA"
-                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMA" 
-                              (keypress)="CheckNum($event)" >
+                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMA"
+                              (keypress)="CheckNum($event)">
                           </div>
                           <div class="col-md-1">
-                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong> </label>
+                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
+                            </label>
                             <select name="GCUNIT_ACODE" id="GCUNIT_ACODE" class="form-select"
                               [(ngModel)]="dataAdd.GCUNIT_ACODE">
                               <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
@@ -766,13 +796,16 @@
                             </select>
                           </div>
                           <div class="col-md-1" *ngIf="dataAdd.PLPDT1">
-                            <label for="name"><strong><i class="fa-regular fa-clock me-2 text-danger"></i>จำนวน{{dataAdd.PLPT2}}</strong> </label>
+                            <label for="name"><strong><i
+                                  class="fa-regular fa-clock me-2 text-danger"></i>จำนวน{{dataAdd.PLPT2}}</strong>
+                            </label>
                             <input type="text" name="PLPROJECTGROUPDT_NUMB" id="PLPROJECTGROUPDT_NUMB"
-                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMB" 
+                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMB"
                               (keypress)="CheckNum($event)">
                           </div>
                           <div class="col-md-1" *ngIf="dataAdd.PLPDT1">
-                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong> </label>
+                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
+                            </label>
                             <select name="GCUNIT_BCODE" id="GCUNIT_BCODE" class="form-select"
                               [(ngModel)]="dataAdd.GCUNIT_BCODE">
                               <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
@@ -780,13 +813,16 @@
                             </select>
                           </div>
                           <div class="col-md-1" *ngIf="dataAdd.PLPDT2">
-                            <label for="name"><strong><i class="fa-solid fa-utensils me-2 text-danger"></i>จำนวน{{dataAdd.PLPT3}}</strong> </label>
+                            <label for="name"><strong><i
+                                  class="fa-solid fa-utensils me-2 text-danger"></i>จำนวน{{dataAdd.PLPT3}}</strong>
+                            </label>
                             <input type="text" name="PLPROJECTGROUPDT_NUMC" id="PLPROJECTGROUPDT_NUMC"
-                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMC" 
+                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMC"
                               (keypress)="CheckNum($event)">
                           </div>
                           <div class="col-md-1" *ngIf="dataAdd.PLPDT2">
-                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong> </label>
+                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
+                            </label>
                             <select name="GCUNIT_CCODE" id="GCUNIT_CCODE" class="form-select"
                               [(ngModel)]="dataAdd.GCUNIT_CCODE">
                               <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
@@ -794,10 +830,11 @@
                             </select>
                           </div>
                           <div class="col-md-2">
-                            <label for="name"><strong><i class="fa-solid fa-coins me-2 text-danger"></i>จำนวนเงิน</strong> </label>
+                            <label for="name"><strong><i
+                                  class="fa-solid fa-coins me-2 text-danger"></i>จำนวนเงิน</strong> </label>
                             <input type="text" name="PLPROJECTGROUPDT_MONEY" id="PLPROJECTGROUPDT_MONEY"
                               class="form-control" placeholder="จำนวน" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_MONEY"
-                               (keypress)="CheckNum($event)" >
+                              (keypress)="CheckNum($event)">
                           </div>
                           <div class="col-md-2">
                             <br>
@@ -834,18 +871,24 @@
                         <td align="left" style="background-color:rgb(167, 166, 166);"
                           *ngIf="p.PRPLPROJECTM_NUMBER && dataAdd.PRPLPROJECT_TIME>1" colspan="4">
                           {{p.PRPLPROJECTM_NUMBER}}</td>
-                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}" *ngIf="p.PLPROJECTGROUPDT_MONEY">{{p.PLPROJECTGROUPDT_NAME}} {{p.PLPROJECTGROUPDT_DETAIL}}
+                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
+                          *ngIf="p.PLPROJECTGROUPDT_MONEY">{{p.PLPROJECTGROUPDT_NAME}} {{p.PLPROJECTGROUPDT_DETAIL}}
                         </td>
-                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}" *ngIf="p.PLPROJECTGROUPDT_MONEY">{{p.PLPROJECTGROUPDT_DETAILD}}
+                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
+                          *ngIf="p.PLPROJECTGROUPDT_MONEY">{{p.PLPROJECTGROUPDT_DETAILD}}
                         </td>
-                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}" *ngIf="p.PLPROJECTGROUPDT_MONEY" align="right">
+                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
+                          *ngIf="p.PLPROJECTGROUPDT_MONEY" align="right">
                           {{p.PLPROJECTGROUPDT_MONEY|
                           number : '1.2-2'}}</td>
-                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}" *ngIf="p.PLPROJECTGROUPDT_MONEY" align="center">
-                          <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
-                            (click)="deleteDatadt(p.PLPROJECTEXPENSES_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
-                          <a *ngIf="p.PLPROJECTGROUPDT_NUM==0"  role="button" title="แก้ไข" class="btn btn-warning text-white"
-                            (click)="editdatadt(p.PLPROJECTEXPENSES_CODE)"><i class="fa fa-edit"></i></a>
+                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
+                          *ngIf="p.PLPROJECTGROUPDT_MONEY" align="center">
+                          <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="ลบข้อมูล"
+                            class="btn btn-danger text-white" (click)="deleteDatadt(p.PLPROJECTEXPENSES_CODE)"><i
+                              class="fa fa-trash"></i> </a>&nbsp;
+                          <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="แก้ไข"
+                            class="btn btn-warning text-white" (click)="editdatadt(p.PLPROJECTEXPENSES_CODE)"><i
+                              class="fa fa-edit"></i></a>
                         </td>
                       </tr>
                       <tr>
@@ -950,7 +993,8 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-4">
-                      <label for="name"><strong><i class="fa-solid fa-chess-knight me-2 text-danger"></i>ยุทธศาสตร์ </strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-chess-knight me-2 text-danger"></i>ยุทธศาสตร์
+                        </strong></label>
                       <select name="PLSTRATEGY_CODE" id="PLSTRATEGY_CODE" class="form-select"
                         (change)="fetchdataPLESTIMATEPLAN()" [(ngModel)]="dataAdd.PLSTRATEGY_CODE">
                         <option value="">กรุณาเลือก</option>
@@ -959,7 +1003,8 @@
                       </select>
                     </div>
                     <div class="col-md-4">
-                      <label for="name"><strong><i class="fa-solid fa-crosshairs me-2 text-danger"></i>เป้าประสงค์</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-crosshairs me-2 text-danger"></i>เป้าประสงค์</strong></label>
                       <select name="PLESTIMATEPLAN_CODE" id="PLESTIMATEPLAN_CODE" class="form-select"
                         (change)="fetchdataPLSTRATEGIES()" [(ngModel)]="dataAdd.PLESTIMATEPLAN_CODE">
                         <option value="">กรุณาเลือก</option>
@@ -968,7 +1013,8 @@
                       </select>
                     </div>
                     <div class="col-md-4">
-                      <label for="name"><strong><i class="fa-solid fa-lightbulb me-2 text-danger"></i>กลยุทธ์</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-lightbulb me-2 text-danger"></i>กลยุทธ์</strong></label>
                       <select name="PLSTRATEGIES_CODE" id="PLSTRATEGIES_CODE" class="form-select"
                         (change)="fetchdataPLMEASURES()" [(ngModel)]="dataAdd.PLSTRATEGIES_CODE">
                         <option value="">กรุณาเลือก</option>
@@ -979,7 +1025,8 @@
                   </div>
                   <div class="row">
                     <div class="col-md-6">
-                      <label for="name"><strong><i class="fa-solid fa-shield-halved me-2 text-danger"></i>มาตรการ </strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-shield-halved me-2 text-danger"></i>มาตรการ
+                        </strong></label>
                       <select name="PLMEASURES_CODE" id="PLMEASURES_CODE" class="form-select"
                         (change)="fetchdataPLPLAND()" [(ngModel)]="dataAdd.PLMEASURES_CODE">
                         <option value="">กรุณาเลือก</option>
@@ -988,7 +1035,8 @@
                       </select>
                     </div>
                     <div class="col-md-6">
-                      <label for="name"><strong><i class="fa-regular fa-clipboard me-2 text-danger"></i>แผนงาน</strong></label>
+                      <label for="name"><strong><i
+                            class="fa-regular fa-clipboard me-2 text-danger"></i>แผนงาน</strong></label>
                       <select name="PLPLAND_CODE" id="PLPLAND_CODE" class="form-select" (change)="fetchdataPLMISSION()"
                         [(ngModel)]="dataAdd.PLPLAND_CODE">
                         <option value="">กรุณาเลือก</option>
@@ -1000,7 +1048,8 @@
 
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i class="fa-solid fa-comment-dots me-2 text-danger"></i>หมายเหตุ </strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-comment-dots me-2 text-danger"></i>หมายเหตุ
+                        </strong></label>
                       <input type="text" name="PLPROJECT_DETAIL" id="PLPROJECT_DETAIL" class="form-control"
                         placeholder="หมายเหตุ" [(ngModel)]="dataAdd.PLPROJECT_DETAIL">
                     </div>
@@ -1059,13 +1108,17 @@
                   </table>
                   <div class="row">
                     <div class="col-md-3">
-                      <label for="name"><strong><i class="fa-solid fa-chart-pie me-2 text-danger"></i>ตัวชี้วัดโครงการ </strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-chart-pie me-2 text-danger"></i>ตัวชี้วัดโครงการ
+                        </strong></label>
                     </div>
                     <div class="col-md-7">
-                      <label for="name"><strong><i class="fa-solid fa-file-signature me-2 text-danger"></i>ชื่อตัวชี้วัด </strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-file-signature me-2 text-danger"></i>ชื่อตัวชี้วัด
+                        </strong></label>
                     </div>
                     <div class="col-md-2">
-                      <label for="name"><strong><i class="fa-solid fa-bullseye me-2 text-danger"></i>ค่าเป้าหมายที่วัดเป็นตัวเลขไม่ได้ให้ใส่ A </strong></label>
+                      <label for="name"><strong><i
+                            class="fa-solid fa-bullseye me-2 text-danger"></i>ค่าเป้าหมายที่วัดเป็นตัวเลขไม่ได้ให้ใส่ A
+                        </strong></label>
                     </div>
                   </div>
                   <div class="row" *ngFor="let p of number;let i = index">
@@ -1565,8 +1618,8 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" id="modalApp" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="modalApp" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header">
@@ -1696,8 +1749,8 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" id="modalEditregister" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-  tabindex="-1">
+<div class="modal fade" data-bs-focus="false" id="modalEditregister" aria-hidden="true"
+  aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -1752,7 +1805,8 @@
     </div>
   </div>
 </div>
-<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -1763,7 +1817,7 @@
         <div class="mb-3">
           <label for="recipient-name" class="col-form-label">การดำเนินงานมีทั้งหมด 5 ขั้นตอน</label>
           <br>
-                    <div class="timeline">
+          <div class="timeline">
             <div class="step" [ngClass]="{'active':  dataAdd.PRSTATUS_PSTATUS >= 1}">
               <div class="circle">1</div>
               <div class="label">รอนำส่ง</div>
@@ -1798,8 +1852,8 @@
   </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModalimport" aria-hidden="true"
-  aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+<div class="modal fade" data-bs-focus="false" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModalimport"
+  aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header bg-primary">
@@ -1809,7 +1863,7 @@
       <div class="modal-body">
         <div class="row">
           <div align="right" class="col-md-3">
-            
+
           </div>
           <div align="right" class="col-md-7">
             <input type="text" class="form-control" (keyup)="fetchdatalistimport()" placeholder="ค้นหาข้อมูล"
@@ -1862,18 +1916,18 @@
 <!-- PDF Preview Side Panel -->
 <div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
 <div class="pdf-preview-panel" [class.open]="previewPdfUrl">
-    <div class="pdf-preview-header bg-primary text-white">
-        <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
-        <div>
-            <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
-                <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
-            </a>
-            <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
-                <i class="fa fa-times me-1"></i> ปิด
-            </button>
-        </div>
+  <div class="pdf-preview-header bg-primary text-white">
+    <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+    <div>
+      <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+        <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+      </a>
+      <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+        <i class="fa fa-times me-1"></i> ปิด
+      </button>
     </div>
-    <div class="pdf-preview-body">
-        <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
-    </div>
+  </div>
+  <div class="pdf-preview-body">
+    <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
+  </div>
 </div>
