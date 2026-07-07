@@ -4,7 +4,7 @@
             <h5 class="fw-bold"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>ทะเบียนคุมการศึกษาบุตร</h5>
         </div>
     </div>
-    
+
     <div>
         <div class="row">
             <div class="col">
@@ -29,12 +29,14 @@
                                 </div>
                                 <div class="col-md-4 text-secondary" style="font-size: 10pt">
                                     <label> คณะ /หน่วยงาน: </label>
-                                    <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
-                                      <option value="" >
-                                        ทุกคณะ/หน่วยงาน</option>
-                                      <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.FACULTY_CODE">
+                                        <option value="">
+                                            ทุกคณะ/หน่วยงาน</option>
+                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
+                                            {{fac.FACULTY_TNAME}}</option>
                                     </select>
-                                  </div>
+                                </div>
                                 <div class="col-md-2 " style="font-size: 10pt">
                                     <label>ปีการศึกษา: </label>
                                     <select name="y_code" id="y_code" class="form-select"
@@ -48,13 +50,13 @@
                                     <label> ประเภทบุคลากร: </label>
                                     <select name="y_code" id="y_code" class="form-select"
                                         [(ngModel)]="dataAdd.STAFFTYPE_ID">
-                                        <option value="" > ทั้งหมด</option>
+                                        <option value=""> ทั้งหมด</option>
                                         <option [value]="item.STAFFTYPE_ID" *ngFor="let item of dataStafftype">
                                             {{item.STAFFTYPE_NAME}}
                                         </option>
                                     </select>
                                 </div>
-                                
+
                                 <div class="col-md-1 ">
                                     <label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                     <button type="submit" class="btn btn-primary" id="submitinsert"
@@ -90,83 +92,85 @@
                 </div>
             </div>
         </div>
-        <table *ngIf="rownum" id="excel-table" class="table btn-font3" width="150%"
-            class="table table-bordered table-striped table-hover">
-            <thead>
-                <tr class="bg-info">
-                    <th>
-                        <div align="center">ที่</div>
-                    </th>
-                    <th>
-                        <div align="center">คณะ/หน่วยงาน</div>
-                    </th>
-                    <th>
-                        <div align="center">ชื่อ-สกุล</div>
-                    </th>
-                    <th>
-                        <div align="center">เลขที่อัตรา</div>
-                    </th>
-                    <th>
-                        <div align="center">ชื่อตำแหน่ง</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภทบุคลากร</div>
-                    </th>
-                    <th>
-                        <div align="center">ชื่อบุตร</div>
-                    </th>
-                    <th>
-                        <div align="center">ปีการศึกษา</div>
-                    </th>
-                    <th>
-                        <div align="center">ระดับการศึกษา</div>
-                    </th>
-                    <th>
-                        <div align="center">เป็นของ</div>
-                    </th>
-                    <th>
-                        <div align="center">ภาคเรียนที่1</div>
-                    </th>
-                    <th>
-                        <div align="center">ฏีกา</div>
-                    </th>
-                    <th>
-                        <div align="center">วันที่จ่าย</div>
-                    </th>
-                    <th>
-                        <div align="center">ภาคเรียนที่2</div>
-                    </th>
-                    <th>
-                        <div align="center">ฏีกา</div>
-                    </th>
-                    <th>
-                        <div align="center">วันที่จ่าย</div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+        <div class="table-responsive-lg">
+            <table *ngIf="rownum" id="excel-table" class="table btn-font3" width="150%"
+                class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr class="bg-info">
+                        <th>
+                            <div align="center">ที่</div>
+                        </th>
+                        <th>
+                            <div align="center">คณะ/หน่วยงาน</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อ-สกุล</div>
+                        </th>
+                        <th>
+                            <div align="center">เลขที่อัตรา</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อตำแหน่ง</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภทบุคลากร</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อบุตร</div>
+                        </th>
+                        <th>
+                            <div align="center">ปีการศึกษา</div>
+                        </th>
+                        <th>
+                            <div align="center">ระดับการศึกษา</div>
+                        </th>
+                        <th>
+                            <div align="center">เป็นของ</div>
+                        </th>
+                        <th>
+                            <div align="center">ภาคเรียนที่1</div>
+                        </th>
+                        <th>
+                            <div align="center">ฏีกา</div>
+                        </th>
+                        <th>
+                            <div align="center">วันที่จ่าย</div>
+                        </th>
+                        <th>
+                            <div align="center">ภาคเรียนที่2</div>
+                        </th>
+                        <th>
+                            <div align="center">ฏีกา</div>
+                        </th>
+                        <th>
+                            <div align="center">วันที่จ่าย</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
-                <tr class="btn-font2" *ngFor="let p of datalist|filter:searchTerm; let i = index">
-                    <td width="5%" align="center">{{+i+1}}</td>
-                    <td>{{p.FACULTY_TNAME}}</td>
-                    <td>{{p.name}}</td>
-                      <td>{{p.ANUMBER}}</td>
-                    <td >{{p.FPOSITION_WORK}}</td>
-                    <td >{{p.STAFFTYPE_NAME}}</td>
-                    <td >{{p.FEDUCAPIO_NAME}}</td>
-                    <td align="center">{{p.FEDUCAPIO_YEAR}}</td>
-                    <td>{{p.FEDLEVEL_NAME}}</td>
-                    <td>{{p.FETHOSP_NAME}}</td>
-                    <td align="right">{{p.FEDUCAPIO_RMONEY1| number : '1.2-2'}}</td>
-                    <td>{{p.dk1}}</td>
-                    <td>{{p.date1}}</td>
-                    <td align="right" >{{p.FEDUCAPIO_RMONEY2| number : '1.2-2'}}</td>
-                    <td>{{p.dk2}}</td>
-                    <td>{{p.date2}}</td>
-                   
-                </tr>
-            </tbody>
-        </table>
+                    <tr class="btn-font2" *ngFor="let p of datalist|filter:searchTerm; let i = index">
+                        <td width="5%" align="center">{{+i+1}}</td>
+                        <td>{{p.FACULTY_TNAME}}</td>
+                        <td>{{p.name}}</td>
+                        <td>{{p.ANUMBER}}</td>
+                        <td>{{p.FPOSITION_WORK}}</td>
+                        <td>{{p.STAFFTYPE_NAME}}</td>
+                        <td>{{p.FEDUCAPIO_NAME}}</td>
+                        <td align="center">{{p.FEDUCAPIO_YEAR}}</td>
+                        <td>{{p.FEDLEVEL_NAME}}</td>
+                        <td>{{p.FETHOSP_NAME}}</td>
+                        <td align="right">{{p.FEDUCAPIO_RMONEY1| number : '1.2-2'}}</td>
+                        <td>{{p.dk1}}</td>
+                        <td>{{p.date1}}</td>
+                        <td align="right">{{p.FEDUCAPIO_RMONEY2| number : '1.2-2'}}</td>
+                        <td>{{p.dk2}}</td>
+                        <td>{{p.date2}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

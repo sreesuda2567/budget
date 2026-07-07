@@ -50,8 +50,7 @@
                     <td class="align-middle"><strong>ชื่อ-สกุล</strong></td>
                     <td class="align-middle"><strong>ชื่อตำแหน่ง</strong></td>
                     <td class="align-middle"><strong>ประเภทบุคลากร</strong></td>
-                    <td class="align-middle"><strong>จำนวนเงิน</strong></td>
-                    <td class="align-middle"><strong>สถานะใบเสร็จ</strong></td>  
+                    <td class="align-middle"><strong>จำนวนเงิน</strong></td> 
                     <td class="align-middle"><strong>รายงาน</strong></td>
                 </tr>
             </thead>
@@ -66,8 +65,7 @@
                     <td>{{p.FPOSITION_WORK}}</td>
                     <td>{{p.STAFFTYPE_NAME}}</td>
                     <td align="right">{{p.FEDUCAPIO_RMONEY| number : '1.2-2'}} </td>
-                    <td>{{p.FNRESTATUS_NAME}}</td>
-                    <td align="right">
+                    <td align="left">
                         <span *ngIf="p.link">
                             <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)">
                                 <i class="fas fa-file-alt"></i></a>
@@ -75,7 +73,7 @@
                           <button type="submit" title="สถานะใบเสร็จ" class="btn btn-danger text-white" id="submitupdate"
                             data-bs-toggle="modal" data-bs-target="#modalEditreceipt"
                             (click)="editdata(p.FEDUCATION_CODE,p.USERNAME_CISCO,p.STF_FNAME,p.FEDUCAPIO_RMONEY)"><i
-                                class="fa-solid fa-file-invoice"></i>&nbsp;สถานะใบเสร็จ</button>&nbsp;  
+                                class="fa-solid fa-file-invoice"></i>&nbsp;ตรวจสอบ</button>&nbsp;  
                     </td>
                 </tr>
                 <tr *ngIf="!rownum">

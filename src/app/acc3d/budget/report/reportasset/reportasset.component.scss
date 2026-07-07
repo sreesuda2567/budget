@@ -22,3 +22,8 @@ th     { background:#b2e3fa; }
     width: 100%;
     border-radius: 25px;
   }
+@media (max-width: 991.98px) {
+  .tableFixHead thead {
+    position: static;
+  }
+}

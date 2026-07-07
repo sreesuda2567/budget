@@ -132,8 +132,8 @@ export class ContractnumberComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataNameb = data;
-        this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
-        this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
+        //this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
+        //this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
 
       });
   }

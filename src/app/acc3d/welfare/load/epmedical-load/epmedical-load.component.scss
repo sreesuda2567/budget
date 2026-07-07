@@ -1,10 +1,20 @@
-table { overflow: auto; font-size: 16px;}
-table thead  { position: sticky; top: 60px; z-index: 1; }
+table {
+  overflow: auto;
+  font-size: 16px;
+}
+
+table thead {
+  position: sticky;
+  top: 60px;
+  z-index: 1;
+}
 
 .modal-xxl {
-  max-width: 80vw;   /* หรือ 90vw / 100vw */
+  max-width: 80vw;
+  /* หรือ 90vw / 100vw */
 }
- // PDF Preview Side Panel
+
+// PDF Preview Side Panel
 .pdf-preview-overlay {
   position: fixed;
   top: 0;
@@ -47,5 +57,21 @@ table thead  { position: sticky; top: 60px; z-index: 1; }
 
   iframe {
     border: none;
+  }
+}
+
+.tableFixHead {
+  overflow: auto;
+}
+
+.tableFixHead thead th {
+  position: sticky;
+  top: 60px;
+  z-index: 1;
+}
+
+@media (max-width: 991.98px) {
+  .tableFixHead thead {
+    position: static;
   }
 }

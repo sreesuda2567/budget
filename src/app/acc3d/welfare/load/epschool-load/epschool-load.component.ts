@@ -105,7 +105,7 @@ export class EpschoolLoadComponent implements OnInit {
   }
   fetchdataFac() {
     this.dataFac = null;
-    this.dataAdd.opt = "viewfacload";
+    this.dataAdd.opt = "viewfacloade";
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())

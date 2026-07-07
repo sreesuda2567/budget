@@ -17,3 +17,8 @@
 table  { border-collapse: collapse; width: 100%; }
 th, td { padding: 8px 12px; font-size: 13px;}
 th     { background:#b2e3fa; }
+@media (max-width: 991.98px) {
+  .tableFixHead thead {
+    position: static;
+  }
+}

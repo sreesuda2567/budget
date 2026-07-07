@@ -11,7 +11,7 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
-defineLocale('th', thBeLocale);
+defineLocale('th-be', thBeLocale);
 import Swal from 'sweetalert2';
 import { PDFDocument } from 'pdf-lib';
 import { ModalController } from '@ionic/angular';
@@ -74,6 +74,7 @@ datalist: any;
     this.rownum = 1;
     this.dataAdd.DATENOWS = '';
     this.dataAdd.DATENOWT = '';
+    this.dataAdd.DATENOWST = '';
   }
  fetchdata() {
     //ดึงคณะตามสังกัด
@@ -221,9 +222,12 @@ datalist: any;
       });
   }
   datenow(datenow: any) {
-    const yyyy = datenow.getFullYear();
-    let mm = datenow.getMonth() + 1; // Months start at 0!
-    let dd = datenow.getDate();
+    if (!datenow) return '';
+    const d = datenow instanceof Date ? datenow : new Date(datenow);
+    if (isNaN(d.getTime())) return '';
+    const yyyy = d.getFullYear();
+    let mm = d.getMonth() + 1; // Months start at 0!
+    let dd = d.getDate();
     return yyyy + '-' + mm + '-' + dd;
   }
   applyLocale(pop: any) {
@@ -259,7 +263,7 @@ datalist: any;
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any, deka: any,load3d:any) {
+  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any, deka: any,load3d:any,ddate:any,doc:any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -271,6 +275,8 @@ datalist: any;
     this.dataAdd.CHIEF_CODE = chief;
     this.dataAdd.FNANNALSMAP_DEKA = deka;
     this.dataAdd.EBOOKREQ_LINK = load3d;
+    this.dataAdd.DATENOWST = new Date(ddate);
+    this.dataAdd.FNANNALSMAP_DOC = doc;
     this.dataAdd.code = id;
     this.rowpbi = '';
     this.rowpbu = 1;
@@ -295,7 +301,7 @@ datalist: any;
     } else {
       this.dataAdd.opt = "insert";
        if (this.dataAdd.DATENOWS != '') {
-        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWS);
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWST);
       } else {
         this.dataAdd.FNANNALSMAP_DDATE = '';
       }
@@ -380,6 +386,11 @@ datalist: any;
   updatedata() {
 
     this.dataAdd.opt = "update";
+     if (this.dataAdd.DATENOWS != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWST);
+      } else {
+        this.dataAdd.FNANNALSMAP_DDATE = '';
+      }
     this.apiService
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
@@ -390,13 +401,14 @@ datalist: any;
             .subscribe((event: any) => {
               // 
               if (event.type == 4) {
-                this.fetchdatalistapp();
+                //this.fetchdatalistapp();
               }
             }
             );
+          document.getElementById("ModalClose")?.click();
           this.fetchdatalistapp();
           this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
-          document.getElementById("ModalClose")?.click();
+         
         }
       });
   }

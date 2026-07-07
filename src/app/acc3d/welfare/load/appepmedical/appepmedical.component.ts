@@ -585,7 +585,7 @@ export class AppepmedicalComponent implements OnInit {
           // Create a File object from the blob
           const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
                  
-              this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '117')
+              this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '113')
                 .subscribe((event: any) => {
                   if (event.type == 4) { // HttpEventType.Response
                      this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยพร้อมส่งสารบรรณ");
