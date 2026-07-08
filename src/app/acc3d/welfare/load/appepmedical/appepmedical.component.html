@@ -80,7 +80,7 @@
                             <div align="center">วันที่ทำรายการ</div>
                         </th>
                         <th>
-                            <div align="center">คณะ/หน่วยงาน</div>
+                            <div align="center">ฏีกา</div>
                         </th>
                         <th>
                             <div align="center">ประเภทเงิน</div>
@@ -103,43 +103,46 @@
                       } ; let i = index">
                         <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
                         <td align="center">{{p.FEDUCATION_RDATE}}</td>
-                        <td>{{p.FACULTY_TNAME}}</td>
+                        <td>{{p.FNANNALSMAP_DEKA}}</td>
                         <td>{{p.PLINCOME_NAME}}</td>
                         <td align="right">{{p.FEPSTATE_TMONEY| number : '1.2-2'}}</td>
                         <td align="center">
-                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                            <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
                                 (click)="fetchdataloadshow(p.FNANNALSMAP_CODE)">
                                 <i class="fa-solid fa-eye"></i></button>
                             &nbsp;
-                            <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button"
-                                title="รวมไฟล์ส่งสารบรรณ" class="btn btn-primary text-white"
-                                (click)="sendfile(p.FNANNALSMAP_CODE,p.link3)"><i class="fa-solid fa-file-arrow-up"></i>
-                            </a>&nbsp;
-                            <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button"
-                                title="ลงนาม" class="btn btn-info text-white" (click)="openPdfAnnotator(p)"><i
-                                    class="fa-solid fa-file-pen">
-                                </i></a> &nbsp;
-                            <span *ngIf="p.link2">
-                                <a role="button" title="รายงาน" class="btn btn-info text-white"
-                                    (click)="previewPdf(p.link2)"><i class="fas fa-file-alt">
+                            <span *ngIf="(p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A')">
+                                <a role="button" title="รวมไฟล์ส่งสารบรรณ" class="btn btn-primary text-white"
+                                    (click)="sendfile(p.FNANNALSMAP_CODE,p.link3)"><i
+                                        class="fa-solid fa-file-arrow-up"></i>
+                                </a>&nbsp;
+                                <a *ngIf="(dataAdd.PRIVILEGE_RSTATUS=='A' || !p.link)" role="button" title="ลงนาม"
+                                    class="btn btn-info text-white" (click)="openPdfAnnotator(p)"><i
+                                        class="fa-solid fa-file-pen">
                                     </i></a> &nbsp;
                             </span>
-                            <span *ngIf="p.link">
+                            <span *ngIf="(p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A' )" >
+                            <a role="button"
+                                title="ส่งสารบรรณ" class="btn btn-primary text-white"><i (click)="deliver(p.FNANNALSMAP_CODE)"
+                                    class="fa fa-arrow-right"></i> </a>&nbsp;
+                            </span>        
+                            
                                 <a role="button" title="รายงาน" class="btn btn-success text-white"
                                     (click)="previewPdf(p.link)"><i class="fas fa-file-alt">
                                     </i></a> &nbsp;
-                            </span>
+                            
                             <span *ngIf="p.link3">
                                 <a role="button" title="รายงานเบิกค่ารักษาพยาบาล" class="btn btn-secondary text-white"
-                                    (click)="previewPdf(p.link3)"><i class="fas fa-file-alt">
+                                    (click)="previewPdf(p.link3)" target="_blank"><i class="fas fa-file-alt">
                                     </i></a> &nbsp;
                             </span>
-                            <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button"
+                             
+                            <a *ngIf="p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button"
                                 title="ลบข้อมูล" class="btn btn-danger text-white"
                                 (click)="deleteData(p.FNANNALSMAP_CODE)"><i class="fa fa-trash"></i>
                             </a>&nbsp;
-                            <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button"
+                            <a *ngIf="p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A' " role="button"
                                 title="แก้ไข" data-bs-toggle="modal" data-bs-target="#exampleModal"
                                 class="btn btn-warning text-white" (click)="editdata(p.FNANNALSMAP_CODE)"><i
                                     class="fa fa-edit"></i></a>
@@ -289,7 +292,7 @@
                     </div>
                 </div>
                 <div class="row px-3" *ngFor="let i of number;">
-                    <div class="col-md-12 mb-2">
+                    <div class="col-md-8 mb-2">
                         <select name="SECTION_CODE" id="SECTION_CODE" class="form-select rounded-3"
                             [(ngModel)]="dataAdd.FRACCCODE[i]">
                             <option [value]=""></option>
@@ -297,7 +300,11 @@
                                 {{sec.FRACC_TNAME}}-->{{sec.FRACC_CODE}}</option>
                         </select>
                     </div>
-                    
+                    <div class="col-md-4">
+                        <input type="number" class="form-control form-control-lg fs-6" placeholder="จำนวนเงิน"
+                            [(ngModel)]="dataAdd.FRACCMONEY[i]">
+                    </div>
+
                 </div>
                 <br>
                 <table width="100%" border="1" cellpadding="0" cellspacing="0"
@@ -326,7 +333,7 @@
                             </td>
                             <td align="center">
                                 <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
-                                    [(ngModel)]="dataAdd.check[i]">
+                                    [(ngModel)]="dataAdd.check[i]" (ngModelChange)="updateTotalMoney()">
                                 <input name="VMREQUEST_CODE" type="hidden" id="VMREQUEST_CODE" size="10"
                                     [(ngModel)]="dataAdd.FEREIM_CODE[i]" />
                                 <input name="FEREIMDT_WMONEY" type="hidden" id="FEREIMDT_WMONEY" size="10"
@@ -334,7 +341,14 @@
                             </td>
                         </tr>
                     </tbody>
-
+                    <tfoot>
+                        <tr style="background-color: #e9ecef;">
+                            <td colspan="3" class="text-end fw-bold align-middle pe-3">รวมจำนวนเงินที่เลือก</td>
+                            <td align="right" class="fw-bold text-primary align-middle fs-6">{{getTotalSelected() |
+                                number : '1.2-2'}}</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             <div class="modal-footer border-0 pt-0">

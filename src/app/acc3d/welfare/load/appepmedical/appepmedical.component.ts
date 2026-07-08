@@ -35,7 +35,7 @@ export class AppepmedicalComponent implements OnInit {
   datalistlink: any;
   loading: any;
   loadingdetail: any;
-  dataAdd: any = { check: [], FEREIM_CODE: [], FEREIMDT_WMONEY: [], FEREIMDT_LINK: [],FRACCCODE:[] };
+  dataAdd: any = { check: [], FEREIM_CODE: [], FEREIMDT_WMONEY: [], FEREIMDT_LINK: [],FRACCCODE:[],FRACCMONEY:[] };
   searchTerm: any;
   show: any;
   dataPro: any;
@@ -370,6 +370,7 @@ export class AppepmedicalComponent implements OnInit {
           for (let i = 0; i < data.data2.length; i++) {
            
             this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
+            this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
             
           }
           // console.log(this.dataAdd.FRACCCODE);
@@ -396,6 +397,7 @@ export class AppepmedicalComponent implements OnInit {
 
      for (let i = 0; i < this.number.length; i++) {
       this.dataAdd.FRACCCODE[i] = '';
+      this.dataAdd.FRACCMONEY[i] = '';
      }
 
   }
@@ -481,7 +483,7 @@ export class AppepmedicalComponent implements OnInit {
    // this.dataAdd.link2 = link;
     this.dataAdd.link3 = link3;
     Swal.fire({
-      title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
+      title: 'ต้องการรวมไฟล์',
       text: 'กำลังรวมไฟล์ PDF...',
       icon: 'warning',
       showCancelButton: true,
@@ -613,5 +615,44 @@ export class AppepmedicalComponent implements OnInit {
     const cacheBuster = new Date().getTime();
     const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
     this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
-  }      
+  }
+
+  updateTotalMoney() {
+    this.dataAdd.FRACCMONEY[0] = this.getTotalSelected();
+  }
+
+  getTotalSelected(): number {
+    let total = 0;
+    if (this.dataAdd && this.dataAdd.check && this.dataAdd.FEREIMDT_WMONEY) {
+      for (let i = 0; i < this.dataAdd.check.length; i++) {
+        if (this.dataAdd.check[i]) {
+          total += Number(this.dataAdd.FEREIMDT_WMONEY[i]) || 0;
+        }
+      }
+    }
+    return total;
+  }
+    deliver(id: any) {
+      this.dataAdd.opt = "deliver";
+      this.dataAdd.id = id;
+      Swal.fire({
+        title: 'ต้องการนำส่งสารบรรณ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        if (result.value) {
+          this.apiService
+            .getdata(this.dataAdd, this.url)
+            .pipe(first())
+            .subscribe((data: any) => {
+              if (data.status == 1) {
+                Swal.fire('นำส่งข้อมูล!', 'นำส่งข้อมูลเรียบร้อยแล้ว', 'success');
+                this.fetchdatalist();
+              }
+            });
+        }
+      });
+    }
 }

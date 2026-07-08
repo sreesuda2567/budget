@@ -23,7 +23,7 @@ import { PdfAnnotatorModalComponent } from 'pdf-annotator';
   styleUrls: ['./loadw.component.scss']
 })
 export class LoadwComponent implements OnInit {
-datalist: any;
+  datalist: any;
   loading: any;
   rownum: any;
   file: any;
@@ -44,11 +44,11 @@ datalist: any;
   datalistapp: any;
   dataEdoc: any;
   datachief: any;
-     page = 1;
+  page = 1;
   count = 0;
   number = 0;
   tableSize = 20;
-  tableSizes = [20, 30,40,100,200];
+  tableSizes = [20, 30, 40, 100, 200];
   searchTerm: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
@@ -67,7 +67,7 @@ datalist: any;
   ) { }
 
   ngOnInit(): void {
-        this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
+    this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
     this.dataAdd.search = "";
     this.dataAdd.FNANNALSSEQREQ_DETAIL = "";
     this.fetchdata();
@@ -76,7 +76,7 @@ datalist: any;
     this.dataAdd.DATENOWT = '';
     this.dataAdd.DATENOWST = '';
   }
- fetchdata() {
+  fetchdata() {
     //ดึงคณะตามสังกัด
     var varN = {
       "opt": "viewufac",
@@ -250,7 +250,7 @@ datalist: any;
     this.dataAdd.DATENOWS = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, id2: any,link: any) {
+  editdata(id: any, id2: any, link: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -263,7 +263,7 @@ datalist: any;
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any, deka: any,load3d:any,ddate:any,doc:any) {
+  editdatapp(id: any, ciz1: any, ciz2: any, code: any, edoc: any, chief: any, deka: any, load3d: any, ddate: any, doc: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -287,20 +287,20 @@ datalist: any;
 
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
-    if (this.dataAdd.EBOOKREQ_FILE == ''|| this.dataAdd.DEPARTMENT_CODE == '' || this.dataAdd.CHIEF_CODE == '') {
+    if (this.dataAdd.EBOOKREQ_FILE == '' || this.dataAdd.DEPARTMENT_CODE == '' || this.dataAdd.CHIEF_CODE == '') {
       if (this.dataAdd.EBOOKREQ_FILE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
       }
       if (this.dataAdd.DEPARTMENT_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกสารบรรณ");
       }
-       if (this.dataAdd.CHIEF_CODE == '') {
+      if (this.dataAdd.CHIEF_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกเรียน");
       }
 
     } else {
       this.dataAdd.opt = "insert";
-       if (this.dataAdd.DATENOWS != '') {
+      if (this.dataAdd.DATENOWST != '') {
         this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWST);
       } else {
         this.dataAdd.FNANNALSMAP_DDATE = '';
@@ -386,11 +386,11 @@ datalist: any;
   updatedata() {
 
     this.dataAdd.opt = "update";
-     if (this.dataAdd.DATENOWS != '') {
-        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWST);
-      } else {
-        this.dataAdd.FNANNALSMAP_DDATE = '';
-      }
+    if (this.dataAdd.DATENOWST != '') {
+      this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWST);
+    } else {
+      this.dataAdd.FNANNALSMAP_DDATE = '';
+    }
     this.apiService
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
@@ -408,7 +408,7 @@ datalist: any;
           document.getElementById("ModalClose")?.click();
           this.fetchdatalistapp();
           this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
-         
+
         }
       });
   }
@@ -420,7 +420,7 @@ datalist: any;
       .pipe(first())
       .subscribe((data: any) => {
         this.dataEdoc = data.data;
-         this.dataAdd.DEPARTMENT_CODE = data.data[0].mapSectionCode;
+        this.dataAdd.DEPARTMENT_CODE = data.data[0].mapSectionCode;
       });
   }
   onChangechief() {
@@ -434,7 +434,7 @@ datalist: any;
         this.dataAdd.CHIEF_CODE = data[0].CHIEF_CODE;
       });
   }
-        // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
     this.fetchdatalistapp();
@@ -443,8 +443,8 @@ datalist: any;
     this.tableSize = event.target.value;
     this.page = 1;
     this.fetchdatalistapp();
-  }  
-    previewPdf(url: string) {
+  }
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
     setTimeout(() => {
@@ -458,37 +458,37 @@ datalist: any;
     const panel = this.eRef.nativeElement.querySelector('.pdf-preview-panel');
     if (panel) panel.classList.remove('open');
   }
-   async openPdfAnnotator(p: any) {
-      //  console.log(p.EBOOKREQ_LINK);
-      const cacheBuster = new Date().getTime();
-      const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
-      const user = this.tokenStorage.getUser();
-  
-      const modal = await this.modalCtrl.create({
-        component: PdfAnnotatorModalComponent,
-        componentProps: {
-          pdfUrl: reportLink,
-          userId: user.citizen,
-          userName: user.fullname || user.username
-        },
-        cssClass: 'pdf-modal-right-side'
-      });
-      await modal.present();
-  
-      const { data } = await modal.onDidDismiss();
-      if (data && data.saved && data.blob) {
-        // Create a File object from the blob
-        const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-        
-        this.file = file;
-        this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
-        
-        const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-        if (fileInput) {
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(file);
-          fileInput.files = dataTransfer.files;
-        }
+  async openPdfAnnotator(p: any) {
+    //  console.log(p.EBOOKREQ_LINK);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
       }
     }
+  }
 }

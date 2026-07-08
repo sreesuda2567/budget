@@ -155,7 +155,9 @@ export class IncomepmedicalComponent implements OnInit {
         .getupdate(this.dataAdd, this.url)
         .pipe(first())
         .subscribe((data: any) => {
-          this.toastr.success("แจ้งเตือน:ส่งอีเมลสถานะใบเสร็จเรียบร้อย");
+           this.fetchdatalist();
+           this.toastr.success("แจ้งเตือน:ส่งอีเมลเรียบร้อยแล้ว");
+           document.getElementById("ModalClose")?.click();
         });
 
     }
