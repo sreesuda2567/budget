@@ -117,7 +117,7 @@
                                     (click)="sendfile(p.FNANNALSMAP_CODE,p.link3)"><i
                                         class="fa-solid fa-file-arrow-up"></i>
                                 </a>&nbsp;
-                                <a *ngIf="(dataAdd.PRIVILEGE_RSTATUS=='A' || !p.link)" role="button" title="ลงนาม"
+                                <a *ngIf="(p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A' || !p.link)" role="button" title="ลงนาม"
                                     class="btn btn-info text-white" (click)="openPdfAnnotator(p)"><i
                                         class="fa-solid fa-file-pen">
                                     </i></a> &nbsp;

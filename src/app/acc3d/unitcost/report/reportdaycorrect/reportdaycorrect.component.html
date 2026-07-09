@@ -110,16 +110,10 @@
                         <div align="center">รายงานประจำวันที่</div>
                     </th>
                     <th>
-                        <div align="center">ชื่อ-สกุล</div>
-                    </th>
-                    <th>
-                        <div align="center">หน่วยงาน</div>
+                        <div align="center">ประเภท</div>
                     </th>
                     <th>
                         <div align="center">สถานะใบเสร็จ</div>
-                    </th>
-                    <th>
-                        <div align="center">เลขสัญญา</div>
                     </th>
                     <th>
                         <div align="center">จำนวนเงิน</div>
@@ -148,13 +142,10 @@
                     <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
                     <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
                     <td>{{p.FSTF_FNAME}}</td>
-                    <td>{{p.FACULTY_TNAME}}
-                    </td>
                     <td>{{p.FNRESTATUS_NAME}}</td>
-                    <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
                     <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number :
                         '1.2-2'}}</td>
-                    <td data-label="เลขฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
+                    <td align="center" data-label="เลขฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
                     <td align="center">
                         <a *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงาน" class="btn btn-success text-white"
                             (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">

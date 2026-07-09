@@ -373,12 +373,12 @@ export class FregiscontrolComponent implements OnInit {
     } else {
 
       this.dataAdd.opt = "update";
-      if (this.dataAdd.DATENOWP != '') {
+      if (this.dataAdd.DATENOWP != '' && this.dataAdd.DATENOWP != null) {
         this.dataAdd.DATENOWP1 = this.datenow(this.dataAdd.DATENOWP);
       } else {
         this.dataAdd.DATENOWP1 = '';
       }
-      if (this.dataAdd.FNEXACREGIS_PDATE != '') {
+      if (this.dataAdd.FNEXACREGIS_PDATE != '' && this.dataAdd.FNEXACREGIS_PDATE != null) {
         this.dataAdd.FNEXACREGIS_PDATE1 = this.datenow(this.dataAdd.FNEXACREGIS_PDATE);
       } else {
         this.dataAdd.FNEXACREGIS_PDATE1 = '';
@@ -441,12 +441,12 @@ export class FregiscontrolComponent implements OnInit {
       this.loadingdetail = true;
       this.dataAdd.opt = 'insert';
       // this.applyLocale('thBeLocale');
-      if (this.dataAdd.DATENOWP != '') {
+      if (this.dataAdd.DATENOWP != '' && this.dataAdd.DATENOWP != null) {
         this.dataAdd.DATENOWP1 = this.datenow(this.dataAdd.DATENOWP);
       } else {
         this.dataAdd.DATENOWP1 = '';
       }
-      if (this.dataAdd.FNEXACREGIS_PDATE != '') {
+      if (this.dataAdd.FNEXACREGIS_PDATE != '' && this.dataAdd.FNEXACREGIS_PDATE != null) {
         this.dataAdd.FNEXACREGIS_PDATE1 = this.datenow(this.dataAdd.FNEXACREGIS_PDATE);
       } else {
         this.dataAdd.FNEXACREGIS_PDATE1 = '';
