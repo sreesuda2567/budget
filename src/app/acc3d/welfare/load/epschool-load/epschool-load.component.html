@@ -177,6 +177,16 @@
                         <input type="text" name="FEPSTATE_NDEKA" class="form-control rounded-3" id="FEPSTATE_NDEKA"
                             placeholder="เลขฎีกา" [(ngModel)]="dataAdd.FEPSTATE_NDEKA">
                     </div>
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold  mb-2"><i class="fa-solid fa-signature me-1"></i>ลงนาม</label>
+                        <select name="f_code_p1" id="f_code_p1" class="form-select form-select-lg fs-6"
+                            [(ngModel)]="dataAdd.CITIZEN_IDP1">
+                            <option value="">--เลือก--</option>
+                            <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
+                                {{name.STF_FNAME}}
+                            </option>
+                        </select>
+                    </div>
                 </div>
                 <br>
                 <table width="100%" border="1" cellpadding="0" cellspacing="0"

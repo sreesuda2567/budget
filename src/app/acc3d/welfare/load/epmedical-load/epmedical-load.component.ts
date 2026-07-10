@@ -33,6 +33,7 @@ export class EpmedicalLoadComponent implements OnInit {
   datalistlink: any;
   loading: any;
   loadingdetail: any;
+  dataNameb: any;
   dataAdd: any = { check: [], FEREIM_CODE: [], FEREIMDT_WMONEY: [], FEREIMDT_LINK: [] };
   searchTerm: any;
   show: any;
@@ -115,6 +116,24 @@ export class EpmedicalLoadComponent implements OnInit {
   showinput() {
     this.rowpbi = 1;
     this.rowpbu = '';
+  }
+    fetchdatareport() {
+    this.dataNameb = null;
+    var varN1 = {
+      "opt": "viewnamereportload",
+      "citizen": this.tokenStorage.getUser().citizen,
+      "FACULTY_CODE": this.dataAdd.FACULTY_CODE,
+      "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS
+    }
+    this.apiService
+      .getdata(varN1, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataNameb = data;
+        // this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
+        // this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
+
+      });
   }
   fetchdataFac() {
     this.dataFac = null;
@@ -248,7 +267,7 @@ export class EpmedicalLoadComponent implements OnInit {
         this.dataAdd.FACULTY_CODE = data.data[0].FACULTY_CODE;
         this.dataAdd.FEPSTATE_CODE = data.data[0].FEPSTATE_CODE;
         this.dataAdd.FEPSTATE_NDEKA = data.data[0].FEPSTATE_NDEKA;
-        // this.dataAdd.link2 = data.data[0].link;
+        this.dataAdd.CITIZEN_IDP1 = data.data[0].CITIZEN_IDP;
         this.fetchdataload();
         if (data.data[0].FEPSTATE_SAVE != null) {
           this.dataAdd.DATENOWS = new Date(data.data[0].FEPSTATE_SAVE);
@@ -330,6 +349,8 @@ export class EpmedicalLoadComponent implements OnInit {
     this.dataAdd.FEPSTATE_CODE = '';
     this.dataAdd.DATENOWS = '';
     this.dataAdd.FEPSTATE_NDEKA = '';
+    this.dataAdd.CITIZEN_IDP1 = '';
+    this.fetchdatareport();
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {

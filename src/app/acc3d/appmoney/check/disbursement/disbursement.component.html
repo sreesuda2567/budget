@@ -2,7 +2,8 @@
     <div class="row mb-3">
 
         <div class="col">
-            <h5 class="fw-bold mb-0 mt-1"><i class="fa-solid fa-clipboard-check me-2 text-primary"></i>ตรวจสอบหลักฐานการเบิกจ่าย</h5>
+            <h5 class="fw-bold mb-0 mt-1"><i
+                    class="fa-solid fa-clipboard-check me-2 text-primary"></i>ตรวจสอบหลักฐานการเบิกจ่าย</h5>
         </div>
         <div class="col-auto">
             <div class="btn-group shadow-sm rounded-3" role="group">
@@ -13,7 +14,7 @@
             </div>
         </div>
     </div>
-    
+
     <div>
         <div class="shadow alert alert-info" role="alert">
             <div class="row">
@@ -92,187 +93,57 @@
                 </div>
             </div>
         </div>
-        <table *ngIf="rownum" width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
-            <thead>
-                <tr class="bg-primary text-white">
-                    <th>
-                        <div align="center">ที่</div>
-                    </th>
-                    <th>
-                        <div align="center">วันที่ทำรายการ</div>
-                    </th>
-                    <th>
-                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
-                    </th>
-                    <th>
-                        <div align="center">หน่วยงาน</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภทเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภท</div>
-                    </th>
-                    <th>
-                        <div align="center">จำนวนเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">รายงาน</div>
-                    </th>
-                    <th>
-                        <div align="center">จัดการข้อมูล</div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+        <div class="table-responsive-lg">
+            <table *ngIf="rownum" width="100%" id="example"
+                class="shadow table table-bordered  table-striped table-hover">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>
+                            <div align="center">ที่</div>
+                        </th>
+                        <th>
+                            <div align="center">วันที่ทำรายการ</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                        </th>
+                        <th>
+                            <div align="center">หน่วยงาน</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภทเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภท</div>
+                        </th>
+                        <th>
+                            <div align="center">จำนวนเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">รายงาน</div>
+                        </th>
+                        <th>
+                            <div align="center">จัดการข้อมูล</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
-                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                    <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
                       itemsPerPage: tableSize,
                       currentPage: page,
                       totalItems: count
                       }; let i = index">
-                    <td align="center" data-label="ที่:">{{i+1}}</td>
-                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
-                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
-                    <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
-                    <td data-label="ประเภทเงิน:">{{p.FNANNALS_BOOK_SUB}}</td>
-                    <td align="center" data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
-                    <td align="center" data-label="ประมาณการ:">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
-                    <td data-label="รายงาน:">
-                        <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2">
-                            <a role="button" title="รายงานใบเบิกค่าใช้จ่าย" class="btn btn-secondary text-white"
-                                (click)="previewPdf(p.linkclear)"><i class="fa-solid fa-file-contract"></i></a>
-                            <span *ngIf="p.linkclear_pages"
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
-                                style="font-size: 0.65rem; z-index: 10;">
-                                {{p.linkclear_pages}}
-                            </span>
-                        </span>
-                        <span *ngIf="p.linkreport" class="position-relative d-inline-block">
-                            <a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
-                                (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
-                            <span *ngIf="p.linkreport_pages"
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
-                                style="font-size: 0.65rem; z-index: 10;">
-                                {{p.linkreport_pages}}
-                            </span>
-                        </span>
-                    </td>
-                    <td align="center" data-label="เลือก:">
-                        <a *ngIf="p.linkclear" role="button" title="ลงนาม" class="btn btn-info text-white"
-                            (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
-                            </i></a> &nbsp;
-                        <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white"
-                            id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear)"
-                            (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
-                        <a *ngIf="p.linkreport" role="button" title="รวมไฟล์ส่งสารบรรณ"
-                            class="btn btn-secondary text-white"
-                            (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
-                                class="fa-solid fa-file-arrow-up"></i>
-                        </a>&nbsp;
-                        <!--<button type="submit" title="สถานะใบเสร็จ" class="btn btn-secondary" id="submitupdate"
-                            data-bs-toggle="modal" data-bs-target="#modalEditreceipt"
-                            (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
-                            (click)="onChangeRadio(1)"><i
-                                class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;-->
-                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-                            data-bs-target="#exampleModalupdate"
-                            (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"><i
-                                class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
-                    </td>
-                </tr>
-                <tr *ngIf="!rownum">
-                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table *ngIf="rownum1" width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
-            <thead>
-                <tr class="bg-primary text-white">
-                    <th>
-                        <div align="center">ที่</div>
-                    </th>
-                    <th>
-                        <div align="center">วันที่ดำเนินการ</div>
-                    </th>
-                    <th>
-                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
-                    </th>
-                    <th>
-                        <div align="center">หน่วยงาน</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภทเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภท</div>
-                    </th>
-                    <th>
-                        <div align="center">สถานะใบเสร็จ</div>
-                    </th>
-                    <th>
-                        <div align="center">จำนวนเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">รายงาน</div>
-                    </th>
-                    <th>
-                        <div align="center">แก้ไข</div>
-                    </th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
-
-                <tr *ngFor="let p of datalistapp|filter:searchTerm|paginate : {
-                      itemsPerPage: tableSize,
-                      currentPage: page,
-                      totalItems: count
-                      }; let i = index">
-                    <td align="center" data-label="ที่:">{{i+1}}</td>
-                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
-                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
-                    <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
-                    <td data-label="ประเภทเงิน:">{{p.FNANNALS_BOOK_SUB}}</td>
-                    <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
-                    <td data-label="สถานะใบเสร็จ:">{{p.FNRESTATUS_NAME}}</td>
-                    <td align="center" data-label="จำนวนเงิน:">{{p.FNANNALS_MONEYC| number : '1.2-2'}}</td>
-                    <td data-label="รายงาน:">
-                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                            (click)="fetchdataloadshow(p.FNANNALSMAP_CODE)">
-                            <i class="fa-solid fa-eye"></i></button>
-                        &nbsp;
-                        <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><button
-                                role="button" title="รายงานใบปะหน้า" class="btn btn-success text-white"
-                                (click)="previewPdf(p.CONTRACT_LINK)"><i class="fa-solid fa-file-contract"></i></button>
-                            <span *ngIf="p.CONTRACT_LINK_pages"
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
-                                style="font-size: 0.65rem; z-index: 10;">
-                                {{p.CONTRACT_LINK_pages}}
-                            </span>
-                        </span>
-                        <span *ngIf="p.correct" class="position-relative d-inline-block me-2"><button role="button"
-                                title="รายงานใบปะหน้า(แก้ไข)" class="btn btn-danger text-white"
-                                (click)="previewPdf(p.correct)"><i class="fa-solid fa-file-contract"></i></button>
-                            <span *ngIf="p.correct_pages"
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
-                                style="font-size: 0.65rem; z-index: 10;">
-                                {{p.correct_pages}}
-                            </span>
-                        </span>
-                    </td>
-                    <td align="center" data-label="เลือก:">
-                        <!-- <button type="submit" title="สถานะใบเสร็จ" class="btn btn-secondary" id="submitupdate"
-                            data-bs-toggle="modal" data-bs-target="#modalEditreceipt"
-                            (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
-                            (click)="onChangeRadio(2)"><i
-                                class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;-->
-                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'">
-                            <span class="position-relative d-inline-block me-2">
+                        <td align="center" data-label="ที่:">{{i+1}}</td>
+                        <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                        <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                        <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
+                        <td data-label="ประเภทเงิน:">{{p.FNANNALS_BOOK_SUB}}</td>
+                        <td align="center" data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                        <td align="center" data-label="ประมาณการ:">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                        <td data-label="รายงาน:">
+                            <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2">
                                 <a role="button" title="รายงานใบเบิกค่าใช้จ่าย" class="btn btn-secondary text-white"
                                     (click)="previewPdf(p.linkclear)"><i class="fa-solid fa-file-contract"></i></a>
                                 <span *ngIf="p.linkclear_pages"
@@ -281,7 +152,7 @@
                                     {{p.linkclear_pages}}
                                 </span>
                             </span>
-                            <span class="position-relative d-inline-block me-2">
+                            <span *ngIf="p.linkreport" class="position-relative d-inline-block">
                                 <a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
                                     (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
                                 <span *ngIf="p.linkreport_pages"
@@ -290,28 +161,163 @@
                                     {{p.linkreport_pages}}
                                 </span>
                             </span>
-                            <a role="button" title="รวมไฟล์ส่งสารบรรณ" class="btn btn-secondary text-white"
+                        </td>
+                        <td align="center" data-label="เลือก:">
+                            <a *ngIf="p.linkclear" role="button" title="ลงนาม" class="btn btn-info text-white"
+                                (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
+                                </i></a> &nbsp;
+                            <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white"
+                                id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear)"
+                                (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
+                            <a *ngIf="p.linkreport" role="button" title="รวมไฟล์ส่งสารบรรณ"
+                                class="btn btn-secondary text-white"
                                 (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
                                     class="fa-solid fa-file-arrow-up"></i>
-                            </a>&nbsp; </span>
-                        <button type="submit" *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'"
-                            title="ใบเบิก" class="btn btn-success text-white" id="submitupdate" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"
-                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear)"
-                            (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
-                        <button
-                            *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' || dataAdd.PRIVILEGE_RSTATUS=='A' "
-                            type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-                            data-bs-target="#exampleModalupdate"
-                            (click)="editdatapp(p.FNANNALSMAP_CODE,p.CONTRACT_LINK,p.CITIZEN_IDB,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALS_MONEYC,p.FNANNALSMAP_STATUS,p.FNRESTATUS_CODE)"><i
-                                class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
-                    </td>
-                </tr>
-                <tr *ngIf="!rownum1">
-                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
-                </tr>
-            </tbody>
-        </table>
+                            </a>&nbsp;
+                            <!--<button type="submit" title="สถานะใบเสร็จ" class="btn btn-secondary" id="submitupdate"
+                            data-bs-toggle="modal" data-bs-target="#modalEditreceipt"
+                            (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
+                            (click)="onChangeRadio(1)"><i
+                                class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;-->
+                            <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalupdate"
+                                (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"><i
+                                    class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!rownum">
+                        <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table *ngIf="rownum1" width="100%" id="example"
+                class="shadow table table-bordered  table-striped table-hover">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>
+                            <div align="center">ที่</div>
+                        </th>
+                        <th>
+                            <div align="center">วันที่ดำเนินการ</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                        </th>
+                        <th>
+                            <div align="center">หน่วยงาน</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภทเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภท</div>
+                        </th>
+                        <th>
+                            <div align="center">สถานะใบเสร็จ</div>
+                        </th>
+                        <th>
+                            <div align="center">จำนวนเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">รายงาน</div>
+                        </th>
+                        <th>
+                            <div align="center">แก้ไข</div>
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                    <tr *ngFor="let p of datalistapp|filter:searchTerm|paginate : {
+                      itemsPerPage: tableSize,
+                      currentPage: page,
+                      totalItems: count
+                      }; let i = index">
+                        <td align="center" data-label="ที่:">{{i+1}}</td>
+                        <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                        <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                        <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
+                        <td data-label="ประเภทเงิน:">{{p.FNANNALS_BOOK_SUB}}</td>
+                        <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                        <td data-label="สถานะใบเสร็จ:">{{p.FNRESTATUS_NAME}}</td>
+                        <td align="center" data-label="จำนวนเงิน:">{{p.FNANNALS_MONEYC| number : '1.2-2'}}</td>
+                        <td data-label="รายงาน:">
+                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                                (click)="fetchdataloadshow(p.FNANNALSMAP_CODE)">
+                                <i class="fa-solid fa-eye"></i></button>
+                            &nbsp;
+                            <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><button
+                                    role="button" title="รายงานใบปะหน้า" class="btn btn-success text-white"
+                                    (click)="previewPdf(p.CONTRACT_LINK)"><i
+                                        class="fa-solid fa-file-contract"></i></button>
+                                <span *ngIf="p.CONTRACT_LINK_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
+                                    {{p.CONTRACT_LINK_pages}}
+                                </span>
+                            </span>
+                            <span *ngIf="p.correct" class="position-relative d-inline-block me-2"><button role="button"
+                                    title="รายงานใบปะหน้า(แก้ไข)" class="btn btn-danger text-white"
+                                    (click)="previewPdf(p.correct)"><i class="fa-solid fa-file-contract"></i></button>
+                                <span *ngIf="p.correct_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
+                                    {{p.correct_pages}}
+                                </span>
+                            </span>
+                        </td>
+                        <td align="center" data-label="เลือก:">
+                            <!-- <button type="submit" title="สถานะใบเสร็จ" class="btn btn-secondary" id="submitupdate"
+                            data-bs-toggle="modal" data-bs-target="#modalEditreceipt"
+                            (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
+                            (click)="onChangeRadio(2)"><i
+                                class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;-->
+                            <span *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'">
+                                <span class="position-relative d-inline-block me-2">
+                                    <a role="button" title="รายงานใบเบิกค่าใช้จ่าย" class="btn btn-secondary text-white"
+                                        (click)="previewPdf(p.linkclear)"><i class="fa-solid fa-file-contract"></i></a>
+                                    <span *ngIf="p.linkclear_pages"
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                        style="font-size: 0.65rem; z-index: 10;">
+                                        {{p.linkclear_pages}}
+                                    </span>
+                                </span>
+                                <span class="position-relative d-inline-block me-2">
+                                    <a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
+                                        (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
+                                    <span *ngIf="p.linkreport_pages"
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                        style="font-size: 0.65rem; z-index: 10;">
+                                        {{p.linkreport_pages}}
+                                    </span>
+                                </span>
+                                <a role="button" title="รวมไฟล์ส่งสารบรรณ" class="btn btn-secondary text-white"
+                                    (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
+                                        class="fa-solid fa-file-arrow-up"></i>
+                                </a>&nbsp; </span>
+                            <button type="submit" *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'"
+                                title="ใบเบิก" class="btn btn-success text-white" id="submitupdate"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear)"
+                                (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
+                            <button
+                                *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' || dataAdd.PRIVILEGE_RSTATUS=='A' "
+                                type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalupdate"
+                                (click)="editdatapp(p.FNANNALSMAP_CODE,p.CONTRACT_LINK,p.CITIZEN_IDB,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALS_MONEYC,p.FNANNALSMAP_STATUS,p.FNRESTATUS_CODE)"><i
+                                    class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!rownum1">
+                        <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div *ngIf="rownum1" class="d-flex justify-content-left">
             <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
             </pagination-controls>
@@ -729,7 +735,7 @@
                                     class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.FRACCCODE[i]">
                                     <option [value]=""></option>
                                     <option [value]="sec.FRACC_CODE" *ngFor="let sec of dataAcc">
-                                       {{sec.FRACC_TNAME}}-->{{sec.FRACC_CODE}}
+                                        {{sec.FRACC_TNAME}}-->{{sec.FRACC_CODE}}
                                     </option>
                                 </select>
                             </div>
