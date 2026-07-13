@@ -1,15 +1,17 @@
 <div class="shadow alert border bg-white mx-4 mt-4" role="alert">
     <div class="row mb-3 align-items-center">
         <div class="col-md-10">
-            <h5 class="fw-bold mb-0 mt-1"><i class="fa-regular fa-calendar-check me-2 text-primary"></i>รายงานประจำวัน</h5>
+            <h5 class="fw-bold mb-0 mt-1"><i class="fa-regular fa-calendar-check me-2 text-primary"></i>รายงานประจำวัน
+            </h5>
         </div>
         <div class="col-md-2" align="right">
-            <a class="btn btn-primary rounded-pill px-4 shadow-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                (click)="showinput()" (click)="setshowbti()" (click)="fetchdataload()" (click)="fetchdatareport()">
+            <a class="btn btn-primary rounded-pill px-4 shadow-sm text-white" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" (click)="showinput()" (click)="setshowbti()" (click)="fetchdataload()"
+                (click)="fetchdatareport()">
                 <i class="fa-solid fa-plus-circle me-1"></i> เพิ่มข้อมูล</a>
         </div>
     </div>
-    
+
     <div>
         <div class="row">
             <div class="col">
@@ -49,7 +51,8 @@
                                         <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker
                                             #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
                                         <i class="fa-solid fa-calendar-days cursor-p text-primary position-absolute"
-                                            style="right: 10px; top: 50%; transform: translateY(-50%);" (click)="dp.toggle()"></i>
+                                            style="right: 10px; top: 50%; transform: translateY(-50%);"
+                                            (click)="dp.toggle()"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-2 text-secondary" style="font-size: 10pt">
@@ -57,7 +60,8 @@
                                         <input placeholder="ถึงวันที่" type="text" class="form-control" bsDatepicker
                                             #dp2="bsDatepicker" [(ngModel)]="dataAdd.DATENOWTT" readonly>
                                         <i class="fa-solid fa-calendar-days cursor-p text-primary position-absolute"
-                                            style="right: 10px; top: 50%; transform: translateY(-50%);" (click)="dp2.toggle()"></i>
+                                            style="right: 10px; top: 50%; transform: translateY(-50%);"
+                                            (click)="dp2.toggle()"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-2 text-secondary" style="font-size: 10pt">
@@ -87,80 +91,86 @@
         <div class="row justify-content-center center-screen" *ngIf="loading">
             <div class="spinner-border " role="status" id="loading"></div>
         </div>
-        <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
-            <thead>
-                <tr class="bg-primary text-white">
-                    <th>
-                        <div align="center">ที่</div>
-                    </th>
-                    <th>
-                        <div align="center">รายงานประจำวันที่</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภท</div>
-                    </th>
-                    <th>
-                        <div align="center">เลขฎีกา</div>
-                    </th>
-                    <th>
-                        <div align="center">จำนวนเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">ผู้ทำรายการ</div>
-                    </th>
-                    <th>
-                        <div align="center">สถานะ</div>
-                    </th>
-                    <th>
-                        <div align="center">จัดการข้อมูล</div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+        <div class="table-responsive-lg">
+            <table width="100%" id="example"
+                class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>
+                            <div align="center">ที่</div>
+                        </th>
+                        <th>
+                            <div align="center">รายงานประจำวันที่</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภท</div>
+                        </th>
+                        <th>
+                            <div align="center">เลขฎีกา</div>
+                        </th>
+                        <th>
+                            <div align="center">จำนวนเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">ผู้ทำรายการ</div>
+                        </th>
+                        <th>
+                            <div align="center">สถานะ</div>
+                        </th>
+                        <th>
+                            <div align="center">จัดการข้อมูล</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
-                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                    <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
                       itemsPerPage: tableSize,
                       currentPage: page,
                       totalItems: count
                       } ; let i = index">
-                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
-                    <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
-                    <td>{{p.FSTF_FNAME}}
-                        <div *ngIf="p.FNANNALSMAPR_NOTE && p.FNANNALSSTATUS_CODE=='3'" class="text-danger">
-                            ({{p.FNANNALSMAPR_NOTE}})
-                        </div>
-                    </td>
+                        <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                        <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
+                        <td>{{p.FSTF_FNAME}}
+                            <div *ngIf="p.FNANNALSMAPR_NOTE && p.FNANNALSSTATUS_CODE=='3'" class="text-danger">
+                                ({{p.FNANNALSMAPR_NOTE}})
+                            </div>
+                        </td>
 
-                    <td data-label="เลขฎีกา:">{{p.FNANNALSMAP_DEKA}}</td>
-                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
-                    <td>{{p.FNANNALSMAPR_NAME}}</td>
-                    <td>{{p.FNANNALSM_TNAME}}</td>
-                    <td align="center">
-                        <a *ngIf="p.FNANNALSMAPR_RSTATUS=='7'" role="button" title="แก้ไข" data-bs-toggle="modal"
-                            data-bs-target="#exampleModalshow" class="btn btn-primary text-white"
-                            (click)="editdatashow(p.FNANNALSMAPR_CODE)"><i class="fa-solid fa-eye"></i></a>&nbsp;
-                        <a *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงาน" class="btn btn-success text-white"
-                            (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
-                            </i></a>
-                            <span *ngIf="p.REPORT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
-                                {{p.REPORT_LINK_pages}}
-                            </span>
-                        </a> &nbsp;
-                        <a *ngIf="p.FNANNALSMAPR_RSTATUS=='0'" role="button" title="ลบข้อมูล"
-                            class="btn btn-danger text-white" (click)="deleteData(p.FNANNALSMAPR_CODE)"><i
-                                class="fa fa-trash"></i>
-                        </a>&nbsp;
-                        <a *ngIf="p.FNANNALSMAPR_RSTATUS=='0'" role="button" title="แก้ไข" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal" class="btn btn-warning text-white"
-                            (click)="editdata(p.FNANNALSMAPR_CODE,p.FACULTY_CODE)"><i class="fa fa-edit"></i></a>
-                    </td>
-                </tr>
-                <tr *ngIf="!rownum">
-                    <td colspan="9">ไม่มีข้อมูล{{rownum}}</td>
-                </tr>
-            </tbody>
-        </table>
+                        <td data-label="เลขฎีกา:">{{p.FNANNALSMAP_DEKA}}</td>
+                        <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                        <td>{{p.FNANNALSMAPR_NAME}}</td>
+                        <td>{{p.FNANNALSM_TNAME}}</td>
+                        <td align="center">
+                            <a *ngIf="p.FNANNALSMAPR_RSTATUS=='7'" role="button" title="แก้ไข" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalshow" class="btn btn-primary text-white"
+                                (click)="editdatashow(p.FNANNALSMAPR_CODE)"><i class="fa-solid fa-eye"></i></a>&nbsp;
+                            <a *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2"><a role="button"
+                                    title="รายงาน" class="btn btn-success text-white"
+                                    (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
+                                    </i></a>
+                                <span *ngIf="p.REPORT_LINK_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
+                                    {{p.REPORT_LINK_pages}}
+                                </span>
+                            </a> &nbsp;
+                            <a *ngIf="p.FNANNALSMAPR_RSTATUS=='0'" role="button" title="ลบข้อมูล"
+                                class="btn btn-danger text-white" (click)="deleteData(p.FNANNALSMAPR_CODE)"><i
+                                    class="fa fa-trash"></i>
+                            </a>&nbsp;
+                            <a *ngIf="p.FNANNALSMAPR_RSTATUS=='0'" role="button" title="แก้ไข" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal" class="btn btn-warning text-white"
+                                (click)="editdata(p.FNANNALSMAPR_CODE,p.FACULTY_CODE)"><i class="fa fa-edit"></i></a>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!rownum">
+                        <td colspan="9">ไม่มีข้อมูล{{rownum}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="d-flex justify-content-left">
             <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
             </pagination-controls>
@@ -168,12 +178,15 @@
     </div>
 </div>
 <!-- The Modal -->
-<div class="modal fade" data-bs-focus="false" id="exampleModalshow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModalshow" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content shadow-lg border-0 rounded-3">
             <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
-                <h5 class="modal-title fw-bold" id="exampleModalLabel"><i class="fa-solid fa-file-invoice me-2"></i>รายงานประจำวัน</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold" id="exampleModalLabel"><i
+                        class="fa-solid fa-file-invoice me-2"></i>รายงานประจำวัน</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 bg-light">
                 <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
@@ -184,7 +197,8 @@
 
                 <div class="card border-0 shadow-sm" *ngIf="!loadingdetail">
                     <div class="card-body bg-white rounded-3 p-4">
-                        <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-list-ul me-2 text-primary"></i>รายการข้อมูล</h6>
+                        <h6 class="fw-bold text-dark mb-3"><i
+                                class="fa-solid fa-list-ul me-2 text-primary"></i>รายการข้อมูล</h6>
                         <div class="table-responsive">
                             <table width="100%" class="table table-bordered table-striped align-middle mb-0">
                                 <thead>
@@ -203,10 +217,14 @@
                                         <td>{{p.FSTF_FNAME}}</td>
                                         <td>{{p.FACULTY_TNAME}}</td>
                                         <td class="text-center">
-                                            <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงานวันจ่าย"
-                                                    class="btn btn-success btn-sm text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
+                                            <span *ngIf="p.CONTRACT_LINK"
+                                                class="position-relative d-inline-block me-2"><a role="button"
+                                                    title="รายงานวันจ่าย" class="btn btn-success btn-sm text-white"
+                                                    (click)="previewPdf(p.CONTRACT_LINK)"><i
                                                         class="fa-solid fa-file-contract"></i></a>
-                                                <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                                <span *ngIf="p.CONTRACT_LINK_pages"
+                                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                                    style="font-size: 0.65rem; z-index: 10;">
                                                     {{p.CONTRACT_LINK_pages}}
                                                 </span>
                                             </span>
@@ -219,7 +237,8 @@
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
-                <button type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+                    data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-1"></i> ปิด
                 </button>
             </div>
@@ -227,12 +246,15 @@
     </div>
 </div>
 <!-- The Modal -->
-<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content shadow-lg border-0 rounded-3">
             <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
-                <h5 class="modal-title fw-bold" id="exampleModalLabel"><i class="fa-solid fa-file-invoice me-2"></i>รายงานประจำวัน</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold" id="exampleModalLabel"><i
+                        class="fa-solid fa-file-invoice me-2"></i>รายงานประจำวัน</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 bg-light">
                 <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
@@ -240,29 +262,35 @@
                 </div>
                 <input type="hidden" class="form-control" name="FEPSTATE_CODE" id="FEPSTATE_CODE"
                     [(ngModel)]="dataAdd.FNANNALSMAPR_CODE">
-                
+
                 <div *ngIf="!loadingdetail">
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body bg-white rounded-3 p-4">
                             <div class="row g-4">
                                 <div class="col-md-3">
-                                    <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-calendar-day me-1"></i>วันที่:</label>
+                                    <label class="form-label fw-bold text-secondary mb-2"><i
+                                            class="fa-solid fa-calendar-day me-1"></i>วันที่:</label>
                                     <div class="position-relative">
-                                        <input placeholder="วันที่" type="text" class="form-control form-control-lg fs-6" bsDatepicker #dp3="bsDatepicker"
+                                        <input placeholder="วันที่" type="text"
+                                            class="form-control form-control-lg fs-6" bsDatepicker #dp3="bsDatepicker"
                                             [(ngModel)]="dataAdd.DATENOWT" readonly>
                                         <i class="fa-solid fa-calendar-days cursor-p text-primary position-absolute"
-                                            style="right: 15px; top: 50%; transform: translateY(-50%);" (click)="dp3.toggle()"></i>
+                                            style="right: 15px; top: 50%; transform: translateY(-50%);"
+                                            (click)="dp3.toggle()"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-9 d-flex align-items-end" *ngIf="dataAdd.EBOOKREQ_LINK">
-                                    <a href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank" class="btn btn-outline-primary fw-bold rounded-pill">
+                                    <a href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"
+                                        class="btn btn-outline-primary fw-bold rounded-pill">
                                         <i class="fa-solid fa-file-pdf me-1"></i> ดูไฟล์แนบเดิม
                                     </a>
                                 </div>
 
                                 <div class="col-md-12">
-                                    <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-user-pen me-1"></i>งานบัญชีผู้รับผิดชอบ</label>
-                                    <select name="f_code1" id="f_code1" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDA">
+                                    <label class="form-label fw-bold text-secondary mb-2"><i
+                                            class="fa-solid fa-user-pen me-1"></i>งานบัญชีผู้รับผิดชอบ</label>
+                                    <select name="f_code1" id="f_code1" class="form-select form-select-lg fs-6"
+                                        [(ngModel)]="dataAdd.CITIZEN_IDA">
                                         <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNameb">
                                             {{name.STF_FNAME}}
                                         </option>
@@ -274,7 +302,8 @@
 
                     <div class="card border-0 shadow-sm">
                         <div class="card-body bg-white rounded-3 p-4">
-                            <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-list-ul me-2 text-primary"></i>รายการข้อมูล</h6>
+                            <h6 class="fw-bold text-dark mb-3"><i
+                                    class="fa-solid fa-list-ul me-2 text-primary"></i>รายการข้อมูล</h6>
                             <div class="table-responsive">
                                 <table width="100%" class="table table-bordered table-striped align-middle mb-0">
                                     <thead>
@@ -292,20 +321,27 @@
                                             <td class="text-center">{{p.FNANNALSMAP_DEKA}}</td>
                                             <td>{{p.FSTF_FNAME}}</td>
                                             <td>{{p.FACULTY_TNAME}}
-                                                <span *ngIf="p.CONTRACT_LINK" class="ms-1 position-relative d-inline-block me-2"><a role="button" title="รายงานวันจ่าย"
-                                                        class="btn btn-success btn-sm text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
+                                                <span *ngIf="p.CONTRACT_LINK"
+                                                    class="ms-1 position-relative d-inline-block me-2"><a role="button"
+                                                        title="รายงานวันจ่าย" class="btn btn-success btn-sm text-white"
+                                                        (click)="previewPdf(p.CONTRACT_LINK)"><i
                                                             class="fa-solid fa-file-contract"></i></a>
-                                                    <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                                    <span *ngIf="p.CONTRACT_LINK_pages"
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                                        style="font-size: 0.65rem; z-index: 10;">
                                                         {{p.CONTRACT_LINK_pages}}
                                                     </span>
                                                 </span>
-                                                <button type="submit" class="btn btn-danger btn-sm ms-1" id="submitupdate" data-bs-toggle="modal"
-                                                    data-bs-target="#modalEdit" (click)="showedit(dataAdd.FNANNALSMAP_CODE[i])"><i class="fa-solid fa-arrow-rotate-left me-1"></i>ปรับปรุง</button>
+                                                <button type="submit" class="btn btn-danger btn-sm ms-1"
+                                                    id="submitupdate" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                                                    (click)="showedit(dataAdd.FNANNALSMAP_CODE[i])"><i
+                                                        class="fa-solid fa-arrow-rotate-left me-1"></i>ปรับปรุง</button>
                                             </td>
                                             <td class="text-center">
-                                                <input class="form-check-input filled-in" name="cnk_code_{{i}}" id="cnk_code_{{i}}" type="checkbox"
-                                                    [(ngModel)]="dataAdd.check[i]">
-                                                <input name="FNANNALSMAP_CODE_{{i}}" type="hidden" id="FNANNALSMAP_CODE_{{i}}" size="10"
+                                                <input class="form-check-input filled-in" name="cnk_code_{{i}}"
+                                                    id="cnk_code_{{i}}" type="checkbox" [(ngModel)]="dataAdd.check[i]">
+                                                <input name="FNANNALSMAP_CODE_{{i}}" type="hidden"
+                                                    id="FNANNALSMAP_CODE_{{i}}" size="10"
                                                     [(ngModel)]="dataAdd.FNANNALSMAP_CODE[i]" />
                                             </td>
                                         </tr>
@@ -317,14 +353,16 @@
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
-                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+                    data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-1"></i> ปิด
                 </button>
                 <button *ngIf="rowpbi" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm"
                     (click)="insertdata()">
                     <i class="fa-solid fa-save me-1"></i> บันทึกข้อมูล
                 </button>
-                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatedata()">
+                <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm"
+                    (click)="updatedata()">
                     <i class="fa-solid fa-save me-1"></i> แก้ไขข้อมูล
                 </button>
             </div>
@@ -332,13 +370,15 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content shadow-lg border-0 rounded-3">
             <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
-                <h5 class="modal-title fw-bold" id="staticBackdropLabel"><i class="fa-solid fa-circle-info me-2"></i>รายละเอียด</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title fw-bold" id="staticBackdropLabel"><i
+                        class="fa-solid fa-circle-info me-2"></i>รายละเอียด</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 bg-light">
                 <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
@@ -348,24 +388,30 @@
                     <div class="card-body bg-white rounded-3 p-4">
                         <div class="row g-4">
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-reply me-1"></i>ส่งกลับแก้ไข</label>
-                                <select name="f_code_edit" id="f_code_edit" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.CITIZEN_IDED">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-reply me-1"></i>ส่งกลับแก้ไข</label>
+                                <select name="f_code_edit" id="f_code_edit" class="form-select form-select-lg fs-6"
+                                    [(ngModel)]="dataAdd.CITIZEN_IDED">
                                     <option [value]="name.CITIZEN_ID" *ngFor="let name of dataNamea">
                                         {{name.STF_FNAME}}
                                     </option>
                                 </select>
                             </div>
                             <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-comment-dots me-1"></i>หมายเหตุ</label>
-                                <textarea id="FNANNALSMAP_NOTE" name="FNANNALSMAP_NOTE" [(ngModel)]="dataAdd.FNANNALSMAP_NOTE"
-                                    rows="4" class="form-control bg-light border-0" placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-comment-dots me-1"></i>หมายเหตุ</label>
+                                <textarea id="FNANNALSMAP_NOTE" name="FNANNALSMAP_NOTE"
+                                    [(ngModel)]="dataAdd.FNANNALSMAP_NOTE" rows="4"
+                                    class="form-control bg-light border-0"
+                                    placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
-                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+                    data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-1"></i> ปิด
                 </button>
                 <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm"
@@ -376,7 +422,7 @@
         </div>
     </div>
 </div>
-    <!-- PDF Preview Side Panel -->
+<!-- PDF Preview Side Panel -->
 <div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
 <div class="pdf-preview-panel" [class.open]="previewPdfUrl">
     <div class="pdf-preview-header bg-primary text-white">

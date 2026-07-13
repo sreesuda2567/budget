@@ -163,6 +163,10 @@
                             </span>
                         </td>
                         <td align="center" data-label="เลือก:">
+                            <button type="submit" class="btn btn-danger" id="submitinsert" data-bs-toggle="modal"
+                                data-bs-target="#modalEditreceipt"
+                                (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"><i
+                                    class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ส่งคืน</button>&nbsp;
                             <a *ngIf="p.linkclear" role="button" title="ลงนาม" class="btn btn-info text-white"
                                 (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
                                 </i></a> &nbsp;
@@ -412,9 +416,9 @@
                                 </div>
                                 <div class="d-flex flex-column gap-2 mt-2">
                                     <div class="form-check" *ngFor="let type of datareceipt; let r = index">
-                                        <input class="form-check-input" name="p_radio" id="radio_{{r}}" type="radio"
+                                        <input class="form-check-input" name="p_radio_update" id="radio_update_{{r}}" type="radio"
                                             value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE">
-                                        <label class="form-check-label" for="radio_{{r}}">
+                                        <label class="form-check-label" for="radio_update_{{r}}">
                                             {{type.FNRESTATUS_NAME}}
                                         </label>
                                     </div>
@@ -508,13 +512,6 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body bg-white rounded-3 p-4">
                         <div class="row g-4">
-                            <div class="col-md-12">
-                                <label class="form-label fw-bold text-secondary mb-2"><i
-                                        class="fa-solid fa-receipt me-1"></i>รายละเอียดใบเสร็จ</label>
-                                <div *ngFor="let detail of dataReceiptdetail" class="mb-2 text-primary fw-bold">
-                                    {{detail.FNREDT_NAME}}
-                                </div>
-                            </div>
 
                             <div *ngIf="dataAdd.FNRESTATUS==2" class="col-md-12">
                                 <div class="d-flex flex-column gap-2 mt-2">
@@ -540,17 +537,13 @@
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
-                <button id="ModalClose" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+                <button id="ModalClosemail" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
                     data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-1"></i> ปิด
                 </button>
-                <button *ngIf="dataAdd.FNRESTATUS==2" type="button"
-                    class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm" (click)="updatereceipt()">
-                    <i class="fa-solid fa-save me-1"></i> บันทึก
-                </button>
-                <button *ngIf="dataAdd.FNRESTATUS==1 || dataAdd.FNRESTATUS==2" type="button"
+                <button  type="button"
                     class="btn btn-danger px-4 fw-bold rounded-pill shadow-sm" (click)="sendemail()">
-                    <i class="fa-solid fa-envelope me-1"></i> ส่งอีเมล
+                    <i class="fa-solid fa-envelope me-1"></i> ส่งกลับแก้ไข
                 </button>
             </div>
         </div>
@@ -752,9 +745,9 @@
                             </div>
                             <div class="d-flex flex-column gap-2 mt-2">
                                 <div class="form-check" *ngFor="let type of datareceipt; let r = index">
-                                    <input class="form-check-input" name="p_radio" id="radio_{{r}}" type="radio"
+                                    <input class="form-check-input" name="p_radio_main" id="radio_main_{{r}}" type="radio"
                                         value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE">
-                                    <label class="form-check-label" for="radio_{{r}}">
+                                    <label class="form-check-label" for="radio_main_{{r}}">
                                         {{type.FNRESTATUS_NAME}}
                                     </label>
                                 </div>

@@ -107,9 +107,10 @@ export class EpschoolLoadComponent implements OnInit {
     fetchdatareport() {
     this.dataNameb = null;
     var varN1 = {
-      "opt": "viewnamereport",
+      "opt": "viewnamereportload",
       "citizen": this.tokenStorage.getUser().citizen,
-      "FACULTY_CODE": this.dataAdd.FACULTY_CODE
+      "FACULTY_CODE": this.dataAdd.FACULTY_CODE,
+      "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS
     }
     this.apiService
       .getdata(varN1, this.url1)

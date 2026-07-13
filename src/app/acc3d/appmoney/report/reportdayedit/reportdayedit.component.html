@@ -1,13 +1,14 @@
 <div class="shadow alert border bg-white mx-4 mt-4" role="alert">
     <div class="row mb-3 align-items-center">
         <div class="col-md-10">
-            <h5 class="fw-bold mb-0 mt-1"><i class="fa-solid fa-pen-to-square me-2 text-primary"></i>แก้ไขรายงานประจำวัน</h5>
+            <h5 class="fw-bold mb-0 mt-1"><i class="fa-solid fa-pen-to-square me-2 text-primary"></i>แก้ไขรายงานประจำวัน
+            </h5>
         </div>
         <div class="col-md-2" align="right">
 
         </div>
     </div>
-    
+
     <div>
         <div class="row">
             <div class="col">
@@ -66,78 +67,85 @@
         <div class="row justify-content-center center-screen" *ngIf="loading">
             <div class="spinner-border " role="status" id="loading"></div>
         </div>
-        <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
-            <thead>
-                <tr class="bg-primary text-white">
-                    <th>
-                        <div align="center">ที่</div>
-                    </th>
-                    <th>
-                        <div align="center">รายงานประจำวันที่</div>
-                    </th>
-                    <th>
-                        <div align="center">ชื่อ-สกุล</div>
-                    </th>
+        <div class="table-responsive-lg">
+            <table width="100%" id="example"
+                class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>
+                            <div align="center">ที่</div>
+                        </th>
+                        <th>
+                            <div align="center">รายงานประจำวันที่</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อ-สกุล</div>
+                        </th>
 
-                    <th>
-                        <div align="center">เลขสัญญา</div>
-                    </th>
-                    <th>
-                        <div align="center">จำนวนเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">ฎีกา</div>
-                    </th>
-                     <th>
-                        <div align="center">รายงาน</div>
-                    </th>
-                    <th>
-                        <div align="center">จัดการข้อมูล</div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+                        <th>
+                            <div align="center">เลขสัญญา</div>
+                        </th>
+                        <th>
+                            <div align="center">จำนวนเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">ฎีกา</div>
+                        </th>
+                        <th>
+                            <div align="center">รายงาน</div>
+                        </th>
+                        <th>
+                            <div align="center">จัดการข้อมูล</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
-                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                    <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
                       itemsPerPage: tableSize,
                       currentPage: page,
                       totalItems: count
                       } ; let i = index">
-                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
-                    <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
-                    <td>{{p.FSTF_FNAME}}
-                        <div *ngIf="p.FNANNALSMAPRDT_NOTE" class="text-danger">
-                            ({{p.FNANNALSMAPRDT_NOTE}})
-                        </div>
+                        <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                        <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
+                        <td>{{p.FSTF_FNAME}}
+                            <div *ngIf="p.FNANNALSMAPRDT_NOTE" class="text-danger">
+                                ({{p.FNANNALSMAPRDT_NOTE}})
+                            </div>
 
-                    </td>
-                    <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
-                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
-                    <td data-label="ฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
-                    <td data-label="รายงาน:" >
-                        <a *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงาน" class="btn btn-success text-white"
-                            (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
-                            </i></a> 
-                            <span *ngIf="p.REPORT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
-                                {{p.REPORT_LINK_pages}}
-                            </span>
-                        </a>
-                    </td>
-                    <td align="center">
-                        <a *ngIf="p.REPORT_LINK" role="button" title="ลงนาม" class="btn btn-info text-white"
-                            (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
-                            </i></a> &nbsp;
-                        <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal" (click)="editdata(p.FNANNALSMAPR_CODE,p.FNANNALSMAP_CODE)"
-                            (click)="setshowbti()"><i class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
-                    </td>
-                </tr>
-                <tr *ngIf="!rownum">
-                    <td colspan="9">ไม่มีข้อมูล{{rownum}}</td>
-                </tr>
-            </tbody>
-        </table>
+                        </td>
+                        <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
+                        <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                        <td data-label="ฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
+                        <td data-label="รายงาน:">
+                            <a *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2"><a role="button"
+                                    title="รายงาน" class="btn btn-success text-white"
+                                    (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
+                                    </i></a>
+                                <span *ngIf="p.REPORT_LINK_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
+                                    {{p.REPORT_LINK_pages}}
+                                </span>
+                            </a>
+                        </td>
+                        <td align="center">
+                            <a *ngIf="p.REPORT_LINK" role="button" title="ลงนาม" class="btn btn-info text-white"
+                                (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
+                                </i></a> &nbsp;
+                            <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                (click)="editdata(p.FNANNALSMAPR_CODE,p.FNANNALSMAP_CODE)" (click)="setshowbti()"><i
+                                    class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!rownum">
+                        <td colspan="9">ไม่มีข้อมูล{{rownum}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="d-flex justify-content-left">
             <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
             </pagination-controls>
@@ -145,10 +153,11 @@
     </div>
 </div>
 <!-- The Modal -->
-<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-l">
         <div class="modal-content">
-           <div class="modal-header bg-primary">
+            <div class="modal-header bg-primary">
                 <h1 class="modal-title fs-5 text-white" id="staticBackdropLabel">รายละเอียด</h1>
                 <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -182,7 +191,7 @@
         </div>
     </div>
 </div>
-    <!-- PDF Preview Side Panel -->
+<!-- PDF Preview Side Panel -->
 <div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
 <div class="pdf-preview-panel" [class.open]="previewPdfUrl">
     <div class="pdf-preview-header bg-primary text-white">

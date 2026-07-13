@@ -129,3 +129,8 @@
     border: none;
   }
 }
+@media (max-width: 991.98px) {
+  .tableFixHead thead {
+    position: static;
+  }
+}

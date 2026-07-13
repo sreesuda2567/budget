@@ -1,13 +1,14 @@
 <div class="shadow alert border bg-white mx-4 mt-4" role="alert">
     <div class="row mb-3 align-items-center">
         <div class="col-md-10">
-            <h5 class="fw-bold mb-0 mt-1"><i class="fa-solid fa-file-invoice me-2 text-primary"></i>เอกสารรายงานประจำวัน</h5>
+            <h5 class="fw-bold mb-0 mt-1"><i class="fa-solid fa-file-invoice me-2 text-primary"></i>เอกสารรายงานประจำวัน
+            </h5>
         </div>
         <div class="col-md-2" align="right">
 
         </div>
     </div>
-    
+
     <div>
         <div class="row">
             <div class="col">
@@ -37,7 +38,7 @@
                                 </div>
                                 <div class="col-md-1 " style="font-size: 10pt">
                                     <select name="y_code" id="y_code" class="form-select"
-                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE" >
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
                                         <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
                                             {{year.PLYEARBUDGET_CODE}}
                                         </option>
@@ -84,66 +85,70 @@
         <div class="row justify-content-center center-screen" *ngIf="loading">
             <div class="spinner-border " role="status" id="loading"></div>
         </div>
+        <div class="table-responsive-lg">
+            <table width="100%" id="example"
+                class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>
+                            <div align="center">ที่</div>
+                        </th>
+                        <th>
+                            <div align="center">รายงานประจำวันที่</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภท</div>
+                        </th>
 
-        <table width="100%" id="example" class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
-            <thead>
-                <tr class="bg-primary text-white">
-                    <th>
-                        <div align="center">ที่</div>
-                    </th>
-                    <th>
-                        <div align="center">รายงานประจำวันที่</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภท</div>
-                    </th>
+                        <th>
+                            <div align="center">ผู้ส่งรายงาน</div>
+                        </th>
 
-                    <th>
-                        <div align="center">ผู้ส่งรายงาน</div>
-                    </th>
+                        <th>
+                            <div align="center">จำนวนเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">เลขฎีกา</div>
+                        </th>
+                        <th>
+                            <div align="center">รายงาน</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
-                    <th>
-                        <div align="center">จำนวนเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">เลขฎีกา</div>
-                    </th>
-                    <th>
-                        <div align="center">รายงาน</div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
-
-                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                    <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
                       itemsPerPage: tableSize,
                       currentPage: page,
                       totalItems: count
                       } ; let i = index">
-                    <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
-                    <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
-                    <td>{{p.FSTF_FNAME}}</td>
-                    <td>{{p.FNANNALSMAPR_NAME}}</td>
-                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number :
-                        '1.2-2'}}</td>
-                    <td align="center" data-label="เลขฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
-                    <td align="center">
-                        <span *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2">
-                            <a role="button" title="รายงาน" class="btn btn-success text-white"
-                                (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
-                                </i></a>
-                            <span *ngIf="p.REPORT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
-                                {{p.REPORT_LINK_pages}}
+                        <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
+                        <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
+                        <td>{{p.FSTF_FNAME}}</td>
+                        <td>{{p.FNANNALSMAPR_NAME}}</td>
+                        <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number :
+                            '1.2-2'}}</td>
+                        <td align="center" data-label="เลขฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
+                        <td align="center">
+                            <span *ngIf="p.REPORT_LINK" class="position-relative d-inline-block me-2">
+                                <a role="button" title="รายงาน" class="btn btn-success text-white"
+                                    (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
+                                    </i></a>
+                                <span *ngIf="p.REPORT_LINK_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
+                                    {{p.REPORT_LINK_pages}}
+                                </span>
                             </span>
-                        </span>
-                    </td>
-                </tr>
-                <tr *ngIf="!rownum">
-                    <td colspan="10">ไม่มีข้อมูล{{rownum}}</td>
-                </tr>
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!rownum">
+                        <td colspan="10">ไม่มีข้อมูล{{rownum}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="d-flex justify-content-left">
             <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
             </pagination-controls>
@@ -151,7 +156,8 @@
     </div>
 </div>
 <!-- The Modal -->
-<div class="modal fade" data-bs-focus="false" id="exampleModalshow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="exampleModalshow" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -185,10 +191,13 @@
 
                             </td>
                             <td align="center">
-                                <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><a role="button" title="รายงานวันจ่าย"
-                                        class="btn btn-success text-white" href="{{p.CONTRACT_LINK}}" target="_blank"><i
+                                <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><a
+                                        role="button" title="รายงานวันจ่าย" class="btn btn-success text-white"
+                                        href="{{p.CONTRACT_LINK}}" target="_blank"><i
                                             class="fa-solid fa-file-contract"></i></a>
-                                    <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
+                                    <span *ngIf="p.CONTRACT_LINK_pages"
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                        style="font-size: 0.65rem; z-index: 10;">
                                         {{p.CONTRACT_LINK_pages}}
                                     </span>
                                 </span>
@@ -206,8 +215,8 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" data-bs-focus="false" id="modalEdit" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-primary">

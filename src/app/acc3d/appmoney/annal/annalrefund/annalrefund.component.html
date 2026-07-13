@@ -4,7 +4,7 @@
             <h5 class="fw-bold"><i class="fa-solid fa-hand-holding-dollar me-2 text-primary"></i>ชดใช้ใบสำคัญ</h5>
         </div>
     </div>
-    
+
     <div>
         <div class="shadow alert alert-info" role="alert">
             <div class="row">
@@ -88,79 +88,83 @@
                 </div>
             </div>
         </div>
-        <table width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
-            <thead>
-                <tr class="bg-primary text-white">
-                    <th>
-                        <div align="center">ที่</div>
-                    </th>
-                    <th>
-                        <div align="center">วันที่ดำเนินการ</div>
-                    </th>
-                    <th>
-                        <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
-                    </th>
-                    <th>
-                        <div align="center">หน่วยงาน</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภทเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">ประเภท</div>
-                    </th>
-                    <th>
-                        <div align="center">เลขสัญญา</div>
-                    </th>
-                    <th>
-                        <div align="center">จำนวนเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">เลขฎีกา</div>
-                    </th>
-                    <th>
-                        <div align="center">วันที่จ่ายเงิน</div>
-                    </th>
-                    <th>
-                        <div align="center">รายงาน</div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+        <div class="table-responsive-lg">
+            <table width="100%" id="example" class="shadow table table-bordered  table-striped table-hover">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>
+                            <div align="center">ที่</div>
+                        </th>
+                        <th>
+                            <div align="center">วันที่ดำเนินการ</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อ-สกุลผู้ทำรายการ</div>
+                        </th>
+                        <th>
+                            <div align="center">หน่วยงาน</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภทเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภท</div>
+                        </th>
+                        <th>
+                            <div align="center">เลขสัญญา</div>
+                        </th>
+                        <th>
+                            <div align="center">จำนวนเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">เลขฎีกา</div>
+                        </th>
+                        <th>
+                            <div align="center">วันที่จ่ายเงิน</div>
+                        </th>
+                        <th>
+                            <div align="center">รายงาน</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
-                <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                    <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
                       itemsPerPage: tableSize,
                       currentPage: page,
                       totalItems: count
                       } ; let i = index">
-                    <td align="center" data-label="ที่:">{{i+1}}</td>
-                    <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
-                    <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
-                    <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
-                    <td data-label="ชื่อเรื่อง:">{{p.FNANNALS_BOOK_SUB}}</td>
-                    <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
-                    <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
-                    <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
-                    <td data-label="วันที่จ่ายเงิน:">{{p.FNEXPENSES_DEKA}}</td>
-                    <td data-label="เลขฎีกา:">{{p.datektb}}</td>
-                    <td data-label="รายงาน:">
+                        <td align="center" data-label="ที่:">{{i+1}}</td>
+                        <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
+                        <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
+                        <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
+                        <td data-label="ชื่อเรื่อง:">{{p.FNANNALS_BOOK_SUB}}</td>
+                        <td data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
+                        <td data-label="เลขสัญญา:">{{p.FNANNALS_NUMBER}}</td>
+                        <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}}</td>
+                        <td data-label="วันที่จ่ายเงิน:">{{p.FNEXPENSES_DEKA}}</td>
+                        <td data-label="เลขฎีกา:">{{p.datektb}}</td>
+                        <td data-label="รายงาน:">
 
-                        <span *ngIf="p.load3df" class="position-relative d-inline-block me-2"><a role="button" title="รายงานใบปะหน้าจ่าย"
-                                class="btn btn-success text-white" (click)="previewPdf(p.load3df)"><i
-                                    class="fa-solid fa-file-contract"></i></a>
-                            <span *ngIf="p.load3df_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
-                                {{p.load3df_pages}}
+                            <span *ngIf="p.load3df" class="position-relative d-inline-block me-2"><a role="button"
+                                    title="รายงานใบปะหน้าจ่าย" class="btn btn-success text-white"
+                                    (click)="previewPdf(p.load3df)"><i class="fa-solid fa-file-contract"></i></a>
+                                <span *ngIf="p.load3df_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
+                                    {{p.load3df_pages}}
+                                </span>
                             </span>
-                        </span>
-                    </td>
+                        </td>
 
-                </tr>
-                <tr *ngIf="!rownum">
-                    <td colspan="11">ไม่มีข้อมูล{{rownum}}</td>
-                </tr>
-            </tbody>
-        </table>
+                    </tr>
+                    <tr *ngIf="!rownum">
+                        <td colspan="11">ไม่มีข้อมูล{{rownum}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="d-flex justify-content-left">
             <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
             </pagination-controls>
