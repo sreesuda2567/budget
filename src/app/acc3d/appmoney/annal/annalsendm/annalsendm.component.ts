@@ -473,8 +473,9 @@ export class AnnalsendmComponent implements OnInit {
 
     }
   }
-   async sendfile(id: any, link: any, link3: any) {
+   async sendfile(id: any,id2: any, link: any, link3: any) {
         this.dataAdd.FNANNALSMAP_CODE = id;
+        this.dataAdd.FNANNALSMAP_CODE1 = id2;
       //  this.editdata(id);
         this.dataAdd.link2 = link;
         this.dataAdd.link3 = link3;
@@ -514,7 +515,7 @@ export class AnnalsendmComponent implements OnInit {
               const user = this.tokenStorage.getUser();
 
               // 5. อัปโหลดไฟล์ที่รวมแล้ว (ใช้ code 81 แบบเดียวกับการแนบไฟล์)
-              this.Uploadfiles.uploadcontract(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '81')
+              this.Uploadfiles.uploadcontract(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id2, user.citizen, '81')
                 .subscribe((event: any) => {
                   if (event.type == 4) {
                      // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ

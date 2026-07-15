@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
     const key = this.tokenStorage.getVersion();
     this.getPermiss();
     if(this.user){
-      this.get_massage(this.user.citizen);
+     // this.get_massage(this.user.citizen);
       this.fetchdata();
     }
   }
@@ -73,31 +73,7 @@ export class HomeComponent implements OnInit {
 });
   }
 
-  saveLog() {
-    let param = {'TIMEENT_EPASSPORT' :this.user.username,'TIMEENT_LOG_TYPE':'1','TIMEENT_LOG_NOTE':''};
-    //console.log(this.param);
-    this.apiService.getdata('/app-service/timeent/log.php','save_log','timeent_rec','',param)
-        .pipe(first())
-        .subscribe((data: any) => {
-           // console.log(data.status);
-    });
-  }
 
-get_massage(otp:any) {
- // console.log(otp);
-  let param:any={MASSAGE_CITIZEN:otp};
-  this.apiService.getdata('/app-service/massagebox/inbox.php', 'get_data', 'count_massage', '', param)
-      .pipe(first())
-      .subscribe((data: any) => {
-          //console.log(data.data[0]);
-          if (data.status == 'ok') {
-              this.count_mms = data.data[0].count_mms;
-              if (data.data[0].count_mms == 0) this.count_mms = null;
-          } else {
-              this.count_mms = null;
-          }
-      });
-}
 golinkeis() {
 
   //  console.log(this.tokenStorage.getUser().token.data.token);
