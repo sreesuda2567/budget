@@ -22,7 +22,7 @@ import { PdfAnnotatorModalComponent } from 'pdf-annotator';
   styleUrls: ['./reportamend.component.scss']
 })
 export class ReportamendComponent implements OnInit {
-title = 'angular-app';
+  title = 'angular-app';
   fileName = 'report.xlsx';
   userList = [{}]
 
@@ -48,14 +48,14 @@ title = 'angular-app';
   count = 0;
   number = 0;
   tableSize = 20;
-  tableSizes = [20, 30,40,100,200];
+  tableSizes = [20, 30, 40, 100, 200];
   rowpbi: any;
   rowpbu: any;
   file: any;
-    previewPdfUrl: string = '';
+  previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   constructor(
-     private tokenStorage: TokenStorageService,
+    private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -75,7 +75,7 @@ title = 'angular-app';
     this.fetchdata();
     this.dataAdd.DATENOWT = new Date();
   }
-fetchdata() {
+  fetchdata() {
     var varN = {
       "opt": "viewufac",
       "citizen": this.tokenStorage.getUser().citizen
@@ -191,10 +191,10 @@ fetchdata() {
   setshowbti() {
     this.dataAdd.FNANNALSMAPR_CODE = '';
     this.dataAdd.FNANNALSMAPR_CODE = '';
-    this.dataAdd.EBOOKREQ_LINK= '';
+    this.dataAdd.EBOOKREQ_LINK = '';
 
   }
-  
+
   //แก้ไขข้อมูล
   updatedata() {
 
@@ -227,7 +227,7 @@ fetchdata() {
     this.rowpbu = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any,id2: any) {
+  editdata(id: any, id2: any) {
     this.setshowbti();
     this.dataAdd.FNANNALSMAPR_CODE = id;
     this.dataAdd.FNANNALSMAP_CODE = id2;
@@ -242,14 +242,14 @@ fetchdata() {
     this.page = 1;
     this.fetchdatalist();
   }
-    previewPdf(url: string) {
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
-  } 
+  }
   async openPdfAnnotator(p: any) {
     const cacheBuster = new Date().getTime();
     const reportLink = p.REPORT_LINK + (p.REPORT_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
@@ -270,17 +270,26 @@ fetchdata() {
     if (data && data.saved && data.blob) {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-             
-          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '86')
-            .subscribe((event: any) => {
-              if (event.type == 4) { // HttpEventType.Response
-                 this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
-                 this.fetchdatalist();
-              }
-            });
-    
+
+      this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '86')
+        .subscribe((event: any) => {
+          if (event.type == 4) { // HttpEventType.Response
+            this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
+            this.dataAdd.FNANNALSMAP_CODE = p.FNANNALSMAP_CODE;
+            this.dataAdd.opt = "update";
+            this.apiService
+              .getupdate(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                //console.log(data.status);       
+
+              });
+            this.fetchdatalist();
+          }
+        });
+
     }
-  } 
+  }
 
   async countPdfPages(url: string, item: any, propertyName: string) {
     if (!url) return;

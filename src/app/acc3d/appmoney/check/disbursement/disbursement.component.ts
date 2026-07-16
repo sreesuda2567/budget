@@ -595,7 +595,7 @@ export class DisbursementComponent implements OnInit {
       .subscribe((data: any) => {
         //console.log(data.status);       
         if (data.status == 1) {
-          this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '57')
+          this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '57')
             .subscribe((event: any) => {
               // 
               if (event.type == 4) {

@@ -12,6 +12,8 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'pdf-annotator';
 
 defineLocale('th', thBeLocale);
 import Swal from 'sweetalert2';
@@ -69,7 +71,8 @@ export class FinancecheckComponent implements OnInit {
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
     private sanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private modalCtrl: ModalController,
   ) { }
 
   ngOnInit(): void {
@@ -655,4 +658,37 @@ export class FinancecheckComponent implements OnInit {
       console.error('Error counting PDF pages for URL:', url, error);
     }
   }
+   async openPdfAnnotator(p: any) {
+          console.log(p.EBOOKREQ_LINK);
+        const cacheBuster = new Date().getTime();
+        const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+        const user = this.tokenStorage.getUser();
+    
+        const modal = await this.modalCtrl.create({
+          component: PdfAnnotatorModalComponent,
+          componentProps: {
+            pdfUrl: reportLink,
+            userId: user.citizen,
+            userName: user.fullname || user.username
+          },
+          cssClass: 'pdf-modal-right-side'
+        });
+        await modal.present();
+    
+        const { data } = await modal.onDidDismiss();
+        if (data && data.saved && data.blob) {
+          // Create a File object from the blob
+          const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+          
+          this.file = file;
+          this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+          
+          const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+          if (fileInput) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+          }
+        }
+      }
 }

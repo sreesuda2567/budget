@@ -391,21 +391,22 @@
 
                             <div class="col-md-3 d-flex flex-column justify-content-end pb-1"
                                 *ngIf="dataAdd.EBOOKREQ_LINK">
-                                <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">&nbsp;</label>
-                                <a href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank"
-                                    class="btn btn-outline-success rounded-pill w-100 fw-bold border-2">
-                                    <i class="fa-solid fa-file-pdf me-1"></i> ดูไฟล์แนบ
+                                <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">ลงนาม</label>
+                                <a (click)="openPdfAnnotator(dataAdd)"
+                                    class="btn btn-outline-info rounded-pill w-100 fw-bold border-2 cursor-pointer"
+                                    style="cursor: pointer;">
+                                    <i class="fa-solid fa-file-pen me-1"></i> ลงนาม
                                 </a>
                             </div>
 
                             <div class="col-md-12 mt-4">
                                 <div class="bg-light p-3 rounded-3 border">
                                     <div class="form-check mb-2" *ngFor="let type of datareceipt">
-                                        <input class="form-check-input" name="p_radio" type="radio"
-                                            value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE"
-                                            [id]="'radio_'+type.FNRESTATUS_CODE">
+                                        <input class="form-check-input" name="p_radio_update" type="radio"
+                                            [value]="type.FNRESTATUS_CODE" [(ngModel)]="dataAdd.FNRESTATUS_CODE"
+                                            [id]="'radio_update_'+type.FNRESTATUS_CODE" style="cursor: pointer;">
                                         <label class="form-check-label fw-bold text-secondary ms-2"
-                                            [for]="'radio_'+type.FNRESTATUS_CODE">
+                                            [for]="'radio_update_'+type.FNRESTATUS_CODE" style="cursor: pointer;">
                                             {{type.FNRESTATUS_NAME}}
                                         </label>
                                     </div>
@@ -506,9 +507,13 @@
                     <div class="form-group col-md-12">
                         <div class="row" *ngFor="let type of datareceipt">
                             <div class="form-group col-md-12">
-                                <input class="form-check-input filled-in" name="p_radio2" id="radio2" type="radio"
-                                    value="{{type.FNRESTATUS_CODE}}" [(ngModel)]="dataAdd.FNRESTATUS_CODE">
-                                {{type.FNRESTATUS_NAME}}
+                                <div class="form-check">
+                                    <input class="form-check-input filled-in" name="p_radio_edit" [id]="'radio_edit_'+type.FNRESTATUS_CODE" type="radio"
+                                        [value]="type.FNRESTATUS_CODE" [(ngModel)]="dataAdd.FNRESTATUS_CODE" style="cursor: pointer;">
+                                    <label class="form-check-label" [for]="'radio_edit_'+type.FNRESTATUS_CODE" style="cursor: pointer;">
+                                        {{type.FNRESTATUS_NAME}}
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
@@ -588,7 +593,7 @@
                                 </select>
                             </div>
 
-                            <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='2' ||dataAdd.PRIVILEGE_RSTATUS=='A'"
+                            <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='2'  || dataAdd.PRIVILEGE_RSTATUS=='3' ||dataAdd.PRIVILEGE_RSTATUS=='A'"
                                 class="col-md-4">
                                 <label class="form-label fw-bold text-secondary mb-2"><i
                                         class="fa-solid fa-building me-1"></i>หน่วยเบิกจ่าย</label>
@@ -652,7 +657,7 @@
                                 </select>
                             </div>
 
-                            <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='2' ||dataAdd.PRIVILEGE_RSTATUS=='A'"
+                            <div *ngIf="dataAdd.PRIVILEGE_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='2' || dataAdd.PRIVILEGE_RSTATUS=='3' ||dataAdd.PRIVILEGE_RSTATUS=='A'"
                                 class="col-md-3">
                                 <label class="form-label fw-bold text-secondary mb-2"><i
                                         class="fa-solid fa-signature me-1"></i>ลงนามคนที่ 4</label>

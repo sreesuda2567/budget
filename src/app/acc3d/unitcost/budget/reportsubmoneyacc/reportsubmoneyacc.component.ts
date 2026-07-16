@@ -268,7 +268,7 @@ export class ReportsubmoneyaccComponent implements OnInit {
 
           this.loading = null;
           this.rownum = 1;
-          this.fetchdataSubplmoneypay();
+         // this.fetchdataSubplmoneypay();
           //this.showdata();  
           let omoney = 0; let amoney = 0; let cmoney = 0; let rmoney = 0;
           for (let i = 0; i < this.datalist.length; i++) {
