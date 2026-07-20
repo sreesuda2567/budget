@@ -215,19 +215,27 @@
             <div class="row g-4">
               
               <div class="col-md-6">
-                <label for="name" class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-stamp me-1"></i>สถานะการอนุมัติ</label>
-                <select name="PRSTATUS_CODE" id="PRSTATUS_CODE" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PRSTATUS_CODE">
-                  <option [value]="status.PRSTATUS_CODE" *ngFor="let status of datastatus">
-                    {{status.PRSTATUS_NAME}}</option>
-                </select>
+                <label for="name" class="form-label fw-bold text-secondary mb-2 d-block"><i class="fa-solid fa-stamp me-1"></i>สถานะการอนุมัติ</label>
+                <div class="form-check form-check-inline mt-1" *ngFor="let status of datastatus; let i = index">
+                  <input class="form-check-input" type="radio" name="PRSTATUS_CODE" [id]="'PRSTATUS_CODE_' + i" [value]="status.PRSTATUS_CODE" [(ngModel)]="dataAdd.PRSTATUS_CODE">
+                  <label class="form-check-label" [for]="'PRSTATUS_CODE_' + i">
+                    {{status.PRSTATUS_NAME}}
+                  </label>
+                </div>
               </div>
               
               <div class="col-md-6">
-                <label for="name" class="form-label fw-bold text-secondary mb-2"><i class="fa-solid fa-list-check me-1"></i>สถานะ</label>
-                <select name="y_code" id="y_code" class="form-select form-select-lg fs-6" [(ngModel)]="dataAdd.PRASSET_PSTATUS">
-                  <option [value]="0">อยู่ในแผน</option>
-                  <option [value]="1">ไม่อยู่ในแผน</option>
-                </select>
+                <label for="name" class="form-label fw-bold text-secondary mb-2 d-block"><i class="fa-solid fa-list-check me-1"></i>สถานะ</label>
+                <div class="mt-1">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="PRASSET_PSTATUS" id="PRASSET_PSTATUS_0" value="0" [(ngModel)]="dataAdd.PRASSET_PSTATUS">
+                    <label class="form-check-label" for="PRASSET_PSTATUS_0">อยู่ในแผน</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="PRASSET_PSTATUS" id="PRASSET_PSTATUS_1" value="1" [(ngModel)]="dataAdd.PRASSET_PSTATUS">
+                    <label class="form-check-label" for="PRASSET_PSTATUS_1">ไม่อยู่ในแผน</label>
+                  </div>
+                </div>
               </div>
               
               <div class="col-md-12">

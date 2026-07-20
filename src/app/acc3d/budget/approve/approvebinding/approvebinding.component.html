@@ -293,7 +293,7 @@
                       class="fa-solid fa-calendar-check text-primary me-1"></i>วันที่ผูกพัน/ผ่านรายการเบิก</label>
                   <div class="input-group">
                     <input name="FNEXPENSES_MDATE" id="FNEXPENSES_MDATE" type="text" class="form-control bg-white"
-                      bsDatepicker #dp1="bsDatepicker" placeholder="ดด/วว/ปปปป" [(ngModel)]="dataFAdd.FNEXPENSES_CMDATE"
+                      bsDatepicker container="body" placement="top" #dp1="bsDatepicker" placeholder="ดด/วว/ปปปป" [(ngModel)]="dataFAdd.FNEXPENSES_CMDATE"
                       readonly>
                     <span class="input-group-text bg-white" style="cursor: pointer;" (click)="dp1.toggle()"><i
                         class="fa-solid fa-calendar-days text-primary"></i></span>
@@ -312,7 +312,7 @@
                       class="fa-solid fa-calendar-plus text-primary me-1"></i>วันที่ผ่านรายการสั่งซื้อ/จ้าง</label>
                   <div class="input-group">
                     <input name="FNEXPENSES_PDATE" id="FNEXPENSES_PDATE" type="text" class="form-control bg-white"
-                      bsDatepicker #dp2="bsDatepicker" placeholder="ดด/วว/ปปปป" [(ngModel)]="dataFAdd.FNEXPENSES_PDATE">
+                      bsDatepicker container="body" placement="top" #dp2="bsDatepicker" placeholder="ดด/วว/ปปปป" [(ngModel)]="dataFAdd.FNEXPENSES_PDATE">
                     <span class="input-group-text bg-white" style="cursor: pointer;" (click)="dp2.toggle()"><i
                         class="fa-solid fa-calendar-days text-primary"></i></span>
                   </div>
@@ -322,7 +322,7 @@
                       class="fa-solid fa-calendar-check text-primary me-1"></i>วันที่ตรวจรับ</label>
                   <div class="input-group">
                     <input name="FNEXPENSES_PODATE" id="FNEXPENSES_PODATE" type="text" class="form-control bg-white"
-                      bsDatepicker #dp3="bsDatepicker" placeholder="ดด/วว/ปปปป"
+                      bsDatepicker container="body" placement="top" #dp3="bsDatepicker" placeholder="ดด/วว/ปปปป"
                       [(ngModel)]="dataFAdd.FNEXPENSES_AODATE">
                     <span class="input-group-text bg-white" style="cursor: pointer;" (click)="dp3.toggle()"><i
                         class="fa-solid fa-calendar-days text-primary"></i></span>
@@ -402,7 +402,7 @@
                       <td class="py-2">
                         <div class="input-group">
                           <input placeholder="ดด/วว/ปปปป" type="text" name="FNEXACC_DATE_{{i}}" id="FNEXACC_DATE_{{i}}"
-                            class="form-control bg-white" bsDatepicker #dp4="bsDatepicker"
+                            class="form-control bg-white" bsDatepicker container="body" placement="top" #dp4="bsDatepicker"
                             [(ngModel)]="dataFAdd.FNEXACC_DATE[i]" readonly>
                           <span class="input-group-text bg-white" style="cursor: pointer;" (click)="dp4.toggle()"><i
                               class="fa fa-calendar text-primary"></i></span>

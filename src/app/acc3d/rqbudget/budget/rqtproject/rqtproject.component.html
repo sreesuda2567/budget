@@ -154,7 +154,7 @@
                   ||  (dataAdd.PRIVILEGE_RSTATUS=='2' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='2' || p.PLPROJECT_RSTATUS=='3'))"
                       role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
                       (click)="deleteData(p.PRPLPROJECT_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
-                    <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3' || (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID))  || dataAdd.PRIVILEGE_RSTATUS=='A'
+                    <a *ngIf="((p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='3'  || p.PLPROJECT_RSTATUS=='3' || (p.PLPROJECT_RSTATUS=='7' && p.PRPLPROJECT_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID))  || dataAdd.PRIVILEGE_RSTATUS=='A'
                     ||  (dataAdd.PRIVILEGE_RSTATUS=='2' && (p.PLPROJECT_RSTATUS=='0' || p.PLPROJECT_RSTATUS=='1' || p.PLPROJECT_RSTATUS=='2' || p.PLPROJECT_RSTATUS=='3'))"
                       role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
                       class="btn btn-warning text-white" (click)="editdata(p.PRPLPROJECT_CODE)"><i

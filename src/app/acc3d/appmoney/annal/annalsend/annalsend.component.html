@@ -84,6 +84,12 @@
                         <div align="center">จำนวนเงิน</div>
                     </th>
                     <th>
+                        <div align="center">เลขฎีกา</div>
+                    </th>
+                    <th>
+                        <div align="center">วันที่จ่ายเงิน</div>
+                    </th>
+                    <th>
                         <div align="center">สถานะ</div>
                     </th>
                     <th>
@@ -103,7 +109,9 @@
                     <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
                     <td>{{p.FNANNALSMAPR_NAME}}</td>
                      <td align="center" data-label="จำนวนเงิน:">{{p.FNANNALS_MONEYC| number : '1.2-2'}}</td>
-                    <td>{{p.FNANNALSM_TNAME}}</td>
+                    <td>{{p.FNANNALSMAP_DEKA}}</td>
+                    <td>{{p.FNANNALSMAP_DATEK}}</td>
+                     <td>{{p.FNANNALSM_TNAME}}</td>
                     <td align="center">
                         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
@@ -137,7 +145,7 @@
                     </td>
                 </tr>
                 <tr *ngIf="!rownum">
-                    <td colspan="6">ไม่มีข้อมูล{{rownum}}</td>
+                    <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
                 </tr>
             </tbody>
         </table>
