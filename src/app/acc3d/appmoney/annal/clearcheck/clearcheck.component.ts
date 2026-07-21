@@ -254,14 +254,17 @@ export class ClearcheckComponent implements OnInit {
   setshowbti() {
     this.dataAdd.EBOOKREQ_FILE = '';
     this.dataAdd.FNANNALS_MONEYC= '';
+    this.dataAdd.USERNAME_CISCO= '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, link: any, money: any) {
+  editdata(id: any, link: any, money: any, mail: any) {
     this.setshowbti();
     this.fetchdatareport();
     this.dataAdd.FNANNALS_CODE = id;
     this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
+    this.dataAdd.USERNAME_CISCO = mail;
+    this.dataAdd.FNEXACCTD_NOTE = '';
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไขFNANNALSMAP_CODE
@@ -342,6 +345,25 @@ export class ClearcheckComponent implements OnInit {
           document.getElementById("ModalClose")?.click();
         }
       });
+  }
+  //ส่งอีเมลสถานะใบเสร็จ
+  sendemail() {
+    if (this.dataAdd.FNEXACCTD_NOTE == '') {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกหมายเหตุ");
+    } else {
+
+      this.dataAdd.opt = "sendemailRE";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.toastr.success("แจ้งเตือน:ส่งอีเมลเรียบร้อยแล้ว");
+          document.getElementById("ModalClosemail")?.click();
+          this.fetchdatalist();
+        });
+
+    }
+
   }
            // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {

@@ -297,14 +297,12 @@
                             [(ngModel)]="dataAdd.EBOOKREQ_FILE" accept="application/pdf" />
 
                     </div>
-                    <div class="col-md-2">
-                        <label for="name" *ngIf="dataAdd.EBOOKREQ_LINK">ลงนาม
-                        </label>
-                        <br>
-                        <a *ngIf="dataAdd.EBOOKREQ_LINK" (click)="openPdfAnnotator(dataAdd)"><i
-                                class="fa-solid fa-file-pen" style="color: rgb(66, 195, 238); font-size: 30px;cursor:pointer;"></i></a>
-                        &nbsp;
-                    </div>
+                    <div class="col-md-2 d-flex flex-column justify-content-end pb-1" *ngIf="dataAdd.EBOOKREQ_LINK">
+                                <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">ลงนาม</label>
+                                <a (click)="openPdfAnnotator(dataAdd)" class="btn btn-outline-info rounded-pill w-100 fw-bold border-2 cursor-pointer" style="cursor: pointer;">
+                                    <i class="fa-solid fa-file-pen me-1"></i> ลงนาม
+                                </a>
+                            </div>
                     <div class="form-group col-md-1"></div>
 
 

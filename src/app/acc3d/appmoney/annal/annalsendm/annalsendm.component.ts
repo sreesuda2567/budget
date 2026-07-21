@@ -344,7 +344,7 @@ export class AnnalsendmComponent implements OnInit {
     // console.log(this.dataAdd.FNANNALSMAP_CODE1);
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapr(id: any,id1: any, id2: any, money: any, mail: any, at: any, name: any, mail2: any) {
+  editdatapr(id: any,id1: any, id2: any, money: any, mail: any, at: any, name: any, mail2: any, linkclear?: any, linkclear_pages?: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -358,6 +358,8 @@ export class AnnalsendmComponent implements OnInit {
     this.dataAdd.FNANNALS_BOOK_AT = at;
     this.dataAdd.FSTF_FNAME = name;
     this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
+    this.dataAdd.linkclear = linkclear;
+    this.dataAdd.linkclear_pages = linkclear_pages;
     this.rowpbi = true;
     // console.log(this.dataAdd.FNANNALSMAP_CODE1);
     this.apiService

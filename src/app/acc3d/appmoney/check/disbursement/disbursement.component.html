@@ -399,12 +399,12 @@
                                     (change)="onChangepdf($event)" [(ngModel)]="dataAdd.EBOOKREQ_FILE"
                                     accept="application/pdf" />
                             </div>
-                            <div class="col-md-3">
-                                <label class="form-label fw-bold text-secondary mb-2" *ngIf="dataAdd.EBOOKREQ_LINK"><i
-                                        class="fa-solid fa-file-pdf me-1"></i>ไฟล์</label>
-                                <br>
-                                <a *ngIf="dataAdd.EBOOKREQ_LINK" href="{{dataAdd.EBOOKREQ_LINK}}" target="_blank">
-                                    <i class="fa-solid fa-file-pdf" style="color: green; font-size: 30px;"></i>
+                             <div class="col-md-3 d-flex flex-column justify-content-end pb-1"
+                                *ngIf="dataAdd.EBOOKREQ_LINK">
+                                <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">ไฟล์</label>
+                                <a (click)="openPdfAnnotator1(dataAdd)"
+                                    class="btn btn-outline-info rounded-pill w-100 fw-bold border-2">
+                                    <i class="fa-solid fa-file-pen me-1"></i> ลงนามเอกสาร
                                 </a>
                             </div>
 
@@ -504,7 +504,7 @@
         <div class="modal-content shadow-lg border-0 rounded-3">
             <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
                 <h5 class="modal-title fw-bold" id="staticBackdropLabel"><i
-                        class="fa-solid fa-file-invoice me-2"></i>สถานะใบเสร็จ</h5>
+                        class="fa-solid fa-file-invoice me-2"></i>ส่งคืนเอกสารผู้ขอเบิก</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>

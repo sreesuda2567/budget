@@ -33,7 +33,7 @@
                                 <div class="col-md-4 text-secondary">
                                     <label for="name">คณะ /หน่วยงาน</label>
                                     <select name="f_code" id="f_code" class="form-select"
-                                        [(ngModel)]="dataAdd.FACULTY_CODE">
+                                        [(ngModel)]="dataAdd.FACULTY_CODE" (change)=" fetchdatalist()">
                                         <option *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" value="">ทั้งหมด</option>
                                         <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
                                             {{fac.FACULTY_TNAME}}</option>
@@ -116,15 +116,15 @@
                         <th>
                             <div align="center">เลขสัญญา</div>
                         </th>
-                        <th>
+                        <!--   <th>
                             <div align="center">วันที่ครบกำหนด</div>
                         </th>
-                        <th>
+                    <th>
                             <div align="center">ฝากธนาคาร</div>
                         </th>
                         <th>
                             <div align="center">ล้างลูกหนี้</div>
-                        </th>
+                        </th>--> 
                         <th>
                             <div align="center">ใบสำคัญ</div>
                         </th>
@@ -151,11 +151,15 @@
                         <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
                         <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
                         <td data-label="ประเภทเงิน:">{{p.FNANNALS_BOOK_SUB}}</td>
-                        <td align="center" data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}</td>
-                        <td data-label="เลขสัญญา:">{{p.FNALLBW_CTNO}}</td>
-                        <td data-label="วันที่ครบกำหนด:">{{p.FNANNALSMAP_DATEDU1}}</td>
-                        <td align="right">{{p.FNLISTBW_CASH_M| number : '1.2-2'}} </td>
-                        <td align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}} </td>
+                        <td align="center" data-label="ประเภท:">{{p.FNTYPESUBJECT_NAME}}
+                            <br>{{p.FNANNALSMAP_DATEDU1}}
+                        </td>
+                        <td data-label="เลขสัญญา:">{{p.FNALLBW_CTNO}}
+                            
+                        </td>
+                     <!--   <td data-label="วันที่ครบกำหนด:">{{p.FNANNALSMAP_DATEDU1}}</td>
+                         <td align="right">{{p.FNLISTBW_CASH_M| number : '1.2-2'}} </td>
+                        <td align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}} </td>-->
                         <td align="right">{{p.FNLISTBW_VOUC_M| number : '1.2-2'}} </td>
                         <td data-label="รายงาน:">
 
@@ -175,9 +179,13 @@
 
                         </td>
                         <td align="center" data-label="เลือก:">
+                            <button type="submit" class="btn btn-danger" id="submitinsert" data-bs-toggle="modal"
+                                data-bs-target="#modalEditreceipt"
+                                (click)="editdata(p.FNANNALS_CODE,p.linkclear,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO)"><i
+                                    class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ส่งคืน</button>&nbsp;
                             <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                                 data-bs-target="#exampleModalupdate"
-                                (click)="editdata(p.FNANNALS_CODE,p.linkclear,p.FNLISTBW_VOUC_M)"><i
+                                (click)="editdata(p.FNANNALS_CODE,p.linkclear,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO)"><i
                                     class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
                         </td>
                     </tr>
@@ -315,7 +323,7 @@
 
                             <div class="col-md-3 d-flex flex-column justify-content-end pb-1"
                                 *ngIf="dataAdd.EBOOKREQ_LINK">
-                                <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">ไฟล์</label>
+                                <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">ลงนาม</label>
                                 <a (click)="openPdfAnnotator(dataAdd)"
                                     class="btn btn-outline-info rounded-pill w-100 fw-bold border-2">
                                     <i class="fa-solid fa-file-pen me-1"></i> ลงนามเอกสาร
@@ -337,6 +345,46 @@
                 <button *ngIf="rowpbu" type="button" class="btn btn-primary px-4 fw-bold rounded-pill shadow-sm"
                     (click)="updatedata()">
                     <i class="fa-solid fa-save me-1"></i> แก้ไขข้อมูล
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" data-bs-focus="false" id="modalEditreceipt" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content shadow-lg border-0 rounded-3">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+                <h5 class="modal-title fw-bold" id="staticBackdropLabel"><i
+                        class="fa-solid fa-file-invoice me-2"></i>ส่งคืนเอกสารผู้ยืมเงิน</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 bg-light">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body bg-white rounded-3 p-4">
+                        <div class="row g-4">
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-comment-dots me-1"></i>หมายเหตุ</label>
+                                <textarea id="FNEXACCTD_NOTE" name="FNEXACCTD_NOTE" [(ngModel)]="dataAdd.FNEXACCTD_NOTE"
+                                    rows="4" class="form-control bg-light border-0"
+                                    placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
+                <button id="ModalClosemail" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+                    data-bs-dismiss="modal">
+                    <i class="fa-solid fa-times me-1"></i> ปิด
+                </button>
+                <button  type="button"
+                    class="btn btn-danger px-4 fw-bold rounded-pill shadow-sm" (click)="sendemail()">
+                    <i class="fa-solid fa-envelope me-1"></i> ส่งกลับแก้ไข
                 </button>
             </div>
         </div>

@@ -212,7 +212,7 @@ export class ClearchecktComponent implements OnInit {
           // Count pages for PDFs
           if (this.datalist && this.datalist.length > 0) {
             this.datalist.forEach((p: any) => {
-              if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
+            //  if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
               if (p.linkclear) this.countPdfPages(p.linkclear, p, 'linkclear_pages');
             });
           }
@@ -317,7 +317,25 @@ export class ClearchecktComponent implements OnInit {
   onChangepdf(event: any) {
     this.file = event.target.files[0];
   }
+ //ส่งอีเมลสถานะใบเสร็จ
+  sendemail() {
+    if (this.dataAdd.FNEXACCTD_NOTE == '') {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกหมายเหตุ");
+    } else {
 
+      this.dataAdd.opt = "sendemailRE";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.toastr.success("แจ้งเตือน:ส่งอีเมลเรียบร้อยแล้ว");
+          document.getElementById("ModalClosemail")?.click();
+          this.fetchdatalist();
+        });
+
+    }
+
+  }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
     if (this.dataAdd.EBOOKREQ_FILE == '' || this.dataAdd.FNANNALS_MONEYC == '' || this.dataAdd.CHIEF_CODE == '' || this.dataAdd.DEPARTMENT_CODE == '') {

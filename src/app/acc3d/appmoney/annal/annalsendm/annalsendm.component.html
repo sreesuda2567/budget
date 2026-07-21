@@ -188,7 +188,7 @@
                     <td align="center" data-label="เลือก:">
                         <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white"
                             id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE1,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA)"><i
+                            (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE1,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages)"><i
                                 class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
                         <a *ngIf="p.linkreport" role="button" title="รวมไฟล์ส่งสารบรรณ"
                             class="btn btn-secondary text-white"
@@ -652,8 +652,19 @@
 
                 <div class="card border-0 shadow-sm">
                     <div class="card-body bg-white rounded-3 p-4">
-                        <label class="form-label fw-bold text-secondary mb-3"><i
-                                class="fa-solid fa-book-open me-1"></i>บัญชีแยกประเภท</label>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label fw-bold text-secondary mb-0"><i
+                                    class="fa-solid fa-book-open me-1"></i>บัญชีแยกประเภท</label>
+                            <span *ngIf="dataAdd.linkclear" class="position-relative d-inline-block">
+                                <a role="button" title="รายงานใบเบิก" class="btn btn-secondary text-white btn-sm"
+                                    (click)="previewPdf(dataAdd.linkclear)"><i class="fa-solid fa-file-contract me-1"></i>ใบเบิก</a>
+                                <span *ngIf="dataAdd.linkclear_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
+                                    {{dataAdd.linkclear_pages}}
+                                </span>
+                            </span>
+                        </div>
                         <div class="row g-3 align-items-center mb-2" *ngFor="let i of number;">
                             <div class="col-md-8">
                                 <select name="SECTION_CODE_{{i}}" id="SECTION_CODE_{{i}}"
@@ -669,7 +680,28 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-body bg-white rounded-3 p-4">
+                        <label class="form-label fw-bold text-secondary mb-3"><i
+                                class="fa-solid fa-list-check me-1"></i>รายละเอียดใบเสร็จ</label>
+                        <div class="mb-3 text-muted ps-4 border-start border-3 border-info">
+                            <div *ngFor="let detail of dataReceiptdetail" class="mb-1">
+                                <i class="fa-solid fa-circle-info me-2 text-info small"></i>{{detail.FNREDT_NAME}}
+                            </div>
+                        </div>
+
+                        <div class="mt-3 ps-2">
+                            <div class="form-check mb-2 custom-radio" *ngFor="let type of datareceipt">
+                                <input class="form-check-input border-secondary" name="p_radio2"
+                                    id="radio2_{{type.FNRESTATUS_CODE}}" type="radio" value="{{type.FNRESTATUS_CODE}}"
+                                    [(ngModel)]="dataAdd.FNRESTATUS_CODE">
+                                <label class="form-check-label text-dark" for="radio2_{{type.FNRESTATUS_CODE}}">
+                                    {{type.FNRESTATUS_NAME}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
             </div>
             <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
                 <button id="ModalCloseb" type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
