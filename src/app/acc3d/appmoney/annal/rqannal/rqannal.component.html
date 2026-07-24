@@ -269,7 +269,7 @@
 
                         </td>
                         <td align="center" data-label="เลือก:">
-                            <button *ngIf="p.FNANNALSMAP_RSTATUS=='1' || dataAdd.PRIVILEGE_RSTATUS=='A'  " type="submit"
+                            <button *ngIf="p.FNANNALSMAP_ASTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A'  " type="submit"
                                 class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                                 data-bs-target="#exampleModalupdate"
                                 (click)="editdatapp(p.FNANNALSMAP_CODE,p.CHIEF_CODE,p.DEPARTMENT_CODE,p.FNANNALS_AMOUNT,p.FNALLBW_AMOUNT,p.CONTRACT_LINK)"><i

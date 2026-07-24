@@ -308,11 +308,7 @@
                         </span>
                     </td>
                     <td align="center" data-label="เลือก:">
-                        <button type="submit" title="สถานะใบเสร็จ" class="btn btn-secondary" id="submitupdate"
-                            data-bs-toggle="modal" data-bs-target="#modalEditreceipt"
-                            (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear)"
-                            (click)="onChangeRadio(2)"><i
-                                class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;
+                        
                         <button *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " type="submit"
                             class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"

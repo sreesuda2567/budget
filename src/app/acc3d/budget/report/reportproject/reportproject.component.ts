@@ -168,7 +168,7 @@ export class ReportprojectComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataFac = data;
-                if (this.dataAdd.CAMPUS_CODE != '') {
+        if (this.dataAdd.CAMPUS_CODE != '') {
           this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
         } else {
           this.dataAdd.FACULTY_CODE = '';
@@ -273,280 +273,281 @@ export class ReportprojectComponent implements OnInit {
         }
       });
   }
- /* exportexcel(): void {
-    const element = document.getElementById('excel-table');
-  
-    if (!element) {
-      console.error('ไม่พบ element: #excel-table');
-      return;
-    }
-  
-    const clonedElement = element.cloneNode(true) as HTMLElement;
-    clonedElement.querySelectorAll('td').forEach(td => {
-      td.innerHTML = td.innerHTML.replace(/<br\s*\/?>/gi, '\n');
-    });
-  
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(clonedElement);
-
-    const range = XLSX.utils.decode_range(ws['!ref']!);
-  
-    const colWidths = [];
-    for (let C = range.s.c; C <= range.e.c; ++C) {
-      let max_width = 10;
-      for (let R = range.s.r; R <= range.e.r; ++R) {
-        const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
-        if (cell && cell.v != null) {
-          const length = String(cell.v).length;
-          if (length > max_width) max_width = length;
-        }
-      }
-      colWidths.push({ wch: max_width + 2 });
-    }
-    ws['!cols'] = colWidths;
-  
-    const moneyCols = [10,11, 12, 13, 14, 15,16,17,18,19];
-    const rightAlignCols = [10,11, 12, 13, 14, 15,16,17,18,19];
-    const statusColumnIndex = 30; // ปรับตามตำแหน่งจริงของคอลัมน์ "สถานะ"
-  
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-      const isHeader = R === 2 || R === 3;
-      const isBold = R <= 3;
-  
-      // 👉 ดึงค่าเฉพาะคอลัมน์ "สถานะ" เท่านั้น
-      const statusCellRef = XLSX.utils.encode_cell({ c: statusColumnIndex, r: R });
-      const statusText = (ws[statusCellRef]?.v || "").toString();
-  
-      // 👉 คำนวณสีพื้นหลัง เฉพาะคอลัมน์สถานะเท่านั้น
-      const getCellFillColor = (c: number): any => {
-        if (c !== statusColumnIndex) return undefined;
-  
-        if (statusText.includes("ยังไม่ดำเนินโครงการ")) return "FF9D9D";
-        if (statusText.includes("อยู่ระหว่างขออนุญาตดำเนินโครงการ")) return "FFFF91";
-        if (statusText.includes("ดำเนินการเสร็จเรียบร้อยแล้ว")) return "99DD99";
-        if (statusText.includes("ไม่สามารถรายงานโครงการได้")) return "FFAA71";
-        if (statusText.includes("ดำเนินการเสร็จแล้ว/เบิกจ่ายเงินเรียบร้อยแล้ว")) return "B5B5DB";
-        if (statusText.includes("ไม่ดำเนินการตามแผน")) return "999999";
-        if (statusText.includes("ยกเลิกโครงการ")) return "999999";
-        if (statusText.includes("อนุมัติการเบิกจ่าย")) return "3586FF";
-        if (statusText.includes("โอนให้หน่วยงานอื่นดำเนินการ")) return "f59adb";
-  
-        return undefined;
-      };
-  
-      for (let C = range.s.c; C <= range.e.c; ++C) {
-        const cellRef = XLSX.utils.encode_cell({ c: C, r: R });
-        if (!ws[cellRef]) {
-          ws[cellRef] = { t: 's', v: '' };
-        }
-  
-        const cell = ws[cellRef];
-        const isMoneyColumn = moneyCols.includes(C);
-        const isNumber = isMoneyColumn && typeof cell.v === 'number';
-        const isRightAlign = rightAlignCols.includes(C);
-        const bgColor = getCellFillColor(C); // 🎯 ใส่สีเฉพาะเซลล์ที่ต้องการ
-  
-        cell.s = {
-          fill: bgColor
-            ? { patternType: 'solid', fgColor: { rgb: bgColor } }
-            : (isHeader
-                ? { patternType: 'solid', fgColor: { rgb: '5084f2' } }
-                : undefined),
-          font: isBold
-            ? { bold: true, color: { rgb: '000000' } }
-            : undefined,
-          alignment: {
-            horizontal: R <= 3 ? 'center' : (isRightAlign ? 'right' : 'left'),
-            vertical: 'center',
-            wrapText: true,
-          },
-          border: {
-            top: { style: 'thin', color: { rgb: '000000' } },
-            bottom: { style: 'thin', color: { rgb: '000000' } },
-            left: { style: 'thin', color: { rgb: '000000' } },
-            right: { style: 'thin', color: { rgb: '000000' } },
-          },
-          ...(isNumber && { numFmt: '#,##0.00' }),
-        };
-      }
-    }
-  
+  /* exportexcel(): void {
+     const element = document.getElementById('excel-table');
+   
+     if (!element) {
+       console.error('ไม่พบ element: #excel-table');
+       return;
+     }
+   
+     const clonedElement = element.cloneNode(true) as HTMLElement;
+     clonedElement.querySelectorAll('td').forEach(td => {
+       td.innerHTML = td.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+     });
+   
+     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(clonedElement);
+ 
+     const range = XLSX.utils.decode_range(ws['!ref']!);
+   
+     const colWidths = [];
+     for (let C = range.s.c; C <= range.e.c; ++C) {
+       let max_width = 10;
+       for (let R = range.s.r; R <= range.e.r; ++R) {
+         const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
+         if (cell && cell.v != null) {
+           const length = String(cell.v).length;
+           if (length > max_width) max_width = length;
+         }
+       }
+       colWidths.push({ wch: max_width + 2 });
+     }
+     ws['!cols'] = colWidths;
+   
+     const moneyCols = [10,11, 12, 13, 14, 15,16,17,18,19];
+     const rightAlignCols = [10,11, 12, 13, 14, 15,16,17,18,19];
+     const statusColumnIndex = 30; // ปรับตามตำแหน่งจริงของคอลัมน์ "สถานะ"
+   
+     for (let R = range.s.r; R <= range.e.r; ++R) {
+       const isHeader = R === 2 || R === 3;
+       const isBold = R <= 3;
+   
+       // 👉 ดึงค่าเฉพาะคอลัมน์ "สถานะ" เท่านั้น
+       const statusCellRef = XLSX.utils.encode_cell({ c: statusColumnIndex, r: R });
+       const statusText = (ws[statusCellRef]?.v || "").toString();
+   
+       // 👉 คำนวณสีพื้นหลัง เฉพาะคอลัมน์สถานะเท่านั้น
+       const getCellFillColor = (c: number): any => {
+         if (c !== statusColumnIndex) return undefined;
+   
+         if (statusText.includes("ยังไม่ดำเนินโครงการ")) return "FF9D9D";
+         if (statusText.includes("อยู่ระหว่างขออนุญาตดำเนินโครงการ")) return "FFFF91";
+         if (statusText.includes("ดำเนินการเสร็จเรียบร้อยแล้ว")) return "99DD99";
+         if (statusText.includes("ไม่สามารถรายงานโครงการได้")) return "FFAA71";
+         if (statusText.includes("ดำเนินการเสร็จแล้ว/เบิกจ่ายเงินเรียบร้อยแล้ว")) return "B5B5DB";
+         if (statusText.includes("ไม่ดำเนินการตามแผน")) return "999999";
+         if (statusText.includes("ยกเลิกโครงการ")) return "999999";
+         if (statusText.includes("อนุมัติการเบิกจ่าย")) return "3586FF";
+         if (statusText.includes("โอนให้หน่วยงานอื่นดำเนินการ")) return "f59adb";
+   
+         return undefined;
+       };
+   
+       for (let C = range.s.c; C <= range.e.c; ++C) {
+         const cellRef = XLSX.utils.encode_cell({ c: C, r: R });
+         if (!ws[cellRef]) {
+           ws[cellRef] = { t: 's', v: '' };
+         }
+   
+         const cell = ws[cellRef];
+         const isMoneyColumn = moneyCols.includes(C);
+         const isNumber = isMoneyColumn && typeof cell.v === 'number';
+         const isRightAlign = rightAlignCols.includes(C);
+         const bgColor = getCellFillColor(C); // 🎯 ใส่สีเฉพาะเซลล์ที่ต้องการ
+   
+         cell.s = {
+           fill: bgColor
+             ? { patternType: 'solid', fgColor: { rgb: bgColor } }
+             : (isHeader
+                 ? { patternType: 'solid', fgColor: { rgb: '5084f2' } }
+                 : undefined),
+           font: isBold
+             ? { bold: true, color: { rgb: '000000' } }
+             : undefined,
+           alignment: {
+             horizontal: R <= 3 ? 'center' : (isRightAlign ? 'right' : 'left'),
+             vertical: 'center',
+             wrapText: true,
+           },
+           border: {
+             top: { style: 'thin', color: { rgb: '000000' } },
+             bottom: { style: 'thin', color: { rgb: '000000' } },
+             left: { style: 'thin', color: { rgb: '000000' } },
+             right: { style: 'thin', color: { rgb: '000000' } },
+           },
+           ...(isNumber && { numFmt: '#,##0.00' }),
+         };
+       }
+     }
+   
+     const wb: XLSX.WorkBook = XLSX.utils.book_new();
+     XLSX.utils.book_append_sheet(wb, ws, 'รายงานการดำเนินโครงการ');
+     
+     XLSX.writeFile(wb, 'รายงาน.xlsx');
+   }*/
+  exportexcel(): void {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'รายงานการดำเนินโครงการ');
-    
-    XLSX.writeFile(wb, 'รายงาน.xlsx');
-  }*/
-    exportexcel(): void {
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    
-      const tableIds = [
-        { id: 'excel-tabledetail', sheetName: 'สรุปผลรวม' },
-        { id: 'excel-table', sheetName: 'รายงานการดำเนินโครงการ' }
-      ];
-    
-      for (const { id, sheetName } of tableIds) {
-        const element = document.getElementById(id);
-        if (!element) {
-          console.error(`ไม่พบ element: #${id}`);
-          continue;
-        }
-    
-        const clonedElement = element.cloneNode(true) as HTMLElement;
-        clonedElement.querySelectorAll('td').forEach(td => {
-          td.innerHTML = td.innerHTML.replace(/<br\s*\/?>/gi, '\n');
-        });
-    
-        const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(clonedElement);
-        const range = XLSX.utils.decode_range(ws['!ref']!);
-    
-        const colWidths = [];
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-          let max_width = 10;
-          for (let R = range.s.r; R <= range.e.r; ++R) {
-            const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
-            if (cell && cell.v != null) {
-              const length = String(cell.v).length;
-              if (length > max_width) max_width = length;
-            }
-          }
-          colWidths.push({ wch: max_width + 2 });
-        }
-    
-        if (id === 'excel-table') {
-          colWidths[0] = { wch: 5 };
-        }
-    
-        ws['!cols'] = colWidths;
-    
-        // ✅ excel-table
-        if (id === 'excel-table') {
-          const moneyCols = [ 10,11, 12, 13, 14, 15, 16, 17, 18, 19];
-          const rightAlignCols = [ 10, ...moneyCols];
-          const statusColumnIndex = 42;
-    
-          for (let R = range.s.r; R <= range.e.r; ++R) {
-            const isHeader = R === 2 || R === 3;
-            const isBold = R <= 3;
-            const isLastRow = R === range.e.r;
-    
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-              const cellRef = XLSX.utils.encode_cell({ c: C, r: R });
-              if (!ws[cellRef]) ws[cellRef] = { t: 's', v: '' };
-    
-              const cell = ws[cellRef];
-              const isMoneyColumn = moneyCols.includes(C);
-              const isNumber = isMoneyColumn && typeof cell.v === 'number';
-              const isRightAlign = rightAlignCols.includes(C);
-    
-              const statusText = (ws[XLSX.utils.encode_cell({ c: statusColumnIndex, r: R })]?.v || "").toString();
-              const getCellFillColor = (): string | undefined => {
-                if (isLastRow) return 'bcbcbc';
-                if (C !== statusColumnIndex) return undefined;
-                if (statusText.includes("ยังไม่ดำเนินโครงการ")) return "FF9D9D";
-                if (statusText.includes("อยู่ระหว่างขออนุญาตดำเนินโครงการ")) return "FFFF91";
-                if (statusText.includes("ดำเนินการเสร็จเรียบร้อยแล้ว")) return "99DD99";
-                if (statusText.includes("ไม่สามารถรายงานโครงการได้")) return "FFAA71";
-                if (statusText.includes("ดำเนินการเสร็จแล้ว/เบิกจ่ายเงินเรียบร้อยแล้ว")) return "B5B5DB";
-                if (statusText.includes("ไม่ดำเนินการตามแผน")) return "999999";
-                if (statusText.includes("ยกเลิกโครงการ")) return "999999";
-                if (statusText.includes("อนุมัติการเบิกจ่าย")) return "3586FF";
-                if (statusText.includes("โอนให้หน่วยงานอื่นดำเนินการ")) return "f59adb";
-                return undefined;
-              };
-    
-              const bgColor = getCellFillColor();
-    
-              cell.s = {
-                fill: bgColor
-                  ? { patternType: 'solid', fgColor: { rgb: bgColor } }
-                  : (isHeader
-                      ? { patternType: 'solid', fgColor: { rgb: 'bcbcbc' } }
-                      : undefined),
-                font: isBold || isLastRow ? { bold: true } : undefined,
-                alignment: {
-                  horizontal: isLastRow
-                    ? 'right'
-                    : (R <= 3
-                      ? 'center'
-                      : (isRightAlign ? 'right' : 'left')),
-                  vertical: 'center',
-                  wrapText: true,
-                },
-                border: {
-                  top: { style: 'thin', color: { rgb: '000000' } },
-                  bottom: { style: 'thin', color: { rgb: '000000' } },
-                  left: { style: 'thin', color: { rgb: '000000' } },
-                  right: { style: 'thin', color: { rgb: '000000' } },
-                },
-                ...(isNumber && { numFmt: '#,##0.00' }),
-              };
-            }
+
+    const tableIds = [
+      { id: 'excel-tabledetail', sheetName: 'สรุปผลรวม' },
+      { id: 'excel-table', sheetName: 'รายงานการดำเนินโครงการ' }
+    ];
+
+    for (const { id, sheetName } of tableIds) {
+      const element = document.getElementById(id);
+      if (!element) {
+        console.error(`ไม่พบ element: #${id}`);
+        continue;
+      }
+
+      const clonedElement = element.cloneNode(true) as HTMLElement;
+      clonedElement.querySelectorAll('td').forEach(td => {
+        td.innerHTML = td.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+      });
+
+      const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(clonedElement);
+      const range = XLSX.utils.decode_range(ws['!ref']!);
+
+      const colWidths = [];
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        let max_width = 10;
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+          const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
+          if (cell && cell.v != null) {
+            const length = String(cell.v).length;
+            if (length > max_width) max_width = length;
           }
         }
-    
-        // ✅ excel-tabledetail
-        if (id === 'excel-tabledetail') {
-          const highlightRows = [0, 1, 2, 3];
-          const colorRows = [2, 3];
-          const numberCols = Array.from({ length: 15 }, (_, i) => i + 1); // คอลัมน์ 2–16
-    
-          const colorMap: { [col: number]: string } = {
-            0: 'bcbcbc', 1: 'bcbcbc', 2: 'bcbcbc',
-            3: '999999', 4: '999999',
-            5: 'f59adb', 6: 'f59adb',
-            7: 'FF9D9D', 8: 'FF9D9D',
-            9: 'FFFF91', 10: 'FFFF91',
-            11: 'FFAA71', 12: 'FFAA71',
-            13: '99DD99', 14: '99DD99', 15: '99DD99', 16: '99DD99'
-          };
-    
-          for (let R = range.s.r; R <= range.e.r; ++R) {
-            const isHighlight = highlightRows.includes(R);
-            const isColorRow = colorRows.includes(R);
-            const isLastRow = R === range.e.r;
-    
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-              const cellRef = XLSX.utils.encode_cell({ c: C, r: R });
-              if (!ws[cellRef]) continue;
-    
-              const cell = ws[cellRef];
-              const isNumberCol = numberCols.includes(C);
-              const isNumeric = isNumberCol && typeof cell.v === 'number';
-              const bgColor = isLastRow ? 'bcbcbc' : (isColorRow ? colorMap[C] : undefined);
-              const alignCenter = isColorRow;
-    
-              cell.s = {
-                font: isHighlight || isLastRow ? { bold: true } : undefined,
-                alignment: {
-                  horizontal: isLastRow
-                    ? 'right'
-                    : alignCenter
+        colWidths.push({ wch: max_width + 2 });
+      }
+
+      if (id === 'excel-table') {
+        colWidths[0] = { wch: 5 };
+      }
+
+      ws['!cols'] = colWidths;
+
+      // ✅ excel-table
+      if (id === 'excel-table') {
+        const moneyCols = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+        const rightAlignCols = [10, ...moneyCols];
+        const statusColumnIndex = 42;
+
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+          const isHeader = R === 2 || R === 3;
+          const isBold = R <= 3;
+          const isLastRow = R === range.e.r;
+
+          for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cellRef = XLSX.utils.encode_cell({ c: C, r: R });
+            if (!ws[cellRef]) ws[cellRef] = { t: 's', v: '' };
+
+            const cell = ws[cellRef];
+            const isMoneyColumn = moneyCols.includes(C);
+            const isNumber = isMoneyColumn && typeof cell.v === 'number';
+            const isRightAlign = rightAlignCols.includes(C);
+
+            const statusText = (ws[XLSX.utils.encode_cell({ c: statusColumnIndex, r: R })]?.v || "").toString();
+            const getCellFillColor = (): string | undefined => {
+              if (isLastRow) return 'bcbcbc';
+              if (C !== statusColumnIndex) return undefined;
+              if (statusText.includes("ยังไม่ดำเนินโครงการ")) return "FF9D9D";
+              if (statusText.includes("อยู่ระหว่างขออนุญาตดำเนินโครงการ")) return "FFFF91";
+              if (statusText.includes("ดำเนินการเสร็จเรียบร้อยแล้ว")) return "99DD99";
+              if (statusText.includes("ไม่สามารถรายงานโครงการได้")) return "FFAA71";
+              if (statusText.includes("ดำเนินการเสร็จแล้ว/เบิกจ่ายเงินเรียบร้อยแล้ว")) return "B5B5DB";
+              if (statusText.includes("ไม่ดำเนินการตามแผน")) return "999999";
+              if (statusText.includes("ยกเลิกโครงการ")) return "999999";
+              if (statusText.includes("อนุมัติการเบิกจ่าย")) return "3586FF";
+              if (statusText.includes("โอนให้หน่วยงานอื่นดำเนินการ")) return "f59adb";
+              if (statusText.includes("โครงการต่อเนื่อง(ดำเนินการทั้งปี)")) return "e69138";
+              return undefined;
+            };
+
+            const bgColor = getCellFillColor();
+
+            cell.s = {
+              fill: bgColor
+                ? { patternType: 'solid', fgColor: { rgb: bgColor } }
+                : (isHeader
+                  ? { patternType: 'solid', fgColor: { rgb: 'bcbcbc' } }
+                  : undefined),
+              font: isBold || isLastRow ? { bold: true } : undefined,
+              alignment: {
+                horizontal: isLastRow
+                  ? 'right'
+                  : (R <= 3
+                    ? 'center'
+                    : (isRightAlign ? 'right' : 'left')),
+                vertical: 'center',
+                wrapText: true,
+              },
+              border: {
+                top: { style: 'thin', color: { rgb: '000000' } },
+                bottom: { style: 'thin', color: { rgb: '000000' } },
+                left: { style: 'thin', color: { rgb: '000000' } },
+                right: { style: 'thin', color: { rgb: '000000' } },
+              },
+              ...(isNumber && { numFmt: '#,##0.00' }),
+            };
+          }
+        }
+      }
+
+      // ✅ excel-tabledetail
+      if (id === 'excel-tabledetail') {
+        const highlightRows = [0, 1, 2, 3];
+        const colorRows = [2, 3];
+        const numberCols = Array.from({ length: 15 }, (_, i) => i + 1); // คอลัมน์ 2–16
+
+        const colorMap: { [col: number]: string } = {
+          0: 'bcbcbc', 1: 'bcbcbc', 2: 'bcbcbc',
+          3: '999999', 4: '999999',
+          5: 'f59adb', 6: 'f59adb',
+          7: 'FF9D9D', 8: 'FF9D9D',
+          9: 'FFFF91', 10: 'FFFF91',
+          11: 'FFAA71', 12: 'FFAA71',
+          13: '99DD99', 14: '99DD99', 15: '99DD99', 16: '99DD99'
+        };
+
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+          const isHighlight = highlightRows.includes(R);
+          const isColorRow = colorRows.includes(R);
+          const isLastRow = R === range.e.r;
+
+          for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cellRef = XLSX.utils.encode_cell({ c: C, r: R });
+            if (!ws[cellRef]) continue;
+
+            const cell = ws[cellRef];
+            const isNumberCol = numberCols.includes(C);
+            const isNumeric = isNumberCol && typeof cell.v === 'number';
+            const bgColor = isLastRow ? 'bcbcbc' : (isColorRow ? colorMap[C] : undefined);
+            const alignCenter = isColorRow;
+
+            cell.s = {
+              font: isHighlight || isLastRow ? { bold: true } : undefined,
+              alignment: {
+                horizontal: isLastRow
+                  ? 'right'
+                  : alignCenter
                     ? 'center'
                     : isNumberCol
-                    ? 'right'
-                    : isHighlight
-                    ? 'center'
-                    : 'left',
-                  vertical: 'center',
-                  wrapText: true,
-                },
-                fill: bgColor
-                  ? { patternType: 'solid', fgColor: { rgb: bgColor } }
-                  : undefined,
-                border: {
-                  top: { style: 'thin', color: { rgb: '000000' } },
-                  bottom: { style: 'thin', color: { rgb: '000000' } },
-                  left: { style: 'thin', color: { rgb: '000000' } },
-                  right: { style: 'thin', color: { rgb: '000000' } },
-                },
-                ...(isNumeric && { numFmt: '#,##0.00' }),
-              };
-            }
+                      ? 'right'
+                      : isHighlight
+                        ? 'center'
+                        : 'left',
+                vertical: 'center',
+                wrapText: true,
+              },
+              fill: bgColor
+                ? { patternType: 'solid', fgColor: { rgb: bgColor } }
+                : undefined,
+              border: {
+                top: { style: 'thin', color: { rgb: '000000' } },
+                bottom: { style: 'thin', color: { rgb: '000000' } },
+                left: { style: 'thin', color: { rgb: '000000' } },
+                right: { style: 'thin', color: { rgb: '000000' } },
+              },
+              ...(isNumeric && { numFmt: '#,##0.00' }),
+            };
           }
         }
-    
-        XLSX.utils.book_append_sheet(wb, ws, sheetName);
       }
-    
-      XLSX.writeFile(wb, 'รายงาน.xlsx');
+
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
     }
+
+    XLSX.writeFile(wb, 'รายงาน.xlsx');
+  }
 }

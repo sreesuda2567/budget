@@ -349,6 +349,14 @@ fetchdata() {
               .subscribe((data: any) => {   
 
               });*/
+          this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '110')
+              .subscribe((event: any) => {
+                // 
+                if (event.type == 4) {
+                  this.fetchdatalistapp();
+                }
+              }
+              );    
           this.fetchdatalistapp();
           this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
           document.getElementById("ModalClose")?.click();
