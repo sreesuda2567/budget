@@ -7,7 +7,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2SearchPipeModule } from 'src/app/shared/search-filter';
 import { HomeComponent } from './home/home.component';
 import { Useracc3dComponent } from './user/useracc3d/useracc3d.component';
 import { LicenseComponent } from './user/license/license.component';

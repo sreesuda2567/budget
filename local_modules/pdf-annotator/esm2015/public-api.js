@@ -1,0 +1,8 @@
+/*
+ * Public API Surface of pdf-annotator
+ */
+export * from './lib/tokens';
+export * from './lib/pdf-manager.service';
+export * from './lib/pdf-annotator-modal.component';
+export * from './lib/pdf-annotator.module';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljLWFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3Byb2plY3RzL3BkZi1hbm5vdGF0b3Ivc3JjL3B1YmxpYy1hcGkudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7O0dBRUc7QUFFSCxjQUFjLGNBQWMsQ0FBQztBQUM3QixjQUFjLDJCQUEyQixDQUFDO0FBQzFDLGNBQWMscUNBQXFDLENBQUM7QUFDcEQsY0FBYyw0QkFBNEIsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIi8qXG4gKiBQdWJsaWMgQVBJIFN1cmZhY2Ugb2YgcGRmLWFubm90YXRvclxuICovXG5cbmV4cG9ydCAqIGZyb20gJy4vbGliL3Rva2Vucyc7XG5leHBvcnQgKiBmcm9tICcuL2xpYi9wZGYtbWFuYWdlci5zZXJ2aWNlJztcbmV4cG9ydCAqIGZyb20gJy4vbGliL3BkZi1hbm5vdGF0b3ItbW9kYWwuY29tcG9uZW50JztcbmV4cG9ydCAqIGZyb20gJy4vbGliL3BkZi1hbm5vdGF0b3IubW9kdWxlJztcbiJdfQ==

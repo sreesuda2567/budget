@@ -1,0 +1,1988 @@
+<ion-header [style.display]="showPreviewOverlay ? 'none' : ''">
+  <ion-toolbar>
+    <!-- <ion-title>PDF Annotator</ion-title> -->
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="close()">
+        <svg-icon name="close"></svg-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="annotator-content" [scrollY]="false">
+
+  <!-- Loading Spinner Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-content" [class.loading-content--progress]="saveProgress > 0">
+
+      <!-- Normal spinner when no save progress -->
+      <ng-container *ngIf="saveProgress === 0">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p class="loading-msg">{{ loadingMessage }}</p>
+      </ng-container>
+
+      <!-- Progress bar UI during save -->
+      <ng-container *ngIf="saveProgress > 0">
+        <div class="save-progress-icon">
+          <svg-icon name="document-text-outline"></svg-icon>
+          <span class="save-progress-pct">{{ saveProgress }}%</span>
+        </div>
+        <div class="save-progress-bar-track">
+          <div class="save-progress-bar-fill" [style.width.%]="saveProgress"
+            [class.save-progress-bar-fill--preview]="saveProgress > 61"
+            [class.save-progress-bar-fill--serializing]="saveProgress === 61"></div>
+        </div>
+        <div class="save-progress-phases">
+          <span [class.active]="saveProgress > 0 && saveProgress < 61">
+            <svg-icon name="layers-outline"></svg-icon> บันทึก Annotations
+          </span>
+          <span [class.active]="saveProgress === 61">
+            <svg-icon name="archive-outline"></svg-icon> Serialize PDF
+          </span>
+          <span [class.active]="saveProgress > 61">
+            <svg-icon name="image-outline"></svg-icon> สร้าง Preview
+          </span>
+        </div>
+        <p class="loading-msg">{{ loadingMessage }}</p>
+      </ng-container>
+
+    </div>
+  </div>
+
+  <!-- New Layout: Top Toolbars + Left Thumbnails + Center Viewer -->
+  <div class="annotator-layout-v2">
+
+    <!-- Top Toolbar Row 1: Zoom & Navigation -->
+    <div class="toolbar-row toolbar-row--nav">
+      <div class="toolbar-group">
+        <button class="toolbar-btn" (click)="toggleThumbnails()" title="แสดง/ซ่อน Thumbnails">
+          <svg-icon name="images-outline"></svg-icon>
+        </button>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <div class="toolbar-group toolbar-group--zoom">
+        <button class="toolbar-btn" (click)="zoomOut()" [disabled]="zoom <= 0.5">
+          <svg-icon name="search-outline"></svg-icon>
+          <svg-icon name="remove-outline" class="zoom-icon"></svg-icon>
+        </button>
+        <span class="toolbar-label">{{ (zoom * 100) | number:'1.0-0' }}%</span>
+        <button class="toolbar-btn" (click)="zoomIn()" [disabled]="zoom >= 3">
+          <svg-icon name="search-outline"></svg-icon>
+          <svg-icon name="add-outline" class="zoom-icon"></svg-icon>
+        </button>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <div class="toolbar-group toolbar-group--pager">
+        <button class="toolbar-btn" (click)="firstPage()" [disabled]="pageNo <= 1" title="หน้าแรก">
+          <svg-icon name="play-skip-back"></svg-icon>
+        </button>
+        <button class="toolbar-btn" (click)="prevPage()" [disabled]="pageNo <= 1" title="หน้าก่อน">
+          <svg-icon name="chevron-back"></svg-icon>
+        </button>
+        <span class="toolbar-label">
+          {{ pageNo }} / {{ pageCount || '?' }}
+          <span *ngIf="loadedUntilPage < pageCount" class="chunk-indicator"
+            [title]="'โหลดแล้ว ' + loadedUntilPage + ' / ' + pageCount + ' หน้า'">
+            <ion-spinner *ngIf="isLoadingChunk" name="crescent" style="width:10px;height:10px;"></ion-spinner>
+            <span *ngIf="!isLoadingChunk">({{ loadedUntilPage }}↓)</span>
+          </span>
+        </span>
+        <button class="toolbar-btn" (click)="nextPage()" [disabled]="pageNo >= pageCount || isLoadingChunk" title="หน้าถัดไป">
+          <svg-icon name="chevron-forward"></svg-icon>
+        </button>
+        <button class="toolbar-btn" (click)="lastPage()" [disabled]="pageNo >= pageCount || isLoadingChunk" title="หน้าสุดท้าย (โหลดแล้ว {{ loadedUntilPage }} หน้า)">
+          <svg-icon name="play-skip-forward"></svg-icon>
+        </button>
+      </div>
+
+      <!-- Pages per view selector -->
+      <div class="toolbar-group toolbar-group--ppv" title="จำนวนหน้าที่แสดง">
+        <svg-icon name="layers-outline" style="font-size:15px;color:#64748b;flex-shrink:0"></svg-icon>
+        <select class="ppv-select" [value]="pagesPerChunk" (change)="setPagesPerChunk(+$any($event.target).value)">
+          <option value="5">5 หน้า</option>
+          <option value="10" selected>10 หน้า</option>
+          <option value="20">20 หน้า</option>
+          <option value="50">50 หน้า</option>
+          <option value="0">ทั้งหมด</option>
+        </select>
+      </div>
+
+      <div class="toolbar-spacer"></div>
+
+      <!-- Insert Blank Page + Delete Page -->
+      <div class="tool-item insert-page-tool">
+        <button class="toolbar-btn" (click)="showInsertMenu = !showInsertMenu" title="แทรก/ลบหน้า">
+          <svg-icon name="documents-outline"></svg-icon>
+          <svg-icon name="chevron-down-outline" class="shape-chevron"></svg-icon>
+        </button>
+
+        <!-- Dropdown -->
+        <div class="insert-page-dropdown" *ngIf="showInsertMenu">
+          <div class="insert-page-backdrop" (click)="showInsertMenu = false"></div>
+          <div class="insert-page-menu">
+
+            <!-- Section: แทรกหน้าเปล่า -->
+            <div class="insert-page-title">
+              <svg-icon name="add-circle-outline"></svg-icon> แทรกหน้าเปล่า
+            </div>
+
+            <!-- Orientation Toggle -->
+            <div class="insert-orient-row">
+              <span class="insert-orient-label">รูปแบบ:</span>
+              <div class="insert-orient-group">
+                <button class="insert-orient-btn"
+                  [class.active]="insertOrientation === 'portrait'"
+                  (click)="insertOrientation = 'portrait'" title="แนวตั้ง">
+                  <svg-icon name="phone-portrait-outline"></svg-icon>
+                  <span>แนวตั้ง</span>
+                </button>
+                <button class="insert-orient-btn"
+                  [class.active]="insertOrientation === 'landscape'"
+                  (click)="insertOrientation = 'landscape'" title="แนวนอน">
+                  <svg-icon name="phone-landscape-outline"></svg-icon>
+                  <span>แนวนอน</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Before / After -->
+            <button class="insert-page-btn" (click)="insertBlankPage('before')">
+              <svg-icon name="arrow-up-outline"></svg-icon>
+              <span>ก่อนหน้านี้ <small>(หน้า {{ pageNo }})</small></span>
+            </button>
+            <button class="insert-page-btn" (click)="insertBlankPage('after')">
+              <svg-icon name="arrow-down-outline"></svg-icon>
+              <span>หลังหน้านี้ <small>(หน้า {{ pageNo + 1 }})</small></span>
+            </button>
+
+            <div class="insert-menu-divider"></div>
+
+            <!-- Section: ลบหน้า -->
+            <div class="insert-page-title insert-page-title--danger">
+              <svg-icon name="trash-outline"></svg-icon> ลบหน้า
+            </div>
+            <button class="insert-page-btn insert-page-btn--danger"
+              [disabled]="pageCount <= 1"
+              (click)="deletePage()">
+              <svg-icon name="close-circle-outline"></svg-icon>
+              <span>ลบหน้านี้ <small>(หน้า {{ pageNo }})</small></span>
+            </button>
+
+            <div class="insert-menu-divider"></div>
+
+            <!-- Section: ย้อนกลับ -->
+            <button class="insert-page-btn insert-page-btn--undo"
+              [disabled]="!canUndoPageOp"
+              (click)="undoPageOp()">
+              <svg-icon name="arrow-undo-outline"></svg-icon>
+              <span>ย้อนกลับการแทรก/ลบ <small *ngIf="!canUndoPageOp">(ไม่มีประวัติ)</small></span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <div class="toolbar-group toolbar-group--save">
+        <button class="toolbar-btn toolbar-btn--save" (click)="saveDocument()">
+          <svg-icon name="save-outline"></svg-icon>
+          <span>บันทึก</span>
+        </button>
+        <!-- User Guide Toggle -->
+        <button class="toolbar-btn toolbar-btn--guide" [class.active]="showUserGuidePanel" (click)="toggleUserGuide($event)" title="คู่มือการใช้งาน">
+          <svg-icon name="book"></svg-icon>
+          <span style="font-weight: 500; font-size: 13px;">แนะนำการใช้งาน</span>
+        </button>
+        <!-- History Panel Toggle -->
+        <button class="toolbar-btn" [class.active]="showHistoryPanel" (click)="toggleHistoryPanel()" title="ประวัติการแก้ไข">
+          <svg-icon name="time-outline"></svg-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Top Toolbar Row 2: Tools -->
+    <div class="toolbar-row toolbar-row--tools">
+      <!-- Text Tool -->
+      <div class="tool-item">
+        <button class="toolbar-btn" [class.active]="textPlaceMode" (click)="enableTextPlaceMode()" title="ข้อความ">
+          <svg-icon name="text"></svg-icon>
+        </button>
+        <div class="tool-options" *ngIf="textPlaceMode">
+          <button (click)="changeTextFontSize(-2)" [disabled]="textFontSize <= 8"><svg-icon
+              name="remove"></svg-icon></button>
+          <span>{{ textFontSize }}</span>
+          <button (click)="changeTextFontSize(2)" [disabled]="textFontSize >= 100"><svg-icon
+              name="add"></svg-icon></button>
+          <div class="color-dots">
+            <div class="color-dot" style="background:#000" (click)="setTextColor('#000000')"
+              [class.active]="textColor === '#000000'"></div>
+            <div class="color-dot" style="background:#00f" (click)="setTextColor('#0000FF')"
+              [class.active]="textColor === '#0000FF'"></div>
+            <div class="color-dot" style="background:#f00" (click)="setTextColor('#FF0000')"
+              [class.active]="textColor === '#FF0000'"></div>
+            <div class="color-dot color-dot--custom" [style.background]="textColor" title="กำหนดสีเอง">
+              <svg-icon name="color-palette" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,0.5); mix-blend-mode: difference; pointer-events: none;"></svg-icon>
+              <input type="color" [value]="textColor" (input)="setTextColor($any($event.target).value)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Mark Stamps + Form Fields -->
+      <div class="tool-item mark-tool-item">
+        <button class="toolbar-btn mark-toolbar-btn" [class.active]="showMarkOptions || toolMode === 'mark'"
+          (click)="showMarkOptions = !showMarkOptions" title="แบบฟอร์ม">
+          <!-- Fixed form icon: shows checkbox + radio + text rows -->
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="1" y="2" width="7" height="6" rx="1.2" stroke="currentColor" stroke-width="1.6"/>
+            <polyline points="2.5,5 4.2,7 7.5,3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="10" y1="5" x2="21" y2="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="4.5" cy="14" r="3.2" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="4.5" cy="14" r="1.5" fill="currentColor"/>
+            <line x1="10" y1="14" x2="21" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10" y1="20" x2="21" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="1" y1="20" x2="7.5" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="1" y1="17.5" x2="5" y2="17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="mark-btn-label">แบบฟอร์ม</span>
+          <svg-icon name="chevron-down-outline" class="mark-chevron"></svg-icon>
+        </button>
+
+        <div class="mark-popup" *ngIf="showMarkOptions">
+          <!-- Quick Marks section -->
+          <div class="mark-popup-section-label">เพิ่มเครื่องหมายด่วน</div>
+          <div class="mark-quick-row">
+            <button class="mark-quick-btn" [class.active]="toolMode === 'mark' && markType === 'check'"
+              (click)="enableMarkMode('check')" title="เครื่องหมายถูก">
+              <svg width="28" height="28" viewBox="0 0 28 28"><polyline points="4,14 11,21 24,7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            </button>
+            <button class="mark-quick-btn" [class.active]="toolMode === 'mark' && markType === 'cross'"
+              (click)="enableMarkMode('cross')" title="เครื่องหมายผิด">
+              <svg width="28" height="28" viewBox="0 0 28 28"><line x1="5" y1="5" x2="23" y2="23" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><line x1="23" y1="5" x2="5" y2="23" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+            </button>
+            <button class="mark-quick-btn" [class.active]="toolMode === 'mark' && markType === 'dot'"
+              (click)="enableMarkMode('dot')" title="จุด">
+              <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="9" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <!-- Form Fields section -->
+          <div class="mark-popup-divider"></div>
+          <div class="mark-popup-section-label">เพิ่มฟิลด์แบบฟอร์มใหม่</div>
+          <div class="mark-form-list">
+            <button class="mark-form-row-btn" [class.active]="toolMode === 'formfield' && formFieldType === 'text'"
+              (click)="enableFormFieldMode('text')" title="Text Field">
+              <span class="mark-form-row-icon mark-form-row-icon--text">Aa</span>
+              <span>Text Field</span>
+            </button>
+            <button class="mark-form-row-btn" [class.active]="toolMode === 'formfield' && formFieldType === 'checkbox'"
+              (click)="enableFormFieldMode('checkbox')" title="Checkbox">
+              <span class="mark-form-row-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18"><rect x="1" y="1" width="16" height="16" rx="2.5" stroke="currentColor" stroke-width="2" fill="none"/><polyline points="4,9 7,13 14,5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+              </span>
+              <span>Checkbox</span>
+            </button>
+            <button class="mark-form-row-btn" [class.active]="toolMode === 'formfield' && formFieldType === 'radio'"
+              (click)="enableFormFieldMode('radio')" title="Radio Button">
+              <span class="mark-form-row-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="9" cy="9" r="4" fill="currentColor"/></svg>
+              </span>
+              <span>Radio Button</span>
+            </button>
+          </div>
+
+          <!-- Size + Color controls (compact, below fold) -->
+          <div class="mark-popup-divider"></div>
+          <div class="mark-controls-row">
+            <button (click)="changeMarkSize(-4)" [disabled]="markSize <= 12"><svg-icon name="remove"></svg-icon></button>
+            <span class="mark-size-val">{{ markSize }}</span>
+            <button (click)="changeMarkSize(4)" [disabled]="markSize >= 96"><svg-icon name="add"></svg-icon></button>
+            <div class="color-dots" style="margin-left: 6px;">
+              <div class="color-dot" style="background:#000" (click)="setMarkColor('#000000')" [class.active]="markColor === '#000000'"></div>
+              <div class="color-dot" style="background:#00f" (click)="setMarkColor('#0000FF')" [class.active]="markColor === '#0000FF'"></div>
+              <div class="color-dot" style="background:#f00" (click)="setMarkColor('#FF0000')" [class.active]="markColor === '#FF0000'"></div>
+              <div class="color-dot" style="background:#009900" (click)="setMarkColor('#009900')" [class.active]="markColor === '#009900'"></div>
+              <div class="color-dot color-dot--custom" [style.background]="markColor" title="กำหนดสีเอง">
+                <svg-icon name="color-palette" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,0.5); mix-blend-mode: difference; pointer-events: none;"></svg-icon>
+                <input type="color" [value]="markColor" (input)="setMarkColor($any($event.target).value)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Cancel / close popup -->
+          <div class="mark-popup-divider"></div>
+          <button class="mark-cancel-btn" (click)="showMarkOptions = false; toolMode = 'none'; updateCursor()">
+            <svg-icon name="close-outline"></svg-icon>
+            ยกเลิก
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <!-- Shapes — Dropdown -->
+      <div class="tool-item shape-tool-item">
+        <!-- Main shape button: shows current shape icon, click to activate/toggle dropdown -->
+        <button class="toolbar-btn" [class.active]="shapeMode"
+          (click)="toolMode='shape'; showShapeDropdown=!showShapeDropdown" title="รูปทรง">
+          <svg-icon [name]="shapeType === 'rect' ? 'square-outline'
+                          : shapeType === 'circle' ? 'ellipse-outline'
+                          : shapeType === 'line' ? 'remove-outline'
+                          : 'arrow-forward-outline'"></svg-icon>
+          <svg-icon name="chevron-down-outline" class="shape-chevron"></svg-icon>
+        </button>
+
+        <!-- Dropdown: choose shape type -->
+        <div class="shape-dropdown" *ngIf="showShapeDropdown">
+          <button class="shape-dd-btn" [class.active]="shapeType === 'rect'" (click)="selectShape('rect')"
+            title="สี่เหลี่ยม">
+            <svg-icon name="square-outline"></svg-icon>
+          </button>
+          <button class="shape-dd-btn" [class.active]="shapeType === 'circle'" (click)="selectShape('circle')"
+            title="วงกลม">
+            <svg-icon name="ellipse-outline"></svg-icon>
+          </button>
+          <button class="shape-dd-btn" [class.active]="shapeType === 'line'" (click)="selectShape('line')" title="เส้น">
+            <svg-icon name="remove-outline"></svg-icon>
+          </button>
+          <button class="shape-dd-btn" [class.active]="shapeType === 'arrow'" (click)="selectShape('arrow')"
+            title="ลูกศร">
+            <svg-icon name="arrow-forward-outline"></svg-icon>
+          </button>
+        </div>
+
+        <!-- Options panel: stroke width, stroke color, fill color -->
+        <div class="shape-options-panel" *ngIf="shapeMode">
+
+          <!-- Stroke width -->
+          <div class="shape-opt-group">
+            <span class="shape-opt-label">ขนาด</span>
+            <button class="sopt-btn" (click)="changeShapeStrokeSize(-1)" [disabled]="shapeStrokeSize <= 1">
+              <svg-icon name="remove"></svg-icon>
+            </button>
+            <span class="sopt-val">{{ shapeStrokeSize }}</span>
+            <button class="sopt-btn" (click)="changeShapeStrokeSize(1)" [disabled]="shapeStrokeSize >= 20">
+              <svg-icon name="add"></svg-icon>
+            </button>
+          </div>
+
+          <div class="sopt-divider"></div>
+
+          <!-- Stroke color (disabled when no-stroke is on) -->
+          <div class="shape-opt-group">
+            <span class="shape-opt-label">เส้นขอบ</span>
+            <!-- No stroke toggle -->
+            <button class="sopt-fill-toggle" [class.active]="shapeNoStroke" (click)="toggleShapeNoStroke()"
+              title="ไม่มีเส้นขอบ">
+              <svg-icon name="ban-outline"></svg-icon>
+            </button>
+            <div class="mac-color-grid" [class.disabled]="shapeNoStroke">
+              <div class="mac-swatch" *ngFor="let c of shapeColorSwatches" [style.background]="c"
+                [class.active]="shapeStrokeColor === c && !shapeNoStroke"
+                (click)="!shapeNoStroke && setShapeStrokeColor(c)" [title]="c"></div>
+            </div>
+            <div class="mac-custom-color" [class.disabled]="shapeNoStroke">
+              <div class="mac-swatch mac-swatch--current" [style.background]="shapeStrokeColor"></div>
+              <input type="color" [value]="shapeStrokeColor" (input)="setShapeStrokeColor($any($event.target).value)"
+                [disabled]="shapeNoStroke" title="กำหนดสีเอง" />
+            </div>
+          </div>
+
+          <div class="sopt-divider"></div>
+
+          <!-- Fill color -->
+          <div class="shape-opt-group">
+            <span class="shape-opt-label">สีพื้น</span>
+            <button class="sopt-fill-toggle" [class.active]="shapeFillEnabled" (click)="toggleShapeFill()"
+              title="เปิด/ปิดสีพื้น">
+              <svg-icon [name]="shapeFillEnabled ? 'color-fill' : 'color-fill-outline'"></svg-icon>
+            </button>
+            <div class="mac-color-grid" [class.disabled]="!shapeFillEnabled">
+              <div class="mac-swatch" *ngFor="let c of shapeFillSwatches" [style.background]="c"
+                [class.active]="shapeFillColor === c && shapeFillEnabled"
+                (click)="shapeFillEnabled && setShapeFillColor(c)" [title]="c"></div>
+            </div>
+            <div class="mac-custom-color" [class.disabled]="!shapeFillEnabled">
+              <div class="mac-swatch mac-swatch--current" [style.background]="shapeFillColor"></div>
+              <input type="color" [value]="shapeFillColor" (input)="setShapeFillColor($any($event.target).value)"
+                [disabled]="!shapeFillEnabled" title="กำหนดสีพื้นเอง" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <!-- Draw Tool -->
+      <div class="tool-item">
+        <button class="toolbar-btn" [class.active]="drawMode" (click)="toggleDraw()" title="วาด">
+          <svg-icon name="brush"></svg-icon>
+        </button>
+        <div class="tool-options" *ngIf="drawMode">
+          <button (click)="changeBrushSize(-1)" [disabled]="brushSize <= 1"><svg-icon name="remove"></svg-icon></button>
+          <span>{{ brushSize }}</span>
+          <button (click)="changeBrushSize(1)" [disabled]="brushSize >= 50"><svg-icon name="add"></svg-icon></button>
+          <div class="color-dots">
+            <div class="color-dot" style="background:#000" (click)="setBrushColor('#000000')"
+              [class.active]="brushColor === '#000000'"></div>
+            <div class="color-dot" style="background:#00f" (click)="setBrushColor('#0000FF')"
+              [class.active]="brushColor === '#0000FF'"></div>
+            <div class="color-dot" style="background:#f00" (click)="setBrushColor('#FF0000')"
+              [class.active]="brushColor === '#FF0000'"></div>
+            <div class="color-dot color-dot--custom" [style.background]="brushColor" title="กำหนดสีเอง">
+              <svg-icon name="color-palette" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,0.5); mix-blend-mode: difference; pointer-events: none;"></svg-icon>
+              <input type="color" [value]="brushColor" (input)="setBrushColor($any($event.target).value)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Highlight Tool -->
+      <div class="tool-item">
+        <button class="toolbar-btn" [class.active]="highlightMode" (click)="toggleHighlight()" title="ไฮไลท์">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Marker Body -->
+            <path d="M18 2l4 4L9 19H5v-4L18 2z"></path>
+            <path d="M14 6l4 4"></path>
+            <!-- Highlight Line -->
+            <line x1="3" y1="22" x2="21" y2="22" stroke-width="3"></line>
+          </svg>
+        </button>
+        <div class="tool-options" *ngIf="highlightMode">
+          <button (click)="changeHighlightSize(-5)" [disabled]="highlightSize <= 5"><svg-icon
+              name="remove"></svg-icon></button>
+          <span>{{ highlightSize }}</span>
+          <button (click)="changeHighlightSize(5)" [disabled]="highlightSize >= 100"><svg-icon
+              name="add"></svg-icon></button>
+          <div class="color-dots">
+            <div class="color-dot" style="background:#ffff00" (click)="setHighlightColor('#ffff00')"
+              [class.active]="highlightColor === '#ffff00'" title="เหลือง"></div>
+            <div class="color-dot" style="background:#00ff00" (click)="setHighlightColor('#00ff00')"
+              [class.active]="highlightColor === '#00ff00'" title="เขียว"></div>
+            <div class="color-dot" style="background:#00ffff" (click)="setHighlightColor('#00ffff')"
+              [class.active]="highlightColor === '#00ffff'" title="ฟ้า"></div>
+            <div class="color-dot" style="background:#ff99c2" (click)="setHighlightColor('#ff99c2')"
+              [class.active]="highlightColor === '#ff99c2'" title="ชมพู"></div>
+            <div class="color-dot" style="background:#ffb366" (click)="setHighlightColor('#ffb366')"
+              [class.active]="highlightColor === '#ffb366'" title="ส้ม"></div>
+            <div class="color-dot" style="background:#d9b3ff" (click)="setHighlightColor('#d9b3ff')"
+              [class.active]="highlightColor === '#d9b3ff'" title="ม่วง"></div>
+            <div class="color-dot color-dot--custom" [style.background]="highlightColor" title="กำหนดสีเองรหัส HEX">
+              <svg-icon name="color-palette" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,0.5); mix-blend-mode: difference; pointer-events: none;"></svg-icon>
+              <input type="color" [value]="highlightColor" (input)="setHighlightColor($any($event.target).value)" title="กำหนดสีเอง">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eraser -->
+      <div class="tool-item">
+        <button class="toolbar-btn" [class.active]="eraserMode" (click)="toggleEraser()" title="ยางลบ (ลบเส้นและรูปทรง)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 20H7L3 16C2.5 15.5 2.5 14.5 3 14L13 4C13.5 3.5 14.5 3.5 15 4L20 9C20.5 9.5 20.5 10.5 20 11L11 20H20V20Z"/>
+            <path d="M17.5 15L9 6.5"/>
+          </svg>
+        </button>
+        <div class="tool-options" *ngIf="eraserMode">
+          <button (click)="changeEraserSize(-5)" [disabled]="eraserSize <= 5"><svg-icon name="remove"></svg-icon></button>
+          <span>{{ eraserSize }}</span>
+          <button (click)="changeEraserSize(5)" [disabled]="eraserSize >= 200"><svg-icon name="add"></svg-icon></button>
+        </div>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <!-- Insert Tools -->
+      <button class="toolbar-btn" (click)="openSignaturePickerOrPad()" title="ลายเซ็น">
+        <svg-icon name="finger-print"></svg-icon>
+      </button>
+      <button class="toolbar-btn toolbar-btn--toggle" [class.active]="showDigitalId"
+        (click)="showDigitalId = !showDigitalId" title="แสดง/ซ่อน Digital ID">
+        <svg-icon [name]="showDigitalId ? 'shield-checkmark' : 'shield-checkmark-outline'"></svg-icon>
+        <span class="toggle-label">DID</span>
+      </button>
+
+      <!-- Date Stamp with Options -->
+      <div class="tool-item">
+        <button class="toolbar-btn" [class.active]="showDateOptions" (click)="addDateStampAndShowOptions()"
+          title="วันที่">
+          <svg-icon name="calendar"></svg-icon>
+        </button>
+        <div class="tool-options" *ngIf="showDateOptions">
+          <button (click)="changeDateFontSize(-2)" [disabled]="dateFontSize <= 8"><svg-icon
+              name="remove"></svg-icon></button>
+          <span>{{ dateFontSize }}</span>
+          <button (click)="changeDateFontSize(2)" [disabled]="dateFontSize >= 100"><svg-icon
+              name="add"></svg-icon></button>
+          <div class="color-dots">
+            <div class="color-dot" style="background:#000" (click)="setDateColor('#000000')"
+              [class.active]="dateColor === '#000000'"></div>
+            <div class="color-dot" style="background:#00f" (click)="setDateColor('#0000FF')"
+              [class.active]="dateColor === '#0000FF'"></div>
+            <div class="color-dot" style="background:#f00" (click)="setDateColor('#FF0000')"
+              [class.active]="dateColor === '#FF0000'"></div>
+            <div class="color-dot color-dot--custom" [style.background]="dateColor" title="กำหนดสีเอง">
+              <svg-icon name="color-palette" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #fff; text-shadow: 0 0 2px rgba(0,0,0,0.5); mix-blend-mode: difference; pointer-events: none;"></svg-icon>
+              <input type="color" [value]="dateColor" (input)="setDateColor($any($event.target).value)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="toolbar-btn" (click)="triggerImageUpload()" title="รูปภาพ">
+        <svg-icon name="image"></svg-icon>
+      </button>
+      <input type="file" #fileInput accept="image/*" style="display:none" (change)="onImageSelected($event)">
+
+      <!-- Stamp Tool -->
+      <button class="toolbar-btn toolbar-btn--labeled" (click)="openStampPicker()" title="ตรายาง/ตราประทับ">
+        <svg-icon name="business-outline"></svg-icon>
+        <small>ตรายาง</small>
+      </button>
+      <input type="file" #stampFileInput accept="image/*" style="display:none" (change)="onStampFileSelected($event)">
+
+      <div class="toolbar-divider"></div>
+
+      <!-- Page Flip -->
+      <div class="tool-item flip-tool-item">
+        <button class="toolbar-btn toolbar-btn--labeled" [class.active]="showFlipPanel" (click)="toggleFlipPanel()" title="พลิกกระดาษ">
+          <svg-icon name="swap-horizontal-outline"></svg-icon>
+          <small>พลิกกระดาษ</small>
+        </button>
+
+        <!-- Flip Panel (floating) -->
+        <div class="flip-panel" *ngIf="showFlipPanel">
+          <div class="flip-panel__header">
+            <svg-icon name="swap-horizontal-outline"></svg-icon> พลิกกระดาษ
+            <button class="flip-panel__close" (click)="closeFlipPanel()">✕</button>
+          </div>
+          <div class="flip-panel__body">
+            <div class="flip-scope">
+              <label [class.active]="flipScope === 'current'" (click)="flipScope = 'current'">
+                <svg-icon name="document-outline"></svg-icon> หน้าปัจจุบัน ({{ pageNo }})
+              </label>
+              <label [class.active]="flipScope === 'all'" (click)="flipScope = 'all'">
+                <svg-icon name="documents-outline"></svg-icon> ทุกหน้า
+              </label>
+            </div>
+            <div class="flip-current-label">
+              มุมปัจจุบัน: <strong>{{ getPageFlip(pageNo) }}°</strong>
+            </div>
+            <div class="flip-angle-btns">
+              <button class="flip-btn" [class.active]="getPageFlip(pageNo) === 0" (click)="setFlipAngle(0)" title="0° (ปกติ)">0°</button>
+              <button class="flip-btn" [class.active]="getPageFlip(pageNo) === 90" (click)="setFlipAngle(90)" title="90° (แนวนอนขวา)">90°</button>
+              <button class="flip-btn" [class.active]="getPageFlip(pageNo) === 180" (click)="setFlipAngle(180)" title="180° (กลับหัว)">180°</button>
+              <button class="flip-btn" [class.active]="getPageFlip(pageNo) === 270" (click)="setFlipAngle(270)" title="270° (แนวนอนซ้าย)">270°</button>
+            </div>
+            <div class="flip-rotate-btns">
+              <button class="flip-action-btn" (click)="flipPageCCW()" title="หมุนทวนเข็ม">
+                <svg-icon name="return-up-back-outline"></svg-icon> หมุนซ้าย
+              </button>
+              <button class="flip-action-btn" (click)="flipPageCW()" title="หมุนตามเข็ม">
+                หมุนขวา <svg-icon name="return-up-forward-outline"></svg-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deskew (Page Straightening) -->
+      <button class="toolbar-btn toolbar-btn--labeled" [class.active]="showDeskewPanel" (click)="toggleDeskewPanel()" title="หมุนหน้า/จัดหน้าตรง">
+        <svg-icon name="sync-outline"></svg-icon>
+        <small>จัดหน้าตรง</small>
+      </button>
+
+      <!-- Watermark -->
+      <div class="tool-item wm-tool-item">
+        <button class="toolbar-btn toolbar-btn--labeled" [class.active]="showWatermarkPanel || watermark.enabled" (click)="toggleWatermarkPanel()" title="ลายน้ำ">
+          <svg-icon name="water-outline"></svg-icon>
+          <small>ลายน้ำ</small>
+        </button>
+
+        <!-- Watermark Settings Panel -->
+        <div class="wm-panel" *ngIf="showWatermarkPanel">
+          <div class="wm-panel__header">
+            <svg-icon name="water-outline"></svg-icon> ลายน้ำ (Watermark)
+            <button class="wm-panel__close" (click)="closeWatermarkPanel()">✕</button>
+          </div>
+          <div class="wm-panel__body">
+            <div class="wm-row">
+              <label>ประเภท</label>
+              <select [(ngModel)]="watermark.type" class="wm-input">
+                <option value="text">ข้อความ</option>
+                <option value="image">รูปภาพ</option>
+              </select>
+            </div>
+            <div *ngIf="watermark.type === 'text'">
+              <div class="wm-row">
+                <label>ข้อความ</label>
+                <input type="text" [(ngModel)]="watermark.text" class="wm-input" placeholder="สำเนา" />
+              </div>
+              <div class="wm-row">
+                <label>ฟอนต์</label>
+                <select [(ngModel)]="watermark.fontFamily" class="wm-input">
+                  <option value="TH Sarabun New">TH Sarabun New</option>
+                  <option value="TH Sarabun IT9">TH Sarabun IT9</option>
+                  <option value="Noto Sans Thai">Noto Sans Thai</option>
+                </select>
+              </div>
+              <div class="wm-row">
+                <label>ขนาด</label>
+                <input type="number" [(ngModel)]="watermark.fontSize" min="10" max="120" class="wm-input wm-input--sm" />
+              </div>
+              <div class="wm-row">
+                <label>สี</label>
+                <div class="wm-color-wrap">
+                  <div class="wm-color-swatch" [style.background]="watermark.color"></div>
+                  <input type="color" [(ngModel)]="watermark.color" />
+                </div>
+              </div>
+            </div>
+            <div *ngIf="watermark.type === 'image'">
+              <div class="wm-row">
+                <label>เลือกรูป</label>
+                <input type="file" accept="image/*" (change)="onWatermarkImageSelected($event)" class="wm-file-input" />
+              </div>
+              <div *ngIf="watermark.imageDataUrl" class="wm-img-preview">
+                <img [src]="watermark.imageDataUrl" />
+              </div>
+            </div>
+            <div class="wm-section-title">การแสดงผล</div>
+            <div class="wm-row">
+              <label>ความโปร่งใส</label>
+              <input type="range" min="5" max="100" [(ngModel)]="watermark.opacity" class="wm-slider" />
+              <span class="wm-val">{{ watermark.opacity }}%</span>
+            </div>
+            <div class="wm-row">
+              <label>มุมหมุน</label>
+              <input type="range" min="0" max="360" [(ngModel)]="watermark.rotation" class="wm-slider" />
+              <span class="wm-val">{{ watermark.rotation }}°</span>
+            </div>
+            <div class="wm-row">
+              <label>โหมด</label>
+              <div class="wm-radio-group">
+                <label><input type="radio" [(ngModel)]="watermark.mode" value="center" /> กึ่งกลาง</label>
+                <label><input type="radio" [(ngModel)]="watermark.mode" value="tiled" /> กระจายเต็มหน้า</label>
+              </div>
+            </div>
+            <div *ngIf="watermark.mode === 'tiled'" class="wm-row">
+              <label>ระยะห่าง</label>
+              <div class="wm-spacing-group">
+                <span>X</span>
+                <input type="number" [(ngModel)]="watermark.spacingX" min="50" max="500" class="wm-input wm-input--xs" />
+                <span>Y</span>
+                <input type="number" [(ngModel)]="watermark.spacingY" min="50" max="500" class="wm-input wm-input--xs" />
+              </div>
+            </div>
+            <div class="wm-row">
+              <label>ขอบเขต</label>
+              <div class="wm-radio-group">
+                <label><input type="radio" [(ngModel)]="watermark.scope" value="all" /> ทุกหน้า</label>
+                <label><input type="radio" [(ngModel)]="watermark.scope" value="current" /> หน้าปัจจุบัน</label>
+              </div>
+            </div>
+          </div>
+          <div class="wm-panel__footer">
+            <button class="wm-btn wm-btn--cancel" (click)="removeWatermark(); closeWatermarkPanel()">
+              <svg-icon name="close-outline"></svg-icon> ลบลายน้ำ
+            </button>
+            <button class="wm-btn wm-btn--apply" (click)="applyWatermark()">
+              <svg-icon name="checkmark-outline"></svg-icon> ใส่ลายน้ำ
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page Numbers -->
+      <div class="tool-item pn-tool-item">
+        <button class="toolbar-btn toolbar-btn--labeled" [class.active]="showPageNumberPanel || pageNumber.enabled" (click)="togglePageNumberPanel()" title="เลขหน้า">
+          <svg-icon name="list-outline"></svg-icon>
+          <small>เลขหน้า</small>
+        </button>
+
+        <!-- Page Number Panel -->
+        <div class="pn-panel" *ngIf="showPageNumberPanel">
+          <div class="pn-panel__header">
+            <svg-icon name="list-outline"></svg-icon> เลขหน้า
+            <button class="pn-panel__close" (click)="closePageNumberPanel()">✕</button>
+          </div>
+          <div class="pn-panel__body" style="max-height: 60vh; overflow-y: auto;">
+            <div class="pn-section-title">รูปแบบตัวเลข</div>
+            <div class="pn-format-btns" style="flex-wrap: wrap;">
+              <button class="pn-format-btn" [class.active]="pageNumber.format === 'arabic'" (click)="pageNumber.format = 'arabic'" style="flex:1; min-width:70px;">123 (อาราบิก)</button>
+              <button class="pn-format-btn" [class.active]="pageNumber.format === 'thai'" (click)="pageNumber.format = 'thai'" style="flex:1; min-width:70px;">๑๒๓ (ไทย)</button>
+              <button class="pn-format-btn" [class.active]="pageNumber.format === 'roman'" (click)="pageNumber.format = 'roman'" style="flex:1; min-width:70px;">i, ii, iii</button>
+              <button class="pn-format-btn" [class.active]="pageNumber.format === 'roman-upper'" (click)="pageNumber.format = 'roman-upper'" style="flex:1; min-width:70px;">I, II, III</button>
+            </div>
+
+            <div class="pn-section-title">ตำแหน่ง</div>
+            <div class="pn-pos-grid">
+              <button class="pn-pos-btn" [class.active]="pageNumber.position === 'top-left'" (click)="pageNumber.position = 'top-left'" title="บนซ้าย"><svg-icon name="arrow-up-outline"></svg-icon> บนซ้าย</button>
+              <button class="pn-pos-btn" [class.active]="pageNumber.position === 'top-center'" (click)="pageNumber.position = 'top-center'" title="บนกลาง"><svg-icon name="remove-outline"></svg-icon> บนกลาง</button>
+              <button class="pn-pos-btn" [class.active]="pageNumber.position === 'top-right'" (click)="pageNumber.position = 'top-right'" title="บนขวา"><svg-icon name="arrow-up-outline"></svg-icon> บนขวา</button>
+              <button class="pn-pos-btn" [class.active]="pageNumber.position === 'bottom-left'" (click)="pageNumber.position = 'bottom-left'" title="ล่างซ้าย"><svg-icon name="arrow-down-outline"></svg-icon> ล่างซ้าย</button>
+              <button class="pn-pos-btn" [class.active]="pageNumber.position === 'bottom-center'" (click)="pageNumber.position = 'bottom-center'" title="ล่างกลาง"><svg-icon name="remove-outline"></svg-icon> ล่างกลาง</button>
+              <button class="pn-pos-btn" [class.active]="pageNumber.position === 'bottom-right'" (click)="pageNumber.position = 'bottom-right'" title="ล่างขวา"><svg-icon name="arrow-down-outline"></svg-icon> ล่างขวา</button>
+            </div>
+
+            <div class="pn-row" style="margin-top: 6px;">
+              <label class="pn-checkbox">
+                <input type="checkbox" [(ngModel)]="pageNumber.mirror" /> สลับซ้าย-ขวา (พิมพ์สองหน้า)
+              </label>
+            </div>
+
+            <div class="pn-section-title" style="margin-top: 10px;">ช่วงหน้า</div>
+            <div class="pn-row">
+              <label>เริ่มนับที่หน้าจริงหน้าที่</label>
+              <input type="number" [(ngModel)]="pageNumber.startAtPage" min="1" [max]="pageCount" class="pn-input pn-input--sm" />
+            </div>
+            <div class="pn-row">
+              <label>เลขเริ่มต้น</label>
+              <input type="number" [(ngModel)]="pageNumber.startFrom" min="1" class="pn-input pn-input--sm" />
+            </div>
+            <div class="pn-row">
+              <label class="pn-checkbox">
+                <input type="checkbox" [(ngModel)]="pageNumber.skipFirstPage" /> ไม่แสดงที่หน้าแรก (หน้าปก)
+              </label>
+            </div>
+
+            <div class="pn-section-title" style="margin-top: 10px;">เลือกหน้าที่แสดง</div>
+            <div class="pn-format-btns" style="flex-wrap: wrap;">
+              <button class="pn-format-btn" [class.active]="pageNumber.pageScope === 'all'" (click)="pageNumber.pageScope = 'all'" style="flex:1; min-width:60px;">ทุกหน้า</button>
+              <button class="pn-format-btn" [class.active]="pageNumber.pageScope === 'odd'" (click)="pageNumber.pageScope = 'odd'" style="flex:1; min-width:60px;">หน้าคี่</button>
+              <button class="pn-format-btn" [class.active]="pageNumber.pageScope === 'even'" (click)="pageNumber.pageScope = 'even'" style="flex:1; min-width:60px;">หน้าคู่</button>
+              <button class="pn-format-btn" [class.active]="pageNumber.pageScope === 'custom'" (click)="pageNumber.pageScope = 'custom'" style="flex:1; min-width:60px;">ระบุเอง</button>
+            </div>
+            <div class="pn-row" *ngIf="pageNumber.pageScope === 'custom'">
+              <label>ระบุหน้า</label>
+              <input type="text" [(ngModel)]="pageNumber.customPages" class="pn-input" placeholder="เช่น 1,3,5-10" style="font-size: 13px;" />
+            </div>
+
+            <div class="pn-section-title" style="margin-top: 10px;">คำนำหน้า / คำต่อท้าย</div>
+            <div class="pn-row">
+              <label class="pn-checkbox">
+                <input type="checkbox" [(ngModel)]="pageNumber.showPrefix" /> แสดงคำนำหน้า
+              </label>
+            </div>
+            <div class="pn-row" *ngIf="pageNumber.showPrefix">
+              <label>คำนำหน้า</label>
+              <input type="text" [(ngModel)]="pageNumber.prefixText" class="pn-input" placeholder="หน้า " style="font-size: 13px;" />
+            </div>
+            <div class="pn-row">
+              <label>คำต่อท้าย</label>
+              <input type="text" [(ngModel)]="pageNumber.suffixText" class="pn-input" placeholder="เช่น /{{ pageCount }}" style="font-size: 13px;" />
+            </div>
+
+            <div class="pn-section-title" style="margin-top: 10px;">ส่วนหัว / ส่วนท้าย</div>
+            <div class="pn-row">
+              <label>ข้อความส่วนหัว</label>
+              <input type="text" [(ngModel)]="pageNumber.headerText" class="pn-input" placeholder="เช่น ชื่อเอกสาร" style="font-size: 13px;" />
+            </div>
+            <div class="pn-row" *ngIf="pageNumber.headerText">
+              <label>ตำแหน่งหัว</label>
+              <div class="pn-format-btns" style="flex-wrap: wrap;">
+                <button class="pn-format-btn" [class.active]="pageNumber.headerPosition === 'top-left'" (click)="pageNumber.headerPosition = 'top-left'" style="flex:1; min-width:50px; font-size: 11px;">ซ้าย</button>
+                <button class="pn-format-btn" [class.active]="pageNumber.headerPosition === 'top-center'" (click)="pageNumber.headerPosition = 'top-center'" style="flex:1; min-width:50px; font-size: 11px;">กลาง</button>
+                <button class="pn-format-btn" [class.active]="pageNumber.headerPosition === 'top-right'" (click)="pageNumber.headerPosition = 'top-right'" style="flex:1; min-width:50px; font-size: 11px;">ขวา</button>
+              </div>
+            </div>
+            <div class="pn-row">
+              <label>ข้อความส่วนท้าย</label>
+              <input type="text" [(ngModel)]="pageNumber.footerText" class="pn-input" placeholder="เช่น วันที่พิมพ์" style="font-size: 13px;" />
+            </div>
+            <div class="pn-row" *ngIf="pageNumber.footerText">
+              <label>ตำแหน่งท้าย</label>
+              <div class="pn-format-btns" style="flex-wrap: wrap;">
+                <button class="pn-format-btn" [class.active]="pageNumber.footerPosition === 'bottom-left'" (click)="pageNumber.footerPosition = 'bottom-left'" style="flex:1; min-width:50px; font-size: 11px;">ซ้าย</button>
+                <button class="pn-format-btn" [class.active]="pageNumber.footerPosition === 'bottom-center'" (click)="pageNumber.footerPosition = 'bottom-center'" style="flex:1; min-width:50px; font-size: 11px;">กลาง</button>
+                <button class="pn-format-btn" [class.active]="pageNumber.footerPosition === 'bottom-right'" (click)="pageNumber.footerPosition = 'bottom-right'" style="flex:1; min-width:50px; font-size: 11px;">ขวา</button>
+              </div>
+            </div>
+
+            <div class="pn-section-title" style="margin-top: 10px;">รูปแบบตัวอักษร</div>
+            <div class="pn-row">
+              <label>ฟอนต์</label>
+              <select [(ngModel)]="pageNumber.fontFamily" class="pn-input">
+                <option value="TH Sarabun New">TH Sarabun New</option>
+                <option value="TH Sarabun IT9">TH Sarabun IT9</option>
+                <option value="Noto Sans Thai">Noto Sans Thai</option>
+              </select>
+            </div>
+            <div class="pn-row">
+              <label>ขนาด</label>
+              <input type="number" [(ngModel)]="pageNumber.fontSize" min="8" max="36" class="pn-input pn-input--sm" />
+            </div>
+            <div class="pn-row">
+              <label>สี</label>
+              <div class="wm-color-wrap">
+                <div class="wm-color-swatch" [style.background]="pageNumber.color"></div>
+                <input type="color" [(ngModel)]="pageNumber.color" />
+              </div>
+            </div>
+
+            <div class="pn-preview-box" style="margin-top: 8px;">
+              ตัวอย่าง: <strong [style.font-family]="pageNumber.fontFamily" [style.font-size.px]="pageNumber.fontSize" [style.color]="pageNumber.color">{{ formatPageNum(pageNumber.startAtPage) }}</strong>
+            </div>
+          </div>
+          <div class="pn-panel__footer">
+            <button class="wm-btn wm-btn--cancel" (click)="removePageNumbers(); closePageNumberPanel()">
+              <svg-icon name="trash-outline"></svg-icon> ลบ
+            </button>
+            <button class="wm-btn wm-btn--apply" (click)="applyPageNumbers()">
+              <svg-icon name="checkmark-outline"></svg-icon> ตั้งค่าตามนี้
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Split PDF -->
+      <div class="tool-item split-tool-item" style="position: relative;">
+        <button class="toolbar-btn toolbar-btn--labeled" [class.active]="showSplitPanel" (click)="toggleSplitPanel()" title="แยก PDF (ดาวน์โหลดบางหน้า)">
+          <svg-icon name="cut-outline"></svg-icon>
+          <small>แยก PDF</small>
+        </button>
+
+        <div class="split-panel" *ngIf="showSplitPanel" style="position: absolute; top: calc(100% + 6px); right: 0; z-index: 1000; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 280px; padding: 16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:8px; margin-bottom:12px;">
+            <strong style="color:#1e293b; display:flex; align-items:center; gap:6px;">
+              <svg-icon name="cut-outline"></svg-icon> แยก PDF
+            </strong>
+            <button (click)="showSplitPanel = false" style="background:none; border:none; cursor:pointer; font-size:18px;">&times;</button>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="display:block; font-size:13px; color:#64748b; margin-bottom:6px;">ระบุหน้า (เช่น 1, 3, 5-10):</label>
+            <input type="text" [(ngModel)]="splitPageRange" placeholder="1-{{ pageCount }}" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px;">
+          </div>
+          <button class="toolbar-btn toolbar-btn--save" (click)="executeSplitPdf()" style="width:100%; background:#10b981; color:#fff; border:none; border-radius:6px; padding:8px; font-weight:bold; justify-content:center;">
+            ดาวน์โหลด
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <!-- Undo/Redo -->
+      <button class="toolbar-btn" (click)="undo()" [disabled]="!canUndo()" title="เลิกทำ">
+        <svg-icon name="arrow-undo"></svg-icon>
+      </button>
+      <button class="toolbar-btn" (click)="redo()" [disabled]="!canRedo()" title="ทำซ้ำ">
+        <svg-icon name="arrow-redo"></svg-icon>
+      </button>
+      <button class="toolbar-btn toolbar-btn--danger" (click)="clearAnnotations()" title="ล้างทั้งหมด">
+        <svg-icon name="trash"></svg-icon>
+      </button>
+    </div>
+
+    <!-- Main Content Area: Thumbnails + Viewer -->
+    <div class="main-area">
+
+      <!-- Left Thumbnails Sidebar -->
+      <aside class="thumbnails-sidebar" *ngIf="showThumbnails">
+        <div class="thumb-list" (scroll)="onThumbScroll($event)">
+
+          <!-- Top insert button (before page 1) -->
+          <div class="thumb-insert-row">
+            <button class="thumb-add-btn" (click)="toggleThumbInsert(0, $event)" title="แทรกก่อนหน้า 1">
+              <svg-icon name="add"></svg-icon>
+            </button>
+          </div>
+
+          <!-- Each thumbnail + its action bar + insert button after it -->
+          <ng-container *ngFor="let thumb of pageThumbnails; let i = index">
+
+            <!-- Thumbnail card wrapper -->
+            <div class="thumb-card-wrap"
+              draggable="true"
+              [class.thumb-card-wrap--dragging]="thumbDragFromIndex === i"
+              [class.thumb-card-wrap--drop-top]="thumbDragOverIndex === i && thumbDragFromIndex !== null && thumbDragFromIndex > i"
+              [class.thumb-card-wrap--drop-bot]="thumbDragOverIndex === i && thumbDragFromIndex !== null && thumbDragFromIndex < i"
+              (dragstart)="onThumbDragStart(i)"
+              (dragover)="$event.preventDefault(); onThumbDragOver(i)"
+              (dragleave)="onThumbDragLeave()"
+              (drop)="$event.preventDefault(); onThumbDrop(i)"
+              (dragend)="onThumbDragEnd()">
+              <!-- Clickable thumbnail -->
+              <div class="thumb-card" [class.active]="pageNo === i + 1"
+                [id]="'thumb-' + (i + 1)" (click)="goToPage(i + 1)">
+                <div class="thumb-card__img-wrap">
+                  <img [src]="thumb" [alt]="'Page ' + (i + 1)">
+                </div>
+                <span class="thumb-card__label">{{ i + 1 }}</span>
+              </div>
+
+              <!-- Per-page action bar -->
+              <div class="thumb-card__actions" (click)="$event.stopPropagation()">
+                <button class="thumb-action-btn" (click)="movePageToIndex(i + 1, 'up')"
+                  [disabled]="i === 0" title="เลื่อนขึ้น">
+                  <svg-icon name="chevron-up-outline"></svg-icon>
+                </button>
+                <button class="thumb-action-btn" (click)="movePageToIndex(i + 1, 'down')"
+                  [disabled]="i === pageThumbnails.length - 1" title="เลื่อนลง">
+                  <svg-icon name="chevron-down-outline"></svg-icon>
+                </button>
+                <button class="thumb-action-btn" (click)="promptMovePage(i + 1)"
+                  [disabled]="pageCount <= 1" title="ย้ายไปหน้า...">
+                  <svg-icon name="move-outline"></svg-icon>
+                </button>
+                <button class="thumb-action-btn" (click)="undoPageOp()"
+                  [disabled]="!canUndoPageOp" title="ย้อนกลับ">
+                  <svg-icon name="arrow-undo-outline"></svg-icon>
+                </button>
+                <button class="thumb-action-btn thumb-action-btn--danger"
+                  (click)="deleteSpecificPage(i + 1)" [disabled]="pageCount <= 1" title="ลบหน้า">
+                  <svg-icon name="trash-outline"></svg-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Insert button after each page -->
+            <div class="thumb-insert-row">
+              <button class="thumb-add-btn" (click)="toggleThumbInsert(i + 1, $event)" title="แทรกหน้า">
+                <svg-icon name="add"></svg-icon>
+              </button>
+            </div>
+
+          </ng-container>
+
+        </div>
+
+        <!-- Hidden file input -->
+        <input type="file" #thumbFileInput accept="image/*,.pdf" style="display:none"
+          (change)="onThumbFileSelected($event)">
+
+      </aside>
+
+      <!-- Insert Dropdown Overlay (outside aside — fixed position, no clipping) -->
+      <div class="thumb-insert-overlay" *ngIf="thumbInsertIndex >= 0"
+        [style.top.px]="thumbDropdownTop">
+        <div class="thumb-insert-backdrop" (click)="thumbInsertIndex = -1"></div>
+        <div class="thumb-insert-menu">
+          <button class="thumb-insert-opt" (click)="insertAtThumb(thumbInsertIndex, 'portrait')">
+            <svg-icon name="phone-portrait-outline"></svg-icon>
+            หน้าเปล่า แนวตั้ง
+          </button>
+          <button class="thumb-insert-opt" (click)="insertAtThumb(thumbInsertIndex, 'landscape')">
+            <svg-icon name="phone-landscape-outline"></svg-icon>
+            หน้าเปล่า แนวนอน
+          </button>
+          <button class="thumb-insert-opt" (click)="triggerThumbFileUpload(thumbInsertIndex)">
+            <svg-icon name="document-outline"></svg-icon>
+            แทรกไฟล์ PDF/รูปภาพ
+          </button>
+        </div>
+      </div>
+
+      <!-- Viewer -->
+      <div class="viewer-wrapper">
+        <!-- Stamp placement banner -->
+        <div class="stamp-place-banner" *ngIf="pendingStamp">
+          <span><svg-icon name="business-outline"></svg-icon> คลิกบน PDF เพื่อวางตรายาง</span>
+          <button (click)="cancelPendingStamp()"><svg-icon name="close-outline"></svg-icon> ยกเลิก (ESC)</button>
+        </div>
+
+        <!-- Deskew Panel Overlay -->
+        <div class="deskew-panel" *ngIf="showDeskewPanel">
+          <div class="deskew-panel__header">
+            <svg-icon name="sync-outline"></svg-icon> หมุนจัดหน้าตรง (หน้า {{ pageNo }})
+          </div>
+          <div class="deskew-panel__body">
+            <button class="toolbar-btn" (click)="setPageRotation(pageNo, (pageRotations[pageNo] || 0) - 90)" title="หมุนซ้าย 90°">
+              <svg-icon name="refresh-outline" style="transform: scaleX(-1);"></svg-icon>
+            </button>
+
+            <div class="deskew-slider-container">
+              <span class="deskew-angle">{{ (pageRotations[pageNo] || 0) | number:'1.1-1' }}°</span>
+              <input type="range" min="-15" max="15" step="0.1"
+                     [ngModel]="pageRotations[pageNo] || 0"
+                     (ngModelChange)="setPageRotation(pageNo, $event)"
+                     class="deskew-slider">
+              <div class="deskew-slider-ticks">
+                <span>-15</span><span>0</span><span>+15</span>
+              </div>
+            </div>
+
+            <button class="toolbar-btn" (click)="setPageRotation(pageNo, (pageRotations[pageNo] || 0) + 90)" title="หมุนขวา 90°">
+              <svg-icon name="refresh-outline"></svg-icon>
+            </button>
+          </div>
+          <div class="deskew-panel__footer">
+            <button class="toolbar-btn toolbar-btn--danger" (click)="resetPageRotation(pageNo)">คืนค่าเดิม</button>
+            <button class="toolbar-btn toolbar-btn--save" (click)="applyDeskew()">ตกลง</button>
+          </div>
+        </div>
+
+        <div class="viewer-container" #viewerContainer (scroll)="onViewerScroll($event)">
+          <!-- Render all pages for continuous scroll -->
+          <div *ngFor="let p of pages" class="page-container" [attr.data-page]="p" [id]="'page-' + p"
+            [class.stamp-place-mode]="!!pendingStamp"
+            [class.flip-mode]="!!getPageFlip(p)"
+            [class.deskew-mode]="showDeskewPanel"
+            [style.transform]="getPageRotation(p) ? 'rotate(' + getPageRotation(p) + 'deg)' : null"
+            (pointermove)="onStampGhostMove($event, p)"
+            (pointerdown)="onStampGhostClick($event, p)">
+            <canvas [id]="'pdfCanvas-' + p" class="pdf-canvas"></canvas>
+            <canvas [id]="'annotCanvas-' + p" class="annot-canvas" [class.tools-active]="toolMode !== 'none'"></canvas>
+
+            <!-- Watermark Preview Overlay -->
+            <div class="wm-preview-overlay" [ngStyle]="getWatermarkPreviewStyle(p)">
+              <div class="wm-preview-content"
+                [style.opacity]="watermark.opacity / 100"
+                [style.transform]="'rotate(-' + watermark.rotation + 'deg)'"
+                [style.color]="watermark.color"
+                [style.font-size.px]="watermark.type === 'text' ? watermark.fontSize * zoom : 0"
+                [style.font-family]="watermark.fontFamily">
+                <ng-container *ngIf="watermark.type === 'text'">
+                  <ng-container *ngIf="watermark.mode === 'center'">
+                    <span class="wm-text-center">{{ watermark.text }}</span>
+                  </ng-container>
+                  <ng-container *ngIf="watermark.mode === 'tiled'">
+                    <span class="wm-text-tiled">{{ watermark.text }}</span>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="watermark.type === 'image' && watermark.imageDataUrl">
+                  <img [src]="watermark.imageDataUrl" class="wm-preview-img" />
+                </ng-container>
+              </div>
+            </div>
+
+            <!-- Page Number Preview -->
+            <div class="pn-preview" *ngIf="pageNumber.enabled && shouldShowPageNum(p)" [ngStyle]="getPageNumPositionStyle(p)">
+              <span [style.font-family]="pageNumber.fontFamily"
+                [style.font-size.px]="pageNumber.fontSize * zoom"
+                [style.color]="pageNumber.color">{{ formatPageNum(p) }}</span>
+            </div>
+
+            <!-- TextBoxes for this page -->
+            <div *ngFor="let tb of getTextBoxesForPage(p)" class="text-box" [attr.data-tbid]="tb.id" [class.active]="activeTextBoxId === tb.id"
+              [style.left.%]="tb.x" [style.top.%]="tb.y" [style.width.%]="tb.width" [style.height.%]="tb.height"
+              [style.color]="tb.color" [style.font-size.px]="tb.fontSize * zoom"
+              [style.font-weight]="tb.bold ? 'bold' : 'normal'" [style.font-style]="tb.italic ? 'italic' : 'normal'"
+              [style.text-align]="tb.align" [style.z-index]="tb.zIndex || 10"
+              [style.font-family]="(tb.fontFamily || 'THSarabunNew') + ', sans-serif'"
+              [style.opacity]="tb.opacity !== undefined ? tb.opacity : 1"
+              [style.transform]="tb.rotation ? 'rotate(' + tb.rotation + 'deg)' : null"
+              [style.letter-spacing.px]="tb.letterSpacing || 0"
+              [style.line-height]="tb.lineHeight || 1.4"
+              (pointerdown)="startDrag($event, tb.id)" (contextmenu)="onContextMenu($event, tb.id, 'text')">
+
+              <!-- Floating toolbar — shown above the text box when active -->
+              <div class="tb-floating-bar" *ngIf="activeTextBoxId === tb.id" (pointerdown)="$event.stopPropagation()" (click)="lsDropOpenId = null; $event.stopPropagation()">
+                <!-- Bold / Italic -->
+                <button class="tb-bar-btn" [class.tb-bar-btn--active]="tb.bold" (click)="toggleBold()" title="ตัวหนา"><b>B</b></button>
+                <button class="tb-bar-btn tb-bar-btn--italic" [class.tb-bar-btn--active]="tb.italic" (click)="toggleItalic()" title="ตัวเอียง"><i>I</i></button>
+                <span class="tb-bar-sep"></span>
+                <!-- Alignment -->
+                <button class="tb-bar-btn" [class.tb-bar-btn--active]="tb.align === 'left'" (click)="setAlign('left')" title="ชิดซ้าย">
+                  <svg width="15" height="13" viewBox="0 0 15 13"><line x1="0" y1="1.5" x2="15" y2="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="0" y1="6.5" x2="10" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="0" y1="11.5" x2="13" y2="11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <button class="tb-bar-btn" [class.tb-bar-btn--active]="tb.align === 'center'" (click)="setAlign('center')" title="กึ่งกลาง">
+                  <svg width="15" height="13" viewBox="0 0 15 13"><line x1="0" y1="1.5" x2="15" y2="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="2.5" y1="6.5" x2="12.5" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="11.5" x2="14" y2="11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <button class="tb-bar-btn" [class.tb-bar-btn--active]="tb.align === 'right'" (click)="setAlign('right')" title="ชิดขวา">
+                  <svg width="15" height="13" viewBox="0 0 15 13"><line x1="0" y1="1.5" x2="15" y2="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="5" y1="6.5" x2="15" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="11.5" x2="15" y2="11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <span class="tb-bar-sep"></span>
+                <!-- Font family -->
+                <select class="tb-bar-select" [ngModel]="tb.fontFamily || 'THSarabunNew'" (ngModelChange)="setTbFontFamily(tb, $event)">
+                  <option value="THSarabunNew">TH Sarabun New</option>
+                  <option value="Noto Sans Thai Looped">Noto Sans Thai</option>
+                  <option value="Arial">Arial</option>
+                  <option value="sans-serif">Sans-serif</option>
+                </select>
+                <span class="tb-bar-sep"></span>
+                <!-- Font size -->
+                <button class="tb-bar-btn" (click)="changeTextFontSize(-2)" [disabled]="tb.fontSize <= 8" title="ลดขนาด"><svg-icon name="remove"></svg-icon></button>
+                <span class="tb-bar-val">{{ tb.fontSize }}</span>
+                <button class="tb-bar-btn" (click)="changeTextFontSize(2)" [disabled]="tb.fontSize >= 100" title="เพิ่มขนาด"><svg-icon name="add"></svg-icon></button>
+                <span class="tb-bar-sep"></span>
+                <!-- Letter spacing -->
+                <span class="tb-bar-lbl" title="ระยะห่างตัวอักษร">AZ</span>
+                <div class="tb-ls-wrap" (click)="$event.stopPropagation()">
+                  <button class="tb-ls-trigger" (click)="toggleLsDrop(tb.id)" title="ระยะห่างตัวอักษร">
+                    <span>{{ (tb.letterSpacing ?? 0) >= 0 ? '+' : '' }}{{ tb.letterSpacing ?? 0 }}</span>
+                    <svg width="8" height="5" viewBox="0 0 8 5"><polyline points="0.5,0.5 4,4.5 7.5,0.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+                  </button>
+                  <div class="tb-ls-drop" *ngIf="lsDropOpenId === tb.id">
+                    <button class="tb-ls-opt" *ngFor="let v of lsPresets"
+                            [class.tb-ls-opt--checked]="(tb.letterSpacing ?? 0) === v"
+                            (click)="pickLetterSpacing(tb, v)">
+                      <svg-icon name="checkmark" *ngIf="(tb.letterSpacing ?? 0) === v"></svg-icon>
+                      <span *ngIf="(tb.letterSpacing ?? 0) !== v" class="tb-ls-spacer"></span>
+                      <span>{{ v >= 0 ? '+' + v : v }}</span>
+                    </button>
+                  </div>
+                </div>
+                <span class="tb-bar-sep"></span>
+                <!-- Line height -->
+                <span class="tb-bar-lbl" title="ระยะห่างบรรทัด">
+                  <svg width="16" height="14" viewBox="0 0 16 14" style="display:block">
+                    <line x1="5" y1="1.5" x2="16" y2="1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="5" y1="7"   x2="16" y2="7"   stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="5" y1="12.5" x2="16" y2="12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="2" y1="1.5" x2="2" y2="12.5" stroke="currentColor" stroke-width="1.2"/>
+                    <polyline points="0.5,4 2,1.5 3.5,4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                    <polyline points="0.5,10 2,12.5 3.5,10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <div class="tb-bar-stepper">
+                  <span class="tb-bar-stepper-val">{{ (tb.lineHeight ?? 1.4) | number:'1.1-1' }}</span>
+                  <div class="tb-bar-stepper-arrows">
+                    <button class="tb-bar-stepper-up" (click)="changeTbLineHeight(tb, 0.1)" [disabled]="(tb.lineHeight ?? 1.4) >= 4">
+                      <svg width="8" height="5" viewBox="0 0 8 5"><polyline points="0.5,4.5 4,0.5 7.5,4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+                    </button>
+                    <button class="tb-bar-stepper-dn" (click)="changeTbLineHeight(tb, -0.1)" [disabled]="(tb.lineHeight ?? 1.4) <= 1">
+                      <svg width="8" height="5" viewBox="0 0 8 5"><polyline points="0.5,0.5 4,4.5 7.5,0.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <span class="tb-bar-sep"></span>
+                <!-- Color -->
+                <div class="tb-bar-color" [style.background]="tb.color" title="สีข้อความ">
+                  <input type="color" [value]="tb.color" (input)="setTextColor($any($event.target).value)" />
+                </div>
+                <span class="tb-bar-sep"></span>
+                <!-- Delete -->
+                <button class="tb-bar-btn tb-bar-btn--delete" (click)="removeTextBox(tb.id)" title="ลบ">
+                  <svg-icon name="trash"></svg-icon>
+                </button>
+              </div>
+
+              <div class="tb-handle tb-handle--left" (pointerdown)="startResizeLeft($event, tb.id)"></div>
+              <textarea [(ngModel)]="tb.text" (focus)="activeTextBoxId = tb.id" (input)="onTextBoxInput($event, tb)"
+                spellcheck="false"></textarea>
+              <div class="tb-handle tb-handle--right" (pointerdown)="startResizeRight($event, tb.id)"></div>
+              <!-- BR corner: resize width + height -->
+              <div class="tb-handle tb-handle--br" (pointerdown)="startResize($event, tb.id)" title="ปรับขนาด"></div>
+            </div>
+            <!-- ShapeStamps for this page (draggable/resizable SVG overlays) -->
+            <div *ngFor="let ss of getShapeStampsForPage(p)" class="shape-stamp" [style.left.%]="ss.x"
+              [style.top.%]="ss.y" [style.width.%]="ss.width" [style.height.%]="ss.height"
+              [style.z-index]="ss.zIndex || 10" (pointerdown)="startShapeDrag($event, ss.id)"
+              (contextmenu)="onContextMenu($event, ss.id, 'shape')">
+              <button class="remove-btn" (click)="removeShapeStamp(ss.id); $event.stopPropagation()"><svg-icon name="close-outline"></svg-icon></button>
+
+              <!-- SVG renders the actual shape inside the bounding box -->
+              <svg width="100%" height="100%" [attr.viewBox]="'0 0 100 100'" preserveAspectRatio="none"
+                style="overflow:visible; pointer-events:none">
+                <!-- rect -->
+                <rect *ngIf="ss.type === 'rect'" x="0" y="0" width="100" height="100"
+                  [attr.stroke]="ss.strokeColor || 'none'" [attr.stroke-width]="ss.strokeWidth"
+                  vector-effect="non-scaling-stroke" [attr.fill]="ss.fillColor || 'none'"></rect>
+                <!-- circle -->
+                <ellipse *ngIf="ss.type === 'circle'" cx="50" cy="50" rx="50" ry="50"
+                  [attr.stroke]="ss.strokeColor || 'none'" [attr.stroke-width]="ss.strokeWidth"
+                  vector-effect="non-scaling-stroke" [attr.fill]="ss.fillColor || 'none'"></ellipse>
+                <!-- line -->
+                <line *ngIf="ss.type === 'line'" [attr.x1]="ss.startFracX * 100" [attr.y1]="ss.startFracY * 100"
+                  [attr.x2]="ss.endFracX * 100" [attr.y2]="ss.endFracY * 100" [attr.stroke]="ss.strokeColor || '#000'"
+                  [attr.stroke-width]="ss.strokeWidth" vector-effect="non-scaling-stroke" fill="none"></line>
+                <!-- arrow -->
+                <g *ngIf="ss.type === 'arrow'">
+                  <line [attr.x1]="ss.startFracX * 100" [attr.y1]="ss.startFracY * 100" [attr.x2]="ss.endFracX * 100"
+                    [attr.y2]="ss.endFracY * 100" [attr.stroke]="ss.strokeColor || '#000'"
+                    [attr.stroke-width]="ss.strokeWidth" vector-effect="non-scaling-stroke" fill="none">
+                  </line>
+                  <polygon [attr.points]="'0,-6 12,0 0,6'" [attr.fill]="ss.strokeColor || '#000'"
+                    [attr.transform]="'translate(' + (ss.endFracX*100) + ',' + (ss.endFracY*100) + ') rotate(' + getArrowAngleDeg(ss) + ')'">
+                  </polygon>
+                </g>
+              </svg>
+
+              <!-- Resize handles (corner + edge) -->
+              <div class="resize-handle rh-nw" (pointerdown)="startShapeResize($event, ss.id, 'nw')"></div>
+              <div class="resize-handle rh-n" (pointerdown)="startShapeResize($event, ss.id, 'n')"></div>
+              <div class="resize-handle rh-ne" (pointerdown)="startShapeResize($event, ss.id, 'ne')"></div>
+              <div class="resize-handle rh-e" (pointerdown)="startShapeResize($event, ss.id, 'e')"></div>
+              <div class="resize-handle rh-se" (pointerdown)="startShapeResize($event, ss.id, 'se')"></div>
+              <div class="resize-handle rh-s" (pointerdown)="startShapeResize($event, ss.id, 's')"></div>
+              <div class="resize-handle rh-sw" (pointerdown)="startShapeResize($event, ss.id, 'sw')"></div>
+              <div class="resize-handle rh-w" (pointerdown)="startShapeResize($event, ss.id, 'w')"></div>
+            </div>
+
+            <!-- Regular image stamps (uploaded images, not marks) -->
+            <div *ngFor="let img of getRegularImageStampsForPage(p)" class="image-stamp"
+              [style.left.%]="img.x"
+              [style.top.%]="img.y" [style.width.%]="img.width" [style.height.%]="img.height"
+              [style.z-index]="img.zIndex || 10" (pointerdown)="startImageDrag($event, img.id)"
+              (contextmenu)="onContextMenu($event, img.id, 'image')">
+              <button class="remove-btn" (click)="removeImage(img.id); $event.stopPropagation()"><svg-icon name="close-outline"></svg-icon></button>
+              <img [src]="img.dataUrl" />
+              <div class="resize-handle rh-nw" (pointerdown)="startImageResize($event, img.id, 'nw')"></div>
+              <div class="resize-handle rh-n" (pointerdown)="startImageResize($event, img.id, 'n')"></div>
+              <div class="resize-handle rh-ne" (pointerdown)="startImageResize($event, img.id, 'ne')"></div>
+              <div class="resize-handle rh-e" (pointerdown)="startImageResize($event, img.id, 'e')"></div>
+              <div class="resize-handle rh-se" (pointerdown)="startImageResize($event, img.id, 'se')"></div>
+              <div class="resize-handle rh-s" (pointerdown)="startImageResize($event, img.id, 's')"></div>
+              <div class="resize-handle rh-sw" (pointerdown)="startImageResize($event, img.id, 'sw')"></div>
+              <div class="resize-handle rh-w" (pointerdown)="startImageResize($event, img.id, 'w')"></div>
+            </div>
+
+            <!-- Mark stamps (check/cross/dot) — rendered as SVG, behaves like form field checkbox -->
+            <div *ngFor="let mk of getMarkStampsForPage(p)" class="pdf-form-field pff-mark"
+              [class.pff-active]="activeObjectId === mk.id"
+              [style.left.%]="mk.x" [style.top.%]="mk.y"
+              [style.width.%]="mk.width" [style.height.%]="mk.height"
+              [style.z-index]="mk.zIndex || 10"
+              (pointerdown)="startMarkDrag($event, mk.id)"
+              (contextmenu)="onContextMenu($event, mk.id, 'image')">
+
+              <!-- Options bar when active -->
+              <div class="pff-options-bar" *ngIf="activeObjectId === mk.id" (pointerdown)="$event.stopPropagation()">
+                <span class="pff-opt-label"><svg-icon name="resize-outline"></svg-icon></span>
+                <button class="pff-opt-btn" (click)="changeMarkStampSize(mk.id, -1)" [disabled]="mk.width <= 1" title="ลดขนาด">
+                  <svg-icon name="remove"></svg-icon>
+                </button>
+                <span class="pff-opt-val">{{ mk.width | number:'1.0-1' }}</span>
+                <button class="pff-opt-btn" (click)="changeMarkStampSize(mk.id, 1)" [disabled]="mk.width >= 25" title="เพิ่มขนาด">
+                  <svg-icon name="add"></svg-icon>
+                </button>
+                <div class="pff-opt-sep"></div>
+                <button class="pff-opt-btn pff-opt-delete" (click)="removeImage(mk.id); $event.stopPropagation()" title="ลบ">
+                  <svg-icon name="trash-outline"></svg-icon>
+                </button>
+              </div>
+
+              <!-- SVG mark symbol fills the bounding box exactly -->
+              <div class="pff-inner">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" style="pointer-events:none; overflow:visible">
+                  <ng-container *ngIf="mk.markType === 'check'">
+                    <polyline points="12,52 42,82 88,18" [attr.stroke]="mk.markColor || '#000000'" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  </ng-container>
+                  <ng-container *ngIf="mk.markType === 'cross'">
+                    <line x1="15" y1="15" x2="85" y2="85" [attr.stroke]="mk.markColor || '#000000'" stroke-width="10" stroke-linecap="round"/>
+                    <line x1="85" y1="15" x2="15" y2="85" [attr.stroke]="mk.markColor || '#000000'" stroke-width="10" stroke-linecap="round"/>
+                  </ng-container>
+                  <ng-container *ngIf="mk.markType === 'dot' || !mk.markType">
+                    <circle cx="50" cy="50" r="38" [attr.fill]="mk.markColor || '#000000'"/>
+                  </ng-container>
+                </svg>
+              </div>
+
+              <div class="pff-resize-handle rh-nw" (pointerdown)="startImageResize($event, mk.id, 'nw')"></div>
+              <div class="pff-resize-handle rh-n"  (pointerdown)="startImageResize($event, mk.id, 'n')"></div>
+              <div class="pff-resize-handle rh-ne" (pointerdown)="startImageResize($event, mk.id, 'ne')"></div>
+              <div class="pff-resize-handle rh-e"  (pointerdown)="startImageResize($event, mk.id, 'e')"></div>
+              <div class="pff-resize-handle rh-se" (pointerdown)="startImageResize($event, mk.id, 'se')"></div>
+              <div class="pff-resize-handle rh-s"  (pointerdown)="startImageResize($event, mk.id, 's')"></div>
+              <div class="pff-resize-handle rh-sw" (pointerdown)="startImageResize($event, mk.id, 'sw')"></div>
+              <div class="pff-resize-handle rh-w"  (pointerdown)="startImageResize($event, mk.id, 'w')"></div>
+            </div>
+
+            <div *ngFor="let sig of getSignatureStampsForPage(p)" class="signature-stamp" [style.left.%]="sig.x"
+              [style.top.%]="sig.y" [style.width.%]="sig.width" [style.height.%]="sig.height"
+              [style.z-index]="sig.zIndex || 10" (pointerdown)="startSignatureDrag($event, sig.id)"
+              (contextmenu)="onContextMenu($event, sig.id, 'signature')">
+              <button class="remove-btn" (click)="removeSignature(sig.id); $event.stopPropagation()"><svg-icon name="close-outline"></svg-icon></button>
+              <img [src]="sig.dataUrl" />
+              <div class="digital-id-label" *ngIf="showDigitalId && (sig.digitalId || sig.signDate)">
+                <span *ngIf="sig.signDate">{{ sig.signDate }}</span>
+                <span *ngIf="sig.signTime">{{ sig.signTime }}</span>
+                <span *ngIf="sig.digitalId" class="did-text">{{ sig.digitalId }}</span>
+              </div>
+              <div class="resize-handle rh-nw" (pointerdown)="startSignatureResize($event, sig.id, 'nw')"></div>
+              <div class="resize-handle rh-n" (pointerdown)="startSignatureResize($event, sig.id, 'n')"></div>
+              <div class="resize-handle rh-ne" (pointerdown)="startSignatureResize($event, sig.id, 'ne')"></div>
+              <div class="resize-handle rh-e" (pointerdown)="startSignatureResize($event, sig.id, 'e')"></div>
+              <div class="resize-handle rh-se" (pointerdown)="startSignatureResize($event, sig.id, 'se')"></div>
+              <div class="resize-handle rh-s" (pointerdown)="startSignatureResize($event, sig.id, 's')"></div>
+              <div class="resize-handle rh-sw" (pointerdown)="startSignatureResize($event, sig.id, 'sw')"></div>
+              <div class="resize-handle rh-w" (pointerdown)="startSignatureResize($event, sig.id, 'w')"></div>
+            </div>
+
+            <!-- PDF Form Fields for this page -->
+            <div *ngFor="let ff of getFormFieldsForPage(p)" class="pdf-form-field"
+              [class.pff-text]="ff.type === 'text'"
+              [class.pff-checkbox]="ff.type === 'checkbox'"
+              [class.pff-radio]="ff.type === 'radio'"
+              [class.pff-no-border]="ff.borderVisible === false"
+              [class.pff-active]="activeFormFieldId === ff.id"
+              [style.left.%]="ff.x" [style.top.%]="ff.y"
+              [style.width.%]="ff.width" [style.height.%]="ff.height"
+              [style.z-index]="ff.zIndex || 20"
+              (pointerdown)="startFormFieldDrag($event, ff.id)">
+
+              <!-- Options bar (shown when active) -->
+              <div class="pff-options-bar" *ngIf="activeFormFieldId === ff.id" (pointerdown)="$event.stopPropagation()">
+                <!-- Element size: all 3 types -->
+                <span class="pff-opt-label">
+                  <svg-icon name="resize-outline"></svg-icon>
+                </span>
+                <button class="pff-opt-btn" (click)="changeFormFieldSize(ff.id, -0.5)" [disabled]="(ff.type === 'text' ? ff.height : ff.width) <= 1.5" title="ลดขนาด">
+                  <svg-icon name="remove"></svg-icon>
+                </button>
+                <span class="pff-opt-val">{{ (ff.type === 'text' ? ff.height : ff.width) | number:'1.0-1' }}</span>
+                <button class="pff-opt-btn" (click)="changeFormFieldSize(ff.id, 0.5)" [disabled]="(ff.type === 'text' ? ff.height : ff.width) >= 30" title="เพิ่มขนาด">
+                  <svg-icon name="add"></svg-icon>
+                </button>
+                <div class="pff-opt-sep"></div>
+                <!-- Font size: text only -->
+                <ng-container *ngIf="ff.type === 'text'">
+                  <span class="pff-opt-label">A</span>
+                  <button class="pff-opt-btn" (click)="changeFormFieldFontSize(ff.id, -2)" [disabled]="(ff.fontSize || 12) <= 6" title="ลดขนาดอักษร">
+                    <svg-icon name="remove"></svg-icon>
+                  </button>
+                  <span class="pff-opt-val">{{ ff.fontSize || 12 }}</span>
+                  <button class="pff-opt-btn" (click)="changeFormFieldFontSize(ff.id, 2)" [disabled]="(ff.fontSize || 12) >= 72" title="เพิ่มขนาดอักษร">
+                    <svg-icon name="add"></svg-icon>
+                  </button>
+                  <div class="pff-opt-sep"></div>
+                </ng-container>
+                <!-- Border toggle -->
+                <button class="pff-opt-btn" [class.pff-opt-active]="ff.borderVisible !== false"
+                  (click)="toggleFormFieldBorder(ff.id)" title="เส้นขอบ">
+                  <svg-icon [name]="ff.borderVisible !== false ? 'square-outline' : 'square'"></svg-icon>
+                </button>
+                <!-- Delete -->
+                <button class="pff-opt-btn pff-opt-delete" (click)="removeFormField(ff.id)" title="ลบ">
+                  <svg-icon name="trash-outline"></svg-icon>
+                </button>
+              </div>
+
+              <div class="pff-inner">
+                <span *ngIf="ff.type === 'text'" class="pff-text-hint">Aa {{ ff.fontSize || 12 }}pt</span>
+                <svg *ngIf="ff.type === 'checkbox'" width="55%" height="55%" viewBox="0 0 18 18" style="pointer-events:none"><rect x="1" y="1" width="16" height="16" rx="2" stroke="#3b82f6" stroke-width="2" fill="none"/></svg>
+                <svg *ngIf="ff.type === 'radio'" width="55%" height="55%" viewBox="0 0 18 18" style="pointer-events:none"><circle cx="9" cy="9" r="8" stroke="#3b82f6" stroke-width="2" fill="none"/></svg>
+              </div>
+
+              <div class="pff-resize-handle rh-nw" (pointerdown)="startFormFieldResize($event, ff.id, 'nw')"></div>
+              <div class="pff-resize-handle rh-n"  (pointerdown)="startFormFieldResize($event, ff.id, 'n')"></div>
+              <div class="pff-resize-handle rh-ne" (pointerdown)="startFormFieldResize($event, ff.id, 'ne')"></div>
+              <div class="pff-resize-handle rh-e"  (pointerdown)="startFormFieldResize($event, ff.id, 'e')"></div>
+              <div class="pff-resize-handle rh-se" (pointerdown)="startFormFieldResize($event, ff.id, 'se')"></div>
+              <div class="pff-resize-handle rh-s"  (pointerdown)="startFormFieldResize($event, ff.id, 's')"></div>
+              <div class="pff-resize-handle rh-sw" (pointerdown)="startFormFieldResize($event, ff.id, 'sw')"></div>
+              <div class="pff-resize-handle rh-w"  (pointerdown)="startFormFieldResize($event, ff.id, 'w')"></div>
+            </div>
+
+            <!-- Date Stamps for this page -->
+            <div *ngFor="let ds of getDateStampsForPage(p)" class="date-stamp" [style.left.%]="ds.x"
+              [style.top.%]="ds.y" [style.color]="ds.color" [style.font-size.px]="ds.fontSize * zoom"
+              [style.z-index]="ds.zIndex || 10" (pointerdown)="startDateDrag($event, ds.id)"
+              (contextmenu)="onContextMenu($event, ds.id, 'date')">
+              <button class="remove-btn" (click)="removeDateStamp(ds.id); $event.stopPropagation()"><svg-icon name="close-outline"></svg-icon></button>
+              {{ ds.text }}
+            </div>
+
+            <!-- Ghost stamp preview when placement mode active -->
+            <img *ngIf="pendingStamp && stampGhostPage === p"
+              [src]="pendingStamp.dataUrl"
+              class="stamp-ghost-img"
+              [style.left.px]="stampGhostX - pendingStamp.defaultWidth / 2"
+              [style.top.px]="stampGhostY - (pendingStamp.defaultWidth * 0.5) / 2"
+              [style.width.px]="pendingStamp.defaultWidth"
+              draggable="false" />
+          </div>
+        </div>
+
+        <div class="hint">
+          <div>• Keyboard: Ctrl+Z (Undo), Ctrl+Y (Redo), Escape (Exit mode), Delete (Remove selected)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Guide Panel (right slide-in drawer) -->
+  <div class="user-guide-drawer" [class.open]="showUserGuidePanel">
+    <div class="user-guide-drawer__backdrop" (click)="showUserGuidePanel = false"></div>
+    <div class="user-guide-drawer__panel">
+      <div class="user-guide-drawer__header">
+        <span><svg-icon name="book-outline"></svg-icon> คู่มือการใช้งาน</span>
+        <button (click)="showUserGuidePanel = false"><svg-icon name="close-outline"></svg-icon></button>
+      </div>
+
+      <div class="user-guide-content-area" *ngIf="!isLoadingGuide">
+        <div *ngIf="!isEditingGuide" class="guide-view-mode">
+
+          <!-- Banner -->
+          <div class="guide-banner">
+            <svg-icon name="rocket"></svg-icon>
+            <div>
+              <strong>เริ่มต้นง่ายมาก!</strong> เลือกเครื่องมือจากแถบด้านบน แล้วคลิกหรือลากบนเอกสารได้เลย
+              — กด <code>Ctrl+Z</code> เพื่อย้อนกลับเสมอหากทำพลาด
+            </div>
+          </div>
+
+          <!-- ข้อความ -->
+          <div class="guide-section">
+            <h4 class="guide-section__title">
+              <svg-icon name="text" style="color:#60a5fa;"></svg-icon> ข้อความ (Text)
+            </h4>
+            <div class="guide-list">
+              <div class="guide-item">
+                <div class="guide-step">1</div>
+                <div class="guide-item__text">กดไอคอน <svg-icon name="text" style="vertical-align:-2px;color:#60a5fa;"></svg-icon> แล้วเลือก <strong>ขนาดตัวอักษร</strong> และ <strong>สี</strong> ที่ต้องการก่อนวาง</div>
+              </div>
+              <div class="guide-item">
+                <div class="guide-step">2</div>
+                <div class="guide-item__text">คลิกบนเอกสาร PDF — กล่องข้อความจะปรากฏทันที พิมพ์ข้อความได้เลย <strong>กล่องจะขยายตามข้อความอัตโนมัติ</strong></div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="move-outline" class="guide-item__icon" style="color:#60a5fa;"></svg-icon>
+                <div class="guide-item__text"><strong>ย้ายตำแหน่ง:</strong> จับที่ <em>เส้นขอบ</em> กล่องแล้วลากไปวางได้ทุกที่ (cursor จะเปลี่ยนเป็นลูกศร 4 ทิศ)</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="contract-outline" class="guide-item__icon" style="color:#60a5fa;"></svg-icon>
+                <div class="guide-item__text"><strong>ปรับความกว้าง:</strong> ลากวงกลมสีฟ้า <span class="guide-dot-demo"></span> ที่ซ้ายหรือขวากล่อง — ความสูงจะปรับตามข้อความเอง</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="trash-outline" class="guide-item__icon" style="color:#f87171;"></svg-icon>
+                <div class="guide-item__text"><strong>ลบกล่องข้อความ:</strong> คลิกที่เส้นขอบกล่องเพื่อเลือก แล้วกด <code>Delete</code> หรือคลิกขวาเพื่อดูเมนู</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- วาดและไฮไลท์ -->
+          <div class="guide-section">
+            <h4 class="guide-section__title">
+              <svg-icon name="brush" style="color:#fb7185;"></svg-icon> วาด / ไฮไลท์ / ยางลบ
+            </h4>
+            <div class="guide-list">
+              <div class="guide-item">
+                <svg-icon name="brush" class="guide-item__icon" style="color:#fb7185;"></svg-icon>
+                <div class="guide-item__text"><strong>ปากกา / ดินสอ:</strong> ลากเพื่อวาดอิสระ — ปรับ <strong>ขนาดเส้น</strong> และ <strong>สี</strong> จากแถบด้านบน เส้นจะรวมเป็น object เดียวเมื่อยกปากกา</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="color-filter-outline" class="guide-item__icon" style="color:#fde68a;"></svg-icon>
+                <div class="guide-item__text"><strong>ไฮไลท์:</strong> ลากทับข้อความเพื่อเน้นสี — มีสีให้เลือก 6 สี หรือกำหนดสีเองได้ ปรับความหนาได้ตามต้องการ</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="cut-outline" class="guide-item__icon" style="color:#94a3b8;"></svg-icon>
+                <div class="guide-item__text"><strong>ยางลบ:</strong> ลากผ่านเส้นวาดหรือไฮไลท์เพื่อลบ — ปรับขนาดยางลบได้จากแถบด้านบน</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- รูปร่าง -->
+          <div class="guide-section">
+            <h4 class="guide-section__title">
+              <svg-icon name="shapes" style="color:#a78bfa;"></svg-icon> รูปร่างและเส้น (Shapes)
+            </h4>
+            <div class="guide-list">
+              <div class="guide-item">
+                <svg-icon name="square-outline" class="guide-item__icon" style="color:#a78bfa;"></svg-icon>
+                <div class="guide-item__text"><strong>4 แบบ:</strong> สี่เหลี่ยม <svg-icon name="square-outline" style="vertical-align:-2px;font-size:13px;"></svg-icon> วงกลม <svg-icon name="ellipse-outline" style="vertical-align:-2px;font-size:13px;"></svg-icon> เส้นตรง <svg-icon name="remove-outline" style="vertical-align:-2px;font-size:13px;"></svg-icon> ลูกศร <svg-icon name="arrow-forward-outline" style="vertical-align:-2px;font-size:13px;"></svg-icon> — กดลูกศรเล็กเพื่อเลือกแบบ แล้ว<strong>ลากบนเอกสาร</strong></div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="color-palette" class="guide-item__icon" style="color:#fbbf24;"></svg-icon>
+                <div class="guide-item__text"><strong>ปรับสีและขนาดเส้น:</strong> ตั้งค่าสีขอบ, สีพื้น, และความหนาเส้นได้จากแถบด้านบน รองรับการปิดเส้นขอบหรือปิดสีพื้นแยกกันได้</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="resize" class="guide-item__icon" style="color:#a78bfa;"></svg-icon>
+                <div class="guide-item__text"><strong>ย้ายและปรับขนาด:</strong> ลากตรงกลางเพื่อย้าย — ลาก handle 8 จุดรอบรูปร่างเพื่อปรับขนาด — คลิกขวาเพื่อจัดลำดับชั้น</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ลายเซ็น -->
+          <div class="guide-section">
+            <h4 class="guide-section__title">
+              <svg-icon name="finger-print" style="color:#34d399;"></svg-icon> ลายเซ็น (Signature)
+            </h4>
+            <div class="guide-list">
+              <div class="guide-item">
+                <svg-icon name="create-outline" class="guide-item__icon" style="color:#34d399;"></svg-icon>
+                <div class="guide-item__text"><strong>วาดลายเซ็น:</strong> กด <svg-icon name="finger-print" style="vertical-align:-2px;font-size:13px;color:#34d399;"></svg-icon> เพื่อเปิดหน้าต่างวาด — ปรับสีและขนาดปากกา — กด <strong>"ใช้ครั้งนี้"</strong> เพื่อวางบนเอกสาร</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="cloud-upload-outline" class="guide-item__icon" style="color:#34d399;"></svg-icon>
+                <div class="guide-item__text"><strong>บันทึกลายเซ็น:</strong> กด <strong>"บันทึกไว้ใช้ภายหลัง"</strong> เพื่อเก็บลายเซ็นไว้ในระบบ — ครั้งถัดไปกดเลือกจากรายการได้ทันที</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="shield-checkmark-outline" class="guide-item__icon" style="color:#34d399;"></svg-icon>
+                <div class="guide-item__text"><strong>Digital ID (DID):</strong> กดปุ่ม <code>DID</code> เพื่อแสดง/ซ่อนข้อมูล Digital ID ใต้ลายเซ็น (วันที่, เวลา, รหัสผู้ใช้)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- วันที่ และรูปภาพ -->
+          <div class="guide-section">
+            <h4 class="guide-section__title">
+              <svg-icon name="calendar" style="color:#fb923c;"></svg-icon> วันที่ และรูปภาพ
+            </h4>
+            <div class="guide-list">
+              <div class="guide-item">
+                <svg-icon name="calendar-outline" class="guide-item__icon" style="color:#fb923c;"></svg-icon>
+                <div class="guide-item__text"><strong>วันที่อัตโนมัติ:</strong> กด <svg-icon name="calendar" style="vertical-align:-2px;font-size:13px;color:#fb923c;"></svg-icon> เพื่อแทรกวันที่ปัจจุบัน — ปรับขนาดและสีตัวอักษรได้ — ลากเพื่อย้ายตำแหน่ง</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="image-outline" class="guide-item__icon" style="color:#fb923c;"></svg-icon>
+                <div class="guide-item__text"><strong>แทรกรูปภาพ:</strong> กด <svg-icon name="image" style="vertical-align:-2px;font-size:13px;color:#fb923c;"></svg-icon> เพื่อเลือกไฟล์รูปจากเครื่อง — ลากเพื่อย้าย ลาก handle 8 จุดเพื่อปรับขนาด</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- จัดการหน้า -->
+          <div class="guide-section">
+            <h4 class="guide-section__title">
+              <svg-icon name="documents" style="color:#f59e0b;"></svg-icon> จัดการหน้าเอกสาร
+            </h4>
+            <div class="guide-list">
+              <div class="guide-item">
+                <svg-icon name="images-outline" class="guide-item__icon" style="color:#f59e0b;"></svg-icon>
+                <div class="guide-item__text"><strong>Thumbnail ด้านซ้าย:</strong> กด <svg-icon name="images-outline" style="vertical-align:-2px;font-size:13px;"></svg-icon> เพื่อแสดง — คลิก thumbnail เพื่อกระโดดไปหน้านั้น — ลาก <svg-icon name="chevron-up-outline" style="vertical-align:-2px;font-size:12px;"></svg-icon><svg-icon name="chevron-down-outline" style="vertical-align:-2px;font-size:12px;"></svg-icon> เพื่อเรียงลำดับหน้า</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="add-circle-outline" class="guide-item__icon" style="color:#f59e0b;"></svg-icon>
+                <div class="guide-item__text"><strong>แทรก/ลบหน้า:</strong> กดไอคอน <svg-icon name="documents-outline" style="vertical-align:-2px;font-size:13px;"></svg-icon> บนแถบด้านบน — แทรกหน้าเปล่าแนวตั้ง/แนวนอน ก่อนหรือหลังหน้าปัจจุบัน — ลบหน้าที่ไม่ต้องการ — ย้อนกลับได้</div>
+              </div>
+              <div class="guide-item">
+                <svg-icon name="search-outline" class="guide-item__icon" style="color:#f59e0b;"></svg-icon>
+                <div class="guide-item__text"><strong>ซูม:</strong> กดปุ่ม <code>+</code> / <code>−</code> หรือใช้ปุ่มซูมบนแถบนำทาง — รองรับตั้งแต่ 50% ถึง 300%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Keyboard Shortcuts -->
+          <div class="guide-section">
+            <h4 class="guide-section__title">
+              <svg-icon name="keypad" style="color:#e2e8f0;"></svg-icon> คีย์ลัดที่ควรรู้
+            </h4>
+            <div class="guide-shortcuts-grid">
+              <div class="guide-shortcut-card">
+                <div class="guide-shortcut-card__keys"><kbd>Ctrl</kbd><span>+</span><kbd>Z</kbd></div>
+                <div class="guide-shortcut-card__label">ย้อนกลับ (Undo)</div>
+              </div>
+              <div class="guide-shortcut-card">
+                <div class="guide-shortcut-card__keys"><kbd>Ctrl</kbd><span>+</span><kbd>Y</kbd></div>
+                <div class="guide-shortcut-card__label">ทำซ้ำ (Redo)</div>
+              </div>
+              <div class="guide-shortcut-card">
+                <div class="guide-shortcut-card__keys"><kbd>Delete</kbd></div>
+                <div class="guide-shortcut-card__label">ลบ object ที่เลือก</div>
+              </div>
+              <div class="guide-shortcut-card">
+                <div class="guide-shortcut-card__keys"><kbd>Esc</kbd></div>
+                <div class="guide-shortcut-card__label">ออกจากโหมดเครื่องมือ</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pro Tips -->
+          <div class="guide-protip">
+            <div class="guide-protip__icon"><svg-icon name="bulb"></svg-icon></div>
+            <div class="guide-protip__body">
+              <div class="guide-protip__title">Pro Tips</div>
+              <ul class="guide-protip__list">
+                <li>คลิกขวาบน object ใด ๆ เพื่อจัดลำดับชั้น (Bring to Front / Send to Back)</li>
+                <li>กด <code>Esc</code> เพื่อออกจากโหมดเครื่องมือและกลับสู่โหมดปกติ</li>
+                <li>ไฮไลท์ที่วาดด้วย opacity ต่ำ — ใช้ไฮไลท์ซ้อนกันหลายชั้นเพื่อเน้นสีเข้มขึ้น</li>
+                <li>บันทึกลายเซ็นไว้ในระบบเพื่อใช้ซ้ำในเอกสารอื่น ๆ ได้สะดวก</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="guide-section" *ngIf="userGuideContent && userGuideContent.trim() !== ''">
+            <h4 class="guide-section__title"><svg-icon name="megaphone" style="color:#10b981;"></svg-icon> ประกาศเพิ่มเติม</h4>
+            <div class="guide-raw-content">{{ userGuideContent }}</div>
+          </div>
+
+          <button *ngIf="canManageGuide" (click)="editGuide()" class="guide-edit-btn">
+            <svg-icon name="create-outline"></svg-icon> อัปเดตประกาศเพิ่มเติม
+          </button>
+        </div>
+
+        <div *ngIf="isEditingGuide" style="display: flex; flex-direction: column; height: 100%;">
+          <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">คุณสามารถพิมพ์ในรูปแบบข้อความธรรมดา หรือ Markdown (ถ้ามีการเชื่อมต่อตัวแปลง)</div>
+          <textarea [(ngModel)]="tempGuideContent" style="flex: 1; min-height: 300px; width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid #334155; border-radius: 6px; color: #e8eaf6; font-size: 13.5px; resize: none; line-height: 1.5; outline: none; font-family: sans-serif;" placeholder="พิมพ์คู่มือที่นี่..."></textarea>
+          
+          <div style="display: flex; gap: 8px; margin-top: 16px; padding-bottom: 20px;">
+            <button (click)="cancelEditGuide()" style="flex: 1; padding: 10px; background: transparent; border: 1px solid #475569; color: #94a3b8; border-radius: 6px; cursor: pointer; font-weight: 500;">ยกเลิก</button>
+            <button (click)="saveGuide()" style="flex: 1; padding: 10px; background: #3b82f6; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.2s;">บันทึกอัปเดต</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Panel (right slide-in drawer) -->
+  <div class="annot-history-drawer" [class.open]="showHistoryPanel">
+    <div class="annot-history-drawer__backdrop" (click)="showHistoryPanel = false"></div>
+    <div class="annot-history-drawer__panel">
+      <div class="annot-history-drawer__header">
+        <span><svg-icon name="time-outline"></svg-icon> ประวัติการแก้ไข</span>
+        <button (click)="showHistoryPanel = false"><svg-icon name="close-outline"></svg-icon></button>
+      </div>
+
+      <div class="annot-history-loading" *ngIf="isLoadingHistory">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+
+      <div class="annot-history-list" *ngIf="!isLoadingHistory">
+        <div class="annot-history-entry" *ngFor="let h of historyEntries">
+          <div class="annot-history-entry__icon" [class]="'hi-' + h.action_type">
+            <svg-icon [name]="getHistoryActionIcon(h.action_type)"></svg-icon>
+          </div>
+          <div class="annot-history-entry__body">
+            <div class="annot-history-entry__title">
+              {{ getHistoryActionLabel(h.action_type) }}
+              <span class="annot-history-entry__page" *ngIf="h.page_number > 0">หน้า {{ h.page_number }}</span>
+            </div>
+            <div class="annot-history-entry__user">{{ h.user_name || h.user_id || 'ผู้ใช้' }}</div>
+            <div class="annot-history-entry__time">{{ h.created_at | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+        </div>
+        <div class="annot-history-empty" *ngIf="historyEntries.length === 0">
+          <svg-icon name="time-outline"></svg-icon>
+          <p>ยังไม่มีประวัติ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input for signature upload (always in DOM) -->
+  <input type="file" #signatureFileInput accept="image/*" style="display:none"
+    (change)="onSignatureFileSelected($event)">
+
+  <!-- Stamp Picker Modal -->
+  <div class="signature-picker-modal" *ngIf="showStampPickerModal">
+    <div class="signature-picker-modal__backdrop" (click)="closeStampPicker()"></div>
+    <div class="signature-picker-modal__content">
+
+      <!-- Stamp List -->
+      <div *ngIf="!showStampGenerator">
+        <h3>ตรายาง/ตราประทับ</h3>
+        <p class="signature-picker-modal__hint">เลือกตราประทับที่บันทึกไว้ หรือสร้างใหม่</p>
+
+        <div class="signature-picker-modal__loading" *ngIf="isLoadingSignatures">
+          <ion-spinner name="crescent"></ion-spinner><span>กำลังโหลด...</span>
+        </div>
+
+        <div class="signature-picker-modal__list" *ngIf="!isLoadingSignatures && savedStamps.length > 0">
+          <div class="signature-item" *ngFor="let stamp of savedStamps" (click)="$event.stopPropagation()">
+            <img [src]="stamp.dataUrl" (click)="useSavedStamp(stamp)" style="cursor:pointer; max-height:50px; width:auto; object-fit:contain;">
+            <div class="signature-item__info">
+              <div class="stamp-name-row" *ngIf="stampEditingId !== stamp.id" (click)="startStampRename(stamp, $event)">
+                <span class="signature-item__name">{{ stamp.name }}</span>
+                <svg-icon name="pencil-outline" class="stamp-edit-icon"></svg-icon>
+              </div>
+              <input class="stamp-name-input" *ngIf="stampEditingId === stamp.id"
+                type="text" [(ngModel)]="stampEditingName"
+                (keyup.enter)="saveStampRename(stamp)"
+                (blur)="saveStampRename(stamp)"
+                (click)="$event.stopPropagation()" />
+              <span class="signature-item__badge">{{ stamp.type === 'receive' ? 'รับเอกสาร' : 'ทั่วไป' }}</span>
+            </div>
+            <div class="signature-item__actions">
+              <button class="signature-item__btn" (click)="useSavedStamp(stamp)" title="ใช้ตรานี้">
+                <svg-icon name="checkmark"></svg-icon>
+              </button>
+              <button class="signature-item__btn signature-item__btn--delete" (click)="deleteSavedStamp(stamp, $event)" title="ลบ">
+                <svg-icon name="trash"></svg-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="signature-picker-modal__empty" *ngIf="!isLoadingSignatures && savedStamps.length === 0">
+          <svg-icon name="business-outline"></svg-icon>
+          <p>ยังไม่มีตราประทับที่บันทึกไว้ กด "สร้างตรายางใหม่" ด้านล่าง</p>
+        </div>
+
+        <div class="signature-picker-modal__actions">
+          <ion-button fill="outline" color="medium" (click)="closeStampPicker()">ยกเลิก</ion-button>
+          <ion-button fill="outline" color="secondary" (click)="triggerStampUpload()">
+            <svg-icon name="cloud-upload-outline" slot="start"></svg-icon>อัปโหลดไฟล์
+          </ion-button>
+          <ion-button color="primary" (click)="openStampGenerator()">สร้างตรายางใหม่</ion-button>
+        </div>
+      </div>
+
+      <!-- Stamp Generator UI -->
+      <div *ngIf="showStampGenerator" style="text-align: left;">
+        <h3 style="text-align: center;">สร้างตราประทับใหม่</h3>
+        <p class="signature-picker-modal__hint" style="text-align: center;">ปรับแต่งข้อความและรูปแบบ</p>
+
+        <div style="margin-bottom: 16px;">
+          <ion-item lines="none" class="input-item" style="--background: #f8fafc; --color: #0f172a; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 2px;">
+            <svg-icon name="options-outline" slot="start" style="color:#92949c"></svg-icon>
+            <ion-select [(ngModel)]="stampGenType" interface="popover" placeholder="เลือกประเภท">
+              <ion-select-option value="receive">ประเภท: ประทับรับเอกสาร (มี เลขรับ/วันที่/เวลา)</ion-select-option>
+              <ion-select-option value="custom">ประเภท: ตราประทับทั่วไป (ไม่มีช่องกรอก)</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" class="input-item" style="--background: #f8fafc; --color: #0f172a; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 2px;">
+            <ion-label position="floating" style="font-size:14px;">ข้อความบรรทัดที่ 1 (ตัวหนาบนสุด)</ion-label>
+            <ion-input type="text" [(ngModel)]="stampGenText1"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="input-item" style="--background: #f8fafc; --color: #0f172a; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 2px;">
+            <ion-label position="floating" style="font-size:14px;">ข้อความบรรทัดที่ 2 (รองลงมา)</ion-label>
+            <ion-input type="text" [(ngModel)]="stampGenText2"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="input-item" *ngIf="stampGenType !== 'receive'" style="--background: #f8fafc; --color: #0f172a; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 2px;">
+            <ion-label position="floating" style="font-size:14px;">ข้อความบรรทัดที่ 3 (ถ้ามี)</ion-label>
+            <ion-input type="text" [(ngModel)]="stampGenText3"></ion-input>
+          </ion-item>
+
+          <ng-container *ngIf="stampGenType === 'receive'">
+            <div class="stamp-row-hint" style="font-size:12px; color:#64748b; margin:6px 2px 2px;">
+              <svg-icon name="information-circle-outline" style="vertical-align:-2px;"></svg-icon>
+              ติ๊กเพื่อเลือกว่าจะแสดงบรรทัดนั้นบนตราหรือไม่
+            </div>
+            <ion-item lines="none" class="input-item" [class.input-item--off]="!stampGenShowDocNo" style="--background: #f8fafc; --color: #0f172a; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 2px;">
+              <ion-checkbox slot="start" [(ngModel)]="stampGenShowDocNo" style="margin-right: 10px;" title="แสดงเลขรับ"></ion-checkbox>
+              <ion-label position="floating" style="font-size:14px; color:#3b82f6;">เลขรับที่ (ปล่อยว่างเพื่อเติมทีหลัง)</ion-label>
+              <ion-input type="text" [(ngModel)]="stampGenDocNo" placeholder="เช่น 1234/2569" [disabled]="!stampGenShowDocNo"></ion-input>
+            </ion-item>
+            <ion-item lines="none" class="input-item" [class.input-item--off]="!stampGenShowDate" style="--background: #f8fafc; --color: #0f172a; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 2px;">
+              <ion-checkbox slot="start" [(ngModel)]="stampGenShowDate" style="margin-right: 10px;" title="แสดงวันที่"></ion-checkbox>
+              <ion-label position="floating" style="font-size:14px; color:#3b82f6;">วันที่ (ปล่อยว่างเพื่อเติมทีหลัง)</ion-label>
+              <ion-input type="text" [(ngModel)]="stampGenDate" placeholder="เช่น 6 พ.ค. 2569" [disabled]="!stampGenShowDate"></ion-input>
+            </ion-item>
+            <ion-item lines="none" class="input-item" [class.input-item--off]="!stampGenShowTime" style="--background: #f8fafc; --color: #0f172a; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 2px;">
+              <ion-checkbox slot="start" [(ngModel)]="stampGenShowTime" style="margin-right: 10px;" title="แสดงเวลา"></ion-checkbox>
+              <ion-label position="floating" style="font-size:14px; color:#3b82f6;">เวลา (ปล่อยว่างเพื่อเติมทีหลัง)</ion-label>
+              <ion-input type="text" [(ngModel)]="stampGenTime" placeholder="เช่น 09.00" [disabled]="!stampGenShowTime"></ion-input>
+            </ion-item>
+          </ng-container>
+
+          <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: center;">
+            <div class="color-dot" style="background:#ef4444; width: 30px; height: 30px;" (click)="stampGenColor='#ef4444'" [class.active]="stampGenColor === '#ef4444'"></div>
+            <div class="color-dot" style="background:#3b82f6; width: 30px; height: 30px;" (click)="stampGenColor='#3b82f6'" [class.active]="stampGenColor === '#3b82f6'"></div>
+            <div class="color-dot" style="background:#10b981; width: 30px; height: 30px;" (click)="stampGenColor='#10b981'" [class.active]="stampGenColor === '#10b981'"></div>
+            <div class="color-dot" style="background:#000000; width: 30px; height: 30px;" (click)="stampGenColor='#000000'" [class.active]="stampGenColor === '#000000'"></div>
+          </div>
+
+          <ion-item lines="none" style="--background: transparent; --padding-start: 0; margin-top: 8px;">
+            <ion-checkbox [(ngModel)]="stampGenNoBorder" slot="start" style="margin-right: 8px;"></ion-checkbox>
+            <ion-label style="font-size: 14px; color: #64748b;">ไม่แสดงเส้นขอบ</ion-label>
+          </ion-item>
+        </div>
+
+        <div class="signature-picker-modal__actions" style="justify-content: center;">
+          <ion-button fill="outline" color="medium" (click)="cancelStampGenerator()" style="margin-right: 8px;">กลับ</ion-button>
+          <ion-button color="primary" (click)="saveGeneratedStamp()"><svg-icon name="save-outline" slot="start"></svg-icon> บันทึกและนำไปใช้</ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signature Pad Modal -->
+  <div class="signature-modal" *ngIf="showSignaturePad">
+    <div class="signature-modal__backdrop" (click)="closeSignaturePad()"></div>
+    <div class="signature-modal__content">
+      <h3>ลงลายเซ็น</h3>
+
+      <!-- Mode Tabs -->
+      <div class="sig-mode-tabs">
+        <button class="sig-mode-tab" [class.active]="sigMode === 'draw'" (click)="switchSigMode('draw')">
+          <svg-icon name="pencil-outline"></svg-icon>
+          วาด
+        </button>
+        <button class="sig-mode-tab" [class.active]="sigMode === 'type'" (click)="switchSigMode('type')">
+          <svg-icon name="text-outline"></svg-icon>
+          พิมพ์
+        </button>
+      </div>
+
+      <p class="signature-modal__hint" *ngIf="sigMode === 'draw'">วาดลายเซ็นของคุณในกรอบด้านล่าง (ยกปากกาแล้ววาดต่อได้)</p>
+      <p class="signature-modal__hint" *ngIf="sigMode === 'type'">พิมพ์ชื่อของคุณแล้วเลือกรูปแบบตัวอักษร</p>
+
+      <!-- Draw mode: Pen Options -->
+      <div class="signature-modal__pen-options" *ngIf="sigMode === 'draw'">
+        <div class="pen-option-group">
+          <span class="pen-option-label">สี:</span>
+          <div class="color-dots">
+            <div class="color-dot" style="background:#000" (click)="setSignaturePenColor('#000000')"
+              [class.active]="signaturePenColor === '#000000'"></div>
+            <div class="color-dot" style="background:#00f" (click)="setSignaturePenColor('#0000FF')"
+              [class.active]="signaturePenColor === '#0000FF'"></div>
+            <div class="color-dot" style="background:#f00" (click)="setSignaturePenColor('#FF0000')"
+              [class.active]="signaturePenColor === '#FF0000'"></div>
+          </div>
+        </div>
+        <div class="pen-option-group">
+          <span class="pen-option-label">ขนาด:</span>
+          <button class="pen-size-btn" (click)="changeSignaturePenSize(-0.5)" [disabled]="signaturePenSize <= 1">
+            <svg-icon name="remove"></svg-icon>
+          </button>
+          <span class="pen-size-val">{{ signaturePenSize }}</span>
+          <button class="pen-size-btn" (click)="changeSignaturePenSize(0.5)" [disabled]="signaturePenSize >= 10">
+            <svg-icon name="add"></svg-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Type mode: Text + Font Options -->
+      <div class="signature-modal__type-opts" *ngIf="sigMode === 'type'">
+        <div class="signature-modal__type-top">
+          <input class="signature-modal__type-input" type="text"
+            placeholder="พิมพ์ชื่อของคุณ..."
+            [(ngModel)]="typedText"
+            (input)="onTypedInput()" />
+          <div class="signature-modal__type-color">
+            <span class="pen-option-label">สี:</span>
+            <div class="color-dots">
+              <div class="color-dot" style="background:#000"
+                (click)="setSignaturePenColor('#000000'); renderTypedCanvas()"
+                [class.active]="signaturePenColor === '#000000'"></div>
+              <div class="color-dot" style="background:#00f"
+                (click)="setSignaturePenColor('#0000FF'); renderTypedCanvas()"
+                [class.active]="signaturePenColor === '#0000FF'"></div>
+              <div class="color-dot" style="background:#f00"
+                (click)="setSignaturePenColor('#FF0000'); renderTypedCanvas()"
+                [class.active]="signaturePenColor === '#FF0000'"></div>
+            </div>
+          </div>
+        </div>
+        <div class="signature-modal__type-fonts">
+          <button class="type-font-btn" *ngFor="let f of typedFontOptions; let i = index"
+            [class.active]="typedFontIndex === i"
+            [style.fontFamily]="f.family"
+            [style.fontWeight]="f.weight"
+            [style.fontStyle]="f.style"
+            (click)="pickTypedFont(i)">
+            {{ typedText || 'ลายเซ็น' }}
+          </button>
+        </div>
+      </div>
+
+      <canvas #signatureCanvas class="signature-modal__canvas"
+        [class.signature-modal__canvas--preview]="sigMode === 'type'"></canvas>
+
+      <div class="signature-modal__actions">
+        <ion-button fill="outline" color="medium" (click)="clearSignaturePad()" *ngIf="sigMode === 'draw'">
+          <svg-icon name="refresh" slot="start"></svg-icon>
+          ล้าง
+        </ion-button>
+        <ion-button fill="outline" color="danger" (click)="closeSignaturePad()">
+          <svg-icon name="close" slot="start"></svg-icon>
+          ยกเลิก
+        </ion-button>
+        <ion-button fill="outline" color="tertiary" (click)="triggerSignatureUpload()" *ngIf="sigMode === 'draw'">
+          <svg-icon name="image-outline" slot="start"></svg-icon>
+          อัพโหลดรูป
+        </ion-button>
+        <ion-button fill="outline" color="success" (click)="saveSignatureToDatabase()">
+          <svg-icon name="cloud-upload" slot="start"></svg-icon>
+          บันทึกไว้ใช้ภายหลัง
+        </ion-button>
+        <ion-button color="primary" (click)="saveSignature()">
+          <svg-icon name="checkmark" slot="start"></svg-icon>
+          ใช้ครั้งนี้
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signature Picker Modal -->
+  <div class="signature-picker-modal" *ngIf="showSignaturePicker">
+    <div class="signature-picker-modal__backdrop" (click)="closeSignaturePicker()"></div>
+    <div class="signature-picker-modal__content">
+      <h3>เลือกลายเซ็น</h3>
+      <p class="signature-picker-modal__hint">เลือกลายเซ็นที่บันทึกไว้ หรือวาดใหม่</p>
+
+      <div class="signature-picker-modal__loading" *ngIf="isLoadingSignatures">
+        <ion-spinner name="crescent"></ion-spinner>
+        <span>กำลังโหลด...</span>
+      </div>
+
+      <div class="signature-picker-modal__list" *ngIf="!isLoadingSignatures">
+        <div class="signature-item" *ngFor="let sig of savedSignatures" (click)="useSavedSignature(sig)">
+          <img [src]="sig.signature_data" [alt]="sig.signature_name" />
+          <div class="signature-item__info">
+            <span class="signature-item__name">{{ sig.signature_name }}</span>
+            <span class="signature-item__badge" *ngIf="sig.is_default">หลัก</span>
+          </div>
+          <div class="signature-item__actions">
+            <button class="signature-item__btn" (click)="setDefaultSignature(sig, $event)"
+              [class.active]="sig.is_default" title="ตั้งเป็นหลัก">
+              <svg-icon name="star"></svg-icon>
+            </button>
+            <button class="signature-item__btn signature-item__btn--delete" (click)="deleteSavedSignature(sig, $event)"
+              title="ลบ">
+              <svg-icon name="trash"></svg-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="signature-picker-modal__empty" *ngIf="savedSignatures.length === 0">
+          <svg-icon name="create-outline"></svg-icon>
+          <p>ยังไม่มีลายเซ็นที่บันทึกไว้</p>
+        </div>
+      </div>
+
+      <div class="signature-picker-modal__actions">
+        <ion-button fill="outline" color="medium" (click)="closeSignaturePicker()">
+          <svg-icon name="close" slot="start"></svg-icon>
+          ปิด
+        </ion-button>
+        <ion-button fill="outline" color="secondary" (click)="triggerSignatureUpload()">
+          <svg-icon name="cloud-upload" slot="start"></svg-icon>
+          อัพโหลดรูป
+        </ion-button>
+        <ion-button color="primary" (click)="openSignaturePadFromPicker()">
+          <svg-icon name="create" slot="start"></svg-icon>
+          วาดลายเซ็นใหม่
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Overlay -->
+  <div class="preview-overlay" *ngIf="showPreviewOverlay">
+    <div class="preview-header">
+      <div class="preview-title">{{ isCancelMode ? 'ตรวจสอบเอกสารก่อนบันทึก' : 'ตรวจสอบเอกสารก่อนลงนาม' }}</div>
+      <div class="preview-actions">
+        <ion-button fill="clear" color="dark" (click)="backToEdit()">
+          <svg-icon slot="start" name="arrow-back-outline"></svg-icon>
+          กลับไปแก้ไข
+        </ion-button>
+        <ion-button color="success" (click)="confirmSave()">
+          <svg-icon slot="start" name="checkmark-done-outline"></svg-icon>
+          {{ isCancelMode ? 'ยืนยันการบันทึก' : 'ยืนยันและลงนาม' }}
+        </ion-button>
+      </div>
+    </div>
+    <div class="preview-scroll-area">
+    <div class="preview-body">
+      <div class="preview-filter-bar" *ngIf="previewIsFiltered || isLoadingAllPreview">
+        <svg-icon name="information-circle-outline"></svg-icon>
+        <span>แสดงเฉพาะหน้าที่มีการแก้ไข ({{ previewPages.length }} / {{ previewTotalPages }} หน้า)</span>
+        <ion-button fill="clear" size="small" (click)="loadAllPreviewPages()" [disabled]="isLoadingAllPreview">
+          <ion-spinner *ngIf="isLoadingAllPreview" name="crescent" slot="start"></ion-spinner>
+          <span *ngIf="!isLoadingAllPreview">แสดงทั้งหมด {{ previewTotalPages }} หน้า</span>
+          <span *ngIf="isLoadingAllPreview">กำลังโหลด...</span>
+        </ion-button>
+      </div>
+      <div class="preview-pages" *ngIf="previewPages.length > 0">
+        <img *ngFor="let page of previewPages; let i = index" [src]="page" [alt]="'Page ' + (i + 1)"
+          class="preview-page-img">
+      </div>
+      <div *ngIf="previewPages.length === 0" class="preview-loading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>กำลังโหลด Preview...</p>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Custom Context Menu -->
+  <div class="custom-context-menu" *ngIf="contextMenu.show" [style.left.px]="contextMenu.x" [style.top.px]="contextMenu.y">
+    <button class="menu-btn" (click)="contextBringToFront()">
+      <svg-icon name="arrow-up-circle-outline"></svg-icon> นำไปไว้หน้าสุด (Bring to Front)
+    </button>
+    <button class="menu-btn" (click)="contextBringForward()">
+      <svg-icon name="chevron-up-outline"></svg-icon> นำไปข้างหน้า (Bring Forward)
+    </button>
+    <button class="menu-btn" (click)="contextSendBackward()">
+      <svg-icon name="chevron-down-outline"></svg-icon> ส่งไปข้างหลัง (Send Backward)
+    </button>
+    <button class="menu-btn" (click)="contextSendToBack()">
+      <svg-icon name="arrow-down-circle-outline"></svg-icon> ส่งไปไว้หลังสุด (Send to Back)
+    </button>
+    <div class="menu-divider"></div>
+    <button class="menu-btn danger-btn" (click)="deleteContextMenuTarget()">
+      <svg-icon name="trash-outline"></svg-icon> ลบ (Delete)
+    </button>
+  </div>
+
+</ion-content>

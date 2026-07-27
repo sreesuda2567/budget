@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http';
 import { AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2SearchPipeModule } from 'src/app/shared/search-filter';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { WelfareRoutingModule } from './welfare-routing.module';
 import { MenuwelfareComponent } from './menuwelfare/menuwelfare.component';
@@ -24,7 +24,7 @@ import { IncomepmedicalComponent } from './load/incomepmedical/incomepmedical.co
 import { IncomepschoolComponent } from './load/incomepschool/incomepschool.component';
 import { EpmedicalSummonthComponent } from './report/epmedical-summonth/epmedical-summonth.component';
 import { EpschoolSummonthComponent } from './report/epschool-summonth/epschool-summonth.component';
-import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'pdf-annotator';
+import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'src/app/shared/pdf-annotator/public-api';
 @NgModule({
   declarations: [MenuwelfareComponent, EpmedicalControlComponent, EpschoolControlComponent, MemberretireComponent, EpmedicalretireComponent, EpschoolLoadComponent, EpmedicalLoadComponent, EpschoolretireComponent, AppepschoolComponent, AppepmedicalComponent, LoadwfComponent, LoadwComponent, WfdashboardComponent, IncomepmedicalComponent, IncomepschoolComponent, EpmedicalSummonthComponent, EpschoolSummonthComponent],
   imports: [

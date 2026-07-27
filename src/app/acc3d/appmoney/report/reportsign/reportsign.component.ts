@@ -13,7 +13,7 @@ import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 import { ModalController } from '@ionic/angular';
-import { PdfAnnotatorModalComponent } from 'pdf-annotator';
+import { PdfAnnotatorModalComponent } from 'src/app/shared/pdf-annotator/public-api';
 
 defineLocale('th', thBeLocale);
 

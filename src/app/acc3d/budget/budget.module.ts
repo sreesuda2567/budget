@@ -41,16 +41,18 @@ import { InsprojectComponent } from './approve/insproject/insproject.component';
 import { MallocateComponent } from './approve/mallocate/mallocate.component';
 import { ProjectmoreComponent } from './approve/projectmore/projectmore.component';
 import { PodayComponent } from './approve/poday/poday.component';
+import { RqdekaComponent } from './approve/rqdeka/rqdeka.component';
 
 import { BudgetComponent } from './budget.component';
 import { BudgetRountingModule } from './budget-rounting.module';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2SearchPipeModule } from 'src/app/shared/search-filter';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AutocompleteLibModule} from 'angular-ng-autocomplete';
 @NgModule({
   declarations: [
     BudgetComponent,
+    RqdekaComponent,
     ShowexpensesComponent,
     ListexpensesComponent,
     ListincomeComponent,

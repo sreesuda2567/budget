@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DesignRoutingModule } from './design-routing.module';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2SearchPipeModule } from 'src/app/shared/search-filter';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { HttpClientModule} from '@angular/common/http';
 import { MenudesignComponent } from './menudesign/menudesign.component';

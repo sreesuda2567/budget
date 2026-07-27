@@ -13,7 +13,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thLocale } from 'ngx-bootstrap/locale'; // ✅ เปลี่ยนเป็น path ที่ถูกต้อง
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ModalController } from '@ionic/angular';
-import { PdfAnnotatorModalComponent } from 'pdf-annotator';
+import { PdfAnnotatorModalComponent } from 'src/app/shared/pdf-annotator/public-api';
 defineLocale('th', thLocale); // โหลด locale ภาษาไทย
 
 

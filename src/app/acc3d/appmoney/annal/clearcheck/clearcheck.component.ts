@@ -14,7 +14,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
 import { ModalController } from '@ionic/angular';
-import { PdfAnnotatorModalComponent } from 'pdf-annotator';
+import { PdfAnnotatorModalComponent } from 'src/app/shared/pdf-annotator/public-api';
 
 @Component({
   selector: 'app-clearcheck',

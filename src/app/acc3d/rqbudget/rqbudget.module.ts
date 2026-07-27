@@ -7,7 +7,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
 import { AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2SearchPipeModule } from 'src/app/shared/search-filter';
 import { MenuComponent } from './menu/menu.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { RqtassetComponent } from './budget/rqtasset/rqtasset.component';

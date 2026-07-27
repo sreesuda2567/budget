@@ -5,7 +5,7 @@ import { ListassetComponent } from './listasset/listasset.component';
 import { InvestmentComponent } from './investment.component';
 import { InvestmentRoutingModule } from './investment-routing.module';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2SearchPipeModule } from 'src/app/shared/search-filter';
 import { ListbuildingComponent } from './listbuilding/listbuilding.component';
 import { ApproveassetComponent } from './approve/approveasset/approveasset.component';
 import { ApprovebuildingComponent } from './approve/approvebuilding/approvebuilding.component';

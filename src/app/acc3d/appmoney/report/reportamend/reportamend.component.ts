@@ -14,7 +14,7 @@ import { thLocale } from 'ngx-bootstrap/locale'; // ✅ เปลี่ยนเ
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 defineLocale('th', thLocale); // โหลด locale ภาษาไทย
 import { ModalController } from '@ionic/angular';
-import { PdfAnnotatorModalComponent } from 'pdf-annotator';
+import { PdfAnnotatorModalComponent } from 'src/app/shared/pdf-annotator/public-api';
 
 @Component({
   selector: 'app-reportamend',

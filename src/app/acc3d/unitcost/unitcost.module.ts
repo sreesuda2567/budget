@@ -10,7 +10,7 @@ import { ExactivityComponent } from './exactivity/exactivity.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { UexpensesComponent } from './uexpenses/uexpenses.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2SearchPipeModule } from 'src/app/shared/search-filter';
 import { ReportledgerComponent } from './budget/reportledger/reportledger.component';
 import { DekamonthComponent } from './budget/dekamonth/dekamonth.component';
 import { Reportrm4Component } from './budget/reportrm4/reportrm4.component';
@@ -31,7 +31,7 @@ import { ReportdayappComponent } from './report/reportdayapp/reportdayapp.compon
 import { ReportdaycheckComponent } from './report/reportdaycheck/reportdaycheck.component';
 import { ReportdaycorrectComponent } from './report/reportdaycorrect/reportdaycorrect.component';
 import { FpaymentdateComponent } from './budget/fpaymentdate/fpaymentdate.component';
-import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'pdf-annotator';
+import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'src/app/shared/pdf-annotator/public-api';
 
 @NgModule({
   declarations: [

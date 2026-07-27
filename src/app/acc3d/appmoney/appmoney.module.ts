@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http';
 import { AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { Ng2SearchPipeModule } from 'src/app/shared/search-filter';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AppmoneyRoutingModule } from './appmoney-routing.module';
 import { HomeComponent } from './home/home.component';
@@ -51,7 +51,7 @@ import { ReportdayappcComponent } from './report/reportdayappc/reportdayappc.com
 import { ReportamendComponent } from './report/reportamend/reportamend.component';
 
 
-import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'pdf-annotator';
+import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'src/app/shared/pdf-annotator/public-api';
 
 @NgModule({
   declarations: [

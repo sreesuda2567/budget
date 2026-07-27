@@ -15,7 +15,7 @@ defineLocale('th', thBeLocale);
 import Swal from 'sweetalert2';
 import { PDFDocument } from 'pdf-lib';
 import { ModalController } from '@ionic/angular';
-import { PdfAnnotatorModalComponent } from 'pdf-annotator';
+import { PdfAnnotatorModalComponent } from 'src/app/shared/pdf-annotator/public-api';
 @Component({
   selector: 'app-loadwf',
   templateUrl: './loadwf.component.html',
