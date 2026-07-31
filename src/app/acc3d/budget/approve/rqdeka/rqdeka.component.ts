@@ -219,6 +219,8 @@ export class RqdekaComponent implements OnInit {
     this.data3d = null;
     this.data3d2 = null;
     this.dataAdd.List = [];
+    this.dataAdd.FNDEKA_REMARK = "";
+    this.dataAdd.FNDEKA_RSTATUS = "1";
   }
   fetchdatalist() {
 
@@ -286,14 +288,15 @@ export class RqdekaComponent implements OnInit {
   editdata(id: any) {
     this.setshowbti();
     this.dataAdd.FNDEKA_CODE = id;
-    // this.htmlStringd = name;
     this.apiService
       .getById(id, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.data3d2 = data.data;
-        for (let i = 0; i < data.data.length; i++) {
-            this.dataAdd.List.push(data.data[i].id);
+        this.data3d2 = data.data2;
+        this.dataAdd.FNDEKA_REMARK = data.data[0].FNDEKA_REMARK;
+        this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNDEKA_RSTATUS;
+        for (let i = 0; i < data.data2.length; i++) {
+            this.dataAdd.List.push(data.data2[i].id);
         }
 
       });

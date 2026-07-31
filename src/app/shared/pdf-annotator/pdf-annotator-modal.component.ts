@@ -5206,7 +5206,11 @@ export class PdfAnnotatorModalComponent implements OnInit, AfterViewInit, OnDest
       }).toPromise();
 
       if (response?.success) {
-        this.savedSignatures = response.signatures || [];
+        let sigs = response.signatures;
+        if (sigs && typeof sigs === 'object' && !Array.isArray(sigs)) {
+          sigs = Object.keys(sigs).length === 0 ? [] : Object.values(sigs);
+        }
+        this.savedSignatures = sigs || [];
       } else {
         console.error('Failed to load signatures:', response?.msg);
       }
@@ -5401,6 +5405,9 @@ export class PdfAnnotatorModalComponent implements OnInit, AfterViewInit, OnDest
           }).toPromise();
 
           if (response?.success) {
+            if (!Array.isArray(this.savedSignatures)) {
+              this.savedSignatures = [];
+            }
             this.savedSignatures.push({
               id: response.id,
               user_id: this.userId,
@@ -5410,6 +5417,9 @@ export class PdfAnnotatorModalComponent implements OnInit, AfterViewInit, OnDest
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString()
             });
+            this.placeSignatureOnCanvas(dataUrl);
+            this.closeSignaturePicker();
+            this.closeSignaturePad();
           }
         } catch (err) {
           console.error('Error uploading signature:', err);
@@ -5418,6 +5428,7 @@ export class PdfAnnotatorModalComponent implements OnInit, AfterViewInit, OnDest
         // No userId, just use directly
         this.placeSignatureOnCanvas(dataUrl);
         this.closeSignaturePicker();
+        this.closeSignaturePad();
       }
 
       this.isLoadingSignatures = false;

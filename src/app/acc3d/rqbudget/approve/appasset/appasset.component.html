@@ -158,7 +158,7 @@
                     (click)="previewPdf(p.link)"><i class="fas fa-file-alt"></i></a>
                 </td>
                 <td align="center">
-                  <a *ngIf="p.PRASSET_RSTATUS =='6'" role="button" title="พิจารณา" (click)="showapp(p.PRASSET_CODE,p.PRREGISASSET_NAME)"
+                  <a *ngIf="p.PRASSET_RSTATUS =='6' || p.PRASSET_RSTATUS =='9'" role="button" title="พิจารณา" (click)="showapp(p.PRASSET_CODE,p.PRREGISASSET_NAME)"
                     data-bs-toggle="modal" data-bs-target="#modalEdit" class="btn btn-warning text-white"><i
                       class="fa fa-edit">พิจารณา</i></a>&nbsp;
                   <a *ngIf="p.PRASSET_RSTATUS =='8'" role="button" title="ปรับปรุง" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"

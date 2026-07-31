@@ -18,7 +18,7 @@
                     <div class="panel">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-md-8 text-secondary" style="font-size: 10pt">
+                                <div class="col-md-9 text-secondary" style="font-size: 10pt">
                                     <label> หน่วยเบิกจ่าย: </label>
                                     <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
                                         id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
@@ -42,7 +42,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="col-md-2 ">
+                                <div class="col-md-1 ">
                                     <br>
                                     <button type="submit" class="btn btn-primary" id="submitinsert"
                                         (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
@@ -57,19 +57,19 @@
         <div class="row justify-content-center center-screen" *ngIf="loading">
             <div class="spinner-border " role="status" id="loading"></div>
         </div>
-            <div class="shadow alert alert-secondary" role="alert">
-      <div class="row">
-        <div class="col-md-2">
-          
+        <div class="shadow alert alert-secondary" role="alert">
+            <div class="row">
+                <div class="col-md-2">
+
+                </div>
+                <div align="right" class="col-md-1">
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+                </div>
+            </div>
         </div>
-        <div align="right" class="col-md-1">
-        </div>
-        <div class="col-md-6"></div>
-        <div class="col-md-3">
-          <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
-        </div>
-      </div>
-    </div>
         <div class="table-responsive-lg">
             <table id="excel-table" class="shadow-lg table table-bordered table-striped table-hover">
                 <thead>
@@ -84,9 +84,17 @@
                             <div align="center">เลขฎีกา</div>
                         </th>
                         <th>
+                            <div align="center">เลข3ดี</div>
+                        </th>
+                        <th>
                             <div align="center">ผู้ทำรายการ</div>
                         </th>
-
+                        <th>
+                            <div align="center">หมายเหตุ</div>
+                        </th>
+                        <th>
+                            <div align="center">สถานะ</div>
+                        </th>
                         <th>
                             <div align="center">จัดการข้อมูล</div>
                         </th>
@@ -97,9 +105,12 @@
                         <td width="5%" align="center">{{i+1}}</td>
                         <td>{{p.FNDEKA_DATE1}}</td>
                         <td>{{p.FNDEKA_DEKA}}/{{p.PLYEARBUDGET_CODE}}</td>
+                        <td>{{p.FNEXPENSES_STEP_LIST}}</td>
                         <td>{{p.FNDEKA_NAME}}</td>
+                        <td>{{p.FNDEKA_REMARK}}</td>
+                        <td>{{p.DEKASTATUS_NAME}}</td>
                         <td width="8%" align="center">
-                            <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                            <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
                                 (click)="deleteData(p.FNDEKA_CODE)"><i class="fa fa-trash"></i>
                             </a>&nbsp;
                             <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
@@ -109,7 +120,7 @@
                         </td>
                     </tr>
                     <tr *ngIf="!rownum">
-                        <td colspan="15">ไม่มีข้อมูล{{rownum}}</td>
+                        <td colspan="7">ไม่มีข้อมูล{{rownum}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -128,6 +139,7 @@
             <div class="modal-body">
 
                 <div class="row">
+                    <div class="col-md-1"></div>
                     <div class="col-md-5 text-secondary mb-3" style="font-size: 10pt">
                         <label> คณะ /หน่วยงาน: </label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
@@ -137,9 +149,10 @@
                             </option>
                         </select>
                     </div>
-                    <div class="col-md-5"></div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-1"></div>
                     <!-- คอลัมน์ซ้าย: ค้นหา + รายชื่อ -->
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="input-group input-group-sm mb-2">
                             <input type="text" name="p_dm" class="form-control" id="p_dm"
                                 placeholder="🔍 ค้นหาเลข3ดี..." (keyup)="Passetsearch()" [(ngModel)]="dataAdd.search">
@@ -151,11 +164,13 @@
                         </select>
                     </div>
                     <!-- ปุ่มตรงกลาง -->
-                    <div class="col-md-2 d-flex flex-column justify-content-center align-items-center gap-1">
-                        <button type="button" class="btn btn-primary btn-sm" (click)="addIt()" title="เพิ่ม">
+                    <div class="col-md-1 d-flex flex-column justify-content-center align-items-center gap-1">
+                        <button type="button" class="btn btn-primary btn-sm rounded-circle shadow-sm" (click)="addIt()"
+                            title="เพิ่ม" style="width: 32px; height: 32px;">
                             <i class="fa-solid fa-arrow-right"></i>
                         </button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="delIt()" title="ลบ">
+                        <button type="button" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm"
+                            (click)="delIt()" title="ลบ" style="width: 32px; height: 32px;">
                             <i class="fa-solid fa-arrow-left"></i>
                         </button>
                     </div>
@@ -174,6 +189,34 @@
                     </div>
 
                 </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="mb-2">
+                            <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
+                                <i class="fa-solid fa-comment-dots text-primary me-1"></i> หมายเหตุ:
+                            </label>
+                            <textarea class="form-control form-control-sm shadow-sm" name="FNDEKA_REMARK"
+                                id="FNDEKA_REMARK" rows="2" [(ngModel)]="dataAdd.FNDEKA_REMARK"
+                                placeholder="กรอกรายละเอียดเพิ่มเติม..."></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
+                                    <i class="fa-solid fa-toggle-on text-success me-1"></i> สถานะการใช้งาน:
+                                </label>
+                                <select class="form-select form-select-sm shadow-sm" name="FNDEKA_RSTATUS" id="FNDEKA_RSTATUS"
+                                    [(ngModel)]="dataAdd.FNDEKA_RSTATUS">
+                                    <option value="" disabled selected>-- เลือกสถานะ --</option>
+                                    <option value="1" class="text-success fw-bold">&#9679; ใช้งาน</option>
+                                    <option value="0" class="text-danger fw-bold">&#9679; ยกเลิก</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <br>
                 <div class="modal-footer">
                     <button id="ModalClose" type="button" class="btn btn-secondary rounded-pill"

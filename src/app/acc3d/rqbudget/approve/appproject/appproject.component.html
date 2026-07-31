@@ -167,7 +167,7 @@
                     (click)="previewPdf(p.link)"><i class="fas fa-file-alt"></i></a>
                 </td>
                 <td align="center">
-                  <a *ngIf="p.PLPROJECT_RSTATUS =='6'" role="button" title="พิจารณา"
+                  <a *ngIf="p.PLPROJECT_RSTATUS =='6'|| p.PRASSET_RSTATUS =='9'" role="button" title="พิจารณา"
                     (click)="showapp(p.PRPLPROJECT_CODE,p.PRREGISPROJECT_NAME)" data-bs-toggle="modal"
                     data-bs-target="#modalEdit" class="btn btn-warning text-white"><i
                       class="fa fa-edit">พิจารณา</i></a>&nbsp;
