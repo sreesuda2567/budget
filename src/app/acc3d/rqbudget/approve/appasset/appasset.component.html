@@ -146,24 +146,37 @@
                 </td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td>
-                  <span *ngIf="p.PRASSET_SLINK2"> <a role="button" title="ICT" class="btn btn-success text-white"
-                      (click)="previewPdf(p.PRASSET_SLINK2)">ICT</a>&nbsp;</span>
-                  <span *ngIf="p.PRASSET_SLINK3"> <a role="button" title="แนบไฟล์แบบเสนอรายการครุภัณฑ์"
-                      class="btn btn-success text-white" (click)="previewPdf(p.PRASSET_SLINK3)">แบบเสนอ</a>&nbsp;</span>
-                  <span *ngIf="p.PRASSET_SLINK4"> <a role="button" title="แบบรายละเอียดคุณลักษณะเฉพาะครุภัณฑ์(Spec)"
-                      class="btn btn-success text-white" (click)="previewPdf(p.PRASSET_SLINK4)">Spec</a>&nbsp;</span>
-                  <a *ngIf="p.PRASSET_SLINK1" role="button" title="ใบเสนอราาคา" class="btn btn-success text-white"
-                    (click)="previewPdf(p.PRASSET_SLINK1)">QN</a>&nbsp;
-                  <a *ngIf="p.PLINCOME_NAME" role="button" title="รายงาน" class="btn btn-success text-white"
-                    (click)="previewPdf(p.link)"><i class="fas fa-file-alt"></i></a>
+                  <div class="dropdown" *ngIf="p.PRASSET_SLINK1 || p.PRASSET_SLINK2 || p.PRASSET_SLINK3 || p.PRASSET_SLINK4 || p.PLINCOME_NAME">
+                    <button class="btn btn-success dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-folder-open me-1"></i> เอกสาร
+                    </button>
+                    <ul class="dropdown-menu shadow-sm">
+                      <li *ngIf="p.PRASSET_SLINK2"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRASSET_SLINK2)"><i class="fa-solid fa-desktop text-secondary me-2"></i>ICT</a></li>
+                      <li *ngIf="p.PRASSET_SLINK3"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRASSET_SLINK3)"><i class="fa-solid fa-file-signature text-secondary me-2"></i>แบบเสนอ</a></li>
+                      <li *ngIf="p.PRASSET_SLINK4"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRASSET_SLINK4)"><i class="fa-solid fa-list-check text-secondary me-2"></i>Spec</a></li>
+                      <li *ngIf="p.PRASSET_SLINK1"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRASSET_SLINK1)"><i class="fa-solid fa-file-invoice-dollar text-secondary me-2"></i>QN</a></li>
+                      <li *ngIf="p.PLINCOME_NAME"><a class="dropdown-item" role="button" (click)="previewPdf(p.link)"><i class="fas fa-file-alt text-secondary me-2"></i>รายงาน</a></li>
+                    </ul>
+                  </div>
                 </td>
-                <td align="center">
-                  <a *ngIf="p.PRASSET_RSTATUS =='6' || p.PRASSET_RSTATUS =='9'" role="button" title="พิจารณา" (click)="showapp(p.PRASSET_CODE,p.PRREGISASSET_NAME)"
-                    data-bs-toggle="modal" data-bs-target="#modalEdit" class="btn btn-warning text-white"><i
-                      class="fa fa-edit">พิจารณา</i></a>&nbsp;
-                  <a *ngIf="p.PRASSET_RSTATUS =='8'" role="button" title="ปรับปรุง" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
-                    class="btn btn-danger text-white" (click)="editdataapp(p.PRASSET_CODE)"><i
-                      class="fa fa-edit"></i>ปรับปรุง</a>
+                <td width="8%" align="center">
+                  <div class="dropdown" *ngIf="p.PRASSET_RSTATUS =='6' || p.PRASSET_RSTATUS =='9'|| p.PRASSET_RSTATUS =='8'">
+                    <button class="btn btn-primary dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-gear me-1"></i> จัดการ
+                    </button>
+                    <ul class="dropdown-menu shadow-sm">
+                      <li>
+                        <a class="dropdown-item" role="button" (click)="showapp(p.PRASSET_CODE,p.PRREGISASSET_NAME)" data-bs-toggle="modal" data-bs-target="#modalEdit">
+                          <i class="fa-solid fa-clipboard-check text-warning me-2"></i>พิจารณา
+                        </a>
+                      </li>
+                      <li *ngIf="p.PRASSET_RSTATUS =='8'">
+                        <a class="dropdown-item" role="button" (click)="editdataapp(p.PRASSET_CODE)" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen">
+                          <i class="fa-solid fa-pen-to-square text-danger me-2"></i>ปรับปรุง
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
               <tr *ngIf="!rownum">

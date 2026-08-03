@@ -168,17 +168,17 @@
                     <span *ngIf="p.PRBUILDING_RSTATUS=='0'">&nbsp;</span>
                   </td>
                   <td>
-                    <span *ngIf="p.PRBUILDING_SLINK"> <a role="button" title="แนบไฟล์แบบเสนอรายการสิ่งก่อสร้าง"
-                        class="btn btn-success text-white"
-                        (click)="previewPdf(p.PRBUILDING_SLINK)">แบบเสนอ</a>&nbsp;</span>
-                    <span *ngIf="p.PRBUILDING_PRICE"> <a role="button" title="รายงาน" class="btn btn-success text-white"
-                        (click)="previewPdf(p.PRBUILDING_PRICE)">ราคากลาง</a>&nbsp; </span>
-                    <span *ngIf="p.PRBUILDING_PAT">
-                      <a role="button" title="รายงาน" class="btn btn-success text-white"
-                        (click)="previewPdf(p.PRBUILDING_PAT)">แบบรูป</a>&nbsp;</span>
-                    <a role="button" title="รายงาน" class="btn btn-success text-white"
-                      (click)="previewPdf(p.link+'&type=0')"><i class="fas fa-file-alt"></i></a>
-
+                    <div class="dropdown">
+                      <button class="btn btn-success dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-folder-open me-1"></i> เอกสาร
+                      </button>
+                      <ul class="dropdown-menu shadow-sm">
+                        <li *ngIf="p.PRBUILDING_SLINK"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRBUILDING_SLINK)"><i class="fa-solid fa-file-signature text-secondary me-2"></i>แบบเสนอ</a></li>
+                        <li *ngIf="p.PRBUILDING_PRICE"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRBUILDING_PRICE)"><i class="fa-solid fa-file-invoice-dollar text-secondary me-2"></i>ราคากลาง</a></li>
+                        <li *ngIf="p.PRBUILDING_PAT"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRBUILDING_PAT)"><i class="fa-solid fa-image text-secondary me-2"></i>แบบรูป</a></li>
+                        <li><a class="dropdown-item" role="button" (click)="previewPdf(p.link+'&type=0')"><i class="fas fa-file-alt text-secondary me-2"></i>รายงาน</a></li>
+                      </ul>
+                    </div>
                   </td>
 
 

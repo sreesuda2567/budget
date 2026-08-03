@@ -148,21 +148,22 @@
                   </td>
 
                   <td *ngIf="dataAdd.PRYEARASSET_CODE ==''" align="center">{{p.PRYEARASSET_CODE}}</td>
-                  <td align="center">{{p.PRSTATUS_NAME}}</td>
-                  <td width="13%">
-                    <span *ngIf="p.PRASSET_SLINK2"> <a role="button" title="รายงาน" class="btn btn-success text-white"
-                        (click)="previewPdf(p.PRASSET_SLINK2)">ICT</a>&nbsp;</span>
-                    <span *ngIf="p.PRASSET_SLINK3"> <a role="button" title="แนบไฟล์แบบเสนอรายการครุภัณฑ์"
-                        class="btn btn-success text-white"
-                        (click)="previewPdf(p.PRASSET_SLINK3)">แบบเสนอ</a>&nbsp;</span>
-                    <span *ngIf="p.PRASSET_SLINK4"> <a role="button" title="แบบรายละเอียดคุณลักษณะเฉพาะครุภัณฑ์(Spec)"
-                        class="btn btn-success text-white" (click)="previewPdf(p.PRASSET_SLINK4)">Spec</a>&nbsp;</span>
-                    <a role="button" title="รายงาน" class="btn btn-success text-white"
-                      (click)="previewPdf(p.PRASSET_SLINK1)">QN</a>&nbsp;
-                    <a role="button" title="รายงาน" class="btn btn-success text-white"
-                      (click)="previewPdf(p.link+'&type=0')"><i class="fas fa-file-alt"></i></a>
+                  <td >{{p.PRSTATUS_NAME}}</td>
+                  <td align="center">
+                    <div class="dropdown">
+                      <button class="btn btn-success dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-folder-open me-1"></i> เอกสาร
+                      </button>
+                      <ul class="dropdown-menu shadow-sm">
+                        <li *ngIf="p.PRASSET_SLINK2"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRASSET_SLINK2)"><i class="fa-solid fa-desktop text-secondary me-2"></i>ICT</a></li>
+                        <li *ngIf="p.PRASSET_SLINK3"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRASSET_SLINK3)"><i class="fa-solid fa-file-signature text-secondary me-2"></i>แบบเสนอ</a></li>
+                        <li *ngIf="p.PRASSET_SLINK4"><a class="dropdown-item" role="button" (click)="previewPdf(p.PRASSET_SLINK4)"><i class="fa-solid fa-list-check text-secondary me-2"></i>Spec</a></li>
+                        <li><a class="dropdown-item" role="button" (click)="previewPdf(p.PRASSET_SLINK1)"><i class="fa-solid fa-file-invoice-dollar text-secondary me-2"></i>QN</a></li>
+                        <li><a class="dropdown-item" role="button" (click)="previewPdf(p.link+'&type=0')"><i class="fas fa-file-alt text-secondary me-2"></i>รายงาน</a></li>
+                      </ul>
+                    </div>
                   </td>
-                  <td width="6%">
+                  <td align="center">
                     <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen"
                       class="btn btn-warning text-white" (click)="editdataapp(p.PRASSET_CODE)"><i
                         class="fa fa-edit"></i></a>&nbsp;
@@ -342,7 +343,7 @@ s
                         <td>{{p.CRPART_TNAME}}</td>
                         <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
                         <td align="right">{{p.PRASSET_MONEY*p.PRASSET_NUMBER| number : '1.2-2'}}</td>
-                        <td width="15%">
+                        <td align="right">
                           <span *ngIf="p.PRASSET_SLINK2">
                             <a role="button" title="รายงาน" class="btn btn-success text-white"
                               (click)="previewPdf(p.PRASSET_SLINK2)">ICT</a>&nbsp;</span>

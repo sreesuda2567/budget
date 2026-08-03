@@ -143,13 +143,23 @@
                   <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"><i class="fas fa-file-alt"></i></a>
                 </td>
                 <td align="center">
-                  <a *ngIf="p.PLPROJECT_RSTATUS =='6'" role="button" title="พิจารณา"
-                    (click)="showapp(p.PRPLPROJECT_CODE,p.PRREGISPROJECT_NAME)" data-bs-toggle="modal"
-                    data-bs-target="#modalEdit" class="btn btn-warning text-white"><i
-                      class="fa fa-edit">พิจารณา</i></a>&nbsp;
-                  <a *ngIf="p.PLPROJECT_RSTATUS =='8'" role="button" title="ปรับปรุง" data-bs-toggle="modal"
-                    data-bs-target="#modalEditlistexpen" class="btn btn-danger text-white"
-                    (click)="editdataapp(p.PRPLPROJECT_CODE)"><i class="fa fa-edit"></i>ปรับปรุง</a>
+                  <div class="dropdown" *ngIf="p.PLPROJECT_RSTATUS =='6'|| p.PLPROJECT_RSTATUS =='9'|| p.PLPROJECT_RSTATUS =='8'">
+                    <button class="btn btn-primary dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-gear me-1"></i> จัดการ
+                    </button>
+                    <ul class="dropdown-menu shadow-sm">
+                      <li>
+                        <a class="dropdown-item" role="button" (click)="showapp(p.PRPLPROJECT_CODE,p.PRREGISPROJECT_NAME)" data-bs-toggle="modal" data-bs-target="#modalEdit">
+                          <i class="fa-solid fa-clipboard-check text-warning me-2"></i>พิจารณา
+                        </a>
+                      </li>
+                      <li *ngIf="p.PLPROJECT_RSTATUS =='8'">
+                        <a class="dropdown-item" role="button" (click)="editdataapp(p.PRPLPROJECT_CODE)" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen">
+                          <i class="fa-solid fa-pen-to-square text-danger me-2"></i>ปรับปรุง
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
               <tr style="background-color:rgb(225, 248, 163);">
@@ -167,13 +177,23 @@
                     (click)="previewPdf(p.link)"><i class="fas fa-file-alt"></i></a>
                 </td>
                 <td align="center">
-                  <a *ngIf="p.PLPROJECT_RSTATUS =='6'|| p.PRASSET_RSTATUS =='9'" role="button" title="พิจารณา"
-                    (click)="showapp(p.PRPLPROJECT_CODE,p.PRREGISPROJECT_NAME)" data-bs-toggle="modal"
-                    data-bs-target="#modalEdit" class="btn btn-warning text-white"><i
-                      class="fa fa-edit">พิจารณา</i></a>&nbsp;
-                  <a *ngIf="p.PLPROJECT_RSTATUS =='8'" role="button" title="ปรับปรุง" data-bs-toggle="modal"
-                    data-bs-target="#modalEditlistexpen" class="btn btn-danger text-white"
-                    (click)="editdataapp(p.PRPLPROJECT_CODE)"><i class="fa fa-edit"></i>ปรับปรุง</a>
+                  <div class="dropdown" *ngIf="p.PLPROJECT_RSTATUS =='6'|| p.PLPROJECT_RSTATUS =='9'|| p.PLPROJECT_RSTATUS =='8'">
+                    <button class="btn btn-primary dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-gear me-1"></i> จัดการ
+                    </button>
+                    <ul class="dropdown-menu shadow-sm">
+                      <li>
+                        <a class="dropdown-item" role="button" (click)="showapp(p.PRPLPROJECT_CODE,p.PRREGISPROJECT_NAME)" data-bs-toggle="modal" data-bs-target="#modalEdit">
+                          <i class="fa-solid fa-clipboard-check text-warning me-2"></i>พิจารณา
+                        </a>
+                      </li>
+                      <li *ngIf="p.PLPROJECT_RSTATUS =='8'">
+                        <a class="dropdown-item" role="button" (click)="editdataapp(p.PRPLPROJECT_CODE)" data-bs-toggle="modal" data-bs-target="#modalEditlistexpen">
+                          <i class="fa-solid fa-pen-to-square text-danger me-2"></i>ปรับปรุง
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
             </tbody>
