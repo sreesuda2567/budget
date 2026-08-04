@@ -46,7 +46,7 @@ export class LoaddktbreportComponent implements OnInit {
     page = 1;
   count = 0;
   number = 0;
-  tableSize = 20;
+  tableSize = 40;
   tableSizes = [40,100,200];
   searchTerm: any;
   previewPdfUrl: string = '';

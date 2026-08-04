@@ -18,6 +18,7 @@ import { AppassetComponent } from './approve/appasset/appasset.component';
 import { AppbuildingComponent } from './approve/appbuilding/appbuilding.component';
 import { AppprojectComponent } from './approve/appproject/appproject.component';
 import { RqtassetpComponent } from './budget/rqtassetp/rqtassetp.component';
+import { SignprojectComponent } from './budget/signproject/signproject.component';
 
 const routes: Routes = [
     { path: '', component: MenuComponent , children : [
@@ -37,6 +38,7 @@ const routes: Routes = [
     { path: 'appbuilding', component : AppbuildingComponent , canActivate: [AuthGuard]},
     { path: 'appproject', component : AppprojectComponent , canActivate: [AuthGuard]},
     { path: 'rqtassetp', component : RqtassetpComponent , canActivate: [AuthGuard]},
+    { path: 'signproject', component : SignprojectComponent , canActivate: [AuthGuard]},
   
     { path: '**', redirectTo: '' }
   ]

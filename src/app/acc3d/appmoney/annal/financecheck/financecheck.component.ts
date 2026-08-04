@@ -328,7 +328,7 @@ export class FinancecheckComponent implements OnInit {
       });
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, id2: any, money: any, mail: any, bookdate: any, name: any) {
+  editdata(id: any, id2: any, money: any, mail: any, bookdate: any, name: any,clearcheck: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -339,6 +339,7 @@ export class FinancecheckComponent implements OnInit {
     this.dataAdd.USERNAME_CISCO = mail;
     this.dataAdd.FNANNALS_BOOK_AT = bookdate;
     this.dataAdd.FSTF_FNAME = name;
+    this.dataAdd.EBOOKREQ_LINK = clearcheck;
     //console.log(id2);
     this.rowpbi = true;
   }

@@ -23,11 +23,12 @@ import { AppassetComponent } from './approve/appasset/appasset.component';
 import { AppbuildingComponent } from './approve/appbuilding/appbuilding.component';
 import { AppprojectComponent } from './approve/appproject/appproject.component';
 import { RqtassetpComponent } from './budget/rqtassetp/rqtassetp.component';
+import { SignprojectComponent } from './budget/signproject/signproject.component';
 
 
 
 @NgModule({
-  declarations: [MenuComponent, RqtassetComponent, RqtbuildingComponent, RqtprojectComponent, SmassetComponent, SmbuildingComponent, SmprojectComponent, ReportrqassetComponent, ReportrqbuildingComponent, ReportrqprojectComponent, AppassetComponent, AppbuildingComponent, AppprojectComponent, RqtassetpComponent],
+  declarations: [MenuComponent, RqtassetComponent, RqtbuildingComponent, RqtprojectComponent, SmassetComponent, SmbuildingComponent, SmprojectComponent, ReportrqassetComponent, ReportrqbuildingComponent, ReportrqprojectComponent, AppassetComponent, AppbuildingComponent, AppprojectComponent, RqtassetpComponent, SignprojectComponent],
   imports: [
     CommonModule,
     FormsModule,
