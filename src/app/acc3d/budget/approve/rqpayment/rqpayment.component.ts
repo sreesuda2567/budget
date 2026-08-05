@@ -13,11 +13,11 @@ import * as XLSX from 'xlsx-js-style';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-rqdeka',
-  templateUrl: './rqdeka.component.html',
-  styleUrls: ['./rqdeka.component.scss']
+  selector: 'app-rqpayment',
+  templateUrl: './rqpayment.component.html',
+  styleUrls: ['./rqpayment.component.scss']
 })
-export class RqdekaComponent implements OnInit {
+export class RqpaymentComponent implements OnInit {
   title = 'angular-app';
   fileName = 'report.xlsx';
   userList = [{}]
@@ -52,9 +52,9 @@ export class RqdekaComponent implements OnInit {
   rowpbu: any;
   data3d: any;
   data3d2: any;
-  url = "/acc3d/budget/approve/rqdeka.php";
+  url = "/acc3d/budget/approve/rqpayment.php";
   url1 = "/acc3d/budget/userpermission.php";
-  constructor(
+ constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
     private toastr: ToastrService,
@@ -170,7 +170,7 @@ export class RqdekaComponent implements OnInit {
   }
   Passetsearch() {
     //รายการวิชา
-    this.dataAdd.opt = "view3ddbp";
+    this.dataAdd.opt = "view3ddb";
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())
@@ -221,7 +221,6 @@ export class RqdekaComponent implements OnInit {
     this.dataAdd.List = [];
     this.dataAdd.FNDEKA_REMARK = "";
     this.dataAdd.FNDEKA_RSTATUS = "1";
-    this.Passetsearch();
   }
   fetchdatalist() {
 
@@ -294,8 +293,8 @@ export class RqdekaComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.data3d2 = data.data2;
-        this.dataAdd.FNDEKA_REMARK = data.data[0].FNDEKA_REMARK;
-        this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNDEKA_RSTATUS;
+        this.dataAdd.FNDEKA_REMARK = data.data[0].FNPAYMENT_REMARK;
+        this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNPAYMENT_RSTATUS;
         for (let i = 0; i < data.data2.length; i++) {
             this.dataAdd.List.push(data.data2[i].id);
         }

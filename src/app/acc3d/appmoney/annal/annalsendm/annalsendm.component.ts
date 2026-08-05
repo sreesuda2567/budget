@@ -422,34 +422,27 @@ export class AnnalsendmComponent implements OnInit {
         .getupdate(this.dataAdd, this.url)
         .pipe(first())
         .subscribe((data: any) => {
-          //console.log(data.status);   uploadbook    
           if (data.status == 1) {
             this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, data.id, this.dataAdd.citizen, '81')
               .subscribe((event: any) => {
-                // 
                 if (event.type == 4) {
+                  if (this.dataAdd.FNRESTATUS_CODE == '0') {
+                    this.dataAdd.opt = "sendemailNRE";
+                    this.apiService
+                      .getupdate(this.dataAdd, this.url)
+                      .pipe(first())
+                      .subscribe((emailData: any) => {
+                      });
+                  }
                   this.fetchdatalist();
+                  this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+                  document.getElementById("ModalClose")?.click();
                 }
-              }
-              );
-            if (this.dataAdd.FNRESTATUS_CODE == '0') {
-              this.dataAdd.opt = "sendemailNRE";
-              this.apiService
-                .getupdate(this.dataAdd, this.url)
-                .pipe(first())
-                .subscribe((data: any) => {
-                });
-            }
-
-            this.fetchdatalist();
-            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-            document.getElementById("ModalClose")?.click();
+              });
           } else {
             this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
           }
         });
-
-
     }
   }
   insertdataapp() {
@@ -547,25 +540,21 @@ export class AnnalsendmComponent implements OnInit {
     
       }
   updatedata() {
-
-    this.dataAdd.opt = "update";
-    this.apiService
-      .getupdate(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        //console.log(data.status);       
-        if (data.status == 1) {
-          this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '81')
-            .subscribe((event: any) => {
-              // 
-              if (event.type == 4) {
+    this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '81')
+      .subscribe((event: any) => {
+        if (event.type == 4) {
+          this.dataAdd.opt = "update";
+          this.apiService
+            .getupdate(this.dataAdd, this.url)
+            .pipe(first())
+            .subscribe((data: any) => {
+              if (data.status == 1) {
                 this.fetchdatalist();
+                this.fetchdatalistapp();
+                this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
+                document.getElementById("ModalClose")?.click();
               }
-            }
-            );
-          this.fetchdatalistapp();
-          this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
-          document.getElementById("ModalClose")?.click();
+            });
         }
       });
   }

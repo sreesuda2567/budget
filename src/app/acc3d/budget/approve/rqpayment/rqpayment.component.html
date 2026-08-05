@@ -1,7 +1,7 @@
 <div class="shadow alert border bg-white mx-4 mt-4" role="alert">
     <div class="row mb-3">
         <div class="col-md-10">
-            <h5 class="fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ทะเบียนคุมเลขฎีกา</h5>
+            <h5 class="fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ทะเบียนคุมขอเบิกเงิน</h5>
         </div>
         <div class="col-md-2" align="right">
             <a class="btn btn-primary text-white rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
@@ -25,7 +25,7 @@
                                     <select name="f_code" id="f_code" class="form-select"
                                         [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdataCam()">
                                         <option value=""
-                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'">
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' ">
                                             ทุกวิทยาเขต
                                         </option>
                                         <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">
@@ -81,9 +81,6 @@
                             <div align="center">วันที่</div>
                         </th>
                         <th>
-                            <div align="center">เลขฎีกา</div>
-                        </th>
-                        <th>
                             <div align="center">เลข3ดี</div>
                         </th>
                         <th>
@@ -103,18 +100,17 @@
                 <tbody>
                     <tr *ngFor="let p of datalist;let i = index">
                         <td width="5%" align="center">{{i+1}}</td>
-                        <td>{{p.FNDEKA_DATE1}}</td>
-                        <td>{{p.FNDEKA_DEKA}}/{{p.PLYEARBUDGET_CODE}}</td>
+                        <td>{{p.FNPAYMENT_DATE1}}</td>
                         <td>{{p.FNEXPENSES_STEP_LIST}}</td>
-                        <td>{{p.FNDEKA_NAME}}</td>
-                        <td>{{p.FNDEKA_REMARK}}</td>
+                        <td>{{p.FNPAYMENT_NAME}}</td>
+                        <td>{{p.FNPAYMENT_REMARK}}</td>
                         <td>{{p.DEKASTATUS_NAME}}</td>
                         <td width="8%" align="center">
                             <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
-                                (click)="deleteData(p.FNDEKA_CODE)"><i class="fa fa-trash"></i>
+                                (click)="deleteData(p.FNPAYMENT_CODE)"><i class="fa fa-trash"></i>
                             </a>&nbsp;
                             <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
-                                class="btn btn-warning text-white" (click)="editdata(p.FNDEKA_CODE)"><i
+                                class="btn btn-warning text-white" (click)="editdata(p.FNPAYMENT_CODE)"><i
                                     class="fa fa-edit"></i></a>
 
                         </td>

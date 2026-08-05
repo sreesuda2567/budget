@@ -42,6 +42,7 @@ import { MallocateComponent } from './approve/mallocate/mallocate.component';
 import { ProjectmoreComponent } from './approve/projectmore/projectmore.component';
 import { PodayComponent } from './approve/poday/poday.component';
 import { RqdekaComponent } from './approve/rqdeka/rqdeka.component';
+import { RqpaymentComponent } from './approve/rqpayment/rqpayment.component';
 
 import { BudgetComponent } from './budget.component';
 import { BudgetRountingModule } from './budget-rounting.module';
@@ -92,7 +93,8 @@ import { AutocompleteLibModule} from 'angular-ng-autocomplete';
     ReportcincomeComponent,
     ReportyexpensesComponent,
     ProjectmoreComponent,
-    PodayComponent
+    PodayComponent,
+    RqpaymentComponent
   ],
   imports: [
     CommonModule,

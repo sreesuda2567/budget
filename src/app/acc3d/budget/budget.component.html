@@ -66,9 +66,12 @@
             <i class="fa-solid fa-clipboard-check me-1 text-info"></i>อนุมัติรายการ
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" routerLink="rqpayment"
+                *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
+                  class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ทะเบียนคุมขอเบิกเงิน</a></li>
             <li><a class="dropdown-item" routerLink="rqdeka"
                 *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
-                  class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ขอเลขฎีกา</a></li>
+                  class="fa-solid fa-money-check-dollar me-2 text-primary"></i>ทะเบียนคุมเลขฎีกา</a></li>
             <li><a class="dropdown-item" routerLink="approve_expenses"
                 *ngIf="datastatus=='A' || datastatusbg=='4' || datastatus=='L' || datastatusbg=='1'"><i
                   class="fa-solid fa-file-invoice me-2 text-primary"></i>รายการขอเบิก</a></li>
