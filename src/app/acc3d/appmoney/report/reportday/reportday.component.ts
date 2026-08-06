@@ -371,6 +371,8 @@ export class ReportdayComponent implements OnInit {
     }
     if (num == 0) {
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูล");
+    } else if (this.dataAdd.CITIZEN_IDA == '' || this.dataAdd.CITIZEN_IDA == null) {
+      this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกผู้รับผิดชอบ");
     } else {
       if (this.dataAdd.DATENOWT != '') {
         this.dataAdd.DATENOWT1 = this.datenow(this.dataAdd.DATENOWT);
@@ -405,6 +407,8 @@ export class ReportdayComponent implements OnInit {
     }
     if (num == 0) {
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูล");
+    } else if (this.dataAdd.CITIZEN_IDA == '' || this.dataAdd.CITIZEN_IDA == null) {
+      this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกผู้รับผิดชอบ");
     } else {
 
       this.dataAdd.opt = "update";

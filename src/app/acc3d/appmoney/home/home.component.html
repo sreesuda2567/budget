@@ -244,6 +244,10 @@
                                                         <a class="dropdown-item" routerLink="reportdayapp"><i
                                                                         class="fas fa-file-alt text-info me-1"></i>รายงานประจำวัน</a>
                                                 </li>
+                                                <li *ngIf="datastatus=='A' ">
+                                                        <a class="dropdown-item" routerLink="reportpaper"><i
+                                                                        class="fas fa-copy text-info me-1"></i>จำนวนการใช้กระดาษ</a>
+                                                </li>
                                         </ul>
                                 </li>
                         </ul>

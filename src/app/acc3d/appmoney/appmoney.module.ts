@@ -52,6 +52,7 @@ import { ReportamendComponent } from './report/reportamend/reportamend.component
 
 
 import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'src/app/shared/pdf-annotator/public-api';
+import { ReportpaperComponent } from './report/reportpaper/reportpaper.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'src/app/shared/pdf-ann
     ReceiveotherComponent,
     RqannalComponent,
     ReportdayappcComponent,
-    ReportamendComponent
+    ReportamendComponent,
+    ReportpaperComponent
   ],
   imports: [
         CommonModule,

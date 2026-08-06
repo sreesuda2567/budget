@@ -73,6 +73,7 @@ export class RqpaymentComponent implements OnInit {
     this.dataAdd.PLSUBMONEYPAY_CODE = '';
     this.dataAdd.DATENOWS = '';
     this.dataAdd.DATENOWT = '';
+    this.dataAdd.search = '';
   }
   fetchdata() {
     var varP = {
@@ -132,8 +133,8 @@ export class RqpaymentComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
   insertdata() {
-    if (!this.dataAdd.List || this.dataAdd.List.length === 0) {
-      this.toastr.warning("แจ้งเตือน:กรุณาเลือกรายการ");
+    if (this.dataAdd.FNDEKA_REMARK=='' ) {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
     } else {
       this.dataAdd.opt = "insert";
       this.apiService
@@ -151,8 +152,8 @@ export class RqpaymentComponent implements OnInit {
   }
   //แก้ไขข้อมูล
   updatedata() {
-    if (!this.dataAdd.List || this.dataAdd.List.length === 0) {
-      this.toastr.warning("แจ้งเตือน:กรุณาเลือกรายการ");
+    if (this.dataAdd.FNDEKA_REMARK=='' ) {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
     } else {
 
       this.dataAdd.opt = "update";

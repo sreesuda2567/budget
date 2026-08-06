@@ -18,6 +18,9 @@ import { IncomepmedicalComponent } from './load/incomepmedical/incomepmedical.co
 import { IncomepschoolComponent } from './load/incomepschool/incomepschool.component';
 import { EpmedicalSummonthComponent } from './report/epmedical-summonth/epmedical-summonth.component';
 import { EpschoolSummonthComponent } from './report/epschool-summonth/epschool-summonth.component';
+import { LoaddktbComponent } from '../appmoney/other/loaddktb/loaddktb.component';
+import { LoaddktbreportComponent } from '../appmoney/other/loaddktbreport/loaddktbreport.component';
+import { PaymentdateComponent } from '../appmoney/other/paymentdate/paymentdate.component';
 
 const routes: Routes = [
   { path: '', component: MenuwelfareComponent , children : [
@@ -37,6 +40,9 @@ const routes: Routes = [
     { path: 'incomepschool', component : IncomepschoolComponent , canActivate: [AuthGuard]},
     { path: 'epmedical_report', component : EpmedicalSummonthComponent , canActivate: [AuthGuard]},
     { path: 'epschool_report', component : EpschoolSummonthComponent , canActivate: [AuthGuard]},
+    { path: 'loaddktb', component : LoaddktbComponent , canActivate: [AuthGuard]},
+    { path: 'loaddktbreport', component : LoaddktbreportComponent , canActivate: [AuthGuard]},
+    { path: 'paymentdate', component : PaymentdateComponent , canActivate: [AuthGuard]},
     { path: '**', redirectTo: '' }
 ]
 },
