@@ -52,6 +52,10 @@ export class RqpaymentComponent implements OnInit {
   rowpbu: any;
   data3d: any;
   data3d2: any;
+  page = 1;
+  count = 0;
+  tableSize = 20;
+  tableSizes = [20, 30, 40];
   url = "/acc3d/budget/approve/rqpayment.php";
   url1 = "/acc3d/budget/userpermission.php";
  constructor(
@@ -392,5 +396,17 @@ export class RqpaymentComponent implements OnInit {
   showadd(id: any) {
     this.dataAdd.showde = id.target.value;
     //console.log(id.target.value);
+  }
+    // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  onTableDataChange(event: any) {
+    this.page = event;
+    this.fetchdatalist();
+  }
+
+
+  onTableSizeChange(event: any): void {
+    this.tableSize = event.target.value;
+    this.page = 1;
+    this.fetchdatalist();
   }
 }

@@ -297,6 +297,15 @@
                     <td data-label="เลขสัญญา:">{{p.FNALLBW_CTNO}}</td>
                     <td align="right">{{p.FNANNALS_AMOUNT| number : '1.2-2'}} </td>
                     <td data-label="รายงาน:" align="center">
+                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' ">
+                        <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white"
+                            id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages)"><i
+                                class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
+                        </span>        
+                        <a role="button"
+                                title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
+                                (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>  &nbsp;       
                         <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2"><a role="button"
                                 title="รายงานใบเบิก" class="btn btn-success text-white"
                                 (click)="previewPdf(p.linkclear)"><i class="fa-solid fa-file-contract"></i></a>

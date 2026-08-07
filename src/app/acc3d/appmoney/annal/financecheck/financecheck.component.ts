@@ -37,7 +37,7 @@ export class FinancecheckComponent implements OnInit {
   rowpbi: any;
   rowpbu: any;
   rownum1: any;
-  dataAdd: any = {FRACCCODE:[],FRACCMONEY:[]};
+  dataAdd: any = {FRACCCODE:[],FRACCMONEY:[],FRACCMONEYP:[]};
   locale = 'th-be';
   locales = listLocales();
   dataEdoc: any;
@@ -52,7 +52,7 @@ export class FinancecheckComponent implements OnInit {
   dataProduct: any;
   page = 1;
   count = 0;
-  number: any = [0, 1, 2];
+  number: any = [0, 1, 2,3];
   tableSize = 20;
   tableSizes = [20, 30, 40, 100, 200];
   searchTerm: any;
@@ -312,6 +312,7 @@ export class FinancecheckComponent implements OnInit {
     this.dataAdd.CAMPUS_CODE = '';
     this.dataAdd.FRACCCODE = [];
     this.dataAdd.FRACCMONEY = [];
+    this.dataAdd.FRACCMONEYP = [];
   }
      fetchdatareportnamea() {
     this.dataNamea = null;
@@ -390,6 +391,7 @@ export class FinancecheckComponent implements OnInit {
          for (let i = 0; i < data.data2.length; i++) {
             this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
             this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
+            this.dataAdd.FRACCMONEYP[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEYP).toFixed(2);
           }
       });
   }

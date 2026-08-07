@@ -52,6 +52,10 @@ export class RqdekaComponent implements OnInit {
   rowpbu: any;
   data3d: any;
   data3d2: any;
+  page = 1;
+  count = 0;
+  tableSize = 20;
+  tableSizes = [20, 30, 40];
   url = "/acc3d/budget/approve/rqdeka.php";
   url1 = "/acc3d/budget/userpermission.php";
   constructor(
@@ -133,7 +137,7 @@ export class RqdekaComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
   insertdata() {
-    if (this.dataAdd.FNDEKA_REMARK=='' ) {
+    if (this.dataAdd.FNDEKA_REMARK == '') {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
     } else {
       this.dataAdd.opt = "insert";
@@ -152,7 +156,7 @@ export class RqdekaComponent implements OnInit {
   }
   //แก้ไขข้อมูล
   updatedata() {
-    if (this.dataAdd.FNDEKA_REMARK=='' ) {
+    if (this.dataAdd.FNDEKA_REMARK == '') {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
     } else {
 
@@ -298,7 +302,7 @@ export class RqdekaComponent implements OnInit {
         this.dataAdd.FNDEKA_REMARK = data.data[0].FNDEKA_REMARK;
         this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNDEKA_RSTATUS;
         for (let i = 0; i < data.data2.length; i++) {
-            this.dataAdd.List.push(data.data2[i].id);
+          this.dataAdd.List.push(data.data2[i].id);
         }
 
       });
@@ -393,5 +397,17 @@ export class RqdekaComponent implements OnInit {
   showadd(id: any) {
     this.dataAdd.showde = id.target.value;
     //console.log(id.target.value);
+  }
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  onTableDataChange(event: any) {
+    this.page = event;
+    this.fetchdatalist();
+  }
+
+
+  onTableSizeChange(event: any): void {
+    this.tableSize = event.target.value;
+    this.page = 1;
+    this.fetchdatalist();
   }
 }

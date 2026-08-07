@@ -1,7 +1,8 @@
 <div class="shadow alert border bg-white mx-4 mt-4" role="alert">
     <div class="row mb-3">
         <div class="col-md-10">
-            <h5 class="fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ทะเบียนคุมขอเบิกเงิน</h5>
+            <h5 class="fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ทะเบียนคุมขอเบิกเงิน
+            </h5>
         </div>
         <div class="col-md-2" align="right">
             <a class="btn btn-primary text-white rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
@@ -23,9 +24,8 @@
                                     <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
                                         id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
                                     <select name="f_code" id="f_code" class="form-select"
-                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdatalist()">
-                                        <option value=""
-                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' ">
+                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdatalist()" (click)="fetchdataCam()">
+                                        <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' ">
                                             ทุกวิทยาเขต
                                         </option>
                                         <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">
@@ -59,8 +59,13 @@
         </div>
         <div class="shadow alert alert-secondary" role="alert">
             <div class="row">
-                <div class="col-md-2">
-
+                <div align="right" class="col-md-1">แสดงข้อมูล</div>
+                <div align="right" class="col-md-1">
+                    <select (change)="onTableSizeChange($event)" class="form-select">
+                        <option *ngFor="let size of tableSizes" [ngValue]="size">
+                            {{ size }}
+                        </option>
+                    </select>
                 </div>
                 <div align="right" class="col-md-1">
                 </div>
@@ -84,9 +89,6 @@
                             <div align="center">เลข3ดี</div>
                         </th>
                         <th>
-                            <div align="center">ผู้ทำรายการ</div>
-                        </th>
-                        <th>
                             <div align="center">เรื่อง</div>
                         </th>
                         <th>
@@ -98,16 +100,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let p of datalist;let i = index">
-                        <td width="5%" align="center">{{i+1}}</td>
+                    <tr *ngFor="let p of datalist|filter:searchTerm|paginate : {
+                itemsPerPage: tableSize,
+                currentPage: page,
+                totalItems: count
+                } ;let i = index">
+                        <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
                         <td>{{p.FNPAYMENT_DATE1}}</td>
                         <td>{{p.FNEXPENSES_STEP_LIST}}</td>
-                        <td>{{p.FNPAYMENT_NAME}}</td>
-                        <td>{{p.FNPAYMENT_REMARK}}</td>
+                        <td>{{p.FNPAYMENT_REMARK}}
+                            <br>
+                            <i class="text-secondary">[{{p.FNPAYMENT_NAME}}]</i>
+                        </td>
                         <td>{{p.DEKASTATUS_NAME}}</td>
                         <td width="8%" align="center">
-                            <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
-                                (click)="deleteData(p.FNPAYMENT_CODE)"><i class="fa fa-trash"></i>
+                            <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล"
+                                class="btn btn-danger text-white" (click)="deleteData(p.FNPAYMENT_CODE)"><i
+                                    class="fa fa-trash"></i>
                             </a>&nbsp;
                             <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalrqvehicle"
                                 class="btn btn-warning text-white" (click)="editdata(p.FNPAYMENT_CODE)"><i
@@ -116,10 +125,14 @@
                         </td>
                     </tr>
                     <tr *ngIf="!rownum">
-                        <td colspan="8">ไม่มีข้อมูล{{rownum}}</td>
+                        <td colspan="6">ไม่มีข้อมูล{{rownum}}</td>
                     </tr>
                 </tbody>
             </table>
+            <div class="d-flex justify-content-left">
+                <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+                </pagination-controls>
+            </div>
         </div>
     </div>
 </div>
@@ -155,7 +168,8 @@
                         </div>
                         <select name="SelectList" id="SelectList" size="5" multiple [(ngModel)]="dataAdd.SelectList"
                             class="form-select form-select-sm">
-                            <option [value]="sub.id" *ngFor="let sub of data3d; let i = index" (click)="dataAdd.FNDEKA_REMARK = sub.FNEXPENSES_TITLE">
+                            <option [value]="sub.id" *ngFor="let sub of data3d; let i = index"
+                                (click)="dataAdd.FNDEKA_REMARK = sub.FNEXPENSES_TITLE">
                                 {{sub.FNEXPENSES_STEP}}จำนวนเงิน:{{sub.FNEXPENSES_AMONEY| number : '1.2-2'}}</option>
                         </select>
                     </div>
@@ -202,8 +216,8 @@
                                 <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
                                     <i class="fa-solid fa-toggle-on text-success me-1"></i> สถานะการใช้งาน:
                                 </label>
-                                <select class="form-select form-select-sm shadow-sm" name="FNDEKA_RSTATUS" id="FNDEKA_RSTATUS"
-                                    [(ngModel)]="dataAdd.FNDEKA_RSTATUS">
+                                <select class="form-select form-select-sm shadow-sm" name="FNDEKA_RSTATUS"
+                                    id="FNDEKA_RSTATUS" [(ngModel)]="dataAdd.FNDEKA_RSTATUS">
                                     <option value="" disabled selected>-- เลือกสถานะ --</option>
                                     <option value="1" class="text-success fw-bold">&#9679; ใช้งาน</option>
                                     <option value="0" class="text-danger fw-bold">&#9679; ยกเลิก</option>

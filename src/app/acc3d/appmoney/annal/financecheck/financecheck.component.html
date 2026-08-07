@@ -686,7 +686,7 @@
                     </div>
                     <div class="card-body bg-white rounded-3 p-4">
                         <div class="row g-3 align-items-center mb-3" *ngFor="let i of number;">
-                            <div class="col-md-9">
+                            <div class="col-md-8">
                                 <select name="SECTION_CODE" id="SECTION_CODE" class="form-select form-select-lg fs-6"
                                     [(ngModel)]="dataAdd.FRACCCODE[i]">
                                     <option [value]=""></option>
@@ -694,9 +694,13 @@
                                         {{sec.FRACC_CODE}}</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <input type="number" class="form-control form-control-lg fs-6 text-end"
                                     placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FRACCMONEY[i]">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" class="form-control form-control-lg fs-6 text-end"
+                                    placeholder="ที่จ่ายเกิน" [(ngModel)]="dataAdd.FRACCMONEYP[i]">
                             </div>
                         </div>
                         <div class="col-md-12">
