@@ -24,7 +24,8 @@
                                     <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
                                         id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
                                     <select name="f_code" id="f_code" class="form-select"
-                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdatalist()" (click)="fetchdataCam()">
+                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdatalist()"
+                                        (click)="fetchdataCam()">
                                         <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' ">
                                             ทุกวิทยาเขต
                                         </option>
@@ -92,6 +93,15 @@
                             <div align="center">เรื่อง</div>
                         </th>
                         <th>
+                            <div align="center">ประเภทเงิน</div>
+                        </th>
+                         <th>
+                            <div align="center">จำนวนเงิน</div>
+                        </th>
+                         <th>
+                            <div align="center">เลขที่หลักฐาน</div>
+                        </th>
+                        <th>
                             <div align="center">สถานะ</div>
                         </th>
                         <th>
@@ -112,6 +122,9 @@
                             <br>
                             <i class="text-secondary">[{{p.FNPAYMENT_NAME}}]</i>
                         </td>
+                        <td>{{p.PLINCOME_NAME}}</td>
+                        <td align="right">{{p.FNEXPENSES_AMONEY_TOTAL| number : '1.2-2'}}</td>
+                        <td>{{p.FNPAYMENT_NUMBER}}</td>
                         <td>{{p.DEKASTATUS_NAME}}</td>
                         <td width="8%" align="center">
                             <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล"
@@ -148,6 +161,18 @@
             <div class="modal-body">
 
                 <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <label for="name" style="font-size: 10pt">แหล่งเงิน</label>
+                        <select name="in_come" id="in_come" class="form-select" (change)="fetchdatalistcr()"
+                            [(ngModel)]="dataAdd.PLINCOME_CODE">
+                            <option value="">ทั้งหมด</option>
+                            <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}
+                            </option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-6"></div>
                     <div class="col-md-1"></div>
                     <div class="col-md-5 text-secondary mb-3" style="font-size: 10pt">
                         <label> คณะ /หน่วยงาน: </label>

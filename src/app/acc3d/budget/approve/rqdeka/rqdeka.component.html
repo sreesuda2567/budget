@@ -91,10 +91,10 @@
                             <div align="center">เลข3ดี</div>
                         </th>
                         <th>
-                            <div align="center">ผู้ทำรายการ</div>
-                        </th>
-                        <th>
                             <div align="center">เรื่อง</div>
+                        </th>
+                         <th>
+                            <div align="center">จำนวนเงิน</div>
                         </th>
                         <th>
                             <div align="center">สถานะ</div>
@@ -114,8 +114,11 @@
                         <td>{{p.FNDEKA_DATE1}}</td>
                         <td>{{p.FNDEKA_DEKA}}/{{p.PLYEARBUDGET_CODE}}</td>
                         <td>{{p.FNEXPENSES_STEP_LIST}}</td>
-                        <td>{{p.FNDEKA_NAME}}</td>
-                        <td>{{p.FNDEKA_REMARK}}</td>
+                        <td>{{p.FNDEKA_REMARK}}
+                            <br>
+                            <i class="text-secondary">[{{p.FNDEKA_NAME}}]</i>
+                        </td>
+                        <td align="right">{{p.FNEXPENSES_AMONEY_TOTAL| number : '1.2-2'}}</td>
                         <td>{{p.DEKASTATUS_NAME}}</td>
                         <td width="8%" align="center">
                             <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล"

@@ -116,7 +116,19 @@ export class RqpaymentComponent implements OnInit {
               });
           });
       });
-
+    //รายการประเภทเงิน
+        var Tablep = {
+          "opt": "viewTable",
+          "Table": "PLINCOME where PLINCOME_ASTATUS=1"
+        }
+        this.apiService
+          .getdata(Tablep, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.dataIncome = data;
+            this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+            // console.log(data[0].PLINCOME_CODE);
+          });
 
   }
   fetchdataCam() {

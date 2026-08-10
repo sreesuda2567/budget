@@ -43,6 +43,8 @@ import { ProjectmoreComponent } from './approve/projectmore/projectmore.componen
 import { PodayComponent } from './approve/poday/poday.component';
 import { RqdekaComponent } from './approve/rqdeka/rqdeka.component';
 import { RqpaymentComponent } from './approve/rqpayment/rqpayment.component';
+import { ReportpaymentComponent } from './report/reportpayment/reportpayment.component';
+
 
 import { BudgetComponent } from './budget.component';
 import { BudgetRountingModule } from './budget-rounting.module';
@@ -94,7 +96,8 @@ import { AutocompleteLibModule} from 'angular-ng-autocomplete';
     ReportyexpensesComponent,
     ProjectmoreComponent,
     PodayComponent,
-    RqpaymentComponent
+    RqpaymentComponent,
+    ReportpaymentComponent
   ],
   imports: [
     CommonModule,
