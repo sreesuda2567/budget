@@ -139,7 +139,7 @@
                             class="table card-table table-bordered table-striped table-vcenter tableFixHead">
                             <thead>
                                 <tr style="background-color:rgb(131, 187, 243);">
-                                    <td width="10%" align="center"><strong>ที่</strong></td>
+                                    <td  align="center"><strong>ที่</strong></td>
                                     <td align="center"><strong>วันที่คุมขอเบิก</strong></td>
                                     <td align="center"><strong>หน่วยงาน</strong></td>
                                     <td align="center"><strong>ประเภทเงิน</strong></td>
@@ -154,33 +154,17 @@
 
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of datalist; ">
-                                    <td *ngIf="item.FRACC_CODE" align="center">{{item.FRACC_CODE}}</td>
-                                    <td *ngIf="item.FRACC_CODE">{{item.FRACC_TNAME}}</td>
-                                    <td *ngIf="item.FRACC_CODE" align="right" class="text-primary">
-                                        <span (click)="fetchdataexpen(item.FRACC_CODE,'0')" data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal" style="cursor:pointer">
-                                            {{item.INCOMEB_B| number : '1.2-2'}}</span>
-                                    </td>
-                                    <td *ngIf="item.FRACC_CODE" align="right" class="text-primary">
-                                        <span (click)="fetchdataexpen(item.FRACC_CODE,'1')" data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal" style="cursor:pointer">
-                                            {{item.INCOMEB_R| number : '1.2-2'}}</span>
-                                    </td>
-                                    <td *ngIf="item.FRACC_CODE" align="right" class="text-primary">
-                                        <span (click)="fetchdataexpen(item.FRACC_CODE,'2')" data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal" style="cursor:pointer">
-                                            {{item.INCOMES_B| number : '1.2-2'}}</span>
-                                    </td>
-                                    <td *ngIf="item.FRACC_CODE" align="right">
-                                        {{item.INCOMES_S| number : '1.2-2'}}</td>
-
-                                    <!--    <td  colspan="2" style="background-color:rgb(251, 134, 61);" *ngIf="item.NAME" align="right">{{item.NAME}}</td>
-                            <td style="background-color:rgb(251, 134, 61);"  *ngIf="item.NAME"align="right">{{item.INCOMEB_B| number : '1.2-2'}}</td>
-                            <td style="background-color:rgb(251, 134, 61);" *ngIf="item.NAME"align="right">{{item.INCOMEB_R| number : '1.2-2'}}</td>
-                            <td style="background-color:rgb(251, 134, 61);" *ngIf="item.NAME"align="right">{{item.INCOMES_B| number : '1.2-2'}}</td>
-                            <td style="background-color:rgb(251, 134, 61);" *ngIf="item.NAME"align="right">{{item.INCOMES_R| number : '1.2-2'}}</td>
-                            <td style="background-color:rgb(251, 134, 61);" *ngIf="item.NAME"align="right">{{item.INCOMES_S| number : '1.2-2'}}</td>-->
+                                <tr *ngFor="let item of datalist; let i = index">
+                                    <td  align="center">{{i+1}}</td>
+                                    <td>{{item.FNPAYMENT_DATE}}</td>
+                                    <td > {{item.FACULTY_TNAME}}</td>
+                                    <td>{{item.PLINCOME_NAME}}</td>
+                                    <td> {{item.FNPAYMENT_REMARK}}</td>
+                                    <td> {{item.FNEXPENSES_DEKA}}</td>
+                                    <td align="right"> {{item.FNEXPENSES_OMONEY| number : '1.2-2'}}</td>
+                                    <td align="right"> {{item.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+                                    <td> {{item.FNEXPENSES_MDATE}}</td>
+                                    <td> {{item.FNEXPENSES_DATE}}</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -95,10 +95,10 @@
                         <th>
                             <div align="center">ประเภทเงิน</div>
                         </th>
-                         <th>
+                        <th>
                             <div align="center">จำนวนเงิน</div>
                         </th>
-                         <th>
+                        <th>
                             <div align="center">เลขที่หลักฐาน</div>
                         </th>
                         <th>
@@ -162,7 +162,15 @@
 
                 <div class="row">
                     <div class="col-md-1"></div>
-                    <div class="col-md-5">
+                    <div class="col-md-2 " style="font-size: 10pt">
+                        <label>ปีงบประมาณ: </label>
+                        <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE2">
+                            <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
+                                {{year.PLYEARBUDGET_CODE}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
                         <label for="name" style="font-size: 10pt">แหล่งเงิน</label>
                         <select name="in_come" id="in_come" class="form-select" (change)="fetchdatalistcr()"
                             [(ngModel)]="dataAdd.PLINCOME_CODE">
@@ -172,9 +180,9 @@
 
                         </select>
                     </div>
-                    <div class="col-md-6"></div>
+                    <div class="col-md-7"></div>
                     <div class="col-md-1"></div>
-                    <div class="col-md-5 text-secondary mb-3" style="font-size: 10pt">
+                    <div class="col-md-4 text-secondary mb-3" style="font-size: 10pt">
                         <label> คณะ /หน่วยงาน: </label>
                         <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
                             <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS!='1'">
@@ -183,7 +191,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="col-md-6"></div>
+                    <div class="col-md-7"></div>
                     <div class="col-md-1"></div>
                     <!-- คอลัมน์ซ้าย: ค้นหา + รายชื่อ -->
                     <div class="col-md-4">

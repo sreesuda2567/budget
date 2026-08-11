@@ -112,6 +112,7 @@ export class RqdekaComponent implements OnInit {
               .subscribe((data: any) => {
                 this.dataYear = data;
                 this.dataAdd.PLYEARBUDGET_CODE = data[0].PLYEARBUDGET_CODE;
+                this.dataAdd.PLYEARBUDGET_CODE2 = data[0].PLYEARBUDGET_CODE;
                 this.fetchdatalist();
               });
           });
