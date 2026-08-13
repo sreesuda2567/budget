@@ -95,14 +95,7 @@
                                     <button type="submit" class="btn btn-primary" id="submitinsert"
                                         (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="row" *ngIf="rownum">
-                                        <div align="right" class="col-md-12">
-                                            <button type="button" class="btn btn-success" (click)="exportexcel()">Export
-                                                Excel</button>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
 
                         </div>
@@ -113,7 +106,12 @@
                     </div>
                     <div class="shadow alert alert-secondary" role="alert">
                         <div class="row">
-                            <div class="col-md-9"></div>
+                            <div class="col-md-2">
+                              
+                                    <button *ngIf="rownum" type="button" class="btn btn-success" (click)="exportexcel()">Export
+                                        Excel</button>                              
+                            </div>
+                            <div class="col-md-7"></div>
                             <div class="col-md-3">
                                 <div class="input-group">
                                     <input class="form-control border-end-0 border" type="search"
@@ -139,32 +137,50 @@
                             class="table card-table table-bordered table-striped table-vcenter tableFixHead">
                             <thead>
                                 <tr style="background-color:rgb(131, 187, 243);">
-                                    <td  align="center"><strong>ที่</strong></td>
+                                    <td align="center"><strong>ที่</strong></td>
                                     <td align="center"><strong>วันที่คุมขอเบิก</strong></td>
                                     <td align="center"><strong>หน่วยงาน</strong></td>
                                     <td align="center"><strong>ประเภทเงิน</strong></td>
+                                    <td align="center"><strong>ภาค</strong></td>
+                                    <td align="center"><strong>ผลผลิต</strong></td>
+                                    <td align="center"><strong>หมวดรายจ่าย</strong></td>
                                     <td align="center"><strong>เรื่อง</strong></td>
+                                    <td align="center"><strong>วันที่เลขที่ฎีกา</strong></td>
                                     <td align="center"><strong>เลขที่ฎีกา</strong></td>
-                                    <td align="center"><strong>จำนวนเงินขอเบิก</strong></td>
-                                    <td align="center"><strong>จำนวนเงินจ่ายจริง</strong></td>
+                                    <td align="center"><strong>จำนวนเงิน</strong></td>
                                     <td align="center"><strong>วันที่ผ่านรายการ</strong></td>
                                     <td align="center"><strong>เลขที่รับฎีกา</strong></td>
                                     <td align="center"><strong>วันที่จ่าย</strong></td>
+                                    <td align="center"><strong>ผู้ทำรายการ</strong></td>
                                 </tr>
 
                             </thead>
                             <tbody>
                                 <tr *ngFor="let item of datalist; let i = index">
-                                    <td  align="center">{{i+1}}</td>
+                                    <td align="center">{{i+1}}</td>
                                     <td>{{item.FNPAYMENT_DATE}}</td>
-                                    <td > {{item.FACULTY_TNAME}}</td>
-                                    <td>{{item.PLINCOME_NAME}}</td>
-                                    <td> {{item.FNPAYMENT_REMARK}}</td>
-                                    <td> {{item.FNEXPENSES_DEKA}}</td>
-                                    <td align="right"> {{item.FNEXPENSES_OMONEY| number : '1.2-2'}}</td>
+                                    <td> {{item.FACULTY_TNAME}}</td>
+                                    <td>{{item.PLINCOME_NAME}}
+                                    </td>
+                                    <td> {{item.CRPART_TNAME}}</td>
+                                    <td> {{item.PLGPRODUCT_SHORTNAME}}</td>
+                                    <td> {{item.PLSUBMONEYPAY_NAME}}
+                                    </td>
+                                    <td> {{item.FNPAYMENT_REMARK}}
+                                    </td>
+                                    <td> {{item.FNDEKA_DATE}}</td> 
+                                    <td> {{item.FNDEKA_DEKA}}/{{item.PLYEARBUDGET_CODE}}</td>
                                     <td align="right"> {{item.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
-                                    <td> {{item.FNEXPENSES_MDATE}}</td>
-                                    <td> {{item.FNEXPENSES_DATE}}</td>
+                                    <td> {{item.FNEXPENSES_MDATE}}
+                                        <br>
+                                        {{item.FNEXPENSES_STEP}}
+                                    </td>
+                                    <td> {{item.FNEXACC_NUMBER_LIST}}</td>
+                                    <td> {{item.FNEXACCPAYDATE_NUMBER_LIST}}
+                                        <br>
+                                        {{item.FNEXACCPAYDATE_DATEPD_LIST}}
+                                    </td>
+                                    <td> {{item.FNPAYMENT_NAME}}</td>
                                 </tr>
                             </tbody>
                         </table>

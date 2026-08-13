@@ -211,7 +211,7 @@ exportexcel(): void {
     }
     ws['!cols'] = colWidths;
 
-    const numberCols = [3, 4 , 5];
+    const numberCols = [10];
 
     for (let R = range.s.r; R <= range.e.r; ++R) {
       const isBoldRow = (R === 0 );
@@ -219,8 +219,11 @@ exportexcel(): void {
 
       for (let C = range.s.c; C <= range.e.c; ++C) {
         const cell_ref = XLSX.utils.encode_cell({ c: C, r: R });
-        const cell = ws[cell_ref];
-        if (!cell) continue;
+        let cell = ws[cell_ref];
+        if (!cell) {
+          cell = { t: 's', v: '' };
+          ws[cell_ref] = cell;
+        }
 
         const isNumber = numberCols.includes(C) && typeof cell.v === 'number';
 
@@ -264,12 +267,12 @@ exportexcel(): void {
         }
 
         // ✅ ใส่สีส้มแถวสุดท้าย
-        if (isLastRow) {
-          baseStyle.fill = {
-            patternType: "solid",
-            fgColor: { rgb: "FFE699" },
-          };
-        }
+        // if (isLastRow) {
+        //   baseStyle.fill = {
+        //     patternType: "solid",
+        //     fgColor: { rgb: "FFE699" },
+        //   };
+        // }
 
         // ✅ ใส่ format ตัวเลข
         if (isNumber) {
