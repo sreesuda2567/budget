@@ -158,7 +158,7 @@
                                     <th *ngIf="dataAdd.PLINCOME_CODE =='02'" rowspan="2">
                                         <div align="center"><strong>รับจริง</strong></div>
                                     </th>
-                                    <th colspan="10">
+                                    <th colspan="12">
                                         <div align="center"><strong>เบิกจ่าย</strong></div>
                                     </th>
 
@@ -201,11 +201,13 @@
                                     <td *ngIf="item.plmoney3>=0" align="right">{{item.plmoney3| number :'1.2-2'}}</td>
                                     <td *ngIf="item.plmoney4>=0" align="right">{{item.plmoney4| number :'1.2-2'}}</td>
                                     <td *ngIf="item.plmoney5>=0" align="right">{{item.plmoney5| number :'1.2-2'}}</td>
+                                    <td *ngIf="item.plmoney6>=0" align="right">{{item.plmoney6| number :'1.2-2'}}</td>
+                                    <td *ngIf="item.plmoney7>=0" align="right">{{item.plmoney7| number :'1.2-2'}}</td>
                                     <td *ngIf="item.savemoney>=0" align="right">{{item.savemoney| number :'1.2-2'}}</td>
                                     <td *ngIf="item.sumplmoney>=0" align="right">{{item.sumplmoney| number :'1.2-2'}}
                                     </td>
                                     <td *ngIf="item.total>=0" align="right">{{item.total| number :'1.2-2'}}</td>
-                                    <td *ngIf="dataAdd.PLINCOME_CODE =='02' && item.totalr>=0" align="right">
+                                    <td *ngIf="dataAdd.PLINCOME_CODE =='02' " align="right">
                                         {{item.totalr|
                                         number :'1.2-2'}}</td>
 

@@ -194,13 +194,13 @@
                                     <div align="center">1/{{dataAdd.PLYEARBUDGET_CODE}}</div>
                                 </th>
                                 <th>
-                                    <div align="center">เทอม1</div>
+                                    <div align="center">2/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
                                 </th>
                                 <th>
-                                    <div align="center">เทอม2</div>
+                                    <div align="center">3/{{dataAdd.PLYEARBUDGET_CODE-1}}</div>
                                 </th>
                                 <th>
-                                    <div align="center">เทอม3</div>
+                                    <div align="center">1/{{dataAdd.PLYEARBUDGET_CODE}}</div>
                                 </th>
                             </tr>
                         </thead>
@@ -223,9 +223,9 @@
                                 <td align="right">{{p.estimate2| number : '1.2-2'}}</td>
                                 <td align="right">{{p.estimate3| number : '1.2-2'}}</td>
                                 <td align="right">{{p.estimate1| number : '1.2-2'}}</td>
-                                <td align="right">{{p.REVEVUE_REGISTER1| number : '1.2-2'}}</td>
                                 <td align="right">{{p.REVEVUE_REGISTER2| number : '1.2-2'}}</td>
                                 <td align="right">{{p.REVEVUE_REGISTER3| number : '1.2-2'}}</td>
+                                <td align="right">{{p.REVEVUE_REGISTER1| number : '1.2-2'}}</td>
 
                             </tr>
                             <tr *ngIf="!rownum">

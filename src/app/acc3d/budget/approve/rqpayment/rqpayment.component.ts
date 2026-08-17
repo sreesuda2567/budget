@@ -75,6 +75,7 @@ export class RqpaymentComponent implements OnInit {
     this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
     this.dataAdd.date_type = 'FNEXPENSES_DATE';
     this.dataAdd.PLSUBMONEYPAY_CODE = '';
+    this.dataAdd.PLINCOME_CODE2 = '1';
     this.dataAdd.DATENOWS = '';
     this.dataAdd.DATENOWT = '';
     this.dataAdd.search = '';

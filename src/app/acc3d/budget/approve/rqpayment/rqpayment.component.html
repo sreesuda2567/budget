@@ -19,7 +19,7 @@
                     <div class="panel">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-md-9 text-secondary" style="font-size: 10pt">
+                                <div class="col-md-8 text-secondary" style="font-size: 10pt">
                                     <label> หน่วยเบิกจ่าย: </label>
                                     <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
                                         id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
@@ -33,21 +33,25 @@
                                             {{cam.CAMPUS_TNAME}}</option>
                                     </select>
                                 </div>
-
+                                <div class="col-md-2" style="font-size: 10pt">
+                                    <label for="name" >แหล่งเงิน</label>
+                                    <select name="in_come" id="in_come" class="form-select" (change)="fetchdatalist()"
+                                        [(ngModel)]="dataAdd.PLINCOME_CODE2">
+                                        <option value="1">งบประมาณ</option>
+                                        <option value="2">เงินรายได้</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-2 " style="font-size: 10pt">
                                     <label>ปีงบประมาณ: </label>
-                                    <select name="y_code" id="y_code" class="form-select"
+                                    <select name="y_code" id="y_code" class="form-select" (change)="fetchdatalist()"
                                         [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
                                         <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
                                             {{year.PLYEARBUDGET_CODE}}
                                         </option>
                                     </select>
                                 </div>
-                                <div class="col-md-1 ">
-                                    <br>
-                                    <button type="submit" class="btn btn-primary" id="submitinsert"
-                                        (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
-                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -138,7 +142,7 @@
                         </td>
                     </tr>
                     <tr *ngIf="!rownum">
-                        <td colspan="6">ไม่มีข้อมูล{{rownum}}</td>
+                        <td colspan="9">ไม่มีข้อมูล{{rownum}}</td>
                     </tr>
                 </tbody>
             </table>

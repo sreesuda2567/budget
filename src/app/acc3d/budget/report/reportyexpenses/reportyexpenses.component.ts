@@ -105,7 +105,7 @@ fetchdata() {
   .pipe(first())
   .subscribe((data: any) => {
     this.dataCrpart = data;
-    this.dataAdd.CRPART_ID = data[0].CRPART_ID;
+    this.dataAdd.CRPART_ID ='';// data[0].CRPART_ID;
   });
     }); 
         //รายการประเภทเงิน
@@ -146,7 +146,7 @@ fetchdata() {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataCrpart = data;
-        this.dataAdd.CRPART_ID = data[0].CRPART_ID;
+        this.dataAdd.CRPART_ID = ''; //data[0].CRPART_ID;
       });
   }
     applyLocale(pop: any) {
