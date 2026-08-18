@@ -44,6 +44,7 @@ import { RqannalComponent } from './annal/rqannal/rqannal.component';
 import { ReportdayappcComponent } from './report/reportdayappc/reportdayappc.component';
 import { ReportamendComponent } from './report/reportamend/reportamend.component';
 import { ReportpaperComponent } from './report/reportpaper/reportpaper.component';
+import { ReportpaymentappComponent } from './report/reportpaymentapp/reportpaymentapp.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent , children : [
@@ -89,6 +90,7 @@ const routes: Routes = [
     { path: 'reportdayapp', component : ReportdayappcComponent , canActivate: [AuthGuard]},
     { path: 'reportamend', component : ReportamendComponent , canActivate: [AuthGuard]},
     { path: 'reportpaper', component : ReportpaperComponent , canActivate: [AuthGuard]},
+    { path: 'reportpaymentapp', component : ReportpaymentappComponent , canActivate: [AuthGuard]},
     
     
     { path: '**', redirectTo: '' }

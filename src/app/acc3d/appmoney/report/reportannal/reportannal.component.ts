@@ -71,8 +71,8 @@ export class ReportannalComponent implements OnInit {
     this.localeService.use('th');
     this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
     this.fetchdata();
-    this.dataAdd.DATENOWS = new Date();
-    this.dataAdd.DATENOWTT = new Date();
+    this.dataAdd.DATENOWS = '';
+    this.dataAdd.DATENOWTT = '';
     this.dataAdd.DATENOWT = new Date();
   }
   fetchdata() {
@@ -95,7 +95,7 @@ export class ReportannalComponent implements OnInit {
           .subscribe((datay: any) => {
             this.dataYear = datay;
             this.dataAdd.PLYEARBUDGET_CODE = datay[0].PLYEARBUDGET_CODE;
-             this.fetchdatalist();
+            // this.fetchdatalist();
           });
         this.fetchdatareport();
       });

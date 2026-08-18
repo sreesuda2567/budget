@@ -93,7 +93,7 @@
 
                                         </ul>
                                 </li>
-                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='7' || datastatus=='5' || datastatus=='6' || datastatus=='9' || datastatus=='2'   "
+                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='7' || datastatus=='5' || datastatus=='6' || datastatus=='9' || datastatus=='2'  ||  datastatus=='E' "
                                         class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -101,9 +101,9 @@
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                                 <li
-                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='7' || datastatus=='2'">
+                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='7' || datastatus=='2' ||  datastatus=='E'">
                                                         <a class="dropdown-item" routerLink="reportannal"><i
-                                                                        class="fas fa-plus text-success me-1"></i>เพิ่มรายงานประจำวัน</a>
+                                                                        class="fas fa-plus text-success me-1"></i>รายงานประจำวัน</a>
                                                 </li>
                                                 <li
                                                         *ngIf="datastatus=='A'  || datastatus=='5' || datastatus=='9'|| datastatus=='6'">
@@ -241,9 +241,14 @@
                                                                         class="fas fa-edit text-warning me-1"></i>แก้ไขรายงาน</a>
                                                 </li>
                                                 <li *ngIf="datastatus=='A' ||  datastatus=='E' ">
-                                                        <a class="dropdown-item" routerLink="reportdayapp"><i
-                                                                        class="fas fa-file-alt text-info me-1"></i>รายงานประจำวัน</a>
+                                                        <a class="dropdown-item" routerLink="reportpaymentapp"><i
+                                                                        class="fas fa-file-invoice-dollar text-info me-1"></i>รายงานทะเบียนคุมขอเบิกเงิน</a>
                                                 </li>
+                                                <li *ngIf="datastatus=='A' ||  datastatus=='E' ">
+                                                        <a class="dropdown-item" routerLink="reportdayapp"><i
+                                                                        class="fas fa-clipboard-list text-info me-1"></i>รายงานประจำวัน</a>
+                                                </li>
+
                                                 <li *ngIf="datastatus=='A' ">
                                                         <a class="dropdown-item" routerLink="reportpaper"><i
                                                                         class="fas fa-copy text-info me-1"></i>จำนวนการใช้กระดาษ</a>
