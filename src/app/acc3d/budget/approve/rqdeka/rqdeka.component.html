@@ -94,7 +94,13 @@
                             <div align="center">เรื่อง</div>
                         </th>
                          <th>
-                            <div align="center">จำนวนเงิน</div>
+                            <div align="center">จำนวนเงินขอเบิก</div>
+                        </th>
+                        <th>
+                            <div align="center">หักส่ง</div>
+                        </th>
+                        <th>
+                            <div align="center">จำนวนเงินขอรับ</div>
                         </th>
                         <th>
                             <div align="center">สถานะ</div>
@@ -119,6 +125,8 @@
                             <i class="text-secondary">[{{p.FNDEKA_NAME}}]</i>
                         </td>
                         <td align="right">{{p.FNEXPENSES_AMONEY_TOTAL| number : '1.2-2'}}</td>
+                        <td align="right">{{p.FNDEKA_TAX| number : '1.2-2'}}</td>
+                        <td align="right">{{p.FNEXPENSES_AMONEY_TOTAL-p.FNDEKA_TAX| number : '1.2-2'}}</td>
                         <td>{{p.DEKASTATUS_NAME}}</td>
                         <td width="8%" align="center">
                             <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล"
@@ -219,6 +227,15 @@
                 </div>
 
                 <div class="row mt-3">
+                    <div class="col-md-1"></div>
+                     <div class="col-md-2">
+                        <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
+                                <i class="fa-solid fa-comment-dots text-primary me-1"></i> หักส่ง:
+                            </label>
+                        <input name="FNDEKA_TAX" id="FNDEKA_TAX" type="text" class="form-control"
+                          placeholder="หักส่ง" [(ngModel)]="dataAdd.FNDEKA_TAX">
+                      </div>
+                    <div class="col-md-9"></div>  
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
                         <div class="mb-2">

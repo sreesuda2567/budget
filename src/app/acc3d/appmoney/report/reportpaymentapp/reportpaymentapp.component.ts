@@ -20,6 +20,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thLocale } from 'ngx-bootstrap/locale'; // ✅ เปลี่ยนเป็น path ที่ถูกต้อง
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 defineLocale('th', thLocale); // โหลด locale ภาษาไทย
+import * as XLSX from 'xlsx-js-style';
 
 @Component({
   selector: 'app-reportpaymentapp',
@@ -47,6 +48,7 @@ title = 'angular-app';
   numrow: any;
   rownum: any;
   dataNameb: any;
+  dataIncome: any;
   url = '/acc3d/budget/report/reportpayment.php';
   url1 = "/acc3d/appmoney/userpermission.php";
   page = 1;
@@ -118,6 +120,19 @@ fetchdata() {
               });
           });
       });
+      //รายการประเภทเงิน
+        var Tablein = {
+          "opt": "viewTable",
+          "Table":"PLINCOME where PLINCOME_ASTATUS=1"
+        }
+        this.apiService
+        .getdata(Tablein,this.url1)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.dataIncome = data;
+          this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+        // console.log(data[0].PLINCOME_CODE);
+        }); 
   }
 
   fetchdatareport() {
@@ -176,23 +191,7 @@ fetchdata() {
         }
       });
   }
-  fetchdataloadshow() {
-    this.dataAdd.opt = 'viewannalshow';
-    this.apiService
-      .getdata(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        if (data.status == '1') {
-          this.datalistdetail = data.data;
-          // Count pages for PDFs
-          if (this.datalistdetail && this.datalistdetail.length > 0) {
-            this.datalistdetail.forEach((p: any) => {
-              if (p.CONTRACT_LINK) this.countPdfPages(p.CONTRACT_LINK, p, 'CONTRACT_LINK_pages');
-            });
-          }
-        }
-      });
-  }
+
   datenow(datenow: any) {
     const yyyy = datenow.getFullYear();
     let mm = datenow.getMonth() + 1; // Months start at 0!
@@ -225,23 +224,7 @@ fetchdata() {
           this.dataAdd.PLINCOME_NAME = data.PLINCOME_NAME;
           this.loading = null;
           this.rownum = 1;
-          // Count pages for PDFs
-          if (this.datalist && this.datalist.length > 0) {
-            this.datalist.forEach((p: any) => {
-              if (p.REPORT_LINK) this.countPdfPages(p.REPORT_LINK, p, 'REPORT_LINK_pages');
-            });
-          }
-          for (let i = 0; i < this.datalist.length; i++) {
-            this.dataAdd.FNANNALSMAPR_CODE[i] =
-              this.datalist[i].FNANNALSMAPR_CODE;
-            this.dataAdd.FNEXACC_DETAIL[i] =
-              'ส่งคืนเอกสารของ ' +
-              this.datalist[i].FSTF_FNAME +
-              'ประจำวันที่ ' +
-              this.datalist[i].FNANNALSMAPR_DATE1;
-            this.dataAdd.USERNAME_CISCO[i] = this.datalist[i].USERNAME_CISCO;
-            this.dataAdd.check[i] = false;
-          }
+
         } else {
           this.rownum = null;
           this.loading = null;
@@ -250,144 +233,99 @@ fetchdata() {
         }
       });
   }
-  fetchdatadetail(CODE: any, name: any) {
-    this.dataAdd.MCITIZEN_ID = CODE;
-    this.dataAdd.FEREIM_NAME = name;
-    this.dataAdd.opt = 'reportdetail';
-    this.datalistdetail = null;
-    this.loading = true;
-    this.apiService
-      .getdata(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        if (data.status == 1) {
-          this.datalistdetail = data.data;
-          this.loading = null;
-        } else {
-          this.loading = null;
-          this.toastr.warning('แจ้งเตือน:ไม่มีข้อมูล');
-          this.datalistdetail = data.data;
-        }
-      });
-  }
 
-  setshowbti() {
-    this.dataAdd.FNANNALSMAPR_CODE = '';
-  }
-  submitData(status: any) {
-    this.loading = true;
-    this.dataAdd.opt = 'SUPDATE';
-    this.dataAdd.STATUS = status;
-    let num = 0;
-    for (let i = 0; i < this.dataAdd.check.length; i++) {
-      if (this.dataAdd.check[i] == true) {
-        num = 1;
-        //console.log(this.dataAdd.check[i]);
-      }
-    }
-    //console.log(this.dataAdd.check);
-    if (num == 0) {
-      this.loading = null;
-      this.toastr.warning('แจ้งเตือน:ยังไม่ได้เลือกข้อมูลรายการที่อนุมัติ');
-    } else {
-      this.apiService
-        .getdata(this.dataAdd, this.url)
-        .pipe(first())
-        .subscribe((data: any) => {
-          if (data.status == '1') {
-            this.loading = null;
-            this.toastr.success('แจ้งเตือน:อนุมัติข้อมูลเรียบร้อย ');
-            this.fetchdatalist();
-          }
-        });
-    }
-  }
-  returnData(status: any) {
-    if (this.dataAdd.FNEXACCTD_NOTE == '') {
-      this.toastr.warning('แจ้งเตือน:กรุณากรอกหมายเหตุ');
-    } else {
-      this.loadingdetail = true;
-      this.dataAdd.opt = 'RETURN';
-      this.dataAdd.STATUS = status;
-      let num = 0;
-      for (let i = 0; i < this.dataAdd.check.length; i++) {
-        if (this.dataAdd.check[i] == true) {
-          num = 1;
-          //console.log(this.dataAdd.check[i]);
+exportexcel(): void {
+    const element = document.getElementById('excel-table');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    const range = XLSX.utils.decode_range(ws['!ref']!);
+
+    // ปรับความกว้างคอลัมน์
+    const colWidths = [];
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      let max_width = 10;
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
+        if (cell && cell.v != null) {
+          const length = String(cell.v).toString().length;
+          if (length > max_width) max_width = length;
         }
       }
-      //console.log(this.dataAdd.check);
-      if (num == 0) {
-        this.loadingdetail = null;
-        this.toastr.warning('แจ้งเตือน:ยังไม่ได้เลือกข้อมูลรายการที่ส่งคืน');
-      } else {
-        this.apiService
-          .getdata(this.dataAdd, this.url)
-          .pipe(first())
-          .subscribe((data: any) => {
-            if (data.status == '1') {
-              this.loadingdetail = null;
-              this.dataAdd.opt = 'sendemail';
-              this.apiService
-                .getupdate(this.dataAdd, this.url)
-                .pipe(first())
-                .subscribe((data: any) => {});
-              this.fetchdatalist();
-              this.toastr.success('แจ้งเตือน:ส่งคืนข้อมูลเรียบร้อย ');
-              document.getElementById('ModalClose')?.click();
-            }
-          });
+      colWidths.push({ wch: max_width + 2 });
+    }
+    ws['!cols'] = colWidths;
+
+    const numberCols = [10];
+
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      const isBoldRow = (R === 0);
+      const isLastRow = R === range.e.r;
+
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_ref = XLSX.utils.encode_cell({ c: C, r: R });
+        let cell = ws[cell_ref];
+        if (!cell) {
+          ws[cell_ref] = { t: 's', v: '' };
+          cell = ws[cell_ref];
+        }
+        
+        if (cell.t === 'z' || cell.v == null || (typeof cell.v === 'string' && cell.v.trim() === '')) {
+          cell.t = 's';
+          cell.v = '';
+        }
+
+        const isNumber = numberCols.includes(C) && typeof cell.v === 'number';
+
+        let horizontalAlign: "left" | "center" | "right" = "left";
+        if (R === 0 ) {
+          horizontalAlign = "center";
+        } else if (C === 0) {
+          horizontalAlign = "center";
+        } else if (numberCols.includes(C)) {
+          horizontalAlign = "right";
+        }
+
+        const baseStyle: any = {
+          alignment: {
+            horizontal: horizontalAlign,
+            vertical: "center",
+            wrapText: true,
+          },
+          border: {
+            top: { style: "thin", color: { rgb: "000000" } },
+            bottom: { style: "thin", color: { rgb: "000000" } },
+            left: { style: "thin", color: { rgb: "000000" } },
+            right: { style: "thin", color: { rgb: "000000" } },
+          },
+        };
+
+        // ✅ ใส่ font ตัวหนา
+        if (isBoldRow) {
+          baseStyle.font = {
+            bold: true,
+            color: { rgb: '000000' },
+          };
+        }
+
+        // ✅ ใส่สีหัวตาราง (แถว 2)
+        if (R === 0 ) {
+          baseStyle.fill = {
+            patternType: "solid",
+            fgColor: { rgb: "5084f2" },
+          };
+        }
+
+
+        // ✅ ใส่ format ตัวเลข
+        if (isNumber) {
+          baseStyle.numFmt = '#,##0.00';
+        }
+
+        cell.s = baseStyle;
       }
     }
-  }
-  // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatashow(id: any) {
-    this.dataAdd.FNANNALSMAPR_CODE = id;
-    this.fetchdataloadshow();
-  }
-  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
-  onTableDataChange(event: any) {
-    this.page = event;
-    this.fetchdatalist();
-  }
-  onTableSizeChange(event: any): void {
-    this.tableSize = event.target.value;
-    this.page = 1;
-    this.fetchdatalist();
-  }
-  checkall() {
-    if (this.dataAdd.checkall == true) {
-      for (let i = 0; i < this.datalist.length; i++) {
-        this.dataAdd.check[i] = false;
-      }
-    } else {
-      for (let i = 0; i < this.datalist.length; i++) {
-        this.dataAdd.check[i] = true;
-      }
-    }
-  }
 
-  async countPdfPages(url: string, item: any, propertyName: string) {
-    if (!url) return;
-    try {
-      if (item[propertyName]) return;
-      const response = await fetch(url);
-      const pdfBytes = await response.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-      item[propertyName] = pdfDoc.getPageCount();
-      this.cdr.detectChanges();
-    } catch (error) {
-      console.error('Error counting PDF pages for URL:', url, error);
-    }
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, this.fileName || 'รายงาน.xlsx');
   }
-
-  previewPdf(url: string) {
-    this.previewPdfUrl = url;
-    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
-  }
-  closePdfPreview() {
-    this.previewPdfUrl = '';
-    this.safePdfUrl = '';
-  }
-
 }
