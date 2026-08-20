@@ -209,6 +209,7 @@ export class RqpaymentComponent implements OnInit {
         this.dataCrpart = data;
         // this.dataAdd.CRPART_ID = data[0].CRPART_ID;
       });
+
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลรายการหมวดรายจ่ายย่อย
   fetchdataSubplmoneypay() {
@@ -275,6 +276,11 @@ export class RqpaymentComponent implements OnInit {
       }, (err: any) => {
         this.loading = null;
       });
+    if(this.dataAdd.PLINCOME_CODE2=='1'){
+      this.dataAdd.PLINCOME_CODE='01';
+    }else{
+      this.dataAdd.PLINCOME_CODE='02';
+    }
   }
   // ฟังก์ชันสำหรับการลบข้อมูล
   deleteData(id: any) {
@@ -422,5 +428,10 @@ export class RqpaymentComponent implements OnInit {
     this.tableSize = event.target.value;
     this.page = 1;
     this.fetchdatalist();
+  }
+
+  get sumSelectedMoney(): number {
+    if (!this.data3d2) return 0;
+    return this.data3d2.reduce((sum: number, item: any) => sum + (parseFloat(item.FNEXPENSES_AMONEY) || 0), 0);
   }
 }

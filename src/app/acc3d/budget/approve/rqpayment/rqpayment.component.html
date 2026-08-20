@@ -188,7 +188,7 @@
                     <div class="col-md-1"></div>
                     <div class="col-md-4 text-secondary mb-3" style="font-size: 10pt">
                         <label> คณะ /หน่วยงาน: </label>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE">
+                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" >
                             <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS!='1'">
                                 ทุกคณะ/หน่วยงาน</option>
                             <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}
@@ -199,12 +199,12 @@
                     <div class="col-md-1"></div>
                     <!-- คอลัมน์ซ้าย: ค้นหา + รายชื่อ -->
                     <div class="col-md-4">
-                        <div class="input-group input-group-sm mb-2">
+                        <div class="input-group input-group-sm mb-2" style="height: 31px;">
                             <input type="text" name="p_dm" class="form-control" id="p_dm"
                                 placeholder="🔍 ค้นหาเลข3ดี..." (keyup)="Passetsearch()" [(ngModel)]="dataAdd.search">
                         </div>
-                        <select name="SelectList" id="SelectList" size="5" multiple [(ngModel)]="dataAdd.SelectList"
-                            class="form-select form-select-sm">
+                        <select name="SelectList" id="SelectList" multiple [(ngModel)]="dataAdd.SelectList"
+                            class="form-select form-select-sm" style="height: 180px;">
                             <option [value]="sub.id" *ngFor="let sub of data3d; let i = index"
                                 (click)="dataAdd.FNDEKA_REMARK = sub.FNEXPENSES_TITLE">
                                 {{sub.FNEXPENSES_STEP}}จำนวนเงิน:{{sub.FNEXPENSES_AMONEY| number : '1.2-2'}}</option>
@@ -223,16 +223,19 @@
                     </div>
                     <!-- คอลัมน์ขวา: ที่เลือกแล้ว -->
                     <div class="col-md-5">
-                        <div class="small text-success fw-bold mb-2">
-                            <i class="fa-solid fa-check-circle me-1"></i>เลือกแล้ว
-                            ({{data3d2?.length || 0}} รายการ)
+                        <div class="small text-success fw-bold mb-2 d-flex align-items-center" style="height: 31px;">
+                            <div><i class="fa-solid fa-check-circle me-1"></i>เลือกแล้ว
+                            ({{data3d2?.length || 0}} รายการ)</div>
                         </div>
-                        <select name="PickList[]" id="PickList[]" size="5" multiple="multiple" (click)="showadd($event)"
-                            [(ngModel)]="dataAdd.PickList" class="form-select form-select-sm border-success">
+                        <select name="PickList[]" id="PickList[]" multiple="multiple" (click)="showadd($event)"
+                            [(ngModel)]="dataAdd.PickList" class="form-select form-select-sm border-success" style="height: 180px;">
                             <option [value]="psub.id" *ngFor="let psub of data3d2; let i = index">
                                 {{psub.FNEXPENSES_STEP}}จำนวนเงิน:{{psub.FNEXPENSES_AMONEY | number : '1.2-2'}}
                             </option>
                         </select>
+                        <div class="text-end mt-2 text-danger fw-bold" style="font-size: 14pt;">
+                            รวมเป็นเงิน: {{ sumSelectedMoney | number : '1.2-2' }} บาท
+                        </div>
                     </div>
 
                 </div>

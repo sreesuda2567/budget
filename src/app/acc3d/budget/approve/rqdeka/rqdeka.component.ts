@@ -226,6 +226,7 @@ export class RqdekaComponent implements OnInit {
     this.data3d2 = null;
     this.dataAdd.List = [];
     this.dataAdd.FNDEKA_REMARK = "";
+    this.dataAdd.FNDEKA_REMARKD = "";
     this.dataAdd.FNDEKA_RSTATUS = "1";
     this.dataAdd.FNDEKA_TAX = "0";
     this.Passetsearch();
@@ -302,6 +303,7 @@ export class RqdekaComponent implements OnInit {
       .subscribe((data: any) => {
         this.data3d2 = data.data2;
         this.dataAdd.FNDEKA_REMARK = data.data[0].FNDEKA_REMARK;
+        this.dataAdd.FNDEKA_REMARKD = data.data[0].FNDEKA_REMARKD;
         this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNDEKA_RSTATUS;
         this.dataAdd.FNDEKA_TAX = parseFloat(data.data[0].FNDEKA_TAX).toFixed(2);
         for (let i = 0; i < data.data2.length; i++) {
@@ -412,5 +414,12 @@ export class RqdekaComponent implements OnInit {
     this.tableSize = event.target.value;
     this.page = 1;
     this.fetchdatalist();
+  }
+
+  get sumSelectedMoney(): number {
+    if (!this.data3d2) return 0;
+    const sum = this.data3d2.reduce((acc: number, item: any) => acc + (parseFloat(item.FNEXPENSES_AMONEY) || 0), 0);
+    const tax = parseFloat(this.dataAdd.FNDEKA_TAX) || 0;
+    return sum - tax;
   }
 }
