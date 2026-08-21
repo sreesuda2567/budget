@@ -41,6 +41,7 @@ title = 'angular-app';
   loadingdetail: any;
   dataAdd: any = {};
   searchTerm: any;
+  searchTermDetail: any;
   show: any;
   dataPro: any;
   datarstatus: any;
@@ -254,7 +255,7 @@ exportexcel(): void {
     }
     ws['!cols'] = colWidths;
 
-    const numberCols = [10];
+    const numberCols = [8,9,10,11];
 
     for (let R = range.s.r; R <= range.e.r; ++R) {
       const isBoldRow = (R === 0);
@@ -328,4 +329,25 @@ exportexcel(): void {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, this.fileName || 'รายงาน.xlsx');
   }
+
+  fetchdataexpen(FNDEKA_CODE:any){ 
+    this.dataAdd.FNDEKA_CODE=FNDEKA_CODE;
+    this.dataAdd.opt = 'reportexpen'; 
+    this.datalistdetail=null;
+    this.loadingdetail=true;
+    this.apiService
+      .getdata(this.dataAdd,this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if(data.status==1){
+       this.datalistdetail = data.data;
+       this.loadingdetail=null; 
+        }else{
+          this.loadingdetail=null;
+           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+           this.datalistdetail= data.data; 
+        }
+       });
+  
+   }
 }

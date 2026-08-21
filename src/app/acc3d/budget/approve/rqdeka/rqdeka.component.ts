@@ -229,6 +229,7 @@ export class RqdekaComponent implements OnInit {
     this.dataAdd.FNDEKA_REMARKD = "";
     this.dataAdd.FNDEKA_RSTATUS = "1";
     this.dataAdd.FNDEKA_TAX = "0";
+    this.dataAdd.FNDEKA_FINE = "0";
     this.Passetsearch();
   }
   fetchdatalist() {
@@ -306,6 +307,7 @@ export class RqdekaComponent implements OnInit {
         this.dataAdd.FNDEKA_REMARKD = data.data[0].FNDEKA_REMARKD;
         this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNDEKA_RSTATUS;
         this.dataAdd.FNDEKA_TAX = parseFloat(data.data[0].FNDEKA_TAX).toFixed(2);
+        this.dataAdd.FNDEKA_FINE = parseFloat(data.data[0].FNDEKA_FINE || 0).toFixed(2);
         for (let i = 0; i < data.data2.length; i++) {
           this.dataAdd.List.push(data.data2[i].id);
         }
@@ -420,6 +422,7 @@ export class RqdekaComponent implements OnInit {
     if (!this.data3d2) return 0;
     const sum = this.data3d2.reduce((acc: number, item: any) => acc + (parseFloat(item.FNEXPENSES_AMONEY) || 0), 0);
     const tax = parseFloat(this.dataAdd.FNDEKA_TAX) || 0;
-    return sum - tax;
+    const fine = parseFloat(this.dataAdd.FNDEKA_FINE) || 0;
+    return sum - tax - fine;
   }
 }

@@ -34,6 +34,7 @@ export class ReportpaymentComponent implements OnInit {
   rownum1: any;
   dataAdd: any = {};
   searchTerm: any;
+  searchTermDetail: any;
   dataCam :any;
     locale = 'th-be';
   locales = listLocales();
@@ -170,9 +171,8 @@ export class ReportpaymentComponent implements OnInit {
         }
       })
   }
-  fetchdataexpen(FRACC_CODE:any,FNEXACC_RSTATUS:any){ 
-    this.dataAdd.FRACC_CODE=FRACC_CODE;
-    this.dataAdd.FNEXACC_RSTATUS=FNEXACC_RSTATUS;
+  fetchdataexpen(FNDEKA_CODE:any){ 
+    this.dataAdd.FNDEKA_CODE=FNDEKA_CODE;
     this.dataAdd.opt = 'reportexpen'; 
     this.datalistdetail=null;
     this.loadingdetail=true;
@@ -211,7 +211,7 @@ exportexcel(): void {
     }
     ws['!cols'] = colWidths;
 
-    const numberCols = [10];
+    const numberCols = [7,8,9];
 
     for (let R = range.s.r; R <= range.e.r; ++R) {
       const isBoldRow = (R === 0 );
@@ -286,5 +286,90 @@ exportexcel(): void {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, this.fileName || 'รายงาน.xlsx');
+  }
+
+  exportexceldetail(): void {
+    const element = document.getElementById('excel-table-detail');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    const range = XLSX.utils.decode_range(ws['!ref']!);
+
+    // ปรับความกว้างคอลัมน์
+    const colWidths = [];
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      let max_width = 10;
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
+        if (cell && cell.v != null) {
+          const length = String(cell.v).toString().length;
+          if (length > max_width) max_width = length;
+        }
+      }
+      colWidths.push({ wch: max_width + 2 });
+    }
+    ws['!cols'] = colWidths;
+
+    const numberCols = [8,9,10,11];
+
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      const isBoldRow = (R === 0 );
+      
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_ref = XLSX.utils.encode_cell({ c: C, r: R });
+        let cell = ws[cell_ref];
+        if (!cell) {
+          cell = { t: 's', v: '' };
+          ws[cell_ref] = cell;
+        }
+
+        const isNumber = numberCols.includes(C) && typeof cell.v === 'number';
+
+        let horizontalAlign: "left" | "center" | "right" = "left";
+        if (R === 0) {
+          horizontalAlign = "center";
+        } else if (C === 0) {
+          horizontalAlign = "center";
+        } else if (numberCols.includes(C)) {
+          horizontalAlign = "right";
+        }
+
+        const baseStyle: any = {
+          alignment: {
+            horizontal: horizontalAlign,
+            vertical: "center",
+            wrapText: true,
+          },
+          border: {
+            top: { style: "thin", color: { rgb: "000000" } },
+            bottom: { style: "thin", color: { rgb: "000000" } },
+            left: { style: "thin", color: { rgb: "000000" } },
+            right: { style: "thin", color: { rgb: "000000" } },
+          },
+        };
+
+        if (isBoldRow) {
+          baseStyle.font = {
+            bold: true,
+            color: { rgb: '000000' },
+          };
+        }
+
+        if (R === 0) {
+          baseStyle.fill = {
+            patternType: "solid",
+            fgColor: { rgb: "5084f2" },
+          };
+        }
+
+        if (isNumber) {
+          baseStyle.numFmt = '#,##0.00';
+        }
+
+        cell.s = baseStyle;
+      }
+    }
+
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'รายงานรายละเอียด.xlsx');
   }
 }

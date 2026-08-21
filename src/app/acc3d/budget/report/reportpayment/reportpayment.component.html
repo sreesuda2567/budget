@@ -17,12 +17,12 @@
                         <div class="shadow alert alert-info" role="alert">
 
                             <div class="row">
-                                <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                                <div class="col-md-5 text-secondary" style="font-size: 10pt">
                                     <label> หน่วยเบิกจ่าย: </label>
                                     <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
                                         id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
                                     <select name="f_code" id="f_code" class="form-select"
-                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdataCam()">
+                                        [(ngModel)]="dataAdd.CAMPUS_CODE">
                                         <option value=""
                                             *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS !='1'">
                                             ทุกวิทยาเขต
@@ -31,44 +31,8 @@
                                             {{cam.CAMPUS_TNAME}}</option>
                                     </select>
                                 </div>
-                                <div class="col-md-8 text-secondary" style="font-size: 10pt">
-                                    <label> คณะ/หน่วยงาน: </label>
-                                    <select name="f_code" id="f_code" class="form-select" (change)="fetchdatalistcr()"
-                                        [(ngModel)]="dataAdd.FACULTY_CODE">
-                                        <option value="">ทั้งหมด</option>
-                                        <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
-                                            {{fac.FACULTY_TNAME}}</option>
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 text-secondary" style="font-size: 10pt">แหล่งเงิน: </div>
-                                <div class="col-md-2 text-secondary" style="font-size: 10pt">ภาค: </div>
-                                <div class="col-md-1 text-secondary" style="font-size: 10pt">ปีงบประมาณ: </div>
-                                <div class="col-md-2 text-secondary" style="font-size: 10pt">จากวันที่: </div>
-                                <div class="col-md-2 text-secondary" style="font-size: 10pt">ถึงวันที่: </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <select name="in_come" id="in_come" class="form-select" (change)="fetchdatalistcr()"
-                                        [(ngModel)]="dataAdd.PLINCOME_CODE">
-                                        <option value="">ทั้งหมด</option>
-                                        <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">
-                                            {{inc.PLINCOME_NAME}}</option>
-
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <select name="cr_code" id="cr_code" class="form-select"
-                                        [(ngModel)]="dataAdd.CRPART_ID">
-                                        <option value="">ทั้งหมด</option>
-                                        <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpart">
-                                            {{crp.CRPART_TNAME}}</option>
-
-                                    </select>
-                                </div>
-                                <div class="col-md-1">
+                                <div class="col-md-1" style="font-size: 10pt">
+                                    <label> ปีงบประมาณ: </label>
                                     <select name="y_code" id="y_code" class="form-select"
                                         [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
                                         <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
@@ -77,7 +41,10 @@
 
                                     </select>
                                 </div>
+
+
                                 <div class="col-md-2" style="font-size: 10pt">
+                                    <label> ตั้งแต่วันที่: </label>
                                     <input placeholder="จากวันที่" type="text" class="form-control" bsDatepicker
                                         #dp="bsDatepicker" [(ngModel)]="dataAdd.DATENOWS" readonly>
                                     <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
@@ -85,6 +52,7 @@
                                     </i>
                                 </div>
                                 <div class="col-md-2" style="font-size: 10pt">
+                                    <label> ถึงวันที่: </label>
                                     <input placeholder="ถึงวันที่" type="text" class="form-control" bsDatepicker
                                         #dp2="bsDatepicker" [(ngModel)]="dataAdd.DATENOWT" readonly>
                                     <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
@@ -92,10 +60,10 @@
                                     </i>
                                 </div>
                                 <div class="col-md-2">
+                                    <br>
                                     <button type="submit" class="btn btn-primary" id="submitinsert"
                                         (click)="fetchdatalist()"><i class="fa fa-search"></i>&nbsp;ค้นหา</button>
                                 </div>
-
                             </div>
 
                         </div>
@@ -107,9 +75,10 @@
                     <div class="shadow alert alert-secondary" role="alert">
                         <div class="row">
                             <div class="col-md-2">
-                              
-                                    <button *ngIf="rownum" type="button" class="btn btn-success" (click)="exportexcel()">Export
-                                        Excel</button>                              
+
+                                <button *ngIf="rownum" type="button" class="btn btn-success"
+                                    (click)="exportexcel()">Export
+                                    Excel</button>
                             </div>
                             <div class="col-md-7"></div>
                             <div class="col-md-3">
@@ -132,13 +101,14 @@
                     <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
                         <div class="spinner-border " role="status" id="loadingdetail"></div>
                     </div>
-                    <div class="table-responsive-lg">
+                    <div style="width:100%; height:500px; overflow:auto;">
                         <table id="excel-table" border="1"
                             class="table card-table table-bordered table-striped table-vcenter tableFixHead">
                             <thead>
                                 <tr style="background-color:rgb(131, 187, 243);">
                                     <td align="center"><strong>ที่</strong></td>
                                     <td align="center"><strong>วันที่คุมขอเบิก</strong></td>
+                                    <td align="center"><strong>เลขที่หลักฐาน</strong></td>
                                     <td align="center"><strong>ประเภทเงิน</strong></td>
                                     <td align="center"><strong>เรื่อง</strong></td>
                                     <td align="center"><strong>วันที่เลขที่ฎีกา</strong></td>
@@ -146,7 +116,8 @@
                                     <td align="center"><strong>เลข3ดี</strong></td>
                                     <td align="center"><strong>จำนวนเงินขอเบิก</strong></td>
                                     <td align="center"><strong>จำนวนหักส่ง</strong></td>
-                                     <td align="center"><strong>จำนวนเงินขอรับ</strong></td>
+                                    <td align="center"><strong>ค่าปรับ</strong></td>
+                                    <td align="center"><strong>จำนวนเงินขอรับ</strong></td>
                                     <td align="center"><strong>วันที่ผ่านรายการ</strong></td>
                                     <td align="center"><strong>เลขที่รับฎีกา</strong></td>
                                     <td align="center"><strong>วันที่จ่าย</strong></td>
@@ -156,19 +127,25 @@
 
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of datalist; let i = index">
+                                <tr *ngFor="let item of datalist|filter:searchTerm ; let i = index">
                                     <td align="center">{{i+1}}</td>
-                                    <td>{{item.FNPAYMENT_DATE}}</td>
-                                    <td>{{item.PLINCOME_NAME}}</td>
+                                    <td>{{item.FNPAYMENT_DATE_LIST}}</td>
+                                    <td>{{item.FNPAYMENT_NUMBER_LIST}}</td>
+                                    <td>{{item.PLINCOMENAME_LIST}}</td>
                                     <td> {{item.FNDEKA_REMARK}}</td>
-                                    <td> {{item.FNDEKA_DATE1}}</td> 
-                                    <td> {{item.FNEXPENSES_STEP_LIST}}</td> 
+                                    <td> {{item.FNDEKA_DATE1}}</td>
                                     <td> {{item.FNDEKA_DEKA}}/{{item.PLYEARBUDGET_CODE}}</td>
+                                    <td> {{item.FNEXPENSES_STEP_LIST}}</td>
                                     <td align="right"> {{item.FNEXPENSES_AMONEY_TOTAL| number : '1.2-2'}}</td>
                                     <td align="right"> {{item.FNDEKA_TAX| number : '1.2-2'}}</td>
-                                    <td align="right"> {{item.FNEXPENSES_AMONEY_TOTAL-item.FNDEKA_TAX| number : '1.2-2'}}</td>
+                                    <td align="right"> {{item.FNDEKA_FINE| number : '1.2-2'}}</td>
+                                    <td align="right"> 
+                                        <a href="javascript:void(0)" class="text-primary text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="fetchdataexpen(item.FNDEKA_CODE)">
+                                            {{item.FNEXPENSES_AMONEY_TOTAL-item.FNDEKA_TAX-item.FNDEKA_FINE| number : '1.2-2'}}
+                                        </a>
+                                    </td>
                                     <td> {{item.FNEXPENSES_MDATE}}</td>
-                                    <td> {{item.FNEXACC_NUMBER_LIST}}</td>
+                                    <td> {{item.FNEXPENSES_NUMBER_LIST}}</td>
                                     <td> {{item.FNEXACCPAYDATE_DATEPD_LIST}}</td>
                                     <td> {{item.FNEXACCPAYDATE_NUMBER_LIST}}</td>
                                     <td> {{item.FNDEKA_NAME}}</td>
@@ -187,55 +164,48 @@
 <!-- The Modal -->
 <div class="modal fade" data-bs-focus="false" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title " id="exampleModalLabel">รายงานรายละเอียดแสดงค่าใช้จ่ายแต่ละกิจกรรม</h5>
+                <h5 class="modal-title " id="exampleModalLabel">รายละเอียดแสดงค่าใช้จ่าย</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row justify-content-center center-screen" *ngIf="loading">
-                    <div class="spinner-border " role="status" id="loading"></div>
+                <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
+                    <div class="spinner-border " role="status" id="loadingdetail"></div>
                 </div>
-                <table width="100%" border="1" cellpadding="0" cellspacing="0"
-                    class="table table-bordered table-striped">
-                    <thead>
-                        <tr style="background-color:rgb(131, 187, 243);">
-                            <td width="3%"><strong>ลำดับ</strong></td>
-                            <td align="center"><strong>คณะ/หน่วยงาน</strong></td>
-                            <td align="center"><strong>ชื่อโครงการ/ชื่อเรื่อง</strong></td>
-                            <td align="center"><strong>หมวดรายจ่าย</strong></td>
-                            <td align="center"><strong>หมวดรายจ่ายย่อย</strong></td>
-                            <td align="center"><strong>วันที่ผ่านรายการเบิก</strong></td>
-                            <td align="center"><strong>เลขฎีกา</strong></td>
-                            <td align="center"><strong>เลข3ดี</strong></td>
-                            <td align="center"><strong>จำนวนเงิน</strong></td>
-                            <td align="center"><strong>หมายเหตุ</strong></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of datalistdetail; ">
-                            <td *ngIf="item.NUMBER">{{item.NUMBER}}</td>
-                            <td *ngIf="item.NUMBER">{{item.FACULTY_TNAME}}</td>
-                            <td *ngIf="item.NUMBER">{{item.FNEXPENSES_TITLE}}</td>
-                            <td *ngIf="item.NUMBER">{{item.PLMONEYPAY_NAME}}</td>
-                            <td *ngIf="item.NUMBER">{{item.PLSUBMONEYPAY_NAME}}</td>
-                            <td *ngIf="item.NUMBER">{{item.FNEXPENSES_CCDATE}}</td>
-                            <td *ngIf="item.NUMBER">{{item.FNEXPENSES_DEKA}}</td>
-                            <td *ngIf="item.NUMBER">{{item.FNEXPENSES_STEP}}</td>
-                            <td *ngIf="item.NUMBER" align="right">{{item.FNEXACC_MONEY| number : '1.2-2'}}</td>
-                            <td *ngIf="item.NUMBER">{{item.EXTEND}}</td>
-
-                            <td colspan="8" style="background-color:rgb(251, 134, 61);" *ngIf="item.NAME" align="right">
-                                {{item.NAME}}</td>
-                            <td style="background-color:rgb(251, 134, 61);" *ngIf="item.NAME" align="right">
-                                {{item.FNEXACCUD_MONEY| number : '1.2-2'}}</td>
-                            <td style="background-color:rgb(251, 134, 61);" *ngIf="item.NAME" align="right"></td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
+                <div class="table-responsive">
+                    <table width="100%" border="1" cellpadding="0" cellspacing="0"
+                        class="table table-bordered table-striped" id="excel-table-detail">
+                        <thead>
+                            <tr style="background-color:rgb(131, 187, 243);">
+                                <td width="5%" align="center"><strong>ที่</strong></td>
+                                <td align="center"><strong>ประเภทเงิน</strong></td>
+                                <td align="center"><strong>เลขที่ฎีกา</strong></td>
+                                <td align="center"><strong>รหัสบัญชี<br>แยกประเภท</strong></td>
+                                <td align="center"><strong>ชื่อรายการบัญชีแยกประเภท</strong></td>
+                                <td align="center"><strong>ชื่อโครงการ/ชื่อเรื่อง</strong></td>
+                                <td align="center"><strong>วันที่ทำรายการ</strong></td>
+                                <td align="center"><strong>จำนวนเงิน</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of datalistdetail | filter:searchTermDetail; let i = index">
+                                <td align="center">{{i+1}}</td>
+                                <td align="center">{{item.PLINCOME_NAME}}</td>
+                                <td align="center">{{item.FNEXPENSES_DEKA}}</td>
+                                <td align="center">{{item.FRACC_CODE}}</td>
+                                <td>{{item.FRACC_TNAME}}</td>
+                                <td>
+                                    {{item.FNEXPENSES_TITLE}}<br>
+                                    <span class="text-danger" *ngIf="item.FACULTY_TNAME || item.FNEXPENSES_STEP">({{item.FACULTY_TNAME}} 3D:{{item.FNEXPENSES_STEP}})</span>
+                                </td>
+                                <td align="center">{{item.FNEXPENSES_CCDATE}}</td>
+                                <td align="right">{{item.FNEXACC_MONEY| number : '1.2-2'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
