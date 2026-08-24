@@ -132,6 +132,7 @@ export class AppassetComponent implements OnInit {
   url1 = "/acc3d/rqbudget/userpermission.php";
   dataAdd: any = { check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [] };
   searchTerm: any;
+  searchTerm1: any;
   selectedDevice: any;
   loading: any;
   dynamicVariable: any;
@@ -149,6 +150,7 @@ export class AppassetComponent implements OnInit {
   tablemonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
   dataYearp: any;
   rownum: any;
+  rownum1: any;
   rownumregis: any;
   rownumspec: any;
   dataIncomeregis: any;
@@ -284,7 +286,7 @@ export class AppassetComponent implements OnInit {
             // console.log(data[0].FACULTY_CODE);
             this.dataAdd.FACULTY_CODE = datafac[0].FACULTY_CODE;
             this.dataAdd.FFACULTY_CODE = datafac[0].FACULTY_CODE;
-            this.fetchdatalist();
+            this.fetchdatalistapp();
             //รายการหลักสูตร
             var Tablesec = {
               "opt": "viewsection",
@@ -468,6 +470,9 @@ export class AppassetComponent implements OnInit {
     this.dataAdd.opt = "readAllapp";
     this.loadingapp = true;
     this.datalistapp = null;
+    this.datalist = null;
+    this.rownum1 = null;
+    this.rownum = null;
     // console.log(1);
     this.apiService
       .getdata(this.dataAdd, this.url)
@@ -476,13 +481,11 @@ export class AppassetComponent implements OnInit {
         if (data.status == 1) {
           this.datalistapp = data.data;
           this.loadingapp = null;
-          for (let i = 0; i < this.datalistapp.length; i++) {
-            this.dataAdd.PRASSET_CODEA[i] = this.datalistapp[i].PRASSET_CODE;
-
-          }
+          this.rownum1 = 'true';
         } else {
           this.datalistapp = data.data;
           this.loadingapp = null;
+          this.rownum1 = null;
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
         }
       });
@@ -655,7 +658,10 @@ export class AppassetComponent implements OnInit {
 
     this.dataAdd.opt = "readAll";
     this.loading = true;
-    this.dataAdd.code
+    this.rownum = null;
+    this.rownum1 = null;
+    this.datalist = null;
+    this.datalistapp = null;
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
@@ -813,6 +819,7 @@ export class AppassetComponent implements OnInit {
 
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any) {
+
     var Tablesec = {
       "opt": "viewsection",
       "fac": this.dataAdd.FACULTY_CODE
@@ -829,6 +836,7 @@ export class AppassetComponent implements OnInit {
         }
       });
     this.setshowbti();
+    this.onChangerister();
     /* this.apiService
      .getById(id,this.url)
      .pipe(first())
@@ -866,6 +874,7 @@ export class AppassetComponent implements OnInit {
           this.showHide();
           this.afyear = null;
         }
+        this.dataAdd.PRREGISASSET_CODE = data[0].PRREGISASSET_CODE;
         this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
         this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
@@ -1222,7 +1231,7 @@ export class AppassetComponent implements OnInit {
           .subscribe((data: any) => {
             if (data.status == 1) {
               Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
-              this.fetchdatalist();
+              this.fetchdatalistapp();
             }
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -1295,6 +1304,7 @@ export class AppassetComponent implements OnInit {
     this.dataAdd.PRASSET_FU = 'ชั่วโมง/สัปดาห์';
     this.dataAdd.PRASSET_TYPE = '';
     this.dataAdd.searchimport = '';
+    this.dataAdd.PRREGISASSET_CODE = '';
     this.dataAdd.List = [];
     this.dataAdd.List1 = [];
 
@@ -1395,6 +1405,45 @@ export class AppassetComponent implements OnInit {
           if (data.status == 1) {
             this.loadingimport = null;
             this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            this.fetchdatalist();
+            document.getElementById("ModalClose")?.click();
+          }
+        });
+    }
+  }
+    // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
+  insertdata() {
+    //console.log(this.dataAdd.PRASSET_COURSET );
+    if (this.dataAdd.checkregis.length == 0) {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกทะเบียนครุภัณฑ์");
+    } else {
+      this.dataAdd.opt = "insert";
+      /*  this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("<br>", "<br/>"); 
+        this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("<p>", "<br/>"); 
+        this.dataAdd.PRASSET_COURSET = this.dataAdd.PRASSET_COURSET.replaceAll("</p>", "");
+        this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("<br>", "<br/>"); 
+        this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("<p>", "<br/>"); 
+        this.dataAdd.PRASSET_TARGET = this.dataAdd.PRASSET_TARGET.replaceAll("</p>", "");
+        this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("<br>", "<br/>"); 
+        this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("<p>", "<br/>"); 
+        this.dataAdd.PRASSET_REASON = this.dataAdd.PRASSET_REASON.replaceAll("</p>", "");
+        this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("<br>", "<br/>"); 
+        this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("<p>", "<br/>"); 
+        this.dataAdd.PRASSET_INSIDE = this.dataAdd.PRASSET_INSIDE.replaceAll("</p>", "");
+        this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("<br>", "<br/>"); 
+        this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("<p>", "<br/>"); 
+        this.dataAdd.PRASSET_EXTERNAL = this.dataAdd.PRASSET_EXTERNAL.replaceAll("</p>", "");
+        this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("<br>", "<br/>"); 
+        this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("<p>", "<br/>"); 
+        this.dataAdd.PRASSET_RESEARCH = this.dataAdd.PRASSET_RESEARCH.replaceAll("</p>", "");*/
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);       
+          if (data.status == 1) {
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            this.onChangerister();
             this.fetchdatalist();
             document.getElementById("ModalClose")?.click();
           }
