@@ -33,7 +33,7 @@ const editorConfig = {
   styleUrls: ['./appasset.component.scss']
 })
 export class AppassetComponent implements OnInit {
- name = 'Angular';
+  name = 'Angular';
   editor = ClassicEditor;
   editorConfig = editorConfig;
 
@@ -128,6 +128,8 @@ export class AppassetComponent implements OnInit {
   datMyear: any;
   dataYearimport: any;
   rownumimport: any;
+  dataPlmoneypay: any;
+  dataSubplmoneypay: any;
   url = "/acc3d/rqbudget/approve/appasset.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   dataAdd: any = { check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [] };
@@ -144,6 +146,7 @@ export class AppassetComponent implements OnInit {
   page = 1;
   count = 0;
   number = 0;
+  activeTab = 2; // 1 for พิจารณา, 2 for รายการพิจารณา
   tableSize = 20;
   tableSizes = [20, 30, 40];
   formModal_del: any;
@@ -165,7 +168,7 @@ export class AppassetComponent implements OnInit {
   safePdfUrl: SafeResourceUrl = '';
 
   constructor(
-        private tokenStorage: TokenStorageService,
+    private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -177,8 +180,8 @@ export class AppassetComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-        document.getElementById("ModalClose")?.click();
-    this.dataAdd.RPLINCOME_CODE1 ='';    
+    document.getElementById("ModalClose")?.click();
+    this.dataAdd.RPLINCOME_CODE1 = '';
     this.fetchdata();
     this.rowpbi = null;
     this.rowict = '';
@@ -191,7 +194,7 @@ export class AppassetComponent implements OnInit {
     this.dataAdd.g_search = 'coursename';
     this.fetchdataCam();
   }
- showHide() {
+  showHide() {
     if (this.dataAdd.RPLINCOME_CODE == '02') {
       this.dataAdd.PRASSET_TYPE = '3';
       this.rowict = true;
@@ -467,6 +470,7 @@ export class AppassetComponent implements OnInit {
   }
 
   fetchdatalistapp() {
+    this.activeTab = 2;
     this.dataAdd.opt = "readAllapp";
     this.loadingapp = true;
     this.datalistapp = null;
@@ -616,7 +620,7 @@ export class AppassetComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataCrpartregis = data;
-        this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+        //this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         //console.log(this.dataSub);
       });
   }
@@ -636,26 +640,31 @@ export class AppassetComponent implements OnInit {
     // this.dataAdd.checkregis =Array;
     this.datalistregister = null;
     this.dataAdd.opt = "readregis";
+    this.dataAdd.PRREGISASSET_CODE = [];
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
         if (data.status == 1) {
+
           this.datalistregister = data.data;
           this.rownumregis = true;
           for (let i = 0; i < this.datalistregister.length; i++) {
             this.dataAdd.PRREGISASSET_CODE[i] = this.datalistregister[i].PRREGISASSET_CODE;
           }
+          // console.log(this.dataAdd.PRREGISASSET_CODE);
         } else {
           this.datalistregister = data.data;
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูลทะเบียนครุภัณฑ์");
           this.rownumregis = null;
         }
       });
+
   }
+
   // ฟังก์ขันสำหรับการดึงข้อมูลครุภัณฑ์
   fetchdatalist() {
-
+    this.activeTab = 1;
     this.dataAdd.opt = "readAll";
     this.loading = true;
     this.rownum = null;
@@ -683,6 +692,14 @@ export class AppassetComponent implements OnInit {
         //this.rownum=this.datalist.length;
 
       });
+  }
+
+  fetchDataByTab() {
+    if (this.activeTab === 1) {
+      this.fetchdatalist();
+    } else {
+      this.fetchdatalistapp();
+    }
   }
 
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
@@ -1062,6 +1079,14 @@ export class AppassetComponent implements OnInit {
   }
   //แก้ไขข้อมูลfilespec
   updatedata() {
+    if (!this.dataAdd.PRASSET_NUMBER || this.dataAdd.PRASSET_NUMBER === 'NaN' || this.dataAdd.PRASSET_NUMBER == 0) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกจำนวน");
+      return;
+    }
+    if (!this.dataAdd.PRASSET_MONEY || this.dataAdd.PRASSET_MONEY === 'NaN' || this.dataAdd.PRASSET_MONEY == 0) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกราคาต่อหน่วย");
+      return;
+    }
 
     this.dataAdd.opt = "update";
 
@@ -1071,12 +1096,12 @@ export class AppassetComponent implements OnInit {
       .subscribe((data: any) => {
         if (data.status == 1) {
 
-          this.fetchdatalist();
+          this.fetchdatalistapp();
           this.editdata(this.dataAdd.PRASSET_CODE);
 
 
           this.rowpbi = null;
-           document.getElementById("ModalCloseupdate")?.click();
+          document.getElementById("ModalCloseupdate")?.click();
         } else if (data.status == 0) {
           this.toastr.warning("แจ้งเตือน:กรุณากรอกเหตุผลความจำเป็นอย่างน้อย 1 หน้ากระดาษ");
         }
@@ -1085,6 +1110,14 @@ export class AppassetComponent implements OnInit {
   }
   //แก้ไขข้อมูล
   updatedata1() {
+    if (!this.dataAdd.PRASSET_NUMBER || this.dataAdd.PRASSET_NUMBER === 'NaN' || this.dataAdd.PRASSET_NUMBER == 0) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกจำนวน");
+      return;
+    }
+    if (!this.dataAdd.PRASSET_MONEY || this.dataAdd.PRASSET_MONEY === 'NaN' || this.dataAdd.PRASSET_MONEY == 0) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกราคาต่อหน่วย");
+      return;
+    }
     //this.Uploadfiles.upload(this.file,'111111')
     //let id=this.dataAdd.FACULTY_CODE+this.dataAdd.PRYEARASSET_CODE;
     //console.log(this.file);
@@ -1411,9 +1444,9 @@ export class AppassetComponent implements OnInit {
         });
     }
   }
-    // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
+  // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
   insertdata() {
-    //console.log(this.dataAdd.PRASSET_COURSET );
+    console.log(this.dataAdd.PRREGISASSET_CODE);
     if (this.dataAdd.checkregis.length == 0) {
       this.toastr.warning("แจ้งเตือน:กรุณาเลือกทะเบียนครุภัณฑ์");
     } else {
@@ -1444,7 +1477,7 @@ export class AppassetComponent implements OnInit {
           if (data.status == 1) {
             this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
             this.onChangerister();
-            this.fetchdatalist();
+            this.fetchdatalistapp();
             document.getElementById("ModalClose")?.click();
           }
         });
@@ -1495,7 +1528,43 @@ export class AppassetComponent implements OnInit {
     //console.log(name);
     this.dataAdd.PRSTATUS_PSTATUS = name;
   }
-    editdataapp(id: any) {
+  onChangePlmoney(){
+  this.dataPlmoneypay=null;
+  this.dataAdd.opt = "viewPLMONEYPAY";
+  this.apiService
+  .getdata(this.dataAdd,this.url1)
+  .pipe(first())
+  .subscribe((data: any) => {
+    this.dataPlmoneypay = data;    
+  });
+}
+onChangeSubplmoney(){
+  this.dataSubplmoneypay=null;
+  this.dataAdd.opt = "viewSUBPLMONEYPAY";
+  this.apiService
+  .getdata(this.dataAdd,this.url1)
+  .pipe(first())
+  .subscribe((data: any) => {
+    this.dataSubplmoneypay = data;    
+  });
+}
+  editdataimport(id: any) {
+    this.onChangePlmoney();
+    this.apiService
+      .getById(id, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAdd.RPLINCOME_CODE = data[0].PLINCOME_CODE;
+        this.onChangecrpartrister();
+        this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+        this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
+        this.dataAdd.PRASSET_MONEY = data[0].PRASSET_MONEY*data[0].PRASSET_NUMBER;
+        this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME+' ตำบล'+data[0].SUB_DISTRICT_NAME_TH+' อำเภอ'+data[0].DISTRICT_NAME_TH+' จังหวัด'+data[0].PROVINCE_TNAME;
+        this.dataAdd.PLMONEYPAY_CODE = '23';
+        this.onChangeSubplmoney();
+      });
+  }
+  editdataapp(id: any) {
     this.setshowbti();
     this.onChangerister();
     this.dataAdd.opt = "readoneapp";
@@ -1504,34 +1573,34 @@ export class AppassetComponent implements OnInit {
       .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-       
+
         this.dataAdd.PRASSET_CODE = data[0].PRASSET_CODE;
         this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
-       
+
         this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
         //this.dataAdd.PRREGISASSET_CODE = data[0].PRREGISASSET_CODE;
-       // this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
-        if(data[0].PRREGISASSET_CODEA !=null){
-         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODEA;
-       //  console.log(data[0].PRREGISASSET_CODEA);
-        }else{
-         
-        this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODE;
+        // this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
+        if (data[0].PRREGISASSET_CODEA != null) {
+          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODEA;
+          //  console.log(data[0].PRREGISASSET_CODEA);
+        } else {
+
+          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISASSET_CODE;
         }
-       if(data[0].PRASSET_NUMBERA !=null){
-         this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBERA; 
-        }else{
-        this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
+        if (data[0].PRASSET_NUMBERA != null) {
+          this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBERA;
+        } else {
+          this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
         }
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
-         if(data[0].PRASSET_MONEYA !=null){
-         this.dataAdd.sum = data[0].PRASSET_NUMBERA * data[0].PRASSET_MONEYA;   
-        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEYA).toFixed(2));  
-        }else{
-        this.dataAdd.sum = data[0].PRASSET_NUMBER * data[0].PRASSET_MONEY;  
-        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEY).toFixed(2));
+        if (data[0].PRASSET_MONEYA != null) {
+          this.dataAdd.sum = data[0].PRASSET_NUMBERA * data[0].PRASSET_MONEYA;
+          this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEYA).toFixed(2));
+        } else {
+          this.dataAdd.sum = data[0].PRASSET_NUMBER * data[0].PRASSET_MONEY;
+          this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEY).toFixed(2));
         }
-      this.calexpenses();
+        this.calexpenses();
       });
   }
   // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
