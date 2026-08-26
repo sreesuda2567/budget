@@ -37,7 +37,7 @@ const editorConfig = {
   styleUrls: ['./appbuilding.component.scss']
 })
 export class AppbuildingComponent implements OnInit {
- name = 'Angular';
+  name = 'Angular';
   editor = ClassicEditor;
   editorConfig = editorConfig;
   /*title = 'angular';
@@ -143,6 +143,8 @@ export class AppbuildingComponent implements OnInit {
   datalistimport: any;
   dataYearimport: any;
   rownumimport: any;
+  dataPlmoneypay: any;
+  dataSubplmoneypay: any;
   url = "/acc3d/rqbudget/approve/appbuilding.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   //dataAdd:any = {PRBOBJECT_NAME:[],PRBOBJECT_CODE:[],PRUSE_NAME:[],PRUSE_CODE:[]};
@@ -152,6 +154,7 @@ export class AppbuildingComponent implements OnInit {
   loading: any;
   file: any;
   fileict: any;
+  activeTab = 2; // 1 for พิจารณา, 2 for รายการพิจารณา
   page = 1;
   count = 0;
   tableSize = 20;
@@ -159,11 +162,12 @@ export class AppbuildingComponent implements OnInit {
   tablemonth = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
   rownum: any;
+  rownum1: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
 
   constructor(
-        private tokenStorage: TokenStorageService,
+    private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -177,11 +181,11 @@ export class AppbuildingComponent implements OnInit {
   ngOnInit(): void {
     document.getElementById("ModalClose")?.click();
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
-    this.dataAdd.RPLINCOME_CODE1 ='';
+    this.dataAdd.RPLINCOME_CODE1 = '';
     this.fetchdata();
     this.rowpbi = null;
   }
- fetchdatalistcr() {
+  fetchdatalistcr() {
     this.dataAdd.opt = "viewcrpart";
     this.apiService
       .getdata(this.dataAdd, this.url1)
@@ -218,7 +222,7 @@ export class AppbuildingComponent implements OnInit {
             // console.log(data);
             this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
             this.dataAdd.FFACULTY_CODE = data[0].FACULTY_CODE;
-            this.fetchdatalist();
+          //  this.fetchdatalistapp();
 
           });
       });
@@ -352,7 +356,7 @@ export class AppbuildingComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataYear = data;
-        this.fetchdatalist();
+        // this.fetchdatalist();
         //this.dataAdd.PRYEARASSET_CODE = data[0].PRYEARASSET_CODE;
       });
   }
@@ -361,6 +365,7 @@ export class AppbuildingComponent implements OnInit {
     // this.dataAdd.checkregis =Array;
     this.datalistregister = null;
     this.dataAdd.opt = "readregis";
+    this.dataAdd.PRREGISBUILDING_CODE=[];
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
@@ -380,9 +385,13 @@ export class AppbuildingComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลครุภัณฑ์
   fetchdatalist() {
+    this.activeTab = 1;
     this.dataAdd.opt = "readAll";
     this.loading = true;
     this.datalist = null;
+    this.datalistapp = null;
+    this.rownum1 = null;
+    this.rownum = null;
     this.dataAdd.code
     this.apiService
       .getdata(this.dataAdd, this.url)
@@ -421,9 +430,13 @@ export class AppbuildingComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลสิ่งก่อสร้าง
   fetchdatalistapp() {
+    this.activeTab = 2;
     this.dataAdd.opt = "readAllapp";
-    this.loadingapp = true;
+    this.loading = true;
     this.datalistapp = null;
+    this.datalist = null;
+    this.rownum = null;
+    this.rownum1 = null;
     // console.log(1);
     this.apiService
       .getdata(this.dataAdd, this.url)
@@ -431,14 +444,12 @@ export class AppbuildingComponent implements OnInit {
       .subscribe((data: any) => {
         if (data.status == 1) {
           this.datalistapp = data.data;
-          this.loadingapp = null;
-          for (let i = 0; i < this.datalistapp.length; i++) {
-            this.dataAdd.PRASSET_CODEA[i] = this.datalistapp[i].PRBUILDING_CODE;
-
-          }
+          this.loading = null;
+          this.rownum1 = 'true';
         } else {
           this.datalistapp = data.data;
-          this.loadingapp = null;
+          this.loading = null;
+          this.rownum1 = null;
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
         }
       });
@@ -483,7 +494,7 @@ export class AppbuildingComponent implements OnInit {
         //console.log(data);       
         if (data.status == 1) {
           this.toastr.success("แจ้งเตือน::เพิ่มข้อมูลเรียบร้อยแล้ว ");
-          this.fetchdatalist();
+          this.fetchdatalistapp();
           this.onChangerister();
           document.getElementById("ModalClose")?.click();
         } else {
@@ -493,54 +504,55 @@ export class AppbuildingComponent implements OnInit {
       });
 
   }
- editdataapp(id: any) {
+  editdataapp(id: any) {
     this.setshowbti();
     this.onChangerister();
     this.dataAdd.opt = "readoneapp";
     this.dataAdd.id = id;
-  /*  this.apiService
-      .getdata(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        //console.log(data);
-        this.onChangedistrict(data[0].PROVINCE_ID);
-        this.onChangesubdistrict(data[0].DISTRICT_ID);
-      });*/
+    /*  this.apiService
+        .getdata(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data);
+          this.onChangedistrict(data[0].PROVINCE_ID);
+          this.onChangesubdistrict(data[0].DISTRICT_ID);
+        });*/
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        if(data[0].PRREGISBUILDING_CODEA !=null){
-         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODEA;
-        }else{
-        this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODE;
+        if (data[0].PRREGISBUILDING_CODEA != null) {
+          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODEA;
+        } else {
+          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISBUILDING_CODE;
         }
         this.dataAdd.PRBUILDING_CODE = data[0].PRBUILDING_CODE;
         this.dataAdd.PRBUILDING_NAME = data[0].PRREGISBUILDING_NAME;
         //this.dataAdd.PRBUILDING_NUMBER = Number(data[0].PRBUILDING_NUMBER);
-         if( data[0].PRBUILDING_NUMBERA !=null){
-         this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBERA);
-        }else{
-        this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBER);
+        if (data[0].PRBUILDING_NUMBERA != null) {
+          this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBERA);
+        } else {
+          this.dataAdd.PRASSET_NUMBER = Number(data[0].PRBUILDING_NUMBER);
         }
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
-       // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
-       if(data[0].PRBUILDING_MONEYA !=null){
-         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEYA).toFixed(2)); 
-        }else{
-        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
+        // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
+        if (data[0].PRBUILDING_MONEYA != null) {
+          this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEYA).toFixed(2));
+        } else {
+          this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
         }
 
 
       });
-      this.calexpenses();
+    this.calexpenses();
   }
-   calexpenses() {
+  calexpenses() {
     this.dataAdd.sum = this.dataAdd.PRASSET_NUMBER * this.dataAdd.PRASSET_MONEY.replace(/,/g, "");
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any) {
     this.setshowbti();
+    this.onChangerister();
     /* this.setshowbti();
      this.apiService
      .getById(id,this.url)
@@ -556,6 +568,7 @@ export class AppbuildingComponent implements OnInit {
       .subscribe((data: any) => {
         //this.onChangedistrict(data[0].PROVINCE_ID);
         //this.onChangesubdistrict(data[0].DISTRICT_ID);
+        this.dataAdd.PRREGISBUILDING_CODE = data[0].PRREGISBUILDING_CODE;
         this.dataAdd.PRBUILDING_CODE = data[0].PRBUILDING_CODE;
         this.dataAdd.PRBUILDING_NAME = data[0].PRREGISBUILDING_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
         this.dataAdd.RPLINCOME_CODE = data[0].PLINCOME_CODE;
@@ -862,11 +875,11 @@ export class AppbuildingComponent implements OnInit {
               //console.log(event.type);
             }
             );
-          this.fetchdatalist();
+          this.fetchdatalistapp();
           this.editdata(this.dataAdd.PRBUILDING_CODE);
           this.rowpbi = null;
           document.getElementById("ModalCloseupdate")?.click();
-        } 
+        }
       });
     // }
   }
@@ -1108,7 +1121,13 @@ export class AppbuildingComponent implements OnInit {
       });
     //console.log(Value);    
   }
-
+   fetchDataByTab() {
+    if (this.activeTab === 1) {
+      this.fetchdatalist();
+    } else {
+      this.fetchdatalistapp();
+    }
+  }
 
   // ฟังก์ชัน cnk
   setcnk(i: any, ev: any, val: any) {
@@ -1121,6 +1140,42 @@ export class AppbuildingComponent implements OnInit {
   }
   fetchclose() {
     this.clickshow = null;
+  }
+  onChangePlmoney() {
+    this.dataPlmoneypay = null;
+    this.dataAdd.opt = "viewPLMONEYPAY";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlmoneypay = data;
+      });
+  }
+  onChangeSubplmoney() {
+    this.dataSubplmoneypay = null;
+    this.dataAdd.opt = "viewSUBPLMONEYPAY";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataSubplmoneypay = data;
+      });
+  }
+  editdataimport(id: any) {
+    this.onChangePlmoney();
+    this.apiService
+      .getById(id, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAdd.RPLINCOME_CODE = data[0].PLINCOME_CODE;
+        this.onChangecrpartrister();
+        this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+        this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
+        this.dataAdd.PRASSET_MONEY = data[0].PRASSET_MONEY * data[0].PRASSET_NUMBER;
+        this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
+        this.dataAdd.PLMONEYPAY_CODE = '23';
+        this.onChangeSubplmoney();
+      });
   }
   showapp(code: any, name: any) {
     this.clickshow = true;

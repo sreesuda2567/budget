@@ -69,6 +69,7 @@ public editor = ClassicEditor;
   dataPlmoneypay: any;
   datalist: any;
   datalistresearch: any;
+  datalistresearchapp: any;
   dataESubplmoneypay: any;
   dataEProjecttype: any;
   dataPstrategy: any;
@@ -114,8 +115,8 @@ public editor = ClassicEditor;
     check: [], checkregis: [], PRREGISPROJECT_CODE: [], PRASSET_CODEA: [],
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
     , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: [],checkimport:[],IMPORTASSET_CODE:[]
-    /*, PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
-    , PLPROJECTEXPENSES_CODE: []*/
+    , PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
+    , PLPROJECTEXPENSES_CODE: []
   };
   searchTerm: any;
   selectedDevice: any;
@@ -128,6 +129,8 @@ public editor = ClassicEditor;
   number: any = [1, 2, 3, 4, 5];
   number1: any = [];
   rownum: any;
+  rownum1: any;
+  activeTab = 2;
   config: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -247,8 +250,10 @@ applyLocale(pop: any) {
         if (data.status == 1) {
           this.datalistregister = data.data;
           this.rownumregis = true;
-          for (let i = 0; i < this.datalistregister.length; i++) {
-            this.dataAdd.PRREGISPROJECT_CODE[i] = this.datalistregister[i].PRREGISPROJECT_CODE;
+          if (Array.isArray(this.dataAdd.PRREGISPROJECT_CODE)) {
+            for (let i = 0; i < this.datalistregister.length; i++) {
+              this.dataAdd.PRREGISPROJECT_CODE[i] = this.datalistregister[i].PRREGISPROJECT_CODE;
+            }
           }
         } else {
           this.datalistregister = data.data;
@@ -282,7 +287,7 @@ applyLocale(pop: any) {
             // console.log(data);
             this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
             // this.dataAdd.FFACULTY_CODE = data[0].FACULTY_CODE;
-            this.fetchdatalist();
+            this.fetchdatalistapp();
           });
       });
     //รายการประเภทเงิน
@@ -497,6 +502,14 @@ applyLocale(pop: any) {
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
 
   }
+     fetchDataByTab() {
+    if (this.activeTab === 1) {
+      this.fetchdatalist();
+    } else {
+      this.fetchdatalistapp();
+    }
+  }
+
   projecttype() {
     if (this.dataAdd.FPLPROJECTTYPE == 1) {
       this.ptype = true;
@@ -641,6 +654,7 @@ applyLocale(pop: any) {
   // เคลียร์ค่า textbox
   setshowbti() {
     this.dataAdd.RPLINCOME_CODE = '';
+    this.dataAdd.PRPLPROJECT_CODE = '';
     this.dataAdd.RCRPART_ID = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
     this.dataAdd.PLSUBMONEYPAY_CODE = '';
@@ -649,11 +663,12 @@ applyLocale(pop: any) {
     this.showact();
     this.dataAdd.FPLPROJECTTYPE = 1;
     this.dataAdd.PLMONEYPAY_CODE = '';
-    this.dataAdd.PLSUBMONEYPAY_CODE = '';
+    this.dataAdd.PLSUBMONEYPAY_CODE1 = '';
     this.dataAdd.PLRESEARCHTYPE_CODE = '';
     this.dataAdd.PRPLPROJECT_HEADER = '';
     this.dataAdd.PRPLPROJECT_HPHONE = '';
     this.dataAdd.PRPLPROJECTHEAD_TYPE = 1;
+    this.dataAdd.PRPLPROJECT_LOCATION = '';
     // this.dataAdd.PRPLPROJECT_PERSONS = 0;
     //this.dataAdd.PRPLPROJECT_PERSONP = 0;
     //this.dataAdd.PRPLPROJECT_PERSONO = 0;
@@ -674,6 +689,7 @@ applyLocale(pop: any) {
     this.dataAdd.PLPLAND_CODE = '';
     this.dataAdd.PLPROJECT_DETAIL = '';
     this.dataAdd.searchregis = '';
+    this.dataAdd.PRREGISPROJECT_CODE = [];
     this.dataAdd.PLPROJECTMORE_ESTIMATE = '';
     this.dataAdd.PLPROJECTMORE_FOLLOW = '';
     this.dataAdd.PRPLPROJECT_T1 = '';
@@ -705,10 +721,12 @@ applyLocale(pop: any) {
       .getdata(this.dataAdd, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataPlm = data.dataplm;
-        this.dataPls = data.datapls;
-        this.dataPli = data.datapli;
-        this.dataPlp = data.dataplp;
+        if (data) {
+          this.dataPlm = data.dataplm;
+          this.dataPls = data.datapls;
+          this.dataPli = data.datapli;
+          this.dataPlp = data.dataplp;
+        }
       });
   }
   //ภาคเงิน
@@ -733,9 +751,15 @@ applyLocale(pop: any) {
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลครุภัณฑ์
   fetchdatalist() {
+    this.activeTab = 1;
     this.dataAdd.opt = "readAll";
     this.loading = true;
     this.datalist = null;
+    this.datalistapp = null;
+    this.datalistresearch = null;
+    this.datalistresearchapp = null;
+    this.rownum = null;
+    this.rownum1 = null;
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
@@ -837,8 +861,9 @@ applyLocale(pop: any) {
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataProjecthead = data.data;
-
+        if (data) {
+          this.dataProjecthead = data.data;
+        }
       });
 
   }
@@ -945,22 +970,26 @@ applyLocale(pop: any) {
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataProjectexd = data.data;
-        let sum = 0;
-        for (var j = 0; j < data.data.length; j++) {
-          // console.log(1);
-          if (data.data[j].PLPROJECTGROUPDT_NUM == 0) {
-            sum += data.data[j].PLPROJECTGROUPDT_MONEY;
+        if (data) {
+          this.dataProjectexd = data.data;
+          let sum = 0;
+          if (data.data) {
+            for (var j = 0; j < data.data.length; j++) {
+              // console.log(1);
+              if (data.data[j].PLPROJECTGROUPDT_NUM == 0) {
+                sum += data.data[j].PLPROJECTGROUPDT_MONEY;
+              }
+            }
           }
-        }
-        this.dataAdd.PLPROJECT_MONEY = sum;
-        this.dataAdd.PLPROJECT_MONEYT = sum;
-        this.dataAdd.PRBUILDING_YEAR = (this.dataAdd.PRPLPROJECTM_EYEAR - this.dataAdd.PRPLPROJECTM_SYEAR) + 1;
+          this.dataAdd.PLPROJECT_MONEY = sum;
+          this.dataAdd.PLPROJECT_MONEYT = sum;
+          this.dataAdd.PRBUILDING_YEAR = (this.dataAdd.PRPLPROJECTM_EYEAR - this.dataAdd.PRPLPROJECTM_SYEAR) + 1;
 
-        for (let i = 0; i < this.dataAdd.PRBUILDING_YEAR; i++) {
-          console.log(this.dataAdd.PRPLPROJECTM_YEAR[i]);
-          if (this.dataAdd.PRPLPROJECTM_YEAR[i] == this.dataAdd.PRYEARASSET_CODE) {
-            this.dataAdd.PRPLPROJECTM_MONEY[i] = this.dataAdd.PLPROJECT_MONEYT;
+          for (let i = 0; i < this.dataAdd.PRBUILDING_YEAR; i++) {
+            console.log(this.dataAdd.PRPLPROJECTM_YEAR[i]);
+            if (this.dataAdd.PRPLPROJECTM_YEAR[i] == this.dataAdd.PRYEARASSET_CODE) {
+              this.dataAdd.PRPLPROJECTM_MONEY[i] = this.dataAdd.PLPROJECT_MONEYT;
+            }
           }
         }
       });
@@ -975,13 +1004,17 @@ applyLocale(pop: any) {
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataProjectact = data.data;
-        for (let i = 0; i < data.data.length; i++) {
-          this.dataAdd.PRPLPROJECTACT_NAME[i] = data.data[i].PRPLPROJECTACT_NAME;
-          this.dataAdd.PRPLPROJECTACT_ACT[i] = data.data[i].PRPLPROJECTACT_ACT;
-          this.dataAdd.PRPLPROJECT_PERSONS[i] = data.data[i].PRPLPROJECT_PERSONS;
-          this.dataAdd.PRPLPROJECT_PERSONP[i] = data.data[i].PRPLPROJECT_PERSONP;
-          this.dataAdd.PRPLPROJECT_PERSONO[i] = data.data[i].PRPLPROJECT_PERSONO;
+        if (data) {
+          this.dataProjectact = data.data;
+          if (data.data) {
+            for (let i = 0; i < data.data.length; i++) {
+              this.dataAdd.PRPLPROJECTACT_NAME[i] = data.data[i].PRPLPROJECTACT_NAME || '';
+              this.dataAdd.PRPLPROJECTACT_ACT[i] = data.data[i].PRPLPROJECTACT_ACT || '';
+              this.dataAdd.PRPLPROJECT_PERSONS[i] = data.data[i].PRPLPROJECT_PERSONS || '';
+              this.dataAdd.PRPLPROJECT_PERSONP[i] = data.data[i].PRPLPROJECT_PERSONP || '';
+              this.dataAdd.PRPLPROJECT_PERSONO[i] = data.data[i].PRPLPROJECT_PERSONO || '';
+            }
+          }
         }
 
       });
@@ -996,7 +1029,9 @@ applyLocale(pop: any) {
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataProjectasset = data.data;
+        if (data) {
+          this.dataProjectasset = data.data;
+        }
       });
 
   }
@@ -1113,9 +1148,15 @@ applyLocale(pop: any) {
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลสิ่งก่อสร้าง
   fetchdatalistapp() {
+    this.activeTab = 2;
     this.dataAdd.opt = "readAllapp";
-    this.loadingapp = true;
+    this.loading = true;
     this.datalistapp = null;
+     this.datalistresearch = null;
+    this.datalistresearchapp = null;
+    this.datalist = null;
+    this.rownum = null;
+    this.rownum1 = null;
     // console.log(1);
     this.apiService
       .getdata(this.dataAdd, this.url)
@@ -1123,14 +1164,14 @@ applyLocale(pop: any) {
       .subscribe((data: any) => {
         if (data.status == 1) {
           this.datalistapp = data.data;
-          this.loadingapp = null;
-          for (let i = 0; i < this.datalistapp.length; i++) {
-            this.dataAdd.PRASSET_CODEA[i] = this.datalistapp[i].PRPLPROJECT_CODE;
-
-          }
+          this.datalistresearchapp = data.dataresearch;
+          this.loading = null;
+          this.rownum1 = 'true';
         } else {
           this.datalistapp = data.data;
-          this.loadingapp = null;
+          this.datalistresearchapp = data.dataresearch;
+          this.loading = null;
+           this.rownum1 = null;
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
         }
       });
@@ -1173,10 +1214,12 @@ applyLocale(pop: any) {
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any) {
+    
     this.rowpbi = 1;
     this.rowpbu = null;
     // console.log(this.rowpbi);
     this.setshowbti();
+    this.dataAdd.PRPLPROJECT_CODE = id;
     this.dataAdd.PRPLPROJECTM_SYEAR = this.dataAdd.PRYEARASSET_CODE;
     this.dataAdd.PRPLPROJECTM_EYEAR = this.dataAdd.PRYEARASSET_CODE;
     this.cleardat();
@@ -1210,6 +1253,7 @@ applyLocale(pop: any) {
     this.fetchdataPLMEASURES();
     this.fetchdataPLPLAND();
     this.fetchdataPLMISSION();
+    this.onChangerister();
     this.apiService
       .getById(id, this.url)
       .pipe(first())
@@ -1222,13 +1266,14 @@ applyLocale(pop: any) {
         // this.dataAdd.PROVINCE_ID = data.data[0].PROVINCE_ID;
         //   this.dataAdd.DISTRICT_ID = data.data[0].DISTRICT_ID;
         //  this.dataAdd.SUB_DISTRICT_ID = data.data[0].SUB_DISTRICT_ID;
-
+      //  this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
+        this.dataAdd.PRREGISPROJECT_CODE = data.data[0].PRREGISPROJECT_CODE;
         this.dataAdd.RPLINCOME_CODE = data.data[0].PLINCOME_CODE;
         this.onChangecrpartrister();
         this.dataAdd.RCRPART_ID = data.data[0].CRPART_ID;
         this.dataAdd.PLSTRATEGY_CODE = data.data[0].PLSTRATEGY_CODE;
         this.dataAdd.PLGPRODUCT_CODE = (data.data[0].PLGPRODUCT_CODE);//.substring(4, 7);
-        this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
+       // this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
         this.dataAdd.PLSUBMONEYPAY_CODE1 = data.data[0].PLSUBMONEYPAY_CODE1;
         this.dataAdd.PRPLPROJECT_NAME = data.data[0].PRREGISPROJECT_NAME;
         this.dataAdd.PRPLPROJECT_TIME = data.data[0].PRPLPROJECT_TIME;
@@ -1303,15 +1348,17 @@ applyLocale(pop: any) {
         }
         this.dataAdd.PLPROJECT_DETAIL = data.data[0].PRPLPROJECT_RDETAIL;
         this.dataPlandicator = data.dataPLPROJECTD;
-        if (this.dataPlandicator.length == 0) {
+        if (!this.dataPlandicator || this.dataPlandicator.length == 0) {
           this.fetchdataPLINDICATOR();
         }
-        for (let i = 0; i < this.dataPlandicator.length; i++) {
-          this.dataAdd.PLPROJECTD_NAME[i] = this.dataPlandicator[i].PLPROJECTD_NAME;
-          this.dataAdd.PLPROJECTD_VALUE[i] = this.dataPlandicator[i].PLPROJECTD_VALUE;
-          this.dataAdd.PLINDICATOR_CODE[i] = this.dataPlandicator[i].PLINDICATOR_CODE;
-          this.dataAdd.PLPROJECTD_RSTATUS[i] = this.dataPlandicator[i].PLPROJECTD_RSTATUS;;
-          this.dataAdd.PLPROJECTD_CODE[i] = this.dataPlandicator[i].PLPROJECTD_CODE;
+        if (this.dataPlandicator) {
+          for (let i = 0; i < this.dataPlandicator.length; i++) {
+            this.dataAdd.PLPROJECTD_NAME[i] = this.dataPlandicator[i].PLPROJECTD_NAME;
+            this.dataAdd.PLPROJECTD_VALUE[i] = this.dataPlandicator[i].PLPROJECTD_VALUE;
+            this.dataAdd.PLINDICATOR_CODE[i] = this.dataPlandicator[i].PLINDICATOR_CODE;
+            this.dataAdd.PLPROJECTD_RSTATUS[i] = this.dataPlandicator[i].PLPROJECTD_RSTATUS;;
+            this.dataAdd.PLPROJECTD_CODE[i] = this.dataPlandicator[i].PLPROJECTD_CODE;
+          }
         }
 
         let k = 0;
@@ -1466,9 +1513,9 @@ applyLocale(pop: any) {
         // console.log(12);
         if (data.status == 1) {
           this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
-          this.fetchdatalist();
+          this.fetchdatalistapp();
           this.editdata(this.dataAdd.PRPLPROJECT_CODE);
-          //console.log(this.dataAdd.PRASSET_CODE);
+          console.log(this.dataAdd.PRPLPROJECT_CODE);
           this.rowpbu = null;
            document.getElementById("ModalCloseupdate")?.click();
         } 
