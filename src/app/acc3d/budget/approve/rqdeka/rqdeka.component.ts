@@ -78,6 +78,7 @@ export class RqdekaComponent implements OnInit {
     this.dataAdd.DATENOWS = '';
     this.dataAdd.DATENOWT = '';
     this.dataAdd.search = '';
+    this.dataAdd.search_deka = '';
   }
   fetchdata() {
     var varP = {
@@ -177,6 +178,17 @@ export class RqdekaComponent implements OnInit {
   Passetsearch() {
     //รายการวิชา
     this.dataAdd.opt = "view3ddbp";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.data3d = data.data;
+        //console.log(this.dataSub);
+      });
+  }
+   Passetsearch1() {
+    //รายการวิชา
+    this.dataAdd.opt = "view3ddbpd1";
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())

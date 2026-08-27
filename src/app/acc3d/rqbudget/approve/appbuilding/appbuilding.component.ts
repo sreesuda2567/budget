@@ -145,6 +145,17 @@ export class AppbuildingComponent implements OnInit {
   rownumimport: any;
   dataPlmoneypay: any;
   dataSubplmoneypay: any;
+  dataPlan: any;
+  dataPstrategy:any;
+  dataPlmeasure:any;
+   dataPlme: any;
+  dataPlmeasures:any;
+  dataPlansub:any;
+  dataPlstrategy:any;
+  dataPli:any;
+  dataPlm:any;
+  dataPlp:any;
+  dataPls:any;
   url = "/acc3d/rqbudget/approve/appbuilding.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   //dataAdd:any = {PRBOBJECT_NAME:[],PRBOBJECT_CODE:[],PRUSE_NAME:[],PRUSE_CODE:[]};
@@ -182,6 +193,7 @@ export class AppbuildingComponent implements OnInit {
     document.getElementById("ModalClose")?.click();
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
     this.dataAdd.RPLINCOME_CODE1 = '';
+    this.dataAdd.RCRPART_ID1 = '';
     this.fetchdata();
     this.rowpbi = null;
   }
@@ -264,7 +276,17 @@ export class AppbuildingComponent implements OnInit {
             this.dataCrpart = datacr;
             this.dataAdd.CRPART_ID = datacr[0].CRPART_ID;
           });
-
+        //ยุทธศาสตร์ 
+        var Table = {
+          "opt": "viewPLSTRATEGY",
+          "PRYEARASSET_CODE": data[0].PLYEARBUDGET_CODE,
+        }
+        this.apiService
+          .getdata(Table, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.dataPstrategy = data;
+          }); 
       });
     //รายการปี
     var Tabley = {
@@ -428,6 +450,72 @@ export class AppbuildingComponent implements OnInit {
         }
       });
   }
+   //เป้าประสงค์
+  fetchdataPLESTIMATEPLAN() {
+    this.dataAdd.opt = "viewPLESTIMATEPLAN";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlan = data;
+        // this.dataAdd.PLESTIMATEPLAN_CODE = data[0].PLESTIMATEPLAN_CODE;
+      });
+    //this.fetchdataPLSTRATEGIES();
+  }
+    //กลยุทธ์
+  fetchdataPLSTRATEGIES() {
+    this.dataAdd.opt = "viewPLSTRATEGIES";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlme = data;
+        // this.dataAdd.PLSTRATEGIES_CODE = data[0].PLSTRATEGIES_CODE;
+      });
+    //this.fetchdataPLMEASURES();
+  }
+   //มาตรการ
+  fetchdataPLMEASURES() {
+    this.dataAdd.opt = "viewPLMEASURES";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlmeasures = data;
+        //  this.dataAdd.PLMEASURES_CODE = data[0].PLMEASURES_CODE;
+      });
+    //this.fetchdataPLPLAND();
+  }
+    //แผนงาน
+  fetchdataPLPLAND() {
+    this.dataAdd.opt = "viewPLPLAND";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlansub = data;
+        // this.dataAdd.PLPLAND_CODE = data[0].PLPLAND_CODE;
+      });
+    // this.fetchdataPLMISSION();
+  }
+  fetchdataPLMISSION() {
+    this.dataPlm = null;
+    this.dataPls = null;
+    this.dataPli = null;
+    this.dataPlp = null;
+    this.dataAdd.opt = "viewPLMISSION";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data) {
+          this.dataPlm = data.dataplm;
+          this.dataPls = data.datapls;
+          this.dataPli = data.datapli;
+          this.dataPlp = data.dataplp;
+        }
+      });
+  }
   // ฟังก์ขันสำหรับการดึงข้อมูลสิ่งก่อสร้าง
   fetchdatalistapp() {
     this.activeTab = 2;
@@ -456,6 +544,9 @@ export class AppbuildingComponent implements OnInit {
   }
   onChangecrpartrister() {
     //รายการวิชา
+    if(this.dataAdd.RPLINCOME_CODE1!=''){
+      this.dataAdd.RPLINCOME_CODE=this.dataAdd.RPLINCOME_CODE1;
+    }
     this.dataAdd.opt = "viewcrpartregis";
     this.apiService
       .getdata(this.dataAdd, this.url1)
@@ -553,6 +644,10 @@ export class AppbuildingComponent implements OnInit {
   editdata(id: any) {
     this.setshowbti();
     this.onChangerister();
+    this.fetchdataPLESTIMATEPLAN();
+    this.fetchdataPLSTRATEGIES();
+    this.fetchdataPLMEASURES();
+    this.fetchdataPLPLAND();
     /* this.setshowbti();
      this.apiService
      .getById(id,this.url)
@@ -583,6 +678,12 @@ export class AppbuildingComponent implements OnInit {
         if (data[0].PRBUILDING_OBJECT != null) {
           this.dataAdd.PRBUILDING_OBJECT = data[0].PRBUILDING_OBJECT;
         }
+        this.dataAdd.PLSTRATEGY_CODE = data[0].PLSTRATEGY_CODE;
+        this.dataAdd.PLESTIMATEPLAN_CODE = data[0].PLESTIMATEPLAN_CODE;
+        this.dataAdd.PLSTRATEGIES_CODE = data[0].PLSTRATEGIES_CODE;
+        this.dataAdd.PLMEASURES_CODE = data[0].PLMEASURES_CODE;
+        this.dataAdd.PLPLAND_CODE = data[0].PLPLAND_CODE;
+        this.fetchdataPLMISSION();
         //this.dataAdd.PRBUILDING_PAT = data[0].PRBUILDING_PAT;
         //this.dataAdd.PRBUILDING_PRICE = data[0].PRBUILDING_PRICE;
         this.dataAdd.SLINK1 = data[0].PRBUILDING_PAT;
@@ -1009,6 +1110,11 @@ export class AppbuildingComponent implements OnInit {
   }
 
   setshowbti() {
+    this.dataAdd.PLSTRATEGY_CODE = '';
+    this.dataAdd.PLESTIMATEPLAN_CODE = '';
+    this.dataAdd.PLSTRATEGIES_CODE = '';
+    this.dataAdd.PLMEASURES_CODE = '';
+    this.dataAdd.PLPLAND_CODE = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
     this.dataAdd.PROVINCE_ID = '';
     this.dataAdd.DISTRICT_ID = '';

@@ -153,7 +153,9 @@ export class RqpaymentComponent implements OnInit {
   insertdata() {
     if (this.dataAdd.FNDEKA_REMARK=='' ) {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
-    } else {
+    } else  if (this.dataAdd.FNPAYMENT_CREDITOR=='' ) {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุเจ้าหนี้");
+    }else{
       this.dataAdd.opt = "insert";
       this.apiService
         .getdata(this.dataAdd, this.url)
@@ -240,7 +242,9 @@ export class RqpaymentComponent implements OnInit {
     this.data3d2 = null;
     this.dataAdd.List = [];
     this.dataAdd.FNDEKA_REMARK = "";
+    this.dataAdd.FNPAYMENT_CREDITOR = "";
     this.dataAdd.FNDEKA_RSTATUS = "1";
+    this.dataAdd.FNPAYMENT_NAME = "";
   }
   fetchdatalist() {
 
@@ -319,7 +323,9 @@ export class RqpaymentComponent implements OnInit {
       .subscribe((data: any) => {
         this.data3d2 = data.data2;
         this.dataAdd.FNDEKA_REMARK = data.data[0].FNPAYMENT_REMARK;
+        this.dataAdd.FNPAYMENT_CREDITOR = data.data[0].FNPAYMENT_CREDITOR;
         this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNPAYMENT_RSTATUS;
+        this.dataAdd.FNPAYMENT_NAME = data.data[0].FNPAYMENT_NAME;
         for (let i = 0; i < data.data2.length; i++) {
             this.dataAdd.List.push(data.data2[i].id);
         }

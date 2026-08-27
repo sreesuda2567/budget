@@ -24,7 +24,7 @@
           <div class="panel-heading">
             <div class="shadow alert alert-info" role="alert">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label for="name"><strong>คณะ /หน่วยงาน</strong> </label>
                   <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
                     (change)="fetchDataByTab()">
@@ -34,23 +34,32 @@
                 <div class="col-md-2">
                   <label for="name"><strong>แหล่งเงิน</strong> </label>
                   <select name="in_come" id="in_come" class="form-select" [(ngModel)]="dataAdd.RPLINCOME_CODE1"
-                    (change)="fetchDataByTab()">
+                    (change)="fetchDataByTab()"  (change)="onChangecrpartrister()">
                     <option value="">ทุกประเภท</option>
                     <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}
+                    </option>
+                  </select>
+                </div>
+                 <div class="col-md-2">
+                  <label for="name"><strong>ภาค</strong> </label>
+                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.RCRPART_ID1"  (change)="fetchDataByTab()">
+                    <option value="">ทุกภาค</option>
+                    <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpartregis">{{crp.CRPART_TNAME}}
                     </option>
                   </select>
                 </div>
                 <div class="col-md-2">
                   <label for="name"><strong>ปีงบประมาณ</strong> </label>
                   <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PLYEARBUDGET_CODE"
-                    (change)="fetchdatalist()">
+                    (change)="fetchDataByTab()">
                     <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">{{year.PLYEARBUDGET_CODE}}
                     </option>
                   </select>
                 </div>
+               
                 <div class="col-md-2">
                   <label for="name"><strong>ประเภทโครงการ </strong> </label>
-                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE" (change)="fetchdatalist()">
+                  <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PLPROJECTTYPE" (change)="fetchDataByTab()">
                     <option [value]="1">โครงการทั่วไป</option>
                     <option [value]="2">โครงการวิจัย</option>
                   </select>

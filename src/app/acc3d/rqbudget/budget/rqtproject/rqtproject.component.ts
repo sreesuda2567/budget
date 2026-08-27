@@ -1248,7 +1248,8 @@ export class RqtprojectComponent implements OnInit {
         for (let i = 0; i < data.datam.length; i++) {
           if (i == 0) {
             this.dataAdd.PRPLPROJECTM_SYEAR = data.datam[i].PRPLPROJECTM_YEAR;
-          } else {
+          } 
+          if (data.datam.length - 1  == i) {
             this.dataAdd.PRPLPROJECTM_EYEAR = data.datam[i].PRPLPROJECTM_YEAR;
           }
           this.dataAdd.PRPLPROJECTM_YEAR[i] = data.datam[i].PRPLPROJECTM_YEAR;

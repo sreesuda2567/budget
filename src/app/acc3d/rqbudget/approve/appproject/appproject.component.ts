@@ -198,6 +198,7 @@ public editor = ClassicEditor;
   ngOnInit(): void {
      document.getElementById("ModalClose")?.click();
      this.dataAdd.RPLINCOME_CODE1 ='';
+     this.dataAdd.RCRPART_ID1 = '';
     this.fetchdata();
     this.dataAdd.PLPROJECTTYPE = 1;
     this.dataAdd.FPLPROJECTTYPE = 1;
@@ -1069,7 +1070,7 @@ applyLocale(pop: any) {
           .subscribe((data: any) => {
             if (data.status == 1) {
               Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
-              this.fetchdatalist();
+              this.fetchdatalistapp();
             }
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -1177,6 +1178,9 @@ applyLocale(pop: any) {
       });
   }
   onChangecrpartrister() {
+    if(this.dataAdd.RPLINCOME_CODE1!=''){
+      this.dataAdd.RPLINCOME_CODE=this.dataAdd.RPLINCOME_CODE1;
+    }
     this.dataAdd.opt = "viewcrpartregis";
     this.apiService
       .getdata(this.dataAdd, this.url1)
@@ -1220,8 +1224,8 @@ applyLocale(pop: any) {
     // console.log(this.rowpbi);
     this.setshowbti();
     this.dataAdd.PRPLPROJECT_CODE = id;
-    this.dataAdd.PRPLPROJECTM_SYEAR = this.dataAdd.PRYEARASSET_CODE;
-    this.dataAdd.PRPLPROJECTM_EYEAR = this.dataAdd.PRYEARASSET_CODE;
+   // this.dataAdd.PRPLPROJECTM_SYEAR = this.dataAdd.PRYEARASSET_CODE;
+  //  this.dataAdd.PRPLPROJECTM_EYEAR = this.dataAdd.PRYEARASSET_CODE;
     this.cleardat();
     this.dataProjecttd = null;
     /* this.dataAdd.PLPROJECTGROUPDT_MONEYA = [];
@@ -1267,10 +1271,14 @@ applyLocale(pop: any) {
         //   this.dataAdd.DISTRICT_ID = data.data[0].DISTRICT_ID;
         //  this.dataAdd.SUB_DISTRICT_ID = data.data[0].SUB_DISTRICT_ID;
       //  this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
+        
         this.dataAdd.PRREGISPROJECT_CODE = data.data[0].PRREGISPROJECT_CODE;
         this.dataAdd.RPLINCOME_CODE = data.data[0].PLINCOME_CODE;
         this.onChangecrpartrister();
         this.dataAdd.RCRPART_ID = data.data[0].CRPART_ID;
+       // this.dataAdd.PRPLPROJECTM_SYEAR = this.dataAdd.PRYEARASSET_CODE;
+        this.dataAdd.PRPLPROJECTM_SYEAR = data.data[0].PRPLPROJECTM_SYEAR;
+        this.dataAdd.PRPLPROJECTM_EYEAR =data.data[0].PRPLPROJECTM_EYEAR;
         this.dataAdd.PLSTRATEGY_CODE = data.data[0].PLSTRATEGY_CODE;
         this.dataAdd.PLGPRODUCT_CODE = (data.data[0].PLGPRODUCT_CODE);//.substring(4, 7);
        // this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
@@ -1314,7 +1322,8 @@ applyLocale(pop: any) {
         for (let i = 0; i < data.datam.length; i++) {
           if (i == 0) {
             this.dataAdd.PRPLPROJECTM_SYEAR = data.datam[i].PRPLPROJECTM_YEAR;
-          } else {
+          } 
+          if (data.datam.length - 1  == i) {
             this.dataAdd.PRPLPROJECTM_EYEAR = data.datam[i].PRPLPROJECTM_YEAR;
           }
           this.dataAdd.PRPLPROJECTM_YEAR[i] = data.datam[i].PRPLPROJECTM_YEAR;

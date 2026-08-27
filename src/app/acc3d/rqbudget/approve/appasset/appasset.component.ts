@@ -131,6 +131,9 @@ export class AppassetComponent implements OnInit {
   rownumimport: any;
   dataPlmoneypay: any;
   dataSubplmoneypay: any;
+  dataPlan: any;
+  dataPstrategy:any;
+  dataPlmeasure:any;
   url = "/acc3d/rqbudget/approve/appasset.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   dataAdd: any = { check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [] };
@@ -167,7 +170,15 @@ export class AppassetComponent implements OnInit {
   datalistimport: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
-
+  dataPlme: any;
+  dataPlmeasures:any;
+  dataPlansub:any;
+  dataPlstrategy:any;
+  dataPli:any;
+  dataPlm:any;
+  dataPlp:any;
+  dataPls:any;
+    
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -183,6 +194,7 @@ export class AppassetComponent implements OnInit {
   ngOnInit(): void {
     document.getElementById("ModalClose")?.click();
     this.dataAdd.RPLINCOME_CODE1 = '';
+    this.dataAdd.RCRPART_ID1 = '';
     this.fetchdata();
     this.rowpbi = null;
     this.rowict = '';
@@ -368,7 +380,17 @@ export class AppassetComponent implements OnInit {
             this.dataCrpart = datacr;
             this.dataAdd.CRPART_ID = '';//datacr[0].CRPART_ID;
           });
-
+       //ยุทธศาสตร์ 
+        var Table = {
+          "opt": "viewPLSTRATEGY",
+          "PRYEARASSET_CODE": data[0].PLYEARBUDGET_CODE,
+        }
+        this.apiService
+          .getdata(Table, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.dataPstrategy = data;
+          }); 
       });
     //รายการปี
     var Tabley = {
@@ -466,10 +488,76 @@ export class AppassetComponent implements OnInit {
         this.dataMyear = data;
         this.dataAdd.PLYEARBUDGET_CODE = data[0].PLYEARBUDGET_CODE;
       });
+       
     this.dataAdd.PRTARGET_CODE = "";
     this.dataAdd.PLASSETTYPE_CODE = "";
   }
-
+    //เป้าประสงค์
+  fetchdataPLESTIMATEPLAN() {
+    this.dataAdd.opt = "viewPLESTIMATEPLAN";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlan = data;
+        // this.dataAdd.PLESTIMATEPLAN_CODE = data[0].PLESTIMATEPLAN_CODE;
+      });
+    //this.fetchdataPLSTRATEGIES();
+  }
+    //กลยุทธ์
+  fetchdataPLSTRATEGIES() {
+    this.dataAdd.opt = "viewPLSTRATEGIES";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlme = data;
+        // this.dataAdd.PLSTRATEGIES_CODE = data[0].PLSTRATEGIES_CODE;
+      });
+    //this.fetchdataPLMEASURES();
+  }
+   //มาตรการ
+  fetchdataPLMEASURES() {
+    this.dataAdd.opt = "viewPLMEASURES";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlmeasures = data;
+        //  this.dataAdd.PLMEASURES_CODE = data[0].PLMEASURES_CODE;
+      });
+    //this.fetchdataPLPLAND();
+  }
+    //แผนงาน
+  fetchdataPLPLAND() {
+    this.dataAdd.opt = "viewPLPLAND";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlansub = data;
+        // this.dataAdd.PLPLAND_CODE = data[0].PLPLAND_CODE;
+      });
+    // this.fetchdataPLMISSION();
+  }
+  fetchdataPLMISSION() {
+    this.dataPlm = null;
+    this.dataPls = null;
+    this.dataPli = null;
+    this.dataPlp = null;
+    this.dataAdd.opt = "viewPLMISSION";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data) {
+          this.dataPlm = data.dataplm;
+          this.dataPls = data.datapls;
+          this.dataPli = data.datapli;
+          this.dataPlp = data.dataplp;
+        }
+      });
+  }
   fetchdatalistapp() {
     this.activeTab = 2;
     this.dataAdd.opt = "readAllapp";
@@ -615,6 +703,9 @@ export class AppassetComponent implements OnInit {
   }
 
   onChangecrpartrister() {
+    if(this.dataAdd.RPLINCOME_CODE1!=''){
+      this.dataAdd.RPLINCOME_CODE=this.dataAdd.RPLINCOME_CODE1;
+    }
     this.dataAdd.opt = "viewcrpartregis";
     this.apiService
       .getdata(this.dataAdd, this.url1)
@@ -857,15 +948,11 @@ export class AppassetComponent implements OnInit {
       });
     this.setshowbti();
     this.onChangerister();
-    /* this.apiService
-     .getById(id,this.url)
-     .pipe(first())
-     .subscribe((data: any) => {
-       this.onChangedistrict(data[0].PROVINCE_ID);
-       this.onChangesubdistrict(data[0].DISTRICT_ID);
-     }); */
-
-    //console.log(d.getFullYear());
+    this.fetchdataPLESTIMATEPLAN();
+    this.fetchdataPLSTRATEGIES();
+    this.fetchdataPLMEASURES();
+    this.fetchdataPLPLAND();
+    
     this.apiService
       .getById(id, this.url)
       .pipe(first())
@@ -906,6 +993,12 @@ export class AppassetComponent implements OnInit {
         if (data[0].PRASSET_REASON != null) {
           this.dataAdd.PRASSET_REASON = data[0].PRASSET_REASON;
         }
+        this.dataAdd.PLSTRATEGY_CODE = data[0].PLSTRATEGY_CODE;
+        this.dataAdd.PLESTIMATEPLAN_CODE = data[0].PLESTIMATEPLAN_CODE;
+        this.dataAdd.PLSTRATEGIES_CODE = data[0].PLSTRATEGIES_CODE;
+        this.dataAdd.PLMEASURES_CODE = data[0].PLMEASURES_CODE;
+        this.dataAdd.PLPLAND_CODE = data[0].PLPLAND_CODE;
+        this.fetchdataPLMISSION();
         this.dataAdd.PRASSET_MINIMUM = data[0].PRASSET_MINIMUM;
         this.dataAdd.PRASSET_AE = data[0].PRASSET_AE;
         this.dataAdd.PRASSET_AV = data[0].PRASSET_AV;
@@ -1287,6 +1380,11 @@ export class AppassetComponent implements OnInit {
     this.dataAdd.PLASSETTYPE_CODE = '';
     this.dataAdd.PRASSET_REASON = '';
     this.dataAdd.PRASSET_MINIMUM = '';
+    this.dataAdd.PLSTRATEGY_CODE = '';
+    this.dataAdd.PLESTIMATEPLAN_CODE = '';
+    this.dataAdd.PLSTRATEGIES_CODE = '';
+    this.dataAdd.PLMEASURES_CODE = '';
+    this.dataAdd.PLPLAND_CODE = '';
     this.dataAdd.PRASSET_AE = '';
     this.dataAdd.PRASSET_AV = '';
     this.dataAdd.PRASSET_DM = '';
