@@ -146,6 +146,7 @@ export class RegisassetComponent implements OnInit {
   } 
    // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
  editdata(id: any){ 
+  //console.log(id);
   this.setshowbti();
   this.apiService
   .getById(id,this.url)

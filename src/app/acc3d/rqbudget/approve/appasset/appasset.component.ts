@@ -132,8 +132,8 @@ export class AppassetComponent implements OnInit {
   dataPlmoneypay: any;
   dataSubplmoneypay: any;
   dataPlan: any;
-  dataPstrategy:any;
-  dataPlmeasure:any;
+  dataPstrategy: any;
+  dataPlmeasure: any;
   url = "/acc3d/rqbudget/approve/appasset.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   dataAdd: any = { check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [] };
@@ -171,14 +171,14 @@ export class AppassetComponent implements OnInit {
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   dataPlme: any;
-  dataPlmeasures:any;
-  dataPlansub:any;
-  dataPlstrategy:any;
-  dataPli:any;
-  dataPlm:any;
-  dataPlp:any;
-  dataPls:any;
-    
+  dataPlmeasures: any;
+  dataPlansub: any;
+  dataPlstrategy: any;
+  dataPli: any;
+  dataPlm: any;
+  dataPlp: any;
+  dataPls: any;
+
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -302,7 +302,7 @@ export class AppassetComponent implements OnInit {
             // console.log(data[0].FACULTY_CODE);
             this.dataAdd.FACULTY_CODE = datafac[0].FACULTY_CODE;
             this.dataAdd.FFACULTY_CODE = datafac[0].FACULTY_CODE;
-          //  this.fetchdatalistapp();
+            this.fetchdatalistapp();
             //รายการหลักสูตร
             var Tablesec = {
               "opt": "viewsection",
@@ -380,7 +380,7 @@ export class AppassetComponent implements OnInit {
             this.dataCrpart = datacr;
             this.dataAdd.CRPART_ID = '';//datacr[0].CRPART_ID;
           });
-       //ยุทธศาสตร์ 
+        //ยุทธศาสตร์ 
         var Table = {
           "opt": "viewPLSTRATEGY",
           "PRYEARASSET_CODE": data[0].PLYEARBUDGET_CODE,
@@ -390,7 +390,7 @@ export class AppassetComponent implements OnInit {
           .pipe(first())
           .subscribe((data: any) => {
             this.dataPstrategy = data;
-          }); 
+          });
       });
     //รายการปี
     var Tabley = {
@@ -488,11 +488,11 @@ export class AppassetComponent implements OnInit {
         this.dataMyear = data;
         this.dataAdd.PLYEARBUDGET_CODE = data[0].PLYEARBUDGET_CODE;
       });
-       
+
     this.dataAdd.PRTARGET_CODE = "";
     this.dataAdd.PLASSETTYPE_CODE = "";
   }
-    //เป้าประสงค์
+  //เป้าประสงค์
   fetchdataPLESTIMATEPLAN() {
     this.dataAdd.opt = "viewPLESTIMATEPLAN";
     this.apiService
@@ -504,7 +504,7 @@ export class AppassetComponent implements OnInit {
       });
     //this.fetchdataPLSTRATEGIES();
   }
-    //กลยุทธ์
+  //กลยุทธ์
   fetchdataPLSTRATEGIES() {
     this.dataAdd.opt = "viewPLSTRATEGIES";
     this.apiService
@@ -516,7 +516,7 @@ export class AppassetComponent implements OnInit {
       });
     //this.fetchdataPLMEASURES();
   }
-   //มาตรการ
+  //มาตรการ
   fetchdataPLMEASURES() {
     this.dataAdd.opt = "viewPLMEASURES";
     this.apiService
@@ -528,7 +528,7 @@ export class AppassetComponent implements OnInit {
       });
     //this.fetchdataPLPLAND();
   }
-    //แผนงาน
+  //แผนงาน
   fetchdataPLPLAND() {
     this.dataAdd.opt = "viewPLPLAND";
     this.apiService
@@ -558,31 +558,7 @@ export class AppassetComponent implements OnInit {
         }
       });
   }
-  fetchdatalistapp() {
-    this.activeTab = 2;
-    this.dataAdd.opt = "readAllapp";
-    this.loading = true;
-    this.datalistapp = null;
-    this.datalist = null;
-    this.rownum1 = null;
-    this.rownum = null;
-    // console.log(1);
-    this.apiService
-      .getdata(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        if (data.status == 1) {
-          this.datalistapp = data.data;
-          this.loading = null;
-          this.rownum1 = 'true';
-        } else {
-          this.datalistapp = data.data;
-          this.loading = null;
-          this.rownum1 = null;
-          this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
-        }
-      });
-  }
+
 
   mission(value: any) {
     //console.log
@@ -703,8 +679,8 @@ export class AppassetComponent implements OnInit {
   }
 
   onChangecrpartrister() {
-    if(this.dataAdd.RPLINCOME_CODE1!=''){
-      this.dataAdd.RPLINCOME_CODE=this.dataAdd.RPLINCOME_CODE1;
+    if (this.dataAdd.RPLINCOME_CODE1 != '') {
+      this.dataAdd.RPLINCOME_CODE = this.dataAdd.RPLINCOME_CODE1;
     }
     this.dataAdd.opt = "viewcrpartregis";
     this.apiService
@@ -754,7 +730,6 @@ export class AppassetComponent implements OnInit {
 
   }
 
-  // ฟังก์ขันสำหรับการดึงข้อมูลครุภัณฑ์
   fetchdatalist() {
     this.activeTab = 1;
     this.dataAdd.opt = "readAll";
@@ -763,29 +738,39 @@ export class AppassetComponent implements OnInit {
     this.rownum1 = null;
     this.datalist = null;
     this.datalistapp = null;
-    this.apiService
-      .getdata(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        if (data.status == 1) {
-          // console.log(data); 
-          this.dataAdd.turnoff = data.turnoff;
-          this.datalist = data.data;
-          this.dataAdd.code = data.PLINCOMECODE;
-          this.rownum = 'true';
-          this.rownum1 = null;
-          this.loading = null;
-        } else {
-          this.dataAdd.turnoff = data.turnoff;
-          this.datalist = data.data;
-          this.rownum = null;
-          this.rownum1 = null;
-          this.loading = null;
-          this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
-        }
-        //this.rownum=this.datalist.length;
-
-      });
+    try {
+      this.apiService
+        .getdata(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe({
+          next: (data: any) => {
+            if (data.status == 1) {
+              this.dataAdd.turnoff = data.turnoff;
+              this.datalist = data.data;
+              this.dataAdd.code = data.PLINCOMECODE;
+              this.rownum = 'true';
+              this.rownum1 = null;
+              this.loading = null;
+            } else {
+              this.dataAdd.turnoff = data.turnoff;
+              this.datalist = data.data;
+              this.rownum = null;
+              this.rownum1 = null;
+              this.loading = null;
+              this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+            }
+          },
+          error: (err: any) => {
+            this.loading = null;
+            console.error("API Error in fetchdatalist:", err);
+            this.toastr.error("เกิดข้อผิดพลาดในการเรียก API");
+          }
+        });
+    } catch (err) {
+      this.loading = null;
+      console.error("Error before API call in fetchdatalist:", err);
+      this.toastr.error("เกิดข้อผิดพลาดก่อนการเรียก API (เช่น Circular JSON)");
+    }
   }
 
   fetchDataByTab() {
@@ -952,7 +937,7 @@ export class AppassetComponent implements OnInit {
     this.fetchdataPLSTRATEGIES();
     this.fetchdataPLMEASURES();
     this.fetchdataPLPLAND();
-    
+
     this.apiService
       .getById(id, this.url)
       .pipe(first())
@@ -1369,7 +1354,37 @@ export class AppassetComponent implements OnInit {
       }
     });
   }
-
+  // ฟังก์ชันสำหรับการลบข้อมูล
+  deleteDataimportall(id: any) {
+    this.dataAdd.opt = "deleteimportall";
+    this.dataAdd.id = id;
+    this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
+    if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
+    } else {
+      Swal.fire({
+        title: 'ต้องการลบข้อมูล?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        if (result.value) {
+          this.apiService
+            .getdata(this.dataAdd, this.url)
+            .pipe(first())
+            .subscribe((data: any) => {
+              if (data.status == 1) {
+                Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+                this.fetchdatalistimportall();
+              }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+        }
+      });
+    }
+  }
   setshowbti() {
     this.ictlink = false;
     this.dataAdd.PRASSET_CODE = '';
@@ -1525,6 +1540,45 @@ export class AppassetComponent implements OnInit {
         }
       });
   }
+  fetchdatalistapp() {
+    this.activeTab = 2;
+    this.dataAdd.opt = "readAllapp";
+    this.loading = true;
+    this.rownum = null;
+    this.rownum1 = null;
+    this.datalist = null;
+    this.datalistapp = null;
+    try {
+      this.apiService
+        .getdata(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe({
+          next: (data: any) => {
+            if (data.status == 1) {
+              this.datalistapp = data.data;
+              this.rownum = null;
+              this.rownum1 = 'true';
+              this.loading = null;
+            } else {
+              this.datalistapp = data.data;
+              this.rownum = null;
+              this.rownum1 = null;
+              this.loading = null;
+              this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+            }
+          },
+          error: (err: any) => {
+            this.loading = null;
+            console.error("API Error in fetchdatalistapp:", err);
+            this.toastr.error("เกิดข้อผิดพลาดในการเรียก API");
+          }
+        });
+    } catch (err) {
+      this.loading = null;
+      console.error("Error before API call in fetchdatalistapp:", err);
+      this.toastr.error("เกิดข้อผิดพลาดก่อนการเรียก API (เช่น Circular JSON)");
+    }
+  }
   insertdataimport() {
     //console.log(this.dataAdd.PRASSET_COURSET );
     this.loadingimport = true;
@@ -1577,6 +1631,16 @@ export class AppassetComponent implements OnInit {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวน");
     } else if (!this.dataAdd.PRASSET_MONEY || this.dataAdd.PRASSET_MONEY == "") {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุราคาต่อหน่วย");
+    } else if (!this.dataAdd.PLSTRATEGY_CODE || this.dataAdd.PLSTRATEGY_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกยุทธศาสตร์");
+    } else if (!this.dataAdd.PLESTIMATEPLAN_CODE || this.dataAdd.PLESTIMATEPLAN_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกเป้าประสงค์");
+    } else if (!this.dataAdd.PLSTRATEGIES_CODE || this.dataAdd.PLSTRATEGIES_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกกลยุทธ์");
+    } else if (!this.dataAdd.PLMEASURES_CODE || this.dataAdd.PLMEASURES_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกมาตรการ");
+    } else if (!this.dataAdd.PLPLAND_CODE || this.dataAdd.PLPLAND_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกแผนงาน");
     } else {
       this.dataAdd.opt = "insertdataimportall";
       this.apiService
@@ -1627,7 +1691,6 @@ export class AppassetComponent implements OnInit {
     this.loadingimport = true;
     this.datalistimport = null;
     this.rownumimport = null;
-    this.dataAdd.IMPORTASSET_CODE = [];
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
@@ -1636,10 +1699,6 @@ export class AppassetComponent implements OnInit {
           this.datalistimport = data.data;
           this.loadingimport = null;
           this.rownumimport = true;
-          for (let i = 0; i < this.datalistimport.length; i++) {
-            this.dataAdd.IMPORTASSET_CODE[i] = this.datalistimport[i].PRASSET_CODE;
-            this.dataAdd.checkimport[i] = false;
-          }
         } else {
           this.datalistimport = data.data;
           this.loadingimport = null;
@@ -1685,11 +1744,18 @@ export class AppassetComponent implements OnInit {
         this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
         this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
+        this.dataAdd.PLSTRATEGY_CODE = data[0].PLSTRATEGY_CODE;
+        this.dataAdd.PLESTIMATEPLAN_CODE = data[0].PLESTIMATEPLAN_CODE;
+        this.dataAdd.PLSTRATEGIES_CODE = data[0].PLSTRATEGIES_CODE;
+        this.dataAdd.PLMEASURES_CODE = data[0].PLMEASURES_CODE;
+        this.dataAdd.PLPLAND_CODE = data[0].PLPLAND_CODE;
+        this.dataAdd.PLASSETTYPE_CODE = data[0].PLASSETTYPE_CODE;
+        this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEY).toFixed(2));
         this.dataAdd.sum = data[0].PRASSET_NUMBER * data[0].PRASSET_MONEY;
         this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
         this.dataAdd.PLMONEYPAY_CODE = '23';
-       this.onChangeSubplmoney();
+        this.onChangeSubplmoney();
       });
   }
   editdataapp(id: any) {

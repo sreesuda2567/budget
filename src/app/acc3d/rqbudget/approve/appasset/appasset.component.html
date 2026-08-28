@@ -2028,12 +2028,16 @@
                 </thead>
                 <tbody>
                   <!-- You can loop through your imported assets array here, e.g., *ngFor="let item of importedAssets; let i = index" -->
-                  <tr *ngFor="let item of dataAdd.List; let i = index">
+                  <tr *ngFor="let item of datalistimportall; let i = index">
                     <td class="text-center">{{ i + 1 }}</td>
-                    <td>{{ item.PRASSET_NAME }}</td>
+                    <td>{{ item.PLASSET_NAME }}</td>
                     <td class="text-end">{{ item.PRASSET_MONEY | number:'1.2-2' }}</td>
+                    <span class="btn btn-sm bg-transparent">
+                      <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                        (click)="deleteDataimportall(item.PLASSET_CODE)"><i class="fa fa-trash"></i> </a>
+                      &nbsp;</span>
                   </tr>
-                  <tr>
+                  <tr *ngIf="datalistimportall?.length == 0">
                     <td colspan="4" class="text-center text-muted py-4">
                       <i class="fa-solid fa-inbox fs-4 mb-2 d-block"></i>
                       ยังไม่มีรายการครุภัณฑ์ที่นำเข้า
