@@ -1181,13 +1181,14 @@ applyLocale(pop: any) {
     if(this.dataAdd.RPLINCOME_CODE1!=''){
       this.dataAdd.RPLINCOME_CODE=this.dataAdd.RPLINCOME_CODE1;
     }
+    this.dataCrpartregis = null;
     this.dataAdd.opt = "viewcrpartregis";
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
         this.dataCrpartregis = data;
-        this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+       // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         //console.log(this.dataSub);
       });
   }

@@ -1116,6 +1116,7 @@ export class RqtprojectComponent implements OnInit {
   }
   onChangecrpartrister() {
     this.dataAdd.opt = "viewcrpartregis";
+    this.dataCrpartregis = null;
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())

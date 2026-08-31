@@ -98,7 +98,9 @@ export class DisbursementComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.datarstatus = data;
-        this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
+        if (data && data.length > 0) {
+          this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
+        }
         //หน่วยเบิกจ่าย
         var Tablein = {
           "opt": "viewCAMPUS",
@@ -121,23 +123,27 @@ export class DisbursementComponent implements OnInit {
           .pipe(first())
           .subscribe((datay: any) => {
             this.dataYear = datay;
-            this.dataAdd.PLYEARBUDGET_CODE = datay[0].PLYEARBUDGET_CODE;
+            if (datay && datay.length > 0) {
+              this.dataAdd.PLYEARBUDGET_CODE = datay[0].PLYEARBUDGET_CODE;
+            }
             var varNf = {
               "opt": "viewfacreport",
               "citizen": this.tokenStorage.getUser().citizen,
-              "PRIVILEGE_RSTATUS": data[0].PRIVILEGE_RSTATUS
+              "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS || ''
             }
             this.apiService
               .getdata(varNf, this.url1)
               .pipe(first())
-              .subscribe((data: any) => {
-                this.dataFac = data;
-                // console.log(data[0].FACULTY_CODE);
-                this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
+              .subscribe((dataf: any) => {
+                this.dataFac = dataf;
+                // console.log(dataf[0].FACULTY_CODE);
+                if (dataf && dataf.length > 0) {
+                  this.dataAdd.FACULTY_CODE = dataf[0].FACULTY_CODE;
+                }
                 var varN1 = {
                   "opt": "viewnamecheckb",
                   "citizen": this.tokenStorage.getUser().citizen,
-                  "FACULTY_CODE": data[0].FACULTY_CODE
+                  "FACULTY_CODE": this.dataAdd.FACULTY_CODE
                 }
                 this.apiService
                   .getdata(varN1, this.url1)
@@ -684,12 +690,20 @@ export class DisbursementComponent implements OnInit {
   }
   onTableDataChange(event: any) {
     this.page = event;
-    this.fetchdatalistapp();
+    if (this.rownum1) {
+      this.fetchdatalistapp();
+    } else {
+      this.fetchdatalist();
+    }
   }
   onTableSizeChange(event: any): void {
     this.tableSize = event.target.value;
     this.page = 1;
-    this.fetchdatalistapp();
+    if (this.rownum1) {
+      this.fetchdatalistapp();
+    } else {
+      this.fetchdatalist();
+    }
   }
   previewPdf(url: string) {
     this.previewPdfUrl = url;

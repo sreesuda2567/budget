@@ -152,6 +152,7 @@ export class AppbuildingComponent implements OnInit {
   dataPlmeasures:any;
   dataPlansub:any;
   dataPlstrategy:any;
+  datalistimportall: any;
   dataPli:any;
   dataPlm:any;
   dataPlp:any;
@@ -534,9 +535,12 @@ export class AppbuildingComponent implements OnInit {
           this.datalistapp = data.data;
           this.loading = null;
           this.rownum1 = 'true';
+          this.rownum = null;
+
         } else {
           this.datalistapp = data.data;
           this.loading = null;
+          this.rownum = null;
           this.rownum1 = null;
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
         }
@@ -1100,7 +1104,7 @@ export class AppbuildingComponent implements OnInit {
           .subscribe((data: any) => {
             if (data.status == 1) {
               Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
-              this.fetchdatalist();
+              this.fetchdatalistapp();
             }
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -1274,12 +1278,23 @@ export class AppbuildingComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataAdd.RPLINCOME_CODE = data[0].PLINCOME_CODE;
+        this.dataAdd.PRBUILDING_CODE = data[0].PRBUILDING_CODE;
         this.onChangecrpartrister();
+        this.fetchdatalistimportall();
         this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
-        this.dataAdd.PRASSET_MONEY = data[0].PRASSET_MONEY * data[0].PRASSET_NUMBER;
-        this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
+        this.dataAdd.PRASSET_MONEY =  this.numberWithCommas(parseFloat(data[0].PRBUILDING_MONEY).toFixed(2));
+         this.dataAdd.PRASSET_NUMBER = data[0].PRBUILDING_NUMBER;
+        this.dataAdd.PLSTRATEGY_CODE = data[0].PLSTRATEGY_CODE;
+        this.dataAdd.PLESTIMATEPLAN_CODE = data[0].PLESTIMATEPLAN_CODE;
+        this.dataAdd.PLSTRATEGIES_CODE = data[0].PLSTRATEGIES_CODE;
+        this.dataAdd.PLMEASURES_CODE = data[0].PLMEASURES_CODE;
+        this.dataAdd.PLPLAND_CODE = data[0].PLPLAND_CODE;
+        this.dataAdd.PLBUILDINGTYPE_CODE = data[0].PLBUILDINGTYPE_CODE;
+        this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
+        this.dataAdd.PRASSET_NAME = data[0].PRREGISBUILDING_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
         this.dataAdd.PLMONEYPAY_CODE = '23';
+        this.dataAdd.sum = data[0].PRBUILDING_NUMBER * data[0].PRBUILDING_MONEY;
         this.onChangeSubplmoney();
       });
   }
@@ -1305,12 +1320,28 @@ export class AppbuildingComponent implements OnInit {
         }
       });
   }
-  insertdataimport() {
-    //console.log(this.dataAdd.PRASSET_COURSET );
-    if (this.dataAdd.checkimport.length == 0) {
-      this.toastr.warning("แจ้งเตือน:กรุณาเลือกรายการครุภัณฑ์");
+ // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
+  insertdataimportall() {
+    if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
+    } else if (!this.dataAdd.PRASSET_NAME || this.dataAdd.PRASSET_NAME == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุชื่อครุภัณฑ์");
+    } else if (!this.dataAdd.PRASSET_NUMBER || this.dataAdd.PRASSET_NUMBER == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวน");
+    } else if (!this.dataAdd.PRASSET_MONEY || this.dataAdd.PRASSET_MONEY == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุราคาต่อหน่วย");
+    } else if (!this.dataAdd.PLSTRATEGY_CODE || this.dataAdd.PLSTRATEGY_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกยุทธศาสตร์");
+    } else if (!this.dataAdd.PLESTIMATEPLAN_CODE || this.dataAdd.PLESTIMATEPLAN_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกเป้าประสงค์");
+    } else if (!this.dataAdd.PLSTRATEGIES_CODE || this.dataAdd.PLSTRATEGIES_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกกลยุทธ์");
+    } else if (!this.dataAdd.PLMEASURES_CODE || this.dataAdd.PLMEASURES_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกมาตรการ");
+    } else if (!this.dataAdd.PLPLAND_CODE || this.dataAdd.PLPLAND_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกแผนงาน");
     } else {
-      this.dataAdd.opt = "insertimport";
+      this.dataAdd.opt = "insertdataimportall";
       this.apiService
         .getupdate(this.dataAdd, this.url)
         .pipe(first())
@@ -1318,10 +1349,56 @@ export class AppbuildingComponent implements OnInit {
           //console.log(data.status);       
           if (data.status == 1) {
             this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-            this.fetchdatalist();
-            document.getElementById("ModalClose")?.click();
+            this.fetchdatalistimportall();
           }
         });
+    }
+  }
+  fetchdatalistimportall() {
+    this.dataAdd.opt = "readAllassetimportall";
+    this.datalistimportall = null;
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == 1) {
+          this.datalistimportall = data.data;
+          this.loading = null;
+        } else {
+          this.datalistimportall = data.data;
+          this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+        }
+      });
+  }
+// ฟังก์ชันสำหรับการลบข้อมูล
+  deleteDataimportall(id: any) {
+    this.dataAdd.opt = "deleteimportall";
+    this.dataAdd.id = id;
+    this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
+    if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
+    } else {
+      Swal.fire({
+        title: 'ต้องการลบข้อมูล?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        if (result.value) {
+          this.apiService
+            .getdata(this.dataAdd, this.url)
+            .pipe(first())
+            .subscribe((data: any) => {
+              if (data.status == 1) {
+                Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+                this.fetchdatalistimportall();
+              }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+        }
+      });
     }
   }
   // ฟังก์ขันสำหรับการดึงปีการนำเข้า

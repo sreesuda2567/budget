@@ -34,7 +34,7 @@
                                 <div class="col-md-4 text-secondary">
                                     <label for="name">คณะ /หน่วยงาน</label>
                                     <select name="f_code" id="f_code" class="form-select"
-                                        [(ngModel)]="dataAdd.FACULTY_CODE" (change)="fetchdatalist()">
+                                        [(ngModel)]="dataAdd.FACULTY_CODE" (change)="rownum1 ? fetchdatalistapp() : fetchdatalist()">
                                         <option *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" value="">ทั้งหมด</option>
                                         <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
                                             {{fac.FACULTY_TNAME}}</option>
@@ -44,7 +44,7 @@
                                 <div class="col-md-1">
                                     <label for="name">ปีงบประมาณ</label>
                                     <select name="y_code" id="y_code" class="form-select"
-                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
+                                        [(ngModel)]="dataAdd.PLYEARBUDGET_CODE" (change)="rownum1 ? fetchdatalistapp() : fetchdatalist()">
                                         <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
                                             {{year.PLYEARBUDGET_CODE}}
                                         </option>
@@ -140,7 +140,7 @@
                       currentPage: page,
                       totalItems: count
                       }; let i = index">
-                        <td align="center" data-label="ที่:">{{i+1}}</td>
+                        <td align="center" data-label="ที่:">{{(page*tableSize)-tableSize+i+1}}</td>
                         <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
                         <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
                         <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
@@ -238,7 +238,7 @@
                       currentPage: page,
                       totalItems: count
                       }; let i = index">
-                        <td align="center" data-label="ที่:">{{i+1}}</td>
+                        <td align="center" data-label="ที่:">{{(page*tableSize)-tableSize+i+1}}</td>
                         <td data-label="วันที่ดำเนินการ:">{{p.FNANNALS_BOOK_SDATE}}</td>
                         <td data-label="ชื่อ-สกุลผู้ทำรายการ:">{{p.FSTF_FNAME}}</td>
                         <td data-label="หน่วยงาน:">{{p.FACULTY_TNAME}}</td>
@@ -296,7 +296,7 @@
                 </tbody>
             </table>
         </div>
-        <div *ngIf="rownum1" class="d-flex justify-content-left">
+        <div *ngIf="rownum || rownum1" class="d-flex justify-content-left">
             <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
             </pagination-controls>
         </div>

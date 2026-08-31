@@ -293,7 +293,7 @@
                         <li>
                           <a class="dropdown-item" role="button" data-bs-toggle="modal" data-bs-target="#modalimport"
                             (click)="editdataimport(p.PRBUILDING_CODE)">
-                            <i class="fa fa-file-import text-primary me-2"></i>นำเข้าครุภัณฑ์
+                            <i class="fa fa-file-import text-primary me-2"></i>นำเข้าสิ่งก่อสร้าง
                           </a>
 
                         </li>
@@ -1302,7 +1302,162 @@
     </div>
   </div>
 </div>
+<!-- Modal Import -->
+<div class="modal fade" data-bs-focus="false" id="modalimport" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header bg-primary text-white border-bottom-0 pb-3">
+        <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-import me-2"></i>นำเข้าสิ่งก่อสร้าง</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 bg-light">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4 bg-white">
+            <div class="row g-4">
 
+              <!-- Row 3 -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-sack-dollar text-success me-2"></i>แหล่งเงิน
+                </label>
+                <select class="form-select text-dark" [(ngModel)]="dataAdd.RPLINCOME_CODE" (change)="dataCrpartregis()">
+                  <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-map-location-dot text-info me-2"></i>ภาค
+                </label>
+                <select class="form-select text-dark" [(ngModel)]="dataAdd.RCRPART_ID">
+                  <option [value]="crp.CRPART_ID" *ngFor="let crp of dataCrpartregis">{{crp.CRPART_TNAME}}</option>
+                </select>
+              </div>
+
+              <!-- Row 4 -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-file-invoice-dollar text-warning me-2"></i>หมวดรายจ่าย
+                </label>
+                <select class="form-select text-dark" [(ngModel)]="dataAdd.PLMONEYPAY_CODE">
+                  <option [value]="fac.PLMONEYPAY_CODE" *ngFor="let fac of dataPlmoneypay">
+                    {{fac.PLMONEYPAY_NAME}}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-graduation-cap text-secondary me-2"></i>ผลผลิต
+                </label>
+                <select class="form-select text-dark" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
+                  <option selected>งบกลาง</option>
+                  <option [value]="prod.PLGPRODUCT_CODE" *ngFor="let prod of dataProduct">{{prod.PLGPRODUCT_SHORTNAME}}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Row 5 -->
+              <div class="col-12">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-list-check text-primary me-2"></i>หมวดรายจ่ายย่อย
+                </label>
+                <select class="form-select text-dark" [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE">
+                  <option [value]="fac.PLSUBMONEYPAY_CODE" *ngFor="let fac of dataSubplmoneypay">
+                    {{fac.PLSUBMONEYPAY_NAME}}</option>
+                </select>
+              </div>
+
+              <!-- Row 6 -->
+              <div class="col-12">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-box-open text-info me-2"></i>ชื่อสิ่งก่อสร้าง
+                </label>
+                <textarea class="form-control form-control-sm shadow-sm" name="PRASSET_NAME" id="PRASSET_NAME" rows="2"
+                  [(ngModel)]="dataAdd.PRASSET_NAME" placeholder="ชื่อสิ่งก่อสร้าง..."></textarea>
+
+              </div>
+
+              <!-- Row 6 -->
+              <div class="col-md-3">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-arrow-up-9-1 text-warning me-2"></i>จำนวน
+                </label>
+                <input type="text" class="form-control text-dark" placeholder="ระบุจำนวน"
+                  [(ngModel)]="dataAdd.PRASSET_NUMBER" (keyup)="calexpenses()">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-tag text-info me-2"></i>ราคาต่อหน่วย
+                </label>
+                <input type="text" class="form-control text-dark" placeholder="ระบุราคาต่อหน่วย"
+                  (keypress)="CheckNum($event)" [(ngModel)]="dataAdd.PRASSET_MONEY" (keyup)="calexpenses()">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold text-secondary mb-1">
+                  <i class="fa-solid fa-coins text-success me-2"></i>รวมเงิน
+                </label>
+                <input type="text" class="form-control text-dark bg-light fw-bold" placeholder="รวมเงิน"
+                  [value]="dataAdd.sum | number : '1.2-2'" readonly>
+              </div>
+              <div class="col-md-3">
+                <br>
+                <button type="button" class="btn btn-primary w-100 fw-bold rounded-pill"
+                  (click)="insertdataimportall()">
+                  <i class="fa-solid fa-save me-1"></i> นำเข้าสิ่งก่อสร้าง
+                </button>
+              </div>
+
+            </div>
+
+            <hr class="my-4 text-muted">
+
+            <!-- Table for Imported Assets -->
+            <h6 class="fw-bold text-primary mb-3"><i
+                class="fa-solid fa-list me-2"></i>รายการครุภัณฑ์ที่นำเข้าเรียบร้อยแล้ว</h6>
+            <div class="table-responsive shadow-sm border rounded-3">
+              <table class="table table-hover table-bordered table-striped mb-0 text-dark" style="font-size: 14px;">
+                <thead class="table-primary text-center">
+                  <tr>
+                    <th width="10%">ลำดับ</th>
+                    <th width="65%">ชื่อครุภัณฑ์</th>
+                    <th width="25%">จำนวนเงิน</th>
+                    <th width="25%">จัดการข้อมูล</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- You can loop through your imported assets array here, e.g., *ngFor="let item of importedAssets; let i = index" -->
+                  <tr *ngFor="let item of datalistimportall; let i = index">
+                    <td class="text-center">{{ i + 1 }}</td>
+                    <td>{{ item.PLASSET_NAME }}</td>
+                    <td class="text-end">{{ item.PRASSET_MONEY | number:'1.2-2' }}</td>
+                    <span class="btn btn-sm bg-transparent">
+                      <a role="button" title="ลบข้อมูล" class="btn btn-danger text-white"
+                        (click)="deleteDataimportall(item.PLASSET_CODE)"><i class="fa fa-trash"></i> </a>
+                      &nbsp;</span>
+                  </tr>
+                  <tr *ngIf="datalistimportall?.length == 0">
+                    <td colspan="4" class="text-center text-muted py-4">
+                      <i class="fa-solid fa-inbox fs-4 mb-2 d-block"></i>
+                      ยังไม่มีรายการครุภัณฑ์ที่นำเข้า
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <br>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-top-0 pt-0 pb-4 px-4 bg-light">
+        <button type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" data-bs-dismiss="modal">
+          <i class="fa-solid fa-times me-1"></i> ปิด
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
 <!-- PDF Preview Side Panel -->
 <div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
 <div class="pdf-preview-panel" [class.open]="previewPdfUrl">
