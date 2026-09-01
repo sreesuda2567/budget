@@ -31,7 +31,7 @@ const editorConfig = {
   styleUrls: ['./appproject.component.scss']
 })
 export class AppprojectComponent implements OnInit {
-public editor = ClassicEditor;
+  public editor = ClassicEditor;
   public editorConfig = {
     toolbar: {
       items: [
@@ -106,6 +106,8 @@ public editor = ClassicEditor;
   loadingimport: any;
   datalistimport: any;
   rownumimport: any;
+  dataSubplmoneypay: any;
+  datalistimportall: any;
   url = "/acc3d/rqbudget/approve/appproject.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   locale = 'th-be';
@@ -114,7 +116,7 @@ public editor = ClassicEditor;
   dataAdd: any = {
     check: [], checkregis: [], PRREGISPROJECT_CODE: [], PRASSET_CODEA: [],
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
-    , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: [],checkimport:[],IMPORTASSET_CODE:[]
+    , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: [], checkimport: [], IMPORTASSET_CODE: []
     , PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
     , PLPROJECTEXPENSES_CODE: []
   };
@@ -184,7 +186,7 @@ public editor = ClassicEditor;
   safePdfUrl: SafeResourceUrl = '';
 
   constructor(
-        private tokenStorage: TokenStorageService,
+    private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
@@ -196,9 +198,9 @@ public editor = ClassicEditor;
   ) { }
 
   ngOnInit(): void {
-     document.getElementById("ModalClose")?.click();
-     this.dataAdd.RPLINCOME_CODE1 ='';
-     this.dataAdd.RCRPART_ID1 = '';
+    document.getElementById("ModalClose")?.click();
+    this.dataAdd.RPLINCOME_CODE1 = '';
+    this.dataAdd.RCRPART_ID1 = '';
     this.fetchdata();
     this.dataAdd.PLPROJECTTYPE = 1;
     this.dataAdd.FPLPROJECTTYPE = 1;
@@ -210,10 +212,10 @@ public editor = ClassicEditor;
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
     this.dataAdd.PLINCOME_CODE = '';
     this.dataAdd.CRPART_ID = '';
-    this.dataAdd.searchimport= '';
+    this.dataAdd.searchimport = '';
     this.rowpbi = true;
   }
-applyLocale(pop: any) {
+  applyLocale(pop: any) {
     this.localeService.use(this.locale);
   }
   keyword = 'name';
@@ -503,7 +505,7 @@ applyLocale(pop: any) {
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
 
   }
-     fetchDataByTab() {
+  fetchDataByTab() {
     if (this.activeTab === 1) {
       this.fetchdatalist();
     } else {
@@ -522,7 +524,7 @@ applyLocale(pop: any) {
 
   }
   calexpensesdt() {
-    this.dataAdd.PLPROJECTGROUPDTMONEY =  parseFloat(this.dataAdd.PRASSET_MONEY);
+    this.dataAdd.PLPROJECTGROUPDTMONEY = parseFloat(this.dataAdd.PRASSET_MONEY);
   }
   calexpenses() {
     this.dataAdd.sum = this.dataAdd.PRASSET_MONEY.replace(/,/g, "");
@@ -868,42 +870,42 @@ applyLocale(pop: any) {
       });
 
   }
-   editdataapp(id: any) {
+  editdataapp(id: any) {
     this.setshowbti();
     this.onChangerister();
     this.dataAdd.opt = "readoneapp";
     this.dataAdd.id = id;
-  /*  this.apiService
-      .getdata(this.dataAdd, this.url)
-      .pipe(first())
-      .subscribe((data: any) => {
-        //console.log(data);
-        this.onChangedistrict(data[0].PROVINCE_ID);
-        this.onChangesubdistrict(data[0].DISTRICT_ID);
-      });*/
+    /*  this.apiService
+        .getdata(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data);
+          this.onChangedistrict(data[0].PROVINCE_ID);
+          this.onChangesubdistrict(data[0].DISTRICT_ID);
+        });*/
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
         this.dataAdd.PRYEARASSET_CODEA = data[0].PRYEARASSET_CODE;
-        if( data[0].PRREGISPROJECT_CODEA !=null){
-         this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISPROJECT_CODEA;
-        }else{
-        this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISPROJECT_CODE;
+        if (data[0].PRREGISPROJECT_CODEA != null) {
+          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISPROJECT_CODEA;
+        } else {
+          this.dataAdd.PRREGISASSET_CODEA = data[0].PRREGISPROJECT_CODE;
         }
         this.dataAdd.PRREGISPROJECT_CODE = data[0].PRREGISPROJECT_CODE;
 
-       // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
-       if(data[0].PRPLPROJECT_MONEYA !=null){
-         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRPLPROJECT_MONEYA).toFixed(2)); 
-        }else{
-        this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRPLPROJECT_MONEY).toFixed(2));
+        // this.dataAdd.PRBUILDING_MONEY = this.numberWithCommas(Number(data[0].PRBUILDING_MONEY).toFixed(2));
+        if (data[0].PRPLPROJECT_MONEYA != null) {
+          this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRPLPROJECT_MONEYA).toFixed(2));
+        } else {
+          this.dataAdd.PRASSET_MONEY = this.numberWithCommas(Number(data[0].PRPLPROJECT_MONEY).toFixed(2));
         }
-      this.calexpenses();
+        this.calexpenses();
 
       });
   }
-    numberWithCommas(x: any) {
+  numberWithCommas(x: any) {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
@@ -1153,7 +1155,7 @@ applyLocale(pop: any) {
     this.dataAdd.opt = "readAllapp";
     this.loading = true;
     this.datalistapp = null;
-     this.datalistresearch = null;
+    this.datalistresearch = null;
     this.datalistresearchapp = null;
     this.datalist = null;
     this.rownum = null;
@@ -1172,14 +1174,147 @@ applyLocale(pop: any) {
           this.datalistapp = data.data;
           this.datalistresearchapp = data.dataresearch;
           this.loading = null;
-           this.rownum1 = null;
+          this.rownum1 = null;
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
         }
       });
   }
+  editdataimport(id: any,type: any) {
+    this.onChangePlmoney();
+    this.dataAdd.typeimport = type;
+    this.dataAdd.PRPLPROJECTACT_NAME=[];
+   /* this.dataAdd.PRPLPROJECT_PERSONS=[];
+    this.dataAdd.PRPLPROJECT_PERSONP=[];
+    this.dataAdd.PRPLPROJECT_PERSONO=[];*/
+    this.apiService
+      .getById(id, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAdd.RPLINCOME_CODE = data.data[0].PLINCOME_CODE;
+        this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
+        this.onChangecrpartrister();
+        this.fetchdatalistimportall();
+        this.dataAdd.RCRPART_ID = data.data[0].CRPART_ID;
+        this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
+        this.dataAdd.PLSTRATEGY_CODE = data.data[0].PLSTRATEGY_CODE;
+        this.dataAdd.PLESTIMATEPLAN_CODE = data.data[0].PLESTIMATEPLAN_CODE;
+        this.dataAdd.PLSTRATEGIES_CODE = data.data[0].PLSTRATEGIES_CODE;
+        this.dataAdd.PLMEASURES_CODE = data.data[0].PLMEASURES_CODE;
+        this.dataAdd.PLPLAND_CODE = data.data[0].PLPLAND_CODE;
+        this.dataAdd.PLMONEYPAY_CODE = '2M';
+        this.onChangeSubplmoney();
+        for (let i = 0; i < data.dataexp.length; i++) {
+          this.dataAdd.PRPLPROJECTACT_NAME[i] = data.dataexp[i].PRPLPROJECTACT_NAME;
+         // this.dataAdd.PRPLPROJECT_PERSONS[i] = data.dataexp[i].PRPLPROJECT_PERSONS;
+         // this.dataAdd.PRPLPROJECT_PERSONP[i] = data.dataexp[i].PRPLPROJECT_PERSONP;
+         // this.dataAdd.PRPLPROJECT_PERSONO[i] = data.dataexp[i].PRPLPROJECT_PERSONO;
+        }
+      });
+  }
+  onChangePlmoney() {
+    this.dataPlmoneypay = null;
+    this.dataAdd.opt = "viewPLMONEYPAY";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlmoneypay = data;
+      });
+  }
+  // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
+  insertdataimportall() {
+    if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
+    } else if (!this.dataAdd.PRASSET_NAME || this.dataAdd.PRASSET_NAME == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุชื่อครุภัณฑ์");
+    } else if (!this.dataAdd.PRASSET_NUMBER || this.dataAdd.PRASSET_NUMBER == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวน");
+    } else if (!this.dataAdd.PRASSET_MONEY || this.dataAdd.PRASSET_MONEY == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุราคาต่อหน่วย");
+    } else if (!this.dataAdd.PLSTRATEGY_CODE || this.dataAdd.PLSTRATEGY_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกยุทธศาสตร์");
+    } else if (!this.dataAdd.PLESTIMATEPLAN_CODE || this.dataAdd.PLESTIMATEPLAN_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกเป้าประสงค์");
+    } else if (!this.dataAdd.PLSTRATEGIES_CODE || this.dataAdd.PLSTRATEGIES_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกกลยุทธ์");
+    } else if (!this.dataAdd.PLMEASURES_CODE || this.dataAdd.PLMEASURES_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกมาตรการ");
+    } else if (!this.dataAdd.PLPLAND_CODE || this.dataAdd.PLPLAND_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกแผนงาน");
+    } else {
+      this.dataAdd.opt = "insertdataimportall";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);       
+          if (data.status == 1) {
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            this.fetchdatalistimportall();
+          }
+        });
+    }
+  }
+  // ฟังก์ชันสำหรับการลบข้อมูล
+    deleteDataimportall(id: any) {
+      this.dataAdd.opt = "deleteimportall";
+      this.dataAdd.id = id;
+      this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
+      if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
+        this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
+      } else {
+        Swal.fire({
+          title: 'ต้องการลบข้อมูล?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'ตกลง',
+          cancelButtonText: 'ยกเลิก',
+        }).then((result) => {
+          if (result.value) {
+            this.apiService
+              .getdata(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                if (data.status == 1) {
+                  Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+                  this.fetchdatalistimportall();
+                }
+              });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+          }
+        });
+      }
+    }
+  fetchdatalistimportall() {
+    this.dataAdd.opt = "readAllassetimportall";
+    this.datalistimportall = null;
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == 1) {
+          this.datalistimportall = data.data;
+          this.loading = null;
+        } else {
+          this.datalistimportall = data.data;
+          this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+        }
+      });
+  }
+  onChangeSubplmoney() {
+    this.dataSubplmoneypay = null;
+    this.dataAdd.opt = "viewSUBPLMONEYPAY";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataSubplmoneypay = data;
+      });
+  }
   onChangecrpartrister() {
-    if(this.dataAdd.RPLINCOME_CODE1!=''){
-      this.dataAdd.RPLINCOME_CODE=this.dataAdd.RPLINCOME_CODE1;
+    if (this.dataAdd.RPLINCOME_CODE1 != '') {
+      this.dataAdd.RPLINCOME_CODE = this.dataAdd.RPLINCOME_CODE1;
     }
     this.dataCrpartregis = null;
     this.dataAdd.opt = "viewcrpartregis";
@@ -1188,7 +1323,7 @@ applyLocale(pop: any) {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataCrpartregis = data;
-       // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+        // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         //console.log(this.dataSub);
       });
   }
@@ -1219,14 +1354,14 @@ applyLocale(pop: any) {
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any) {
-    
+
     this.rowpbi = 1;
     this.rowpbu = null;
     // console.log(this.rowpbi);
     this.setshowbti();
     this.dataAdd.PRPLPROJECT_CODE = id;
-   // this.dataAdd.PRPLPROJECTM_SYEAR = this.dataAdd.PRYEARASSET_CODE;
-  //  this.dataAdd.PRPLPROJECTM_EYEAR = this.dataAdd.PRYEARASSET_CODE;
+    // this.dataAdd.PRPLPROJECTM_SYEAR = this.dataAdd.PRYEARASSET_CODE;
+    //  this.dataAdd.PRPLPROJECTM_EYEAR = this.dataAdd.PRYEARASSET_CODE;
     this.cleardat();
     this.dataProjecttd = null;
     /* this.dataAdd.PLPROJECTGROUPDT_MONEYA = [];
@@ -1271,18 +1406,18 @@ applyLocale(pop: any) {
         // this.dataAdd.PROVINCE_ID = data.data[0].PROVINCE_ID;
         //   this.dataAdd.DISTRICT_ID = data.data[0].DISTRICT_ID;
         //  this.dataAdd.SUB_DISTRICT_ID = data.data[0].SUB_DISTRICT_ID;
-      //  this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
-        
+        //  this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
+
         this.dataAdd.PRREGISPROJECT_CODE = data.data[0].PRREGISPROJECT_CODE;
         this.dataAdd.RPLINCOME_CODE = data.data[0].PLINCOME_CODE;
         this.onChangecrpartrister();
         this.dataAdd.RCRPART_ID = data.data[0].CRPART_ID;
-       // this.dataAdd.PRPLPROJECTM_SYEAR = this.dataAdd.PRYEARASSET_CODE;
+        // this.dataAdd.PRPLPROJECTM_SYEAR = this.dataAdd.PRYEARASSET_CODE;
         this.dataAdd.PRPLPROJECTM_SYEAR = data.data[0].PRPLPROJECTM_SYEAR;
-        this.dataAdd.PRPLPROJECTM_EYEAR =data.data[0].PRPLPROJECTM_EYEAR;
+        this.dataAdd.PRPLPROJECTM_EYEAR = data.data[0].PRPLPROJECTM_EYEAR;
         this.dataAdd.PLSTRATEGY_CODE = data.data[0].PLSTRATEGY_CODE;
         this.dataAdd.PLGPRODUCT_CODE = (data.data[0].PLGPRODUCT_CODE);//.substring(4, 7);
-       // this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
+        // this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
         this.dataAdd.PLSUBMONEYPAY_CODE1 = data.data[0].PLSUBMONEYPAY_CODE1;
         this.dataAdd.PRPLPROJECT_NAME = data.data[0].PRREGISPROJECT_NAME;
         this.dataAdd.PRPLPROJECT_TIME = data.data[0].PRPLPROJECT_TIME;
@@ -1323,8 +1458,8 @@ applyLocale(pop: any) {
         for (let i = 0; i < data.datam.length; i++) {
           if (i == 0) {
             this.dataAdd.PRPLPROJECTM_SYEAR = data.datam[i].PRPLPROJECTM_YEAR;
-          } 
-          if (data.datam.length - 1  == i) {
+          }
+          if (data.datam.length - 1 == i) {
             this.dataAdd.PRPLPROJECTM_EYEAR = data.datam[i].PRPLPROJECTM_YEAR;
           }
           this.dataAdd.PRPLPROJECTM_YEAR[i] = data.datam[i].PRPLPROJECTM_YEAR;
@@ -1527,8 +1662,8 @@ applyLocale(pop: any) {
           this.editdata(this.dataAdd.PRPLPROJECT_CODE);
           console.log(this.dataAdd.PRPLPROJECT_CODE);
           this.rowpbu = null;
-           document.getElementById("ModalCloseupdate")?.click();
-        } 
+          document.getElementById("ModalCloseupdate")?.click();
+        }
       });
     // } 
   }
@@ -1830,7 +1965,7 @@ applyLocale(pop: any) {
       this.dataAdd.money5 = null;
     }
   }
-  
+
 
   fetchdatalistimport() {
     this.dataAdd.opt = "readAllimport";
@@ -1857,26 +1992,26 @@ applyLocale(pop: any) {
         }
       });
   }
-insertdataimport(){  
-  //console.log(this.dataAdd.PRASSET_COURSET );
-  this.loadingimport=true;
-  if(this.dataAdd.checkimport.length ==0){
+  insertdataimport() {
+    //console.log(this.dataAdd.PRASSET_COURSET );
+    this.loadingimport = true;
+    if (this.dataAdd.checkimport.length == 0) {
       this.toastr.warning("แจ้งเตือน:กรุณาเลือกรายการครุภัณฑ์");
-  }else{
-    this.dataAdd.opt = "insertimport"; 
-    this.apiService
-     .getupdate(this.dataAdd,this.url)
-     .pipe(first())
-     .subscribe((data: any) => {
-       //console.log(data.status);       
-     if (data.status == 1) {
-      this.loadingimport=null;
-       this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-       this.fetchdatalist();
-       document.getElementById("ModalClose")?.click();
-     } 
-     });
-   }
+    } else {
+      this.dataAdd.opt = "insertimport";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);       
+          if (data.status == 1) {
+            this.loadingimport = null;
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            this.fetchdatalist();
+            document.getElementById("ModalClose")?.click();
+          }
+        });
+    }
   }
 
   previewPdf(url: string) {

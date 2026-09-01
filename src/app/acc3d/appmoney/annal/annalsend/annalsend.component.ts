@@ -449,12 +449,12 @@ title = 'angular-app';
   // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
-    this.fetchdata();
+    this.fetchdatalist();
   }
   onTableSizeChange(event: any): void {
     this.tableSize = event.target.value;
     this.page = 1;
-    this.fetchdata();
+    this.fetchdatalist();
   }
    exportpdf(link: any) {
     const cacheBuster = new Date().getTime();

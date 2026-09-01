@@ -51,6 +51,7 @@ export class AnnalsendmComponent implements OnInit {
   datacampus: any;
   dataProduct: any;
   dataIncome: any;
+  dataSeq: any;
   number: any = [0, 1, 2];
   page = 1;
   count = 0;
@@ -60,6 +61,7 @@ export class AnnalsendmComponent implements OnInit {
   searchTerm: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
+  pdfUrlToView: SafeResourceUrl | null = null;
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -393,6 +395,25 @@ export class AnnalsendmComponent implements OnInit {
             this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
           }
       });
+  }
+    fetchdataloadshow(id: any) {
+    this.pdfUrlToView = null;
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.opt = "viewshow";
+
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == '1') {
+          this.dataSeq = data.data;
+        }
+      });
+  }
+   exportpdf(link: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไขFNANNALSMAP_CODE
   editdatapp(id: any, id2: any, link: any, ciz: any, money: any, status: any) {
