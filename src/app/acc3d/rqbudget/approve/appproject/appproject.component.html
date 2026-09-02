@@ -2087,27 +2087,33 @@
                 </select>
               </div>
               <div class="col-md-12 mb-2">
-                <div class="row" *ngFor="let p of number1;let i = index">
-                  <div class="col-md-5">
+                <div class="row" *ngFor="let p of dataAdd.PRPLPROJECTACT_NAME; let i = index">
+                  <div class="col-md-7">
                     <label for="name"><strong>ชื่อกิจกรรมที่{{i+1}}</strong></label>
-                    <input type="text" name="FRACCDATEC" class="form-control" placeholder="ชื่อกิจกรรมที่ {{i+1}}"
-                      [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]">
+                    <textarea class="form-control form-control-sm shadow-sm" name="PRASSET_NAME" id="PRASSET_NAME" rows="2"
+                  [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]" placeholder="ชื่อกิจกรรม..."></textarea>
                   </div>
-                 <!-- <div class="col-md-2">
+                   <div class="col-md-1">
                     <label for="name"><strong>นักศึกษา</strong></label>
                     <input type="text" name="FRACCDATEC[0]" class="form-control" placeholder="นักศึกษา"
                       [(ngModel)]="dataAdd.PRPLPROJECT_PERSONS[i]">
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <label for="name"><strong>บุคลากร</strong></label>
                     <input type="text" name="FRACCDATEC[0]" class="form-control" placeholder="บุคลากร"
                       [(ngModel)]="dataAdd.PRPLPROJECT_PERSONP[i]">
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <label for="name"><strong>ภายนอก</strong></label>
                     <input type="text" name="FRACCDATEC[0]" class="form-control" placeholder="ภายนอก"
                       [(ngModel)]="dataAdd.PRPLPROJECT_PERSONO[i]">
-                  </div>-->
+                  </div>
+                  <div class="col-md-2">
+                    <label for="name"><strong>งบประมาณ</strong></label>
+                    <input type="text" name="FRACCDATEC[0]" class="form-control text-end" placeholder="งบประมาณ"
+                      [(ngModel)]="dataAdd.TOTAL_MONEY[i]">
+                  </div>
+                 
                 </div>
               </div>
 
@@ -2125,13 +2131,13 @@
 
             <!-- Table for Imported Assets -->
             <h6 class="fw-bold text-primary mb-3"><i
-                class="fa-solid fa-list me-2"></i>รายการครุภัณฑ์ที่นำเข้าเรียบร้อยแล้ว</h6>
+                class="fa-solid fa-list me-2"></i>รายการโครงการที่นำเข้าเรียบร้อยแล้ว</h6>
             <div class="table-responsive shadow-sm border rounded-3">
               <table class="table table-hover table-bordered table-striped mb-0 text-dark" style="font-size: 14px;">
                 <thead class="table-primary text-center">
                   <tr>
                     <th width="10%">ลำดับ</th>
-                    <th width="65%">ชื่อครุภัณฑ์</th>
+                    <th width="65%">ชื่อโครงการ</th>
                     <th width="25%">จำนวนเงิน</th>
                     <th width="25%">จัดการข้อมูล</th>
                   </tr>
@@ -2150,7 +2156,7 @@
                   <tr *ngIf="datalistimportall?.length == 0">
                     <td colspan="4" class="text-center text-muted py-4">
                       <i class="fa-solid fa-inbox fs-4 mb-2 d-block"></i>
-                      ยังไม่มีรายการครุภัณฑ์ที่นำเข้า
+                      ยังไม่มีรายการโครงการที่นำเข้า
                     </td>
                   </tr>
                 </tbody>

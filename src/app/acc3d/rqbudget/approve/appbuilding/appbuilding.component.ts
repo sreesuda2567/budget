@@ -1375,9 +1375,9 @@ export class AppbuildingComponent implements OnInit {
     this.dataAdd.opt = "deleteimportall";
     this.dataAdd.id = id;
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
-    if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
+   /* if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
       this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
-    } else {
+    } else {*/
       Swal.fire({
         title: 'ต้องการลบข้อมูล?',
         icon: 'warning',
@@ -1399,7 +1399,7 @@ export class AppbuildingComponent implements OnInit {
           Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
         }
       });
-    }
+   // }
   }
   // ฟังก์ขันสำหรับการดึงปีการนำเข้า
   onChangeyearimport() {

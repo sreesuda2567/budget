@@ -42,6 +42,7 @@ import { ProjectmoreComponent } from './approve/projectmore/projectmore.componen
 import { RqdekaComponent } from './approve/rqdeka/rqdeka.component';
 import { RqpaymentComponent } from './approve/rqpayment/rqpayment.component';
 import { ReportpaymentComponent } from './report/reportpayment/reportpayment.component';
+import { ReportdekaComponent } from './report/reportdeka/reportdeka.component';
 
 import { ReportcincomeComponent } from './report/reportcincome/reportcincome.component';
 import { PodayComponent } from './approve/poday/poday.component';
@@ -88,7 +89,8 @@ const routes: Routes = [
     { path: 'poday', component : PodayComponent , canActivate: [AuthGuard]}, 
     { path: 'rqdeka', component : RqdekaComponent , canActivate: [AuthGuard]},   
     { path: 'rqpayment', component : RqpaymentComponent , canActivate: [AuthGuard]}, 
-    { path: 'reportpayment', component : ReportpaymentComponent , canActivate: [AuthGuard]},   
+    { path: 'reportpayment', component : ReportpaymentComponent , canActivate: [AuthGuard]}, 
+    { path: 'reportdeka', component : ReportdekaComponent , canActivate: [AuthGuard]},   
     { path: '**', redirectTo: '' }
   ]
 },

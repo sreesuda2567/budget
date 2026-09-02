@@ -118,7 +118,7 @@ export class AppprojectComponent implements OnInit {
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
     , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: [], checkimport: [], IMPORTASSET_CODE: []
     , PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
-    , PLPROJECTEXPENSES_CODE: []
+    , PLPROJECTEXPENSES_CODE: [], TOTAL_MONEY: []
   };
   searchTerm: any;
   selectedDevice: any;
@@ -1179,13 +1179,19 @@ export class AppprojectComponent implements OnInit {
         }
       });
   }
-  editdataimport(id: any,type: any) {
+  editdataimport(id: any, type: any) {
     this.onChangePlmoney();
     this.dataAdd.typeimport = type;
-    this.dataAdd.PRPLPROJECTACT_NAME=[];
-   /* this.dataAdd.PRPLPROJECT_PERSONS=[];
-    this.dataAdd.PRPLPROJECT_PERSONP=[];
-    this.dataAdd.PRPLPROJECT_PERSONO=[];*/
+    this.dataAdd.PRPLPROJECTACT_NAME = [];
+    this.dataAdd.PRPLPROJECT_PERSONS = [];
+    this.dataAdd.PRPLPROJECT_PERSONP = [];
+    this.dataAdd.PRPLPROJECT_PERSONO = [];
+    this.dataAdd.TOTAL_MONEY = [];
+    this.dataAdd.PLPROJECTD_NAME = [];
+    this.dataAdd.PLPROJECTD_VALUE = [];
+    this.dataAdd.PLINDICATOR_CODE = [];
+    this.dataAdd.PLPROJECTD_RSTATUS = [];
+    this.dataAdd.PLPROJECTD_CODE = [];
     this.apiService
       .getById(id, this.url)
       .pipe(first())
@@ -1201,13 +1207,33 @@ export class AppprojectComponent implements OnInit {
         this.dataAdd.PLSTRATEGIES_CODE = data.data[0].PLSTRATEGIES_CODE;
         this.dataAdd.PLMEASURES_CODE = data.data[0].PLMEASURES_CODE;
         this.dataAdd.PLPLAND_CODE = data.data[0].PLPLAND_CODE;
+        this.dataAdd.PLPROJECT_TIME = data.data[0].PRPLPROJECT_TIME;
+        this.dataAdd.PLPROJECTTYPE_CODE = data.data[0].PLPROJECTTYPE_CODE;
+        this.dataAdd.PRPLPROJECT_SDATE = new Date(data.data[0].PRPLPROJECT_SDATE);
+        this.dataAdd.PRPLPROJECT_EDATE = new Date(data.data[0].PRPLPROJECT_EDATE);
+       // console.log(data.data[0].PRPLPROJECT_SDATE);
+        
+        
         this.dataAdd.PLMONEYPAY_CODE = '2M';
         this.onChangeSubplmoney();
         for (let i = 0; i < data.dataexp.length; i++) {
-          this.dataAdd.PRPLPROJECTACT_NAME[i] = data.dataexp[i].PRPLPROJECTACT_NAME;
-         // this.dataAdd.PRPLPROJECT_PERSONS[i] = data.dataexp[i].PRPLPROJECT_PERSONS;
-         // this.dataAdd.PRPLPROJECT_PERSONP[i] = data.dataexp[i].PRPLPROJECT_PERSONP;
-         // this.dataAdd.PRPLPROJECT_PERSONO[i] = data.dataexp[i].PRPLPROJECT_PERSONO;
+          this.dataAdd.PRPLPROJECTACT_NAME[i] = data.dataexp[i].PRREGISPROJECT_NAME + (data.dataexp[i].PRPLPROJECTACT_NAME ? ' กิจกรรม :' + data.dataexp[i].PRPLPROJECTACT_NAME : '');
+          this.dataAdd.PRPLPROJECT_PERSONS[i] = data.dataexp[i].PRPLPROJECT_PERSONS;
+          this.dataAdd.PRPLPROJECT_PERSONP[i] = data.dataexp[i].PRPLPROJECT_PERSONP;
+          this.dataAdd.PRPLPROJECT_PERSONO[i] = data.dataexp[i].PRPLPROJECT_PERSONO;
+          this.dataAdd.TOTAL_MONEY[i] = this.numberWithCommas(parseFloat(data.dataexp[i].TOTAL_MONEY).toFixed(2));
+        }
+        for (let i = 0; i < data.datahead.length; i++) {
+          this.dataAdd.PLPROJECT_HEADER = data.datahead[i].PRPLPROJECTHEAD_NAME;
+          this.dataAdd.PLPROJECT_HPHONE = data.datahead[i].PRPLPROJECTHEAD_PHONE;
+          this.dataAdd.PLPROJECT_HCITIZEN = data.datahead[i].CITIZEN_ID;
+        }
+        for (let i = 0; i < data.dataPLPROJECTD.length; i++) {
+          this.dataAdd.PLPROJECTD_NAME[i] = data.dataPLPROJECTD[i].PLPROJECTD_NAME;
+          this.dataAdd.PLPROJECTD_VALUE[i] = data.dataPLPROJECTD[i].PLPROJECTD_VALUE;
+          this.dataAdd.PLINDICATOR_CODE[i] = data.dataPLPROJECTD[i].PLINDICATOR_CODE;
+          this.dataAdd.PLPROJECTD_RSTATUS[i] = data.dataPLPROJECTD[i].PLPROJECTD_RSTATUS;;
+          this.dataAdd.PLPROJECTD_CODE[i] = data.dataPLPROJECTD[i].PLPROJECTD_CODE;
         }
       });
   }
@@ -1225,12 +1251,6 @@ export class AppprojectComponent implements OnInit {
   insertdataimportall() {
     if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
       this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
-    } else if (!this.dataAdd.PRASSET_NAME || this.dataAdd.PRASSET_NAME == "") {
-      this.toastr.warning("แจ้งเตือน:กรุณาระบุชื่อครุภัณฑ์");
-    } else if (!this.dataAdd.PRASSET_NUMBER || this.dataAdd.PRASSET_NUMBER == "") {
-      this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวน");
-    } else if (!this.dataAdd.PRASSET_MONEY || this.dataAdd.PRASSET_MONEY == "") {
-      this.toastr.warning("แจ้งเตือน:กรุณาระบุราคาต่อหน่วย");
     } else if (!this.dataAdd.PLSTRATEGY_CODE || this.dataAdd.PLSTRATEGY_CODE == "") {
       this.toastr.warning("แจ้งเตือน:กรุณาเลือกยุทธศาสตร์");
     } else if (!this.dataAdd.PLESTIMATEPLAN_CODE || this.dataAdd.PLESTIMATEPLAN_CODE == "") {
@@ -1243,6 +1263,13 @@ export class AppprojectComponent implements OnInit {
       this.toastr.warning("แจ้งเตือน:กรุณาเลือกแผนงาน");
     } else {
       this.dataAdd.opt = "insertdataimportall";
+      if (this.dataAdd.PRPLPROJECT_SDATE != '') {
+      this.dataAdd.PRPLPROJECT_SDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_SDATE);
+      this.dataAdd.PRPLPROJECT_EDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_EDATE);
+    } else {
+      this.dataAdd.PRPLPROJECT_SDATE1 = '';
+      this.dataAdd.PRPLPROJECT_EDATE1 = '';
+    }
       this.apiService
         .getupdate(this.dataAdd, this.url)
         .pipe(first())
@@ -1256,36 +1283,36 @@ export class AppprojectComponent implements OnInit {
     }
   }
   // ฟังก์ชันสำหรับการลบข้อมูล
-    deleteDataimportall(id: any) {
-      this.dataAdd.opt = "deleteimportall";
-      this.dataAdd.id = id;
-      this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
-      if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
-        this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
-      } else {
-        Swal.fire({
-          title: 'ต้องการลบข้อมูล?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'ตกลง',
-          cancelButtonText: 'ยกเลิก',
-        }).then((result) => {
-          if (result.value) {
-            this.apiService
-              .getdata(this.dataAdd, this.url)
-              .pipe(first())
-              .subscribe((data: any) => {
-                if (data.status == 1) {
-                  Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
-                  this.fetchdatalistimportall();
-                }
-              });
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
-          }
-        });
-      }
+  deleteDataimportall(id: any) {
+    this.dataAdd.opt = "deleteimportall";
+    this.dataAdd.id = id;
+    this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
+    if (!this.dataAdd.PLSUBMONEYPAY_CODE || this.dataAdd.PLSUBMONEYPAY_CODE == "") {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกหมวดรายจ่ายย่อย");
+    } else {
+      Swal.fire({
+        title: 'ต้องการลบข้อมูล?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        if (result.value) {
+          this.apiService
+            .getdata(this.dataAdd, this.url)
+            .pipe(first())
+            .subscribe((data: any) => {
+              if (data.status == 1) {
+                Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+                this.fetchdatalistimportall();
+              }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+        }
+      });
     }
+  }
   fetchdatalistimportall() {
     this.dataAdd.opt = "readAllassetimportall";
     this.datalistimportall = null;
@@ -1998,6 +2025,7 @@ export class AppprojectComponent implements OnInit {
     if (this.dataAdd.checkimport.length == 0) {
       this.toastr.warning("แจ้งเตือน:กรุณาเลือกรายการครุภัณฑ์");
     } else {
+
       this.dataAdd.opt = "insertimport";
       this.apiService
         .getupdate(this.dataAdd, this.url)

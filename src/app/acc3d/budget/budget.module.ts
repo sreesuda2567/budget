@@ -44,6 +44,7 @@ import { PodayComponent } from './approve/poday/poday.component';
 import { RqdekaComponent } from './approve/rqdeka/rqdeka.component';
 import { RqpaymentComponent } from './approve/rqpayment/rqpayment.component';
 import { ReportpaymentComponent } from './report/reportpayment/reportpayment.component';
+import { ReportdekaComponent } from './report/reportdeka/reportdeka.component';
 
 
 import { BudgetComponent } from './budget.component';
@@ -97,7 +98,8 @@ import { AutocompleteLibModule} from 'angular-ng-autocomplete';
     ProjectmoreComponent,
     PodayComponent,
     RqpaymentComponent,
-    ReportpaymentComponent
+    ReportpaymentComponent,
+    ReportdekaComponent
   ],
   imports: [
     CommonModule,

@@ -74,7 +74,7 @@ export class SignprojectComponent {
         // this.datastatus = this.dataAdd.PRIVILEGE_RSTATUS
          // console.log(this.dataAdd.PRIVILEGE_RSTATUS);
          var varN = {
-           "opt": "viewfacasset",
+           "opt": "viewfac",
            "citizen": this.tokenStorage.getUser().citizen,
            "PRIVILEGERSTATUS": data[0].PRIVILEGE_RSTATUS
          }
@@ -169,20 +169,29 @@ export class SignprojectComponent {
      return parts.join(".");
    }
    insertdataapp() {
-     this.dataAdd.opt = "deliver";
-     if (this.dataAdd.check.length == 0) {
-       this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูลนำส่ง");
-     } else {
-       let num = 0;
-       for (let i = 0; i < this.dataAdd.check.length; i++) {
-         num += parseFloat(this.dataAdd.PRASSET_MONEY[i]);
-       }
-       Swal.fire({
-         title: 'ต้องการลงนามรายการโครงการ ทั้งหมด ' + this.dataAdd.check.length + ' รายการ จำนวนเงิน ' + this.numberWithCommas(num) + ' บาท',
-         icon: 'warning',
-         showCancelButton: true,
-         confirmButtonText: 'ตกลง',
-         cancelButtonText: 'ยกเลิก',
+    this.dataAdd.opt = "deliver";
+    
+    let num = 0;
+    let count = 0;
+    if (this.datalistapp) {
+      for (let i = 0; i < this.datalistapp.length; i++) {
+        if (this.dataAdd.check[i]) {
+          count++;
+          const amountStr = this.dataAdd.PRASSET_MONEY[i] ? this.dataAdd.PRASSET_MONEY[i].toString().replace(/,/g, '') : '0';
+          num += Number(amountStr) || 0;
+        }
+      }
+    }
+
+    if (count == 0) {
+      this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูลนำส่ง");
+    } else {
+      Swal.fire({
+        title: 'ต้องการลงนามรายการโครงการ ทั้งหมด ' + count + ' รายการ จำนวนเงิน ' + this.numberWithCommas(num.toFixed(2)) + ' บาท',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
        }).then((result) => {
          if (result.value) {
            this.apiService
