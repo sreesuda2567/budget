@@ -23,11 +23,11 @@ defineLocale('th', thLocale); // โหลด locale ภาษาไทย
 import * as XLSX from 'xlsx-js-style';
 
 @Component({
-  selector: 'app-reportpaymentapp',
-  templateUrl: './reportpaymentapp.component.html',
-  styleUrls: ['./reportpaymentapp.component.scss']
+  selector: 'app-reportdekaapp',
+  templateUrl: './reportdekaapp.component.html',
+  styleUrls: ['./reportdekaapp.component.scss']
 })
-export class ReportpaymentappComponent implements OnInit {
+export class ReportdekaappComponent implements OnInit {
 title = 'angular-app';
   fileName = 'report.xlsx';
   userList = [{}];
@@ -50,7 +50,7 @@ title = 'angular-app';
   rownum: any;
   dataNameb: any;
   dataIncome: any;
-  url = '/acc3d/budget/report/reportpayment.php';
+  url = '/acc3d/budget/report/reportdeka.php';
   url1 = "/acc3d/appmoney/userpermission.php";
   page = 1;
   count = 0;
@@ -360,4 +360,5 @@ exportexcel(): void {
        });
   
    }
+
 }

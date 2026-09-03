@@ -107,21 +107,16 @@
                             <thead>
                                 <tr style="background-color:rgb(131, 187, 243);">
                                     <td align="center"><strong>ที่</strong></td>
-                                    <td align="center"><strong>วันที่คุมขอเบิก</strong></td>
-                                    <td align="center"><strong>เลขที่หลักฐาน</strong></td>
-                                    <td align="center"><strong>ประเภทเงิน</strong></td>
+                                    <td align="center"><strong>วันที่</strong></td>
                                     <td align="center"><strong>เรื่อง</strong></td>
-                                    <td align="center"><strong>วันที่เลขที่ฎีกา</strong></td>
+                                    <td align="center"><strong>เจ้าหนี้/ผู้ขอเบิก</strong></td>
+                                    <td align="center"><strong>ประเภทเงิน</strong></td>
+                                    <td align="center"><strong>ผลผลิต</strong></td>
+                                    <td align="center"><strong>หมวดรายจ่าย</strong></td>
+                                    <td align="center"><strong>เลขที่หลักฐาน</strong></td>
                                     <td align="center"><strong>เลขที่ฎีกา</strong></td>
                                     <td align="center"><strong>เลข3ดี</strong></td>
-                                    <td align="center"><strong>จำนวนเงินขอเบิก</strong></td>
-                                    <td align="center"><strong>จำนวนหักส่ง</strong></td>
-                                    <td align="center"><strong>ค่าปรับ</strong></td>
-                                    <td align="center"><strong>จำนวนเงินขอรับ</strong></td>
-                                    <td align="center"><strong>วันที่ผ่านรายการ</strong></td>
-                                    <td align="center"><strong>เลขที่รับฎีกา</strong></td>
-                                    <td align="center"><strong>วันที่จ่าย</strong></td>
-                                    <td align="center"><strong>เลขเอกสาร</strong></td>
+                                    <td align="center"><strong>จำนวนเงิน</strong></td>
                                     <td align="center"><strong>ผู้ทำรายการ</strong></td>
                                 </tr>
 
@@ -129,26 +124,17 @@
                             <tbody>
                                 <tr *ngFor="let item of datalist|filter:searchTerm ; let i = index">
                                     <td align="center">{{i+1}}</td>
-                                    <td>{{item.FNPAYMENT_DATE_LIST}}</td>
-                                    <td>{{item.FNPAYMENT_NUMBER_LIST}}</td>
-                                    <td>{{item.PLINCOMENAME_LIST}}</td>
-                                    <td> {{item.FNDEKA_REMARK}}</td>
-                                    <td> {{item.FNDEKA_DATE1}}</td>
+                                    <td>{{item.FNPAYMENT_DATE}}</td>
+                                    <td> {{item.FNPAYMENT_REMARK}}</td>  
+                                    <td> {{item.FNPAYMENT_CREDITOR}}</td>                                 
+                                    <td>{{item.PLINCOME_NAME}}</td>                                
+                                    <td> {{item.PLGPRODUCT_SHORTNAME}}</td>
+                                    <td> {{item.PLSUBMONEYPAY_NAME}}</td>
+                                     <td>{{item.FNPAYMENT_NUMBER}}</td>
                                     <td> {{item.FNDEKA_DEKA}}/{{item.PLYEARBUDGET_CODE}}</td>
-                                    <td> {{item.FNEXPENSES_STEP_LIST}}</td>
-                                    <td align="right"> {{item.FNEXPENSES_AMONEY_TOTAL| number : '1.2-2'}}</td>
-                                    <td align="right"> {{item.FNDEKA_TAX| number : '1.2-2'}}</td>
-                                    <td align="right"> {{item.FNDEKA_FINE| number : '1.2-2'}}</td>
-                                    <td align="right"> 
-                                        <a href="javascript:void(0)" class="text-primary text-decoration-none" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="fetchdataexpen(item.FNDEKA_CODE)">
-                                            {{item.FNEXPENSES_AMONEY_TOTAL-item.FNDEKA_TAX-item.FNDEKA_FINE| number : '1.2-2'}}
-                                        </a>
-                                    </td>
-                                    <td> {{item.FNEXPENSES_MDATE}}</td>
-                                    <td> {{item.FNEXPENSES_NUMBER_LIST}}</td>
-                                    <td> {{item.FNEXACCPAYDATE_DATEPD_LIST}}</td>
-                                    <td> {{item.FNEXACCPAYDATE_NUMBER_LIST}}</td>
-                                    <td> {{item.FNDEKA_NAME}}</td>
+                                    <td> {{item.FNEXPENSES_STEP}}</td>
+                                    <td align="right"> {{item.FNEXPENSES_AMONEY| number : '1.2-2'}}</td>
+                                    <td> {{item.FNPAYMENT_NAME}}</td>
                                 </tr>
                             </tbody>
                         </table>

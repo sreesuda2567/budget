@@ -45,6 +45,7 @@ import { ReportdayappcComponent } from './report/reportdayappc/reportdayappc.com
 import { ReportamendComponent } from './report/reportamend/reportamend.component';
 import { ReportpaperComponent } from './report/reportpaper/reportpaper.component';
 import { ReportpaymentappComponent } from './report/reportpaymentapp/reportpaymentapp.component';
+import { ReportdekaappComponent } from './report/reportdekaapp/reportdekaapp.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent , children : [
@@ -91,6 +92,7 @@ const routes: Routes = [
     { path: 'reportamend', component : ReportamendComponent , canActivate: [AuthGuard]},
     { path: 'reportpaper', component : ReportpaperComponent , canActivate: [AuthGuard]},
     { path: 'reportpaymentapp', component : ReportpaymentappComponent , canActivate: [AuthGuard]},
+    { path: 'reportdekaapp', component : ReportdekaappComponent , canActivate: [AuthGuard]},
     
     
     { path: '**', redirectTo: '' }

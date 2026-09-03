@@ -245,6 +245,11 @@
                                                                         class="fas fa-file-invoice-dollar text-info me-1"></i>รายงานทะเบียนคุมขอเบิกเงิน</a>
                                                 </li>
                                                 <li *ngIf="datastatus=='A' ||  datastatus=='E' ">
+                                                        <a class="dropdown-item" routerLink="reportdekaapp"><i
+                                                                        class="fas fa-file-invoice-dollar text-info me-1"></i>รายงานทะเบียนคุมเลขฎีกา</a>
+                                                </li>
+                                                
+                                                <li *ngIf="datastatus=='A' ||  datastatus=='E' ">
                                                         <a class="dropdown-item" routerLink="reportdayapp"><i
                                                                         class="fas fa-clipboard-list text-info me-1"></i>รายงานประจำวัน</a>
                                                 </li>

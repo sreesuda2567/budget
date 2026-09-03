@@ -151,11 +151,24 @@ export class ReportdekaComponent implements OnInit {
         this.dataAdd.CRPART_ID = data[0].CRPART_ID;
       });
   }
+  datenow(datenow: any) {
+    const yyyy = datenow.getFullYear();
+    let mm = datenow.getMonth() + 1; // Months start at 0!
+    let dd = datenow.getDate();
+    return yyyy + '-' + mm + '-' + dd;
+  }
   fetchdatalist() {
     this.loading = true;
     this.datalist = null;
     this.dataAdd.opt = 'readAll';
     this.rownum = null;
+    if (this.dataAdd.DATENOWS != '') {
+      this.dataAdd.DATENOWS1 = this.datenow(this.dataAdd.DATENOWS);
+      this.dataAdd.DATENOWT1 = this.datenow(this.dataAdd.DATENOWT);
+    } else {
+      this.dataAdd.DATENOWS1 = '';
+      this.dataAdd.DATENOWT1 = '';
+    }
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
@@ -194,7 +207,7 @@ export class ReportdekaComponent implements OnInit {
    }
 exportexcel(): void {
     const element = document.getElementById('excel-table');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element, { raw: true });
     const range = XLSX.utils.decode_range(ws['!ref']!);
 
     // ปรับความกว้างคอลัมน์
@@ -212,7 +225,7 @@ exportexcel(): void {
     }
     ws['!cols'] = colWidths;
 
-    const numberCols = [7,8,9];
+    const numberCols = [7,8,9,10];
 
     for (let R = range.s.r; R <= range.e.r; ++R) {
       const isBoldRow = (R === 0 );
@@ -226,7 +239,17 @@ exportexcel(): void {
           ws[cell_ref] = cell;
         }
 
-        const isNumber = numberCols.includes(C) && typeof cell.v === 'number';
+        if (numberCols.includes(C) && R > 0) {
+          if (cell.v && typeof cell.v === 'string') {
+            const numVal = parseFloat(cell.v.replace(/,/g, ''));
+            if (!isNaN(numVal)) {
+              cell.v = numVal;
+              cell.t = 'n';
+            }
+          }
+        }
+
+        const isNumber = numberCols.includes(C) && cell.t === 'n';
 
         let horizontalAlign: "left" | "center" | "right" = "left";
         if (R === 0) {
@@ -291,7 +314,7 @@ exportexcel(): void {
 
   exportexceldetail(): void {
     const element = document.getElementById('excel-table-detail');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element, { raw: true });
     const range = XLSX.utils.decode_range(ws['!ref']!);
 
     // ปรับความกว้างคอลัมน์
@@ -309,7 +332,7 @@ exportexcel(): void {
     }
     ws['!cols'] = colWidths;
 
-    const numberCols = [7,8,9,10];
+    const numberCols = [7];
 
     for (let R = range.s.r; R <= range.e.r; ++R) {
       const isBoldRow = (R === 0 );
@@ -322,7 +345,17 @@ exportexcel(): void {
           ws[cell_ref] = cell;
         }
 
-        const isNumber = numberCols.includes(C) && typeof cell.v === 'number';
+        if (numberCols.includes(C) && R > 0) {
+          if (cell.v && typeof cell.v === 'string') {
+            const numVal = parseFloat(cell.v.replace(/,/g, ''));
+            if (!isNaN(numVal)) {
+              cell.v = numVal;
+              cell.t = 'n';
+            }
+          }
+        }
+
+        const isNumber = numberCols.includes(C) && cell.t === 'n';
 
         let horizontalAlign: "left" | "center" | "right" = "left";
         if (R === 0) {
