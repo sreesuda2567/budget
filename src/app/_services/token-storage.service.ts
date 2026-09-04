@@ -36,7 +36,7 @@ export class TokenStorageService {
     if (user) {
         return JSON.parse(user);
       /*const parsedUser = JSON.parse(user);
-      parsedUser.citizen = '3901100135410'
+      parsedUser.citizen = '3809700202833'
       return parsedUser;*/
     }
     return {};

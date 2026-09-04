@@ -2042,6 +2042,25 @@ export class AppprojectComponent implements OnInit {
     }
   }
 
+  getTotalMoneySum(): number {
+    if (!this.dataAdd?.TOTAL_MONEY) return 0;
+    return this.dataAdd.TOTAL_MONEY.reduce((sum: number, val: any) => {
+      if (!val) return sum;
+      const num = typeof val === 'string' ? parseFloat(val.replace(/,/g, '')) : val;
+      return sum + (isNaN(num) ? 0 : num);
+    }, 0);
+  }
+
+  getImportTotalSum(): number {
+    if (!this.datalistimportall) return 0;
+    return this.datalistimportall.reduce((sum: number, item: any) => {
+      const val = item.PRASSET_MONEY;
+      if (!val) return sum;
+      const num = typeof val === 'string' ? parseFloat(val.replace(/,/g, '')) : val;
+      return sum + (isNaN(num) ? 0 : num);
+    }, 0);
+  }
+
   previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');

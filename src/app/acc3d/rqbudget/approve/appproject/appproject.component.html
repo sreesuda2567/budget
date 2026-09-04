@@ -636,6 +636,26 @@
                         <option [value]="8">8 กิจกรรมย่อย</option>
                         <option [value]="9">9 กิจกรรมย่อย</option>
                         <option [value]="10">10 กิจกรรมย่อย</option>
+                        <option [value]="11">11 กิจกรรมย่อย</option>
+                        <option [value]="12">12 กิจกรรมย่อย</option>
+                        <option [value]="13">13 กิจกรรมย่อย</option>
+                        <option [value]="14">14 กิจกรรมย่อย</option>
+                        <option [value]="15">15 กิจกรรมย่อย</option>
+                        <option [value]="16">16 กิจกรรมย่อย</option>
+                        <option [value]="17">17 กิจกรรมย่อย</option>
+                        <option [value]="18">18 กิจกรรมย่อย</option>
+                        <option [value]="19">19 กิจกรรมย่อย</option>
+                        <option [value]="20">20 กิจกรรมย่อย</option>
+                        <option [value]="21">21 กิจกรรมย่อย</option>
+                        <option [value]="22">22 กิจกรรมย่อย</option>
+                        <option [value]="23">23 กิจกรรมย่อย</option>
+                        <option [value]="24">24 กิจกรรมย่อย</option>
+                        <option [value]="25">25 กิจกรรมย่อย</option>
+                        <option [value]="26">26 กิจกรรมย่อย</option>
+                        <option [value]="27">27 กิจกรรมย่อย</option>
+                        <option [value]="28">28 กิจกรรมย่อย</option>
+                        <option [value]="29">29 กิจกรรมย่อย</option>
+                        <option [value]="30">30 กิจกรรมย่อย</option>
                       </select>
                     </div>
                     <div class="col-md-12 mb-2" *ngFor="let p of number1;let i = index">
@@ -2115,6 +2135,15 @@
                   </div>
                  
                 </div>
+                <!-- Total Row for Activities -->
+                <div class="row mt-2" *ngIf="dataAdd.PRPLPROJECTACT_NAME?.length > 0">
+                  <div class="col-md-10 text-end pt-1">
+                    <strong class="text-primary fs-6">รวมทั้งหมด :</strong>
+                  </div>
+                  <div class="col-md-2">
+                    <input type="text" class="form-control text-end fw-bold text-primary bg-light" [value]="getTotalMoneySum() | number:'1.2-2'" readonly>
+                  </div>
+                </div>
               </div>
 
               <div class="col-md-3">
@@ -2158,6 +2187,12 @@
                       <i class="fa-solid fa-inbox fs-4 mb-2 d-block"></i>
                       ยังไม่มีรายการโครงการที่นำเข้า
                     </td>
+                  </tr>
+                  <!-- Total Row for Imported Assets -->
+                  <tr *ngIf="datalistimportall?.length > 0" class="table-light fw-bold text-primary">
+                    <td colspan="2" class="text-end fs-6">รวมทั้งหมด</td>
+                    <td class="text-end fs-6">{{ getImportTotalSum() | number:'1.2-2' }}</td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
