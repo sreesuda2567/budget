@@ -682,6 +682,7 @@ export class AppassetComponent implements OnInit {
     if (this.dataAdd.RPLINCOME_CODE1 != '') {
       this.dataAdd.RPLINCOME_CODE = this.dataAdd.RPLINCOME_CODE1;
     }
+    this.dataCrpartregis=null;
     this.dataAdd.opt = "viewcrpartregis";
     this.apiService
       .getdata(this.dataAdd, this.url1)
@@ -1732,6 +1733,7 @@ export class AppassetComponent implements OnInit {
       });
   }
   editdataimport(id: any) {
+    this.setshowbti();
     this.onChangePlmoney();
     this.apiService
       .getById(id, this.url)

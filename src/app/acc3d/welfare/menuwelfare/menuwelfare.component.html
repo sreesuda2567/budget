@@ -12,7 +12,7 @@
           <a class="nav-link active" aria-current="page" routerLink="../"><i
               class="fa-solid fa-home me-1"></i>หน้าหลัก</a>
         </li>
-        <li class="nav-item dropdown">
+        <li *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='2'" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
             <i class="fa-solid fa-file-arrow-down me-1 text-primary"></i>หนังสือเข้า
@@ -24,7 +24,7 @@
                   class="fa-solid fa-graduation-cap me-2 text-primary"></i>การศึกษาของบุตร</a></li>
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='2'" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
             <i class="fa-solid fa-file-arrow-down me-1 text-info"></i>หน้างบใบสำคัญ
@@ -36,7 +36,7 @@
                   class="fa-solid fa-graduation-cap me-2 text-primary"></i>การศึกษาของบุตร</a></li>
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='2'" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
             <i class="fa-solid fa-clipboard-check me-1 text-success"></i>ขออนุมัติเงิน
@@ -60,7 +60,7 @@
             </li>
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='2'" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
             <i class="fa-solid fa-gear me-1 text-secondary"></i>จัดการข้อมูล
@@ -74,7 +74,7 @@
                   class="fa-solid fa-book-open-reader me-2 text-primary"></i>การศึกษาของบุตร(ข้าราชการเกษียณ)</a></li>
           </ul>
         </li>
-        <li class="nav-item dropdown">
+        <li *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='2' || datastatus=='3'" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
             <i class="fa-solid fa-chart-column me-1 text-success"></i>รายงาน

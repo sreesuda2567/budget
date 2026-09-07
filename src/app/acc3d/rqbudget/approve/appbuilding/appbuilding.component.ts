@@ -551,6 +551,7 @@ export class AppbuildingComponent implements OnInit {
     if(this.dataAdd.RPLINCOME_CODE1!=''){
       this.dataAdd.RPLINCOME_CODE=this.dataAdd.RPLINCOME_CODE1;
     }
+    this.dataCrpartregis=null;
     this.dataAdd.opt = "viewcrpartregis";
     this.apiService
       .getdata(this.dataAdd, this.url1)

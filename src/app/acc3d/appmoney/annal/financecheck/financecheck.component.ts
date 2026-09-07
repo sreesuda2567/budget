@@ -37,7 +37,7 @@ export class FinancecheckComponent implements OnInit {
   rowpbi: any;
   rowpbu: any;
   rownum1: any;
-  dataAdd: any = {FRACCCODE:[],FRACCMONEY:[],FRACCMONEYP:[]};
+  dataAdd: any = { FRACCCODE: [], FRACCMONEY: [], FRACCMONEYP: [] };
   locale = 'th-be';
   locales = listLocales();
   dataEdoc: any;
@@ -52,7 +52,7 @@ export class FinancecheckComponent implements OnInit {
   dataProduct: any;
   page = 1;
   count = 0;
-  number: any = [0, 1, 2,3];
+  number: any = [0, 1, 2, 3];
   tableSize = 20;
   tableSizes = [20, 30, 40, 100, 200];
   searchTerm: any;
@@ -165,15 +165,15 @@ export class FinancecheckComponent implements OnInit {
       .subscribe((data: any) => {
         this.datareceipt = data;
       });
-     this.dataAdd.opt = "viewFRACCE";
+    this.dataAdd.opt = "viewFRACCE";
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
         this.dataAcc = data;
         //console.log(data);
-      }); 
-      //รายการประเภทเงิน
+      });
+    //รายการประเภทเงิน
     var Tablein = {
       "opt": "viewPLINCOME"
     }
@@ -182,9 +182,9 @@ export class FinancecheckComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataIncome = data;
-       // this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
-      }); 
-       //รายการผลผลิต
+        // this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+      });
+    //รายการผลผลิต
     var Tablein = {
       "opt": "viewPLGPRODUCT"
     }
@@ -193,8 +193,8 @@ export class FinancecheckComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataProduct = data;
-       // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
-      });   
+        // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
+      });
   }
 
   fetchdatalist() {
@@ -321,7 +321,7 @@ export class FinancecheckComponent implements OnInit {
     this.dataAdd.FRACCMONEY = [];
     this.dataAdd.FRACCMONEYP = [];
   }
-     fetchdatareportnamea() {
+  fetchdatareportnamea() {
     this.dataNamea = null;
     var varN1 = {
       "opt": "viewnamecheckc",
@@ -336,7 +336,7 @@ export class FinancecheckComponent implements OnInit {
       });
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, id2: any, money: any, mail: any, bookdate: any, name: any,clearcheck: any) {
+  editdata(id: any, id2: any, money: any, mail: any, bookdate: any, name: any, clearcheck: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -363,9 +363,9 @@ export class FinancecheckComponent implements OnInit {
     this.rowpbi = '';
     this.rowpbu = 1;
   }
-   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+  // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdatapr(id: any, id2: any, money: any, mail: any, bookdate: any, name: any, linkclear: any = null) {
- 
+
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -379,12 +379,12 @@ export class FinancecheckComponent implements OnInit {
     this.dataAdd.FSTF_FNAME = name;
     this.dataAdd.linkclear = linkclear;
     this.rowpbi = true;
-    
+
     this.apiService
       .getById(id2, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-       // this.dataSeq = data.data2;
+        // this.dataSeq = data.data2;
         this.dataAdd.CHIEF_CODE = data.data[0].CHIEF_CODE;
         this.dataAdd.DEPARTMENT_CODE = data.data[0].DEPARTMENT_CODE;
         this.dataAdd.PLINCOME_CODE = data.data[0].PLINCOME_CODE;
@@ -395,43 +395,43 @@ export class FinancecheckComponent implements OnInit {
         this.dataAdd.CITIZEN_IDP3 = data.data[0].CITIZEN_IDP3;
         this.dataAdd.CITIZEN_IDP4 = data.data[0].CITIZEN_IDP4;
         this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
-         for (let i = 0; i < data.data2.length; i++) {
-            this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
-            this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
-            this.dataAdd.FRACCMONEYP[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEYP).toFixed(2);
-          }
+        for (let i = 0; i < data.data2.length; i++) {
+          this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
+          this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
+          this.dataAdd.FRACCMONEYP[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEYP).toFixed(2);
+        }
       });
   }
   sendfile(id: any, link: any, link3: any) {
-        this.dataAdd.FNANNALSMAP_CODE = id;
-      //  this.editdata(id);
-        this.dataAdd.link2 = link;
-        this.dataAdd.link3 = link3;
-        Swal.fire({
-          title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'ตกลง',
-          cancelButtonText: 'ยกเลิก',
-        }).then((result) => {
-          this.dataAdd.opt = "sendfile";
-          if (result.value) {
-            this.apiService
-              .getdata(this.dataAdd, this.url)
-              .pipe(first())
-              .subscribe((data: any) => {
-                if (data.status == 1) {
-                  this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
-                  this.fetchdatalist();
-    
-                }
-              });
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
-          }
-        });
-    
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    //  this.editdata(id);
+    this.dataAdd.link2 = link;
+    this.dataAdd.link3 = link3;
+    Swal.fire({
+      title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      this.dataAdd.opt = "sendfile";
+      if (result.value) {
+        this.apiService
+          .getdata(this.dataAdd, this.url)
+          .pipe(first())
+          .subscribe((data: any) => {
+            if (data.status == 1) {
+              this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+              this.fetchdatalist();
+
+            }
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
       }
+    });
+
+  }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdataapp() {
     if (this.dataAdd.FNANNALS_MONEYC == '') {
@@ -455,7 +455,7 @@ export class FinancecheckComponent implements OnInit {
 
 
     }
-  }     
+  }
   onChangepdf(event: any) {
     this.file = event.target.files[0];
   }
@@ -489,7 +489,7 @@ export class FinancecheckComponent implements OnInit {
                 }
               }
               );
-               if (this.dataAdd.FNRESTATUS_CODE == '0') {
+            if (this.dataAdd.FNRESTATUS_CODE == '0') {
               this.dataAdd.opt = "sendemailNRE";
               this.apiService
                 .getupdate(this.dataAdd, this.url)
@@ -652,7 +652,7 @@ export class FinancecheckComponent implements OnInit {
       this.fetchdatalist();
     }
   }
-    previewPdf(url: string) {
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
@@ -666,7 +666,7 @@ export class FinancecheckComponent implements OnInit {
     try {
       // Fetch only if not already counted
       if (item[propertyName]) return;
-      
+
       const response = await fetch(url);
       const pdfBytes = await response.arrayBuffer();
       const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
@@ -676,37 +676,68 @@ export class FinancecheckComponent implements OnInit {
       console.error('Error counting PDF pages for URL:', url, error);
     }
   }
-   async openPdfAnnotator(p: any) {
-          console.log(p.EBOOKREQ_LINK);
-        const cacheBuster = new Date().getTime();
-        const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
-        const user = this.tokenStorage.getUser();
-    
-        const modal = await this.modalCtrl.create({
-          component: PdfAnnotatorModalComponent,
-          componentProps: {
-            pdfUrl: reportLink,
-            userId: user.citizen,
-            userName: user.fullname || user.username
-          },
-          cssClass: 'pdf-modal-right-side'
-        });
-        await modal.present();
-    
-        const { data } = await modal.onDidDismiss();
-        if (data && data.saved && data.blob) {
-          // Create a File object from the blob
-          const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-          
-          this.file = file;
-          this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
-          
-          const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-          if (fileInput) {
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            fileInput.files = dataTransfer.files;
-          }
-        }
+  async openPdfAnnotator(p: any) {
+    console.log(p.EBOOKREQ_LINK);
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+
+      this.file = file;
+      this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
+
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
       }
+    }
+  }
+  async openPdfAnnotator1(p: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = p.linkclear + (p.linkclear.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+             
+          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '56')
+            .subscribe((event: any) => {
+              if (event.type == 4) { // HttpEventType.Response
+                 this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
+                 this.fetchdatalist();
+              }
+            });
+    
+    }
+  }
 }

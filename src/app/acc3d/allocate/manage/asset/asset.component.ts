@@ -9,6 +9,7 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 defineLocale('th', thBeLocale);
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
@@ -87,6 +88,8 @@ export class AssetComponent implements OnInit {
   tableSizes = [10, 20, 30];
   locale = 'th-be';
   locales = listLocales();
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -96,6 +99,7 @@ export class AssetComponent implements OnInit {
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -679,5 +683,14 @@ this.apiService
     /* save to file */
     XLSX.writeFile(wb, this.fileName);
 
+  }
+      previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
   }
 }

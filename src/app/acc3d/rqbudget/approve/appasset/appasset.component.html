@@ -1980,20 +1980,28 @@
               </div>
 
               <!-- Row 6 -->
-              <div class="col-md-3">
+              <div class="col-md-2">
                 <label class="form-label fw-bold text-secondary mb-1">
                   <i class="fa-solid fa-arrow-up-9-1 text-warning me-2"></i>จำนวน
                 </label>
                 <input type="text" class="form-control text-dark" placeholder="ระบุจำนวน"
                   [(ngModel)]="dataAdd.PRASSET_NUMBER" (keyup)="calexpenses()">
               </div>
-              <div class="col-md-3">
+              <div class="form-group col-md-2">
+                    <label for="name" class="fw-bold mb-1"><i class="fa-solid fa-ruler-combined text-secondary me-1"></i>หน่วยนับ</label>
+                    <select name="u_code" id="u_code" class="form-select" [(ngModel)]="dataAdd.GCUNIT_CODE">
+                        <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
+                        </option>
+                    </select>
+                </div>
+              <div class="col-md-2">
                 <label class="form-label fw-bold text-secondary mb-1">
                   <i class="fa-solid fa-tag text-info me-2"></i>ราคาต่อหน่วย
                 </label>
                 <input type="text" class="form-control text-dark" placeholder="ระบุราคาต่อหน่วย"
                   (keypress)="CheckNum($event)" [(ngModel)]="dataAdd.PRASSET_MONEY" (keyup)="calexpenses()">
               </div>
+              
               <div class="col-md-3">
                 <label class="form-label fw-bold text-secondary mb-1">
                   <i class="fa-solid fa-coins text-success me-2"></i>รวมเงิน

@@ -418,10 +418,10 @@ export class ApprovebindingComponent implements OnInit {
         this.dataFAdd.PLGPRODUCT_CODE = data.datae[0].PLGPRODUCT_CODE;
         this.dataFAdd.FNEXPENSES_AMONEY = (parseFloat(data.datae[0].FNEXPENSES_AMONEY).toFixed(2));
         this.dataFAdd.FNEXPENSES_CMDATE = new Date();
-        this.dataFAdd.FNEXPENSES_DEKA = 'P';
+        this.dataFAdd.FNEXPENSES_DEKA = 'P' + String(this.dataFAdd.PLYEARBUDGET_CODE || '').slice(-2) + String(data.datae[0].FNDEKA_DEKA).padStart(7, '0');
         this.dataFAdd.FNEXACC_DATE[0] = new Date();
         this.dataFAdd.FNEXACCMONEYC[0] = (parseFloat(data.datae[0].FNEXPENSES_AMONEY).toFixed(2));
-        this.dataFAdd.FNEXACC_DEKA[0] = 'P';
+        this.dataFAdd.FNEXACC_DEKA[0] = 'P' + String(this.dataFAdd.PLYEARBUDGET_CODE || '').slice(-2) + String(data.datae[0].FNDEKA_DEKA).padStart(7, '0');
         this.dataFAdd.FRACCCODEC[0] = '';
         this.dataFAdd.FNEXACC_TYPE[0] = 'KN';
         for (let i = 0; i < data.datac.length; i++) {

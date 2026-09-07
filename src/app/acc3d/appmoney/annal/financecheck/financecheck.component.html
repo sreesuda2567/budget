@@ -185,7 +185,10 @@
                             (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
                             (click)="onChangeRadio(1)"><i
                                 class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;-->
-
+                            <a class="btn btn-info text-white" href="javascript:void(0)" title="ลงนาม"
+                                            (click)="openPdfAnnotator(p)">
+                                         <i class="fa-solid fa-file-pen"></i> 
+                                        </a>&nbsp;
                             <button *ngIf="p.clearcheck" type="submit" title="ใบเบิก" class="btn btn-success text-white"
                                 id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
                                 (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.clearcheck)"
