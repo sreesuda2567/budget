@@ -20,7 +20,7 @@
                                     <select name="f_code" id="f_code" class="form-select"
                                         [(ngModel)]="dataAdd.CAMPUS_CODE" (change)=" fetchdataCam()">
                                         <option value=""
-                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS =='1'">
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS =='1'|| dataAdd.PRIVILEGE_RSTATUS =='3'">
                                             ทุกวิทยาเขต
                                         </option>
                                         <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">

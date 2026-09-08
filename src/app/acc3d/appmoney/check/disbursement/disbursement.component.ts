@@ -40,7 +40,7 @@ export class DisbursementComponent implements OnInit {
   rowpbi: any;
   rowpbu: any;
   rownum1: any;
-  dataAdd: any = {FRACCCODE:[],FRACCMONEY:[]};
+  dataAdd: any = { FRACCCODE: [], FRACCMONEY: [] };
   locale = 'th-be';
   locales = listLocales();
   datalistapp: any;
@@ -50,7 +50,7 @@ export class DisbursementComponent implements OnInit {
   searchTerm: any;
   page = 1;
   count = 0;
-  number: any = [0, 1, 2];
+  number: any = [0, 1, 2, 3];
   tableSize = 40;
   tableSizes = [40, 100, 200];
   datareceipt: any;
@@ -168,15 +168,15 @@ export class DisbursementComponent implements OnInit {
       .subscribe((data: any) => {
         this.datareceipt = data;
       });
-   this.dataAdd.opt = "viewFRACCE";
+    this.dataAdd.opt = "viewFRACCE";
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
         this.dataAcc = data;
         //console.log(data);
-      }); 
-      //รายการประเภทเงิน
+      });
+    //รายการประเภทเงิน
     var Tablein = {
       "opt": "viewPLINCOME"
     }
@@ -185,9 +185,9 @@ export class DisbursementComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataIncome = data;
-       // this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
-      }); 
-       //รายการผลผลิต
+        // this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+      });
+    //รายการผลผลิต
     var Tablein = {
       "opt": "viewPLGPRODUCT"
     }
@@ -196,11 +196,11 @@ export class DisbursementComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataProduct = data;
-       // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
-      });   
-       
+        // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
+      });
+
   }
-   fetchdatareportnamea() {
+  fetchdatareportnamea() {
     this.dataNamea = null;
     var varN1 = {
       "opt": "viewnamecheckc",
@@ -339,7 +339,7 @@ export class DisbursementComponent implements OnInit {
     try {
       // Fetch only if not already counted
       if (item[propertyName]) return;
-      
+
       const response = await fetch(url);
       const pdfBytes = await response.arrayBuffer();
       const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
@@ -395,7 +395,7 @@ export class DisbursementComponent implements OnInit {
     }
     this.rowpbi = true;
   }
-    // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+  // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdatapr(id: any, link: any, money: any, mail: any, at: any, name: any, linkclear?: any) {
     this.setshowbti();
     this.onChangeedoc();
@@ -412,12 +412,12 @@ export class DisbursementComponent implements OnInit {
       this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
     }
     this.rowpbi = true;
-    
+
     this.apiService
       .getById(id, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-       // this.dataSeq = data.data2;
+        // this.dataSeq = data.data2;
         this.dataAdd.FNANNALSMAP_RSTATUS = data.data[0].FNANNALSMAP_STATUS;
         this.dataAdd.FNANNALS_MONEYC = parseFloat(data.data[0].FNANNALS_MONEYC).toFixed(2);
         this.dataAdd.CITIZEN_IDB = data.data[0].CITIZEN_IDB;
@@ -431,10 +431,10 @@ export class DisbursementComponent implements OnInit {
         this.dataAdd.CITIZEN_IDP3 = data.data[0].CITIZEN_IDP3;
         this.dataAdd.CITIZEN_IDP4 = data.data[0].CITIZEN_IDP4;
         this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
-         for (let i = 0; i < data.data2.length; i++) {
-            this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
-            this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
-          }
+        for (let i = 0; i < data.data2.length; i++) {
+          this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
+          this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
+        }
       });
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
@@ -499,7 +499,7 @@ export class DisbursementComponent implements OnInit {
 
     }
   }
-    // ฟังก์ขันสำหรับการเพิ่มข้อมูล
+  // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdataapp() {
     if (this.dataAdd.FNANNALS_MONEYC == '') {
       this.toastr.warning("แจ้งเตือน:กรุณากรอกจำนวนเงิน");
@@ -523,75 +523,75 @@ export class DisbursementComponent implements OnInit {
 
     }
   }
-    async sendfile(id: any, link: any, link3: any) {
-      this.dataAdd.FNANNALSMAP_CODE = id;
-      this.dataAdd.link2 = link;
-      this.dataAdd.link3 = link3;
+  async sendfile(id: any, link: any, link3: any) {
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.link2 = link;
+    this.dataAdd.link3 = link3;
 
-      Swal.fire({
-        title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
-        text: 'กำลังรวมไฟล์ PDF...',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'ตกลง',
-        cancelButtonText: 'ยกเลิก',
-      }).then(async (result) => {
-        if (result.value) {
-          Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-          try {
-            // 1. โหลดไฟล์ PDF ทั้งสองไฟล์จาก URL
-            const pdf1Bytes = await fetch(link).then(res => res.arrayBuffer());
-            const pdf2Bytes = await fetch(link3).then(res => res.arrayBuffer());
+    Swal.fire({
+      title: 'ต้องการรวมไฟล์ส่งสารบรรณ',
+      text: 'กำลังรวมไฟล์ PDF...',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(async (result) => {
+      if (result.value) {
+        Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+        try {
+          // 1. โหลดไฟล์ PDF ทั้งสองไฟล์จาก URL
+          const pdf1Bytes = await fetch(link).then(res => res.arrayBuffer());
+          const pdf2Bytes = await fetch(link3).then(res => res.arrayBuffer());
 
-            // 2. อ่านข้อมูลไฟล์ PDF
-            const pdf1 = await PDFDocument.load(pdf1Bytes);
-            const pdf2 = await PDFDocument.load(pdf2Bytes);
+          // 2. อ่านข้อมูลไฟล์ PDF
+          const pdf1 = await PDFDocument.load(pdf1Bytes);
+          const pdf2 = await PDFDocument.load(pdf2Bytes);
 
-            // 3. สร้างไฟล์ PDF ใหม่เพื่อนำหน้ากระดาษมารวมกัน
-            const mergedPdf = await PDFDocument.create();
+          // 3. สร้างไฟล์ PDF ใหม่เพื่อนำหน้ากระดาษมารวมกัน
+          const mergedPdf = await PDFDocument.create();
 
-            // นำหน้าทั้งหมดจากไฟล์ที่ 1 มาใส่
-            const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
-            copiedPages1.forEach((page) => mergedPdf.addPage(page));
+          // นำหน้าทั้งหมดจากไฟล์ที่ 1 มาใส่
+          const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+          copiedPages1.forEach((page) => mergedPdf.addPage(page));
 
-            // นำหน้าทั้งหมดจากไฟล์ที่ 2 มาใส่
-            const copiedPages2 = await mergedPdf.copyPages(pdf2, pdf2.getPageIndices());
-            copiedPages2.forEach((page) => mergedPdf.addPage(page));
+          // นำหน้าทั้งหมดจากไฟล์ที่ 2 มาใส่
+          const copiedPages2 = await mergedPdf.copyPages(pdf2, pdf2.getPageIndices());
+          copiedPages2.forEach((page) => mergedPdf.addPage(page));
 
-            // 4. บันทึกไฟล์ใหม่และแปลงเป็น File Object
-            const mergedPdfBytes = await mergedPdf.save();
-            const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
-            const user = this.tokenStorage.getUser();
+          // 4. บันทึกไฟล์ใหม่และแปลงเป็น File Object
+          const mergedPdfBytes = await mergedPdf.save();
+          const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
+          const user = this.tokenStorage.getUser();
 
-            // 5. อัปโหลดไฟล์ที่รวมแล้ว (ใช้ code 57 แบบเดียวกับการแนบไฟล์เบิก)
-            this.Uploadfiles.uploadcheck(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '57')
-              .subscribe((event: any) => {
-                if (event.type == 4) {
-                   // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ
-                   this.dataAdd.opt = "sendfile";
-                   this.apiService.getdata(this.dataAdd, this.url)
-                     .pipe(first())
-                     .subscribe((data: any) => {
-                       if (data.status == 1) {
-                         Swal.close();
-                         this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
-                         this.fetchdatalist();
-                       } else {
-                         Swal.fire('ข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ', 'error');
-                       }
-                     });
-                }
-              });
+          // 5. อัปโหลดไฟล์ที่รวมแล้ว (ใช้ code 57 แบบเดียวกับการแนบไฟล์เบิก)
+          this.Uploadfiles.uploadcheck(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '57')
+            .subscribe((event: any) => {
+              if (event.type == 4) {
+                // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ
+                this.dataAdd.opt = "sendfile";
+                this.apiService.getdata(this.dataAdd, this.url)
+                  .pipe(first())
+                  .subscribe((data: any) => {
+                    if (data.status == 1) {
+                      Swal.close();
+                      this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                      this.fetchdatalist();
+                    } else {
+                      Swal.fire('ข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ', 'error');
+                    }
+                  });
+              }
+            });
 
-          } catch (error) {
-            console.error("Error merging PDFs:", error);
-            Swal.fire('ข้อผิดพลาด', 'ไม่สามารถรวมไฟล์ได้ (อาจเกิดจากไฟล์ไม่มีอยู่จริง หรือติดปัญหา Cross-Origin)', 'error');
-          }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+        } catch (error) {
+          console.error("Error merging PDFs:", error);
+          Swal.fire('ข้อผิดพลาด', 'ไม่สามารถรวมไฟล์ได้ (อาจเกิดจากไฟล์ไม่มีอยู่จริง หรือติดปัญหา Cross-Origin)', 'error');
         }
-      });
-    }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+      }
+    });
+  }
   updatedata() {
 
     this.dataAdd.opt = "update";
@@ -733,19 +733,19 @@ export class DisbursementComponent implements OnInit {
     if (data && data.saved && data.blob) {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-             
-          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '52')
-            .subscribe((event: any) => {
-              if (event.type == 4) { // HttpEventType.Response
-                 this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
-                 this.fetchdatalist();
-              }
-            });
-    
+
+      this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '52')
+        .subscribe((event: any) => {
+          if (event.type == 4) { // HttpEventType.Response
+            this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
+            this.fetchdatalist();
+          }
+        });
+
     }
   }
-    async openPdfAnnotator1(p: any) {
-     // console.log(p.EBOOKREQ_LINK);
+  async openPdfAnnotator1(p: any) {
+    // console.log(p.EBOOKREQ_LINK);
     const cacheBuster = new Date().getTime();
     const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
     const user = this.tokenStorage.getUser();
@@ -765,10 +765,10 @@ export class DisbursementComponent implements OnInit {
     if (data && data.saved && data.blob) {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-      
+
       this.file = file;
       this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
-      
+
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       if (fileInput) {
         const dataTransfer = new DataTransfer();

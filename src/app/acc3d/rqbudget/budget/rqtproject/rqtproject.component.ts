@@ -659,6 +659,11 @@ export class RqtprojectComponent implements OnInit {
   }
   // เคลียร์ค่า textbox
   setshowbti() {
+    this.dataAdd.PRPLPROJECTACT_NAME = [];
+    this.dataAdd.PRPLPROJECTACT_ACT = [];
+    this.dataAdd.PRPLPROJECT_PERSONS = [];
+    this.dataAdd.PRPLPROJECT_PERSONP = [];
+    this.dataAdd.PRPLPROJECT_PERSONO = [];
     this.dataAdd.RPLINCOME_CODE = '';
     this.dataAdd.RCRPART_ID = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
@@ -1535,11 +1540,11 @@ export class RqtprojectComponent implements OnInit {
     this.number1 = [];
     for (let i = 0; i < this.dataAdd.PRPLPROJECT_TIME; i++) {
       this.number1[i] = i;
-      this.dataAdd.PRPLPROJECTACT_NAME[i] = '';
-      this.dataAdd.PRPLPROJECTACT_ACT[i] = '';
-      this.dataAdd.PRPLPROJECT_PERSONS[i] = 0;
-      this.dataAdd.PRPLPROJECT_PERSONP[i] = 0;
-      this.dataAdd.PRPLPROJECT_PERSONO[i] = 0;
+      this.dataAdd.PRPLPROJECTACT_NAME[i] = this.dataAdd.PRPLPROJECTACT_NAME[i] !== undefined ? this.dataAdd.PRPLPROJECTACT_NAME[i] : '';
+      this.dataAdd.PRPLPROJECTACT_ACT[i] = this.dataAdd.PRPLPROJECTACT_ACT[i] !== undefined ? this.dataAdd.PRPLPROJECTACT_ACT[i] : '';
+      this.dataAdd.PRPLPROJECT_PERSONS[i] = this.dataAdd.PRPLPROJECT_PERSONS[i] !== undefined ? this.dataAdd.PRPLPROJECT_PERSONS[i] : 0;
+      this.dataAdd.PRPLPROJECT_PERSONP[i] = this.dataAdd.PRPLPROJECT_PERSONP[i] !== undefined ? this.dataAdd.PRPLPROJECT_PERSONP[i] : 0;
+      this.dataAdd.PRPLPROJECT_PERSONO[i] = this.dataAdd.PRPLPROJECT_PERSONO[i] !== undefined ? this.dataAdd.PRPLPROJECT_PERSONO[i] : 0;
     }
 
   }

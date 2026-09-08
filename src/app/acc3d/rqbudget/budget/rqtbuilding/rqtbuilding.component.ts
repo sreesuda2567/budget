@@ -880,7 +880,7 @@ export class RqtbuildingComponent implements OnInit {
         if (data.status == 1) {
           this.toastr.success("แจ้งเตือน:ลบไฟล์เรียบร้อยแล้ว");
           this.editdata(id);
-          this.fetchdatalist();
+          this.fetchdatalistapp();
           // document.getElementById("ModalClose")?.click();
         }
       });

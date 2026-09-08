@@ -34,7 +34,7 @@ export class EpschoolLoadComponent implements OnInit {
   loading: any;
   loadingdetail: any;
   dataNameb: any;
-  dataAdd: any = { check: [], FEREIM_CODE: [], FEREIMDT_WMONEY: [], FEREIMDT_LINK: [] };
+  dataAdd: any = { check: [], FEREIM_CODE: [], FEREIMDT_WMONEY: [], FEREIMDT_LINK: [] , FEREIMREC_LINK:[]};
   searchTerm: any;
   show: any;
   dataPro: any;
@@ -159,7 +159,7 @@ export class EpschoolLoadComponent implements OnInit {
               }
           }
           for (let i = 0; i < this.datalistlink.length; i++) {
-            this.dataAdd.FEREIMDT_LINK[i] = this.datalistlink[i].link;
+            this.dataAdd.FEREIMREC_LINK[i] = this.datalistlink[i].link;
            // console.log(this.dataAdd.FEREIMDT_LINK[i]);
 
           }

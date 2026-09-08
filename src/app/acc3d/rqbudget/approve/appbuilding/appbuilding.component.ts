@@ -454,6 +454,7 @@ export class AppbuildingComponent implements OnInit {
    //เป้าประสงค์
   fetchdataPLESTIMATEPLAN() {
     this.dataAdd.opt = "viewPLESTIMATEPLAN";
+    this.dataPlan = null;
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())
@@ -466,6 +467,7 @@ export class AppbuildingComponent implements OnInit {
     //กลยุทธ์
   fetchdataPLSTRATEGIES() {
     this.dataAdd.opt = "viewPLSTRATEGIES";
+    this.dataPlme = null;
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())
@@ -478,6 +480,7 @@ export class AppbuildingComponent implements OnInit {
    //มาตรการ
   fetchdataPLMEASURES() {
     this.dataAdd.opt = "viewPLMEASURES";
+    this.dataPlmeasures = null;
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())
@@ -490,6 +493,7 @@ export class AppbuildingComponent implements OnInit {
     //แผนงาน
   fetchdataPLPLAND() {
     this.dataAdd.opt = "viewPLPLAND";
+    this.dataPlansub = null;
     this.apiService
       .getdata(this.dataAdd, this.url1)
       .pipe(first())

@@ -49,7 +49,10 @@ export class ContractotherComponent implements OnInit {
   tableSizes = [20, 30,40,100,200];
   searchTerm: any;
   dataSeq: any;
-    previewPdfUrl: string = '';
+  datacampus: any;
+  dataIncome: any;
+  dataProduct: any;
+  previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   constructor(
     private tokenStorage: TokenStorageService,
@@ -117,10 +120,44 @@ export class ContractotherComponent implements OnInit {
                 if (dataf && dataf.length > 0) {
                   this.dataAdd.FACULTY_CODE = dataf[0].FACULTY_CODE;
                 }
+                    var Tablein = {
+          "opt": "viewCAMPUS",
+          "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS,
+          "citizen": this.tokenStorage.getUser().citizen
+        }
+        this.apiService
+          .getdata(Tablein, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.datacampus = data;
+            //this.dataAdd.CAMPUS_CODE = data[0].CAMPUS_CODE;
+          });
                 this.fetchdatalist();                
               });
           });
 
+      });
+       //รายการประเภทเงิน
+    var Tablein = {
+      "opt": "viewPLINCOME"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataIncome = data;
+        // this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+      });
+    //รายการผลผลิต
+    var Tablein = {
+      "opt": "viewPLGPRODUCT"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataProduct = data;
+        // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
       });
   }
 
@@ -222,23 +259,32 @@ export class ContractotherComponent implements OnInit {
     this.dataAdd.DATENOWE = '';
     this.dataAdd.DATENOWR = '';
     this.dataAdd.FNANNALS_MONEYC= '';
+    this.dataAdd.CAMPUS_CODE = '';
+    this.dataAdd.PLINCOME_CODE = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, money: any, link: any) {
+  editdata(id: any, money: any, link: any,campus: any,income: any,product: any) {
      this.setshowbti();
     this.dataAdd.FNANNALS_CODE = id;
     this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
     this.dataAdd.EBOOKREQ_LINK = link;
+    this.dataAdd.CAMPUS_CODE = campus;
+    this.dataAdd.PLINCOME_CODE = income;
+    this.dataAdd.PLGPRODUCT_CODE = product;
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, link: any, ciz: any, number: any, date1: any, date2: any, code: any, money: any) {
+  editdatapp(id: any, link: any, ciz: any, number: any, date1: any, date2: any, code: any, money: any,campus: any,income: any,product: any) {
     this.setshowbti();
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.CITIZEN_IDA = ciz;
     this.dataAdd.FNANNALS_NUMBER = number;
     this.dataAdd.FNANNALS_CODE = code;
+    this.dataAdd.CAMPUS_CODE = campus;
+    this.dataAdd.PLINCOME_CODE = income;
+    this.dataAdd.PLGPRODUCT_CODE = product;
      this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
     if(date1 !=null){
     this.dataAdd.DATENOWE =  new Date(date1)
