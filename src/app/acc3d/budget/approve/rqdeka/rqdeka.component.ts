@@ -141,6 +141,8 @@ export class RqdekaComponent implements OnInit {
   insertdata() {
     if (this.dataAdd.FNDEKA_REMARK == '') {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
+    }else  if (this.dataAdd.FNDEKA_MONEY=='' ) {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวนเงิน");
     } else {
       this.dataAdd.opt = "insert";
       this.apiService
@@ -320,6 +322,8 @@ export class RqdekaComponent implements OnInit {
         this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNDEKA_RSTATUS;
         this.dataAdd.FNDEKA_TAX = parseFloat(data.data[0].FNDEKA_TAX).toFixed(2);
         this.dataAdd.FNDEKA_FINE = parseFloat(data.data[0].FNDEKA_FINE || 0).toFixed(2);
+        this.dataAdd.FNDEKA_MONEY = parseFloat(data.data[0].FNDEKA_MONEY || 0).toFixed(2);
+        
         for (let i = 0; i < data.data2.length; i++) {
           this.dataAdd.List.push(data.data2[i].id);
         }

@@ -100,6 +100,9 @@
                             <div align="center">ประเภทเงิน</div>
                         </th>
                         <th>
+                            <div align="center">เจ้าหนี้/ผู้ขอเบิก</div>
+                        </th>
+                        <th>
                             <div align="center">จำนวนเงิน</div>
                         </th>
                         <th>
@@ -127,7 +130,8 @@
                             <i class="text-secondary">[{{p.FNPAYMENT_NAME}}]</i>
                         </td>
                         <td>{{p.PLINCOME_NAME}}</td>
-                        <td align="right">{{p.FNEXPENSES_AMONEY_TOTAL| number : '1.2-2'}}</td>
+                        <td>{{p.FNPAYMENT_CREDITOR}}</td>
+                        <td align="right">{{p.FNPAYMENT_MONEY| number : '1.2-2'}}</td>
                         <td>{{p.FNPAYMENT_NUMBER}}</td>
                         <td>{{p.DEKASTATUS_NAME}}</td>
                         <td width="8%" align="center">
@@ -243,6 +247,14 @@
                 <div class="row mt-3">
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
+                        <div class="mb-2">
+                            <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
+                                <i class="fa-solid fa-coins text-primary me-1"></i> จำนวนเงิน:
+                            </label>
+                            <input type="text" class="form-control form-control-sm shadow-sm" name="FNPAYMENT_MONEY"
+                                id="FNPAYMENT_MONEY" [(ngModel)]="dataAdd.FNPAYMENT_MONEY"
+                                placeholder="ระบุจำนวนเงิน...">
+                        </div>
                         <div class="mb-2">
                             <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
                                 <i class="fa-solid fa-comment-dots text-primary me-1"></i> เรื่อง:

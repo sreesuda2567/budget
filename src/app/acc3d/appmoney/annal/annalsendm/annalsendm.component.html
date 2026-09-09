@@ -189,10 +189,6 @@
                         </span>
                     </td>
                     <td align="center" data-label="เลือก:">
-                        <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white"
-                            id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE1,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages)"><i
-                                class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
                         <a *ngIf="p.linkreport" role="button" title="รวมไฟล์ส่งสารบรรณ"
                             class="btn btn-secondary text-white"
                             (click)="sendfile(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE1,p.linkreport,p.linkclear)"><i
@@ -204,6 +200,14 @@
                                 <i class="fa-solid fa-gear"></i> จัดการ
                             </button>
                             <ul class="dropdown-menu shadow" attr.aria-labelledby="dropdownManage{{i}}">
+                                <li *ngIf="p.linkclear">
+                                    <a class="dropdown-item py-2" href="javascript:void(0)" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
+                                        (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE1,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages)">
+                                        <i class="fa fa-plus-circle text-success w-20px text-center"></i>
+                                        ใบเบิก
+                                    </a>
+                                </li>
                                 <li>
                                     <a class="dropdown-item py-2" href="javascript:void(0)" data-bs-toggle="modal"
                                         data-bs-target="#modalEditf"

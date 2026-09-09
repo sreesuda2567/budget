@@ -134,7 +134,7 @@
                         <td align="right">{{p.FNEXPENSES_AMONEY_TOTAL| number : '1.2-2'}}</td>
                         <td align="right">{{p.FNDEKA_TAX| number : '1.2-2'}}</td>
                         <td align="right">{{p.FNDEKA_FINE || 0 | number : '1.2-2'}}</td>
-                        <td align="right">{{p.FNEXPENSES_AMONEY_TOTAL-p.FNDEKA_TAX-(p.FNDEKA_FINE||0)| number : '1.2-2'}}</td>
+                        <td align="right">{{p.FNDEKA_MONEY-p.FNDEKA_TAX-(p.FNDEKA_FINE||0)| number : '1.2-2'}}</td>
                         <td>{{p.DEKASTATUS_NAME}}</td>
                         <td width="8%" align="center">
                             <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล"
@@ -241,6 +241,13 @@
 
                 <div class="row mt-3">
                     <div class="col-md-1"></div>
+                      <div class="col-md-2">
+                        <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
+                                <i class="fa-solid fa-coins text-primary me-1"></i> จำนวนเงิน:
+                            </label>
+                        <input name="FNDEKA_MONEY" id="FNDEKA_MONEY" type="text" class="form-control"
+                          placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNDEKA_MONEY">
+                      </div>
                      <div class="col-md-2">
                         <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
                                 <i class="fa-solid fa-money-bill-transfer text-primary me-1"></i> จำนวนเงินหักส่ง:
@@ -255,7 +262,7 @@
                         <input name="FNDEKA_FINE" id="FNDEKA_FINE" type="text" class="form-control"
                           placeholder="ค่าปรับ" [(ngModel)]="dataAdd.FNDEKA_FINE">
                       </div>
-                    <div class="col-md-7"></div>  
+                    <div class="col-md-5"></div>  
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
                         <div class="mb-2">

@@ -155,6 +155,8 @@ export class RqpaymentComponent implements OnInit {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
     } else  if (this.dataAdd.FNPAYMENT_CREDITOR=='' ) {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเจ้าหนี้");
+    }else  if (this.dataAdd.FNPAYMENT_MONEY=='' ) {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวนเงิน");
     }else{
       this.dataAdd.opt = "insert";
       this.apiService
@@ -314,6 +316,11 @@ export class RqpaymentComponent implements OnInit {
     });
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+    numberWithCommas(x: any) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  }
   editdata(id: any) {
     this.setshowbti();
     this.dataAdd.FNDEKA_CODE = id;
@@ -326,6 +333,7 @@ export class RqpaymentComponent implements OnInit {
         this.dataAdd.FNPAYMENT_CREDITOR = data.data[0].FNPAYMENT_CREDITOR;
         this.dataAdd.FNDEKA_RSTATUS = data.data[0].FNPAYMENT_RSTATUS;
         this.dataAdd.FNPAYMENT_NAME = data.data[0].FNPAYMENT_NAME;
+        this.dataAdd.FNPAYMENT_MONEY =this.numberWithCommas(Number(data.data[0].FNPAYMENT_MONEY).toFixed(2)) ;
         for (let i = 0; i < data.data2.length; i++) {
             this.dataAdd.List.push(data.data2[i].id);
         }
@@ -376,6 +384,7 @@ export class RqpaymentComponent implements OnInit {
 
     // ล้าง selection หลังเพิ่มเสร็จ
     this.dataAdd.SelectList = [];
+    this.dataAdd.FNPAYMENT_MONEY = this.sumSelectedMoney;
   }
   delIt() {
     // ตรวจสอบว่ามีการเลือกหลายรายการหรือไม่
@@ -418,6 +427,7 @@ export class RqpaymentComponent implements OnInit {
 
     // ล้าง selection หลังลบเสร็จ
     this.dataAdd.PickList = [];
+    this.dataAdd.FNPAYMENT_MONEY = this.sumSelectedMoney;
   }
   showadd(id: any) {
     this.dataAdd.showde = id.target.value;
