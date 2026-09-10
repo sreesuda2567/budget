@@ -289,7 +289,8 @@ export class AppprojectComponent implements OnInit {
             this.dataFac = data;
             // console.log(data);
             this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
-            // this.dataAdd.FFACULTY_CODE = data[0].FACULTY_CODE;
+             this.dataAdd.FFACULTY_CODE = data[0].FACULTY_CODE;
+            this.dataAdd.FACULTY_CODE1 = data[0].FACULTY_CODE;
             this.fetchdatalistapp();
           });
       });

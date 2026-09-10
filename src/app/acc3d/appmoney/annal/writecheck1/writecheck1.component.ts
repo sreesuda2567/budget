@@ -10,6 +10,7 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 defineLocale('th', thBeLocale);
 
 @Component({
@@ -37,6 +38,8 @@ export class Writecheck1Component implements OnInit {
   locale = 'th-be';
   locales = listLocales();
   datalistapp: any;
+  previewPdfUrl: string | null = null;
+  safePdfUrl: SafeResourceUrl | null = null;
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -46,7 +49,8 @@ export class Writecheck1Component implements OnInit {
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private Uploadfiles: UploadfileserviceService,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -284,5 +288,15 @@ export class Writecheck1Component implements OnInit {
         this.dataAdd.check[i] = true;
       }
     }
+  }
+
+  previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  closePdfPreview() {
+    this.previewPdfUrl = null;
+    this.safePdfUrl = null;
   }
 }

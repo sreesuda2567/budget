@@ -23,7 +23,8 @@
                                     <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
                                         id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
                                     <select name="f_code" id="f_code" class="form-select"
-                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdatalist()" (click)="fetchdataCam()">
+                                        [(ngModel)]="dataAdd.CAMPUS_CODE" (change)="fetchdatalist()"
+                                        (click)="fetchdataCam()">
                                         <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'">
                                             ทุกวิทยาเขต
                                         </option>
@@ -96,7 +97,7 @@
                         <th>
                             <div align="center">หมายเหตุ</div>
                         </th>
-                         <th>
+                        <th>
                             <div align="center">จำนวนเงินขอเบิก</div>
                         </th>
                         <th>
@@ -131,7 +132,7 @@
                             <i class="text-secondary">[{{p.FNDEKA_NAME}}]</i>
                         </td>
                         <td>{{p.FNDEKA_REMARKD}}</td>
-                        <td align="right">{{p.FNEXPENSES_AMONEY_TOTAL| number : '1.2-2'}}</td>
+                        <td align="right">{{p.FNDEKA_MONEY| number : '1.2-2'}}</td>
                         <td align="right">{{p.FNDEKA_TAX| number : '1.2-2'}}</td>
                         <td align="right">{{p.FNDEKA_FINE || 0 | number : '1.2-2'}}</td>
                         <td align="right">{{p.FNDEKA_MONEY-p.FNDEKA_TAX-(p.FNDEKA_FINE||0)| number : '1.2-2'}}</td>
@@ -180,12 +181,13 @@
                             </option>
                         </select>
                     </div>
-                    
+
                     <div class="col-md-7"></div>
                     <div class="col-md-1"></div>
                     <div class="col-md-4 text-secondary mb-3" style="font-size: 10pt">
                         <label> คณะ /หน่วยงาน: </label>
-                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE" (change)="Passetsearch()">
+                        <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
+                            (change)="Passetsearch()">
                             <option value="" *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS!='1'">
                                 ทุกคณะ/หน่วยงาน</option>
                             <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}
@@ -200,13 +202,15 @@
                             <input type="text" name="p_dm" class="form-control" id="p_dm"
                                 placeholder="🔍 ค้นหาเลข3ดี..." (keyup)="Passetsearch()" [(ngModel)]="dataAdd.search">
                             <input type="text" name="search_deka" class="form-control" id="search_deka"
-                                placeholder="🔍 ค้นหาเลขคุมเบิก..." (keyup)="Passetsearch1()" [(ngModel)]="dataAdd.search_deka">
+                                placeholder="🔍 ค้นหาเลขคุมเบิก..." (keyup)="Passetsearch1()"
+                                [(ngModel)]="dataAdd.search_deka">
                         </div>
                         <select name="SelectList" id="SelectList" multiple [(ngModel)]="dataAdd.SelectList"
                             class="form-select form-select-sm" style="height: 180px;">
                             <option [value]="sub.id" *ngFor="let sub of data3d; let i = index"
                                 (click)="dataAdd.FNDEKA_REMARK = sub.FNEXPENSES_TITLE">
-                                {{sub.FNEXPENSES_STEP}}จำนวนเงิน:{{sub.FNEXPENSES_AMONEY| number }}({{sub.FACULTY_ABNAME}})</option>
+                                {{sub.FNEXPENSES_STEP}}จำนวนเงิน:{{sub.FNEXPENSES_AMONEY| number
+                                }}({{sub.FACULTY_ABNAME}})</option>
                         </select>
                     </div>
                     <!-- ปุ่มตรงกลาง -->
@@ -224,12 +228,14 @@
                     <div class="col-md-5">
                         <div class="small text-success fw-bold mb-2 d-flex align-items-center" style="height: 31px;">
                             <div><i class="fa-solid fa-check-circle me-1"></i>เลือกแล้ว
-                            ({{data3d2?.length || 0}} รายการ)</div>
+                                ({{data3d2?.length || 0}} รายการ)</div>
                         </div>
                         <select name="PickList[]" id="PickList[]" multiple="multiple" (click)="showadd($event)"
-                            [(ngModel)]="dataAdd.PickList" class="form-select form-select-sm border-success" style="height: 180px;">
+                            [(ngModel)]="dataAdd.PickList" class="form-select form-select-sm border-success"
+                            style="height: 180px;">
                             <option [value]="psub.id" *ngFor="let psub of data3d2; let i = index">
-                                {{psub.FNEXPENSES_STEP}}จำนวนเงิน:{{psub.FNEXPENSES_AMONEY | number}}({{psub.FACULTY_ABNAME}})
+                                {{psub.FNEXPENSES_STEP}}จำนวนเงิน:{{psub.FNEXPENSES_AMONEY |
+                                number}}({{psub.FACULTY_ABNAME}})
                             </option>
                         </select>
                         <div class="text-end mt-2 text-danger fw-bold" style="font-size: 14pt;">
@@ -241,28 +247,28 @@
 
                 <div class="row mt-3">
                     <div class="col-md-1"></div>
-                      <div class="col-md-2">
+                    <div class="col-md-2">
                         <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
-                                <i class="fa-solid fa-coins text-primary me-1"></i> จำนวนเงิน:
-                            </label>
+                            <i class="fa-solid fa-coins text-primary me-1"></i> จำนวนเงิน:
+                        </label>
                         <input name="FNDEKA_MONEY" id="FNDEKA_MONEY" type="text" class="form-control"
-                          placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNDEKA_MONEY">
-                      </div>
-                     <div class="col-md-2">
+                            placeholder="จำนวนเงิน" [(ngModel)]="dataAdd.FNDEKA_MONEY">
+                    </div>
+                    <div class="col-md-2">
                         <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
-                                <i class="fa-solid fa-money-bill-transfer text-primary me-1"></i> จำนวนเงินหักส่ง:
-                            </label>
-                        <input name="FNDEKA_TAX" id="FNDEKA_TAX" type="text" class="form-control"
-                          placeholder="หักส่ง" [(ngModel)]="dataAdd.FNDEKA_TAX">
-                      </div>
-                      <div class="col-md-2">
+                            <i class="fa-solid fa-money-bill-transfer text-primary me-1"></i> จำนวนเงินหักส่ง:
+                        </label>
+                        <input name="FNDEKA_TAX" id="FNDEKA_TAX" type="text" class="form-control" placeholder="หักส่ง"
+                            [(ngModel)]="dataAdd.FNDEKA_TAX">
+                    </div>
+                    <div class="col-md-2">
                         <label class="text-secondary fw-bold mb-1" style="font-size: 10pt">
-                                <i class="fa-solid fa-gavel text-primary me-1"></i> ค่าปรับ:
-                            </label>
+                            <i class="fa-solid fa-gavel text-primary me-1"></i> ค่าปรับ:
+                        </label>
                         <input name="FNDEKA_FINE" id="FNDEKA_FINE" type="text" class="form-control"
-                          placeholder="ค่าปรับ" [(ngModel)]="dataAdd.FNDEKA_FINE">
-                      </div>
-                    <div class="col-md-5"></div>  
+                            placeholder="ค่าปรับ" [(ngModel)]="dataAdd.FNDEKA_FINE">
+                    </div>
+                    <div class="col-md-5"></div>
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
                         <div class="mb-2">

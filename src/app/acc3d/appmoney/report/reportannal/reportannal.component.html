@@ -198,14 +198,14 @@
                             <td class="text-end">{{p.FNLISTBW_VOUC_M| number : '1.2-2'}} </td>
                             <td class="text-center">
                                 <span *ngIf="p.CONTRACT_LINK" class="ms-1 position-relative d-inline-block"><a role="button" title="รายงานสัญญา"
-                                        class="btn btn-success btn-sm text-white" href="{{p.CONTRACT_LINK}}" target="_blank"><i
+                                        class="btn btn-success btn-sm text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
                                             class="fa-solid fa-file-contract"></i></a>
                                     <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
                                         {{p.CONTRACT_LINK_pages}}
                                     </span>
                                 </span>
                                 <span *ngIf="p.clearcheck" class="ms-1 position-relative d-inline-block"><a role="button" title="รายงานใบล้างหนี้"
-                                        class="btn btn-primary btn-sm text-white" href="{{p.clearcheck}}" target="_blank"><i
+                                        class="btn btn-primary btn-sm text-white" (click)="previewPdf(p.clearcheck)"><i
                                             class="fa-solid fa-file-contract"></i></a>
                                     <span *ngIf="p.clearcheck_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
                                         {{p.clearcheck_pages}}
@@ -312,14 +312,14 @@
                             <td>{{p.FSTF_FNAME}}</td>
                             <td>{{p.FACULTY_TNAME}}
                                 <span *ngIf="p.CONTRACT_LINK" class="ms-1 position-relative d-inline-block"><a role="button" title="รายงานสัญญา"
-                                        class="btn btn-success btn-sm text-white" href="{{p.CONTRACT_LINK}}" target="_blank"><i
+                                        class="btn btn-success btn-sm text-white" (click)="previewPdf(p.CONTRACT_LINK)"><i
                                             class="fa-solid fa-file-contract"></i></a>
                                     <span *ngIf="p.CONTRACT_LINK_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
                                         {{p.CONTRACT_LINK_pages}}
                                     </span>
                                 </span>
                                 <span *ngIf="p.clearcheck" class="ms-1 position-relative d-inline-block"><a role="button" title="รายงานใบล้างหนี้"
-                                        class="btn btn-primary btn-sm text-white" href="{{p.clearcheck}}" target="_blank"><i
+                                        class="btn btn-primary btn-sm text-white" (click)="previewPdf(p.clearcheck)"><i
                                             class="fa-solid fa-file-contract"></i></a>
                                     <span *ngIf="p.clearcheck_pages" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" style="font-size: 0.65rem; z-index: 10;">
                                         {{p.clearcheck_pages}}

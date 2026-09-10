@@ -302,6 +302,7 @@ export class AppassetComponent implements OnInit {
             // console.log(data[0].FACULTY_CODE);
             this.dataAdd.FACULTY_CODE = datafac[0].FACULTY_CODE;
             this.dataAdd.FFACULTY_CODE = datafac[0].FACULTY_CODE;
+            this.dataAdd.FACULTY_CODE1 = datafac[0].FACULTY_CODE;
             this.fetchdatalistapp();
             //รายการหลักสูตร
             var Tablesec = {

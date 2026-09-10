@@ -141,7 +141,7 @@ export class RqdekaComponent implements OnInit {
   insertdata() {
     if (this.dataAdd.FNDEKA_REMARK == '') {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
-    }else  if (this.dataAdd.FNDEKA_MONEY=='' ) {
+    } else if (this.dataAdd.FNDEKA_MONEY == '') {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวนเงิน");
     } else {
       this.dataAdd.opt = "insert";
@@ -188,7 +188,7 @@ export class RqdekaComponent implements OnInit {
         //console.log(this.dataSub);
       });
   }
-   Passetsearch1() {
+  Passetsearch1() {
     //รายการวิชา
     this.dataAdd.opt = "view3ddbpd1";
     this.apiService
@@ -196,8 +196,17 @@ export class RqdekaComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.data3d = data.data;
+        this.dataAdd.FNDEKA_REMARK = data.data[0].FNEXPENSES_TITLE;
+        this.dataAdd.FNDEKA_MONEY = this.numberWithCommas(Number(data.data[0].FNPAYMENT_MONEY).toFixed(2));
+        this.dataAdd.FNPAYMENT_CODE = data.data[0].FNPAYMENT_CODE;
         //console.log(this.dataSub);
       });
+  }
+    // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+    numberWithCommas(x: any) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   }
   //ภาคเงิน
   fetchdatalistcr() {
@@ -244,6 +253,8 @@ export class RqdekaComponent implements OnInit {
     this.dataAdd.FNDEKA_RSTATUS = "1";
     this.dataAdd.FNDEKA_TAX = "0";
     this.dataAdd.FNDEKA_FINE = "0";
+    this.dataAdd.FNDEKA_MONEY = '0.00';
+    this.dataAdd.FNPAYMENT_CODE = '';
     this.Passetsearch();
   }
   fetchdatalist() {
@@ -323,7 +334,7 @@ export class RqdekaComponent implements OnInit {
         this.dataAdd.FNDEKA_TAX = parseFloat(data.data[0].FNDEKA_TAX).toFixed(2);
         this.dataAdd.FNDEKA_FINE = parseFloat(data.data[0].FNDEKA_FINE || 0).toFixed(2);
         this.dataAdd.FNDEKA_MONEY = parseFloat(data.data[0].FNDEKA_MONEY || 0).toFixed(2);
-        
+
         for (let i = 0; i < data.data2.length; i++) {
           this.dataAdd.List.push(data.data2[i].id);
         }

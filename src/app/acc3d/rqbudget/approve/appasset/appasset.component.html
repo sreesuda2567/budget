@@ -27,8 +27,8 @@
               <div class="row">
                 <div class="col-md-6">
                   <label for="name"><strong>คณะ /หน่วยงาน</strong> </label>
-                  <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
-                    (change)="fetchDataByTab()">
+                  <select name="f_code1" id="f_code1" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE1"
+                    (change)="dataAdd.FACULTY_CODE = dataAdd.FACULTY_CODE1; fetchDataByTab()">
                     <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
                   </select>
                 </div>
@@ -1919,6 +1919,13 @@
             <div class="row g-4">
 
               <!-- Row 3 -->
+               <div class="col-md-12">
+                  <label for="name"><strong>คณะ /หน่วยงาน</strong> </label>
+                  <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
+                    (change)="fetchDataByTab()">
+                    <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                  </select>
+                </div>
               <div class="col-md-6">
                 <label class="form-label fw-bold text-secondary mb-1">
                   <i class="fa-solid fa-sack-dollar text-success me-2"></i>แหล่งเงิน

@@ -2055,7 +2055,13 @@
         <div class="card border-0 shadow-sm">
           <div class="card-body p-4 bg-white">
             <div class="row g-4">
-
+             <div class="col-md-12">
+                  <label for="name"><strong>คณะ /หน่วยงาน</strong> </label>
+                  <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
+                    (change)="fetchDataByTab()">
+                    <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
+                  </select>
+                </div> 
               <!-- Row 3 -->
               <div class="col-md-6">
                 <label class="form-label fw-bold text-secondary mb-1">
