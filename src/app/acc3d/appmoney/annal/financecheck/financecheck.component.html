@@ -185,23 +185,33 @@
                             (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)"
                             (click)="onChangeRadio(1)"><i
                                 class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;-->
-                            <a class="btn btn-info text-white" href="javascript:void(0)" title="ลงนาม"
-                                            (click)="openPdfAnnotator(p)">
-                                         <i class="fa-solid fa-file-pen"></i> 
-                                        </a>&nbsp;
-                            <button *ngIf="p.clearcheck" type="submit" title="ใบเบิก" class="btn btn-success text-white"
-                                id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.clearcheck)"
-                                (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
-                            <a *ngIf="p.linkreport" role="button" title="รวมไฟล์ส่งสารบรรณ"
-                                class="btn btn-secondary text-white"
-                                (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
-                                    class="fa-solid fa-file-arrow-up"></i>
-                            </a>&nbsp;
-                            <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalupdate"
-                                (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.clearcheck)"><i
-                                    class="fa fa-arrow-circle-right"></i>&nbsp;แนบไฟล์</button>
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-gear me-1"></i> จัดการ
+                                </button>
+                                <ul class="dropdown-menu shadow-sm">
+                                  <!-- <li>
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="ลงนาม" (click)="openPdfAnnotator(p)">
+                                            <i class="fa-solid fa-file-pen text-info me-2"></i> ลงนาม
+                                        </a>
+                                    </li>--> 
+                                    <li *ngIf="p.clearcheck">
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="ใบเบิก" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.clearcheck); onChangeRadio(1)">
+                                            <i class="fa fa-plus-circle text-success me-2"></i> ใบเบิก
+                                        </a>
+                                    </li>
+                                   <!-- <li *ngIf="p.linkreport">
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="รวมไฟล์ส่งสารบรรณ" (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)">
+                                            <i class="fa-solid fa-file-arrow-up text-secondary me-2"></i> รวมไฟล์ส่งสารบรรณ
+                                        </a>
+                                    </li>-->
+                                    <li>
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="แนบไฟล์" data-bs-toggle="modal" data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.clearcheck,p.linkreport)">
+                                            <i class="fa fa-arrow-circle-right text-primary me-2"></i> แนบไฟล์
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     <tr *ngIf="!rownum">
@@ -295,44 +305,48 @@
                             (click)="onChangeRadio(2)"><i
                                 class="fa-solid fa-file-invoice"></i>&nbsp;ใบเสร็จ</button>&nbsp;
                         -->
-                            <span *ngIf="p.FNANNALSMAP_RSTATUS=='0' " class="position-relative d-inline-block me-2"><a
-                                    role="button" title="รายงานใบล้างหนี้" class="btn btn-secondary ext-white"
-                                    (click)="previewPdf(p.clearcheck)"><i class="fa-solid fa-file-contract"></i></a>
-                                <span *ngIf="p.clearcheck_pages"
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
-                                    style="font-size: 0.65rem; z-index: 10;">
-                                    {{p.clearcheck_pages}}
-                                </span>
-                            </span>
-                            <span class="position-relative d-inline-block me-2"><a role="button"
-                                    title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
-                                    (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
-                                <span *ngIf="p.linkreport_pages"
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
-                                    style="font-size: 0.65rem; z-index: 10;">
-                                    {{p.linkreport_pages}}
-                                </span>
-                            </span>
-                            <button *ngIf="p.FNANNALSMAP_RSTATUS=='0'  " type="submit" title="ใบเบิก"
-                                class="btn btn-success text-white" id="submitupdate" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
-                                (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.clearcheck)"
-                                (click)="onChangeRadio(1)"><i class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
-                            <a *ngIf="p.FNANNALSMAP_RSTATUS=='0' " role="button" title="รวมไฟล์ส่งสารบรรณ"
-                                class="btn btn-secondary text-white"
-                                (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)"><i
-                                    class="fa-solid fa-file-arrow-up"></i>
-                            </a>&nbsp;
-                            <a *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" role="button" title="ลบข้อมูล"
-                                class="btn btn-danger text-white" (click)="deleteData(p.FNANNALSMAP_CODE)"><i
-                                    class="fa fa-trash"></i>
-                            </a> &nbsp;
-                            <button *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " type="submit"
-                                class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalupdate"
-                                (click)="editdatapp(p.FNANNALSMAP_CODE,p.disbursement,p.FNLISTBW_VOUC_M,p.FNRESTATUS_CODE)"><i
-                                    class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>&nbsp;
-
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-gear me-1"></i> จัดการ
+                                </button>
+                                <ul class="dropdown-menu shadow-sm">
+                                    <li *ngIf="p.FNANNALSMAP_RSTATUS=='0'">
+                                        <a class="dropdown-item py-2 d-flex justify-content-between align-items-center" href="javascript:void(0)" title="รายงานใบล้างหนี้" (click)="previewPdf(p.clearcheck)">
+                                            <span><i class="fa-solid fa-file-contract text-secondary me-2"></i> รายงานใบล้างหนี้</span>
+                                            <span *ngIf="p.clearcheck_pages" class="badge rounded-pill bg-danger">{{p.clearcheck_pages}}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item py-2 d-flex justify-content-between align-items-center" href="javascript:void(0)" title="รายงานใบเบิกเงิน" (click)="previewPdf(p.linkreport)">
+                                            <span><i class="fa-solid fa-file-contract text-info me-2"></i> รายงานใบเบิกเงิน</span>
+                                            <span *ngIf="p.linkreport_pages" class="badge rounded-pill bg-danger">{{p.linkreport_pages}}</span>
+                                        </a>
+                                    </li>
+                                    <li *ngIf="p.FNANNALSMAP_RSTATUS=='0'">
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="ใบเบิก" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.clearcheck); onChangeRadio(1)">
+                                            <i class="fa fa-plus-circle text-success me-2"></i> ใบเบิก
+                                        </a>
+                                    </li>
+                                    <li *ngIf="p.FNANNALSMAP_RSTATUS=='0'">
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="รวมไฟล์ส่งสารบรรณ" (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)">
+                                            <i class="fa-solid fa-file-arrow-up text-secondary me-2"></i> รวมไฟล์ส่งสารบรรณ
+                                        </a>
+                                    </li>
+                                    <li *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A'">
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#exampleModalupdate" (click)="editdatapp(p.FNANNALSMAP_CODE,p.disbursement,p.FNLISTBW_VOUC_M,p.FNRESTATUS_CODE,p.linkreport)">
+                                            <i class="fa fa-arrow-circle-right text-primary me-2"></i> แก้ไข
+                                        </a>
+                                    </li>
+                                    <ng-container *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'">
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item py-2 text-danger" href="javascript:void(0)" title="ลบข้อมูล" (click)="deleteData(p.FNANNALSMAP_CODE)">
+                                                <i class="fa fa-trash me-2"></i> ลบข้อมูล
+                                            </a>
+                                        </li>
+                                    </ng-container>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     <tr *ngIf="!rownum1">

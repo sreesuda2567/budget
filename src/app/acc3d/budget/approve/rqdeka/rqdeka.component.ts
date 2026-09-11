@@ -141,7 +141,7 @@ export class RqdekaComponent implements OnInit {
   insertdata() {
     if (this.dataAdd.FNDEKA_REMARK == '') {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
-    } else if (this.dataAdd.FNDEKA_MONEY == '') {
+    } else if (this.dataAdd.FNDEKA_MONEY == '' || this.dataAdd.FNDEKA_MONEY == '0.00') {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวนเงิน");
     } else {
       this.dataAdd.opt = "insert";

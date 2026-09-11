@@ -379,24 +379,24 @@ export class DisbursementComponent implements OnInit {
     this.dataAdd.FRACCMONEY = [];
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, link: any, money: any, mail: any, at: any, name: any) {
+  editdata(code: any, link: any, money: any, name: any, date: any, fname: any, linkclear: any = null, linkreport: any = null) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
-    this.fetchdatareport();
     this.fetchdatareportnamea();
-    this.dataAdd.FNANNALS_CODE = id;
     this.dataAdd.EBOOKREQ_LINK = link;
-    this.dataAdd.USERNAME_CISCO = mail;
-    this.dataAdd.FNANNALS_BOOK_AT = at;
-    this.dataAdd.FSTF_FNAME = name;
-    if (money != null) {
-      this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
-    }
+    this.dataAdd.FSTF_FNAME = fname;
+    this.dataAdd.FNANNALS_BOOK_AT = date;
+    this.dataAdd.USERNAME_CISCO = name;
+    this.dataAdd.FNANNALS_CODE = code;
+    this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
+    this.dataAdd.linkclear = linkclear;
+    this.dataAdd.linkreport = linkreport;
     this.rowpbi = true;
+    this.rowpbu = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapr(id: any, link: any, money: any, mail: any, at: any, name: any, linkclear?: any) {
+  editdatapr(id: any, link: any, money: any, mail: any, at: any, name: any, linkclear?: any, linkreport?: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -408,6 +408,7 @@ export class DisbursementComponent implements OnInit {
     this.dataAdd.FNANNALS_BOOK_AT = at;
     this.dataAdd.FSTF_FNAME = name;
     this.dataAdd.linkclear = linkclear;
+    this.dataAdd.linkreport = linkreport;
     if (money != null) {
       this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
     }
@@ -714,14 +715,66 @@ export class DisbursementComponent implements OnInit {
     this.safePdfUrl = '';
   }
   async openPdfAnnotator(p: any) {
-    const cacheBuster = new Date().getTime();
-    const reportLink = p.linkclear + (p.linkclear.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const link1 = p.linkclear;
+    const link2 = p.linkreport;
+
+    if (!link1 && !link2) {
+      this.toastr.warning("ไม่มีไฟล์สำหรับลงนาม");
+      return;
+    }
+
     const user = this.tokenStorage.getUser();
+    let finalPdfUrl = '';
+
+    if (link1 && link2) {
+      Swal.fire({ title: 'กำลังเตรียมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+      try {
+        const pdf1Bytes = await fetch(link1).then(res => res.arrayBuffer());
+        const pdf2Bytes = await fetch(link2).then(res => res.arrayBuffer());
+        
+        const pdf1 = await PDFDocument.load(pdf1Bytes);
+        const pdf2 = await PDFDocument.load(pdf2Bytes);
+        const mergedPdf = await PDFDocument.create();
+
+        const count1 = pdf1.getPageCount();
+        const count2 = pdf2.getPageCount();
+
+        let firstPdf = pdf1;
+        let secondPdf = pdf2;
+        
+        if (count2 === 1 && count1 > 1) {
+          firstPdf = pdf2;
+          secondPdf = pdf1;
+        } else if (count2 < count1) {
+          firstPdf = pdf2;
+          secondPdf = pdf1;
+        }
+
+        const copiedPages1 = await mergedPdf.copyPages(firstPdf, firstPdf.getPageIndices());
+        copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+        const copiedPages2 = await mergedPdf.copyPages(secondPdf, secondPdf.getPageIndices());
+        copiedPages2.forEach((page) => mergedPdf.addPage(page));
+
+        const finalPdfBytes = await mergedPdf.save();
+        const blob = new Blob([finalPdfBytes as any], { type: 'application/pdf' });
+        finalPdfUrl = URL.createObjectURL(blob);
+        Swal.close();
+      } catch (error) {
+        console.error("Error merging PDFs:", error);
+        Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเตรียมไฟล์ได้', 'error');
+        return;
+      }
+    } else {
+      const singleLink = link1 || link2;
+      const cacheBuster = new Date().getTime();
+      finalPdfUrl = singleLink + (singleLink.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    }
 
     const modal = await this.modalCtrl.create({
       component: PdfAnnotatorModalComponent,
       componentProps: {
-        pdfUrl: reportLink,
+        pdfUrl: finalPdfUrl,
         userId: user.citizen,
         userName: user.fullname || user.username
       },

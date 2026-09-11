@@ -1,0 +1,26 @@
+.btn-font2 {
+    margin-top: 5px;
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 16px;
+  
+  }
+  .btn-font3 {
+    margin-top: 5px;
+    font-family: 'Prompt-Regular', sans-serif;
+    font-size: 16px;
+  
+  }
+.tableFixHead { overflow: auto; }
+.tableFixHead thead { 
+  position: sticky; 
+  top: 60px; 
+  z-index: 10; 
+}
+.tableFixHead thead th { 
+  background-clip: padding-box; /* Ensures borders don't disappear when scrolling */
+}
+@media (max-width: 991.98px) {
+  .tableFixHead thead {
+    position: static;
+  }
+}

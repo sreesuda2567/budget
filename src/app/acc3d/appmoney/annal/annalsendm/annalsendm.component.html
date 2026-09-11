@@ -195,7 +195,7 @@
                                 class="fa-solid fa-file-arrow-up"></i>
                         </a>&nbsp;
                         <div class="dropdown d-inline-block">
-                            <button class="btn btn-info dropdown-toggle text-white" type="button"
+                            <button class="btn btn-primary dropdown-toggle text-white" type="button"
                                 id="dropdownManage{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-gear"></i> จัดการ
                             </button>
@@ -203,7 +203,7 @@
                                 <li *ngIf="p.linkclear">
                                     <a class="dropdown-item py-2" href="javascript:void(0)" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
-                                        (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE1,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages)">
+                                        (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE1,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;">
                                         <i class="fa fa-plus-circle text-success w-20px text-center"></i>
                                         ใบเบิก
                                     </a>
@@ -226,7 +226,7 @@
                                 </li>
                                 <li>
                                     <a class="dropdown-item py-2" href="javascript:void(0)"  data-bs-toggle="modal" data-bs-target="#exampleModalupdate"
-                                        (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear)">
+                                        (click)="editdata(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;">
                                         <i class="fa fa-arrow-circle-right text-primary w-20px text-center"></i>
                                         ใบปะหน้า
                                     </a>
@@ -311,7 +311,7 @@
                         <span *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' ">
                             <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white"
                                 id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages)"><i
+                                (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;"><i
                                     class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
                         </span>
                         <a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
@@ -331,7 +331,7 @@
                         <button *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " type="submit"
                             class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
-                            (click)="editdatapp(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.linkclear,p.CITIZEN_IDA,p.FNANNALS_AMOUNT,p.FNRESTATUS_CODE)"><i
+                            (click)="editdatapp(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.linkclear,p.CITIZEN_IDA,p.FNANNALS_AMOUNT,p.FNRESTATUS_CODE); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;"><i
                                 class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
                     </td>
                 </tr>
@@ -392,7 +392,7 @@
                             </div>
 
                             <div class="col-md-3 d-flex flex-column justify-content-end pb-1"
-                                *ngIf="dataAdd.EBOOKREQ_LINK">
+                                *ngIf="dataAdd.linkclear || dataAdd.linkreport">
                                 <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">ลงนาม</label>
                                 <a (click)="openPdfAnnotator(dataAdd)"
                                     class="btn btn-outline-info rounded-pill w-100 fw-bold border-2">

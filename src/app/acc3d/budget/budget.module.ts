@@ -45,6 +45,8 @@ import { RqdekaComponent } from './approve/rqdeka/rqdeka.component';
 import { RqpaymentComponent } from './approve/rqpayment/rqpayment.component';
 import { ReportpaymentComponent } from './report/reportpayment/reportpayment.component';
 import { ReportdekaComponent } from './report/reportdeka/reportdeka.component';
+import { ReportProjectcnComponent } from './manage/report-projectcn/report-projectcn.component';
+import { ReportProjectidComponent } from './manage/report-projectid/report-projectid.component';
 
 
 import { BudgetComponent } from './budget.component';
@@ -99,7 +101,9 @@ import { AutocompleteLibModule} from 'angular-ng-autocomplete';
     PodayComponent,
     RqpaymentComponent,
     ReportpaymentComponent,
-    ReportdekaComponent
+    ReportdekaComponent,
+    ReportProjectcnComponent,
+    ReportProjectidComponent,
   ],
   imports: [
     CommonModule,

@@ -253,18 +253,19 @@ export class Load3dfaceanComponent implements OnInit {
     this.dataAdd.CHIEF_CODE = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, link: any) {
+  editdata(id: any, link: any, linkreport: any = null) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
     this.fetchdatareportnamea();
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.EBOOKREQ_LINK = link;
+    this.dataAdd.linkreport = linkreport;
     this.rowpbi = true;
     this.rowpbu = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, link: any, ciz: any) {
+  editdatapp(id: any, link: any, ciz: any, linkreport: any = null) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -272,6 +273,7 @@ export class Load3dfaceanComponent implements OnInit {
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.CITIZEN_IDD1 = ciz;
+    this.dataAdd.linkreport = linkreport;
     this.rowpbi = '';
     this.rowpbu = 1;
   }
@@ -520,15 +522,66 @@ export class Load3dfaceanComponent implements OnInit {
   }
 
   async openPdfAnnotator(p: any) {
-    console.log(p.EBOOKREQ_LINK);
-    const cacheBuster = new Date().getTime();
-    const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const link1 = p.EBOOKREQ_LINK;
+    const link2 = p.linkreport;
+
+    if (!link1 && !link2) {
+      this.toastr.warning("ไม่มีไฟล์สำหรับลงนาม");
+      return;
+    }
+
     const user = this.tokenStorage.getUser();
+    let finalPdfUrl = '';
+
+    if (link1 && link2) {
+      Swal.fire({ title: 'กำลังเตรียมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+      try {
+        const pdf1Bytes = await fetch(link1).then(res => res.arrayBuffer());
+        const pdf2Bytes = await fetch(link2).then(res => res.arrayBuffer());
+        
+        const pdf1 = await PDFDocument.load(pdf1Bytes);
+        const pdf2 = await PDFDocument.load(pdf2Bytes);
+        const mergedPdf = await PDFDocument.create();
+
+        const count1 = pdf1.getPageCount();
+        const count2 = pdf2.getPageCount();
+
+        let firstPdf = pdf1;
+        let secondPdf = pdf2;
+        
+        if (count2 === 1 && count1 > 1) {
+          firstPdf = pdf2;
+          secondPdf = pdf1;
+        } else if (count2 < count1) {
+          firstPdf = pdf2;
+          secondPdf = pdf1;
+        }
+
+        const copiedPages1 = await mergedPdf.copyPages(firstPdf, firstPdf.getPageIndices());
+        copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+        const copiedPages2 = await mergedPdf.copyPages(secondPdf, secondPdf.getPageIndices());
+        copiedPages2.forEach((page) => mergedPdf.addPage(page));
+
+        const finalPdfBytes = await mergedPdf.save();
+        const blob = new Blob([finalPdfBytes as any], { type: 'application/pdf' });
+        finalPdfUrl = URL.createObjectURL(blob);
+        Swal.close();
+      } catch (error) {
+        console.error("Error merging PDFs:", error);
+        Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเตรียมไฟล์ได้', 'error');
+        return;
+      }
+    } else {
+      const singleLink = link1 || link2;
+      const cacheBuster = new Date().getTime();
+      finalPdfUrl = singleLink + (singleLink.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    }
 
     const modal = await this.modalCtrl.create({
       component: PdfAnnotatorModalComponent,
       componentProps: {
-        pdfUrl: reportLink,
+        pdfUrl: finalPdfUrl,
         userId: user.citizen,
         userName: user.fullname || user.username
       },

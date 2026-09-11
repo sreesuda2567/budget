@@ -175,7 +175,7 @@
                                             <i class="fa-solid fa-arrow-rotate-left"></i> ส่งคืน
                                         </a>
                                     </li>
-                                    <li *ngIf="p.linkclear">
+                                    <li *ngIf="p.linkclear || p.linkreport">
                                         <a class="dropdown-item text-info" href="javascript:void(0)" title="ลงนาม"
                                             (click)="openPdfAnnotator(p)">
                                             <i class="fa-solid fa-file-pen"></i> ลงนาม
@@ -184,7 +184,7 @@
                                     <li *ngIf="p.linkclear">
                                         <a class="dropdown-item text-success" href="javascript:void(0)" title="ใบเบิก"
                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear); onChangeRadio(1)">
+                                            (click)="editdatapr(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport; onChangeRadio(1)">
                                             <i class="fa fa-plus-circle"></i> ใบเบิก
                                         </a>
                                     </li>
@@ -197,7 +197,7 @@
                                     <li>
                                         <a class="dropdown-item text-primary" href="javascript:void(0)" data-bs-toggle="modal"
                                             data-bs-target="#exampleModalupdate"
-                                            (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_MONEYC,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME)">
+                                            (click)="editdata(p.FNANNALS_CODE,p.CONTRACT_LINK,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.linkclear,p.linkreport)">
                                             <i class="fa fa-arrow-circle-right"></i> แนบไฟล์
                                         </a>
                                     </li>
@@ -327,7 +327,7 @@
                                 *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E' || dataAdd.PRIVILEGE_RSTATUS=='A' "
                                 type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                                 data-bs-target="#exampleModalupdate"
-                                (click)="editdatapp(p.FNANNALSMAP_CODE,p.CONTRACT_LINK,p.CITIZEN_IDB,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALS_MONEYC,p.FNANNALSMAP_STATUS,p.FNRESTATUS_CODE)"><i
+                                (click)="editdatapp(p.FNANNALSMAP_CODE,p.CONTRACT_LINK,p.CITIZEN_IDB,p.FNANNALS_CODE,p.DEPARTMENT_CODE,p.CHIEF_CODE,p.FNANNALS_MONEYC,p.FNANNALSMAP_STATUS,p.FNRESTATUS_CODE); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;"><i
                                     class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
                         </td>
                     </tr>
@@ -415,9 +415,9 @@
                                     accept="application/pdf" />
                             </div>
                              <div class="col-md-3 d-flex flex-column justify-content-end pb-1"
-                                *ngIf="dataAdd.EBOOKREQ_LINK">
+                                *ngIf="dataAdd.linkclear || dataAdd.linkreport">
                                 <label class="form-label fw-bold text-secondary mb-2 d-none d-md-block">ไฟล์</label>
-                                <a (click)="openPdfAnnotator1(dataAdd)"
+                                <a (click)="openPdfAnnotator(dataAdd)"
                                     class="btn btn-outline-info rounded-pill w-100 fw-bold border-2">
                                     <i class="fa-solid fa-file-pen me-1"></i> ลงนามเอกสาร
                                 </a>
