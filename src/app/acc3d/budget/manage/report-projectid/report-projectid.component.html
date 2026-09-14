@@ -113,6 +113,7 @@
                   </i>
                 </div>-->
                 <div class="col-md-1 ">
+                  <br>
                   <button type="submit" class="btn btn-primary" id="submitinsert" (click)="fetchdatalist()"><i
                       class="fa fa-search"></i>&nbsp;ค้นหา</button>
                 </div>
@@ -224,51 +225,31 @@
       </td>
 
       <!-- งบประมาณแผ่นดิน -->
-      <td class="text-end align-middle text-primary">
-        <div
-          style="cursor:pointer"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          (click)="fetchdataexpenApi(item, 4)"
-        >
+      <td class="text-end align-middle ">
+        
           {{ item.budget_land | number:'1.2-2' }}
-        </div>
+        
       </td>
 
       <!-- งบกลาง -->
-      <td class="text-end align-middle text-primary">
-        <div
-          style="cursor:pointer"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          (click)="fetchdataexpenApi(item, 3)"
-        >
+      <td class="text-end align-middle ">
+        
           {{ item.budget_center | number:'1.2-2' }}
-        </div>
+        
       </td>
 
       <!-- งบดำเนินงานเงินรายได้ -->
-      <td class="text-end align-middle text-primary">
-        <div
-          style="cursor:pointer"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          (click)="fetchdataexpenApi(item, 1)"
-        >
+      <td class="text-end align-middle ">
+       
           {{ item.operate_income | number:'1.2-2' }}
-        </div>
+        
       </td>
 
       <!-- งบดำเนินงานงบแผ่นดิน -->
-      <td class="text-end align-middle text-primary">
-        <div
-          style="cursor:pointer"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          (click)="fetchdataexpenApi(item, 2)"
-        >
+      <td class="text-end align-middle ">
+        
           {{ item.operate_land | number:'1.2-2' }}
-        </div>
+        
       </td>
 
       <!-- รวม -->

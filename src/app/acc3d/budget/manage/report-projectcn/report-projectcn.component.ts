@@ -113,7 +113,7 @@ export class ReportProjectcnComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataPro = data;
-        this.dataAdd.PLPRODUCT_CODE = data[0].PLPRODUCT_CODE
+        this.dataAdd.PLPRODUCT_CODE = '';//data[0].PLPRODUCT_CODE
       });
           //รายการภาค
    var Table2 = {
@@ -198,7 +198,7 @@ export class ReportProjectcnComponent implements OnInit {
     .pipe(first())
     .subscribe((data: any) => {
       this.dataPro = data;
-      this.dataAdd.PLPRODUCT_CODE = data[0].PLPRODUCT_CODE
+      this.dataAdd.PLPRODUCT_CODE = '';//data[0].PLPRODUCT_CODE
       
     });
   } 
@@ -380,31 +380,20 @@ exportexcel(): void {
     }
     ws['!cols'] = colWidths;
   
-    const moneyCols = [1,2, 3, 4, 5];
-    const rightAlignCols = [1,2, 3, 4, 5];
+    const moneyCols = [1,2, 3, 4, 5,6];
+    const rightAlignCols = [1,2, 3, 4, 5,6];
   
     for (let R = range.s.r; R <= range.e.r; ++R) {
       const firstCellRef = XLSX.utils.encode_cell({ c: 0, r: R });
       const firstCellVal = (ws[firstCellRef]?.v || "").toString();
   
-      // 🎨 กำหนดสีพื้นหลังตามหมวด
+      // 🎨 กำหนดสีพื้นหลังตามแถวข้อมูล
       let bgColor = undefined;
-      if (firstCellVal.includes("ผลผลิตวิทย์ฯ")) {
-        bgColor = "66CCFF";
-      } else if (firstCellVal.includes("ผลผลิตสังคม")) {
-        bgColor = "66CCFF";
-      } else if (firstCellVal.includes("ผลผลิตการท่องเที่ยว")) {
-        bgColor = "66CCFF";
-      } else if (firstCellVal.includes("ผลผลิตบุคลากรภาครัฐ")) {
-        bgColor = "66CCFF";
-      } else if (firstCellVal.includes("งบลงทุน")) {
-        bgColor = "a2dffc";
-      } else if (firstCellVal.includes("งบเงินอุดหนุน")) {
-        bgColor = "a2dffc";
-      } else if (firstCellVal.includes("งบบุคลากร")) {
-        bgColor = "a2dffc";
-      }else if (firstCellVal.includes("งบดำเนินงาน")) {
-        bgColor = "a2dffc";
+      if (R >= 3 && this.datalist && this.datalist[R - 3]) {
+        const itemBg = this.datalist[R - 3].bg_color;
+        if (itemBg) {
+          bgColor = itemBg.replace('#', '');
+        }
       }
   
       for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -416,18 +405,18 @@ exportexcel(): void {
         }
   
         const cell = ws[cell_ref];
-        const isHeader = R === 0;
-        const isBold = (R === 0 ) || !!bgColor;
+        const isHeader = R <= 2;
+        const isBold = (R <= 2 ) || !!bgColor;
         const isMoneyColumn = moneyCols.includes(C);
         const isNumber = isMoneyColumn && typeof cell.v === 'number';
         const isRightAlign = rightAlignCols.includes(C);
         const isLastRow = R === range.e.r;
   
         cell.s = {
-          fill: isLastRow
-            ? { patternType: 'solid', fgColor: { rgb: 'FFE699' } }
-            : bgColor
-              ? { patternType: 'solid', fgColor: { rgb: bgColor } }
+          fill: bgColor
+            ? { patternType: 'solid', fgColor: { rgb: bgColor } }
+            : isLastRow
+              ? { patternType: 'solid', fgColor: { rgb: 'FFE699' } }
               : (isHeader
                   ? { patternType: 'solid', fgColor: { rgb: '5084f2' } }
                   : undefined),
@@ -436,7 +425,7 @@ exportexcel(): void {
             : undefined,
           alignment: {
             horizontal:
-              (R === 0 ) ? 'center' :
+              (R <= 2 ) ? 'center' :
               (isRightAlign ? 'right' : 'left'),
             vertical: 'center',
             wrapText: true,
