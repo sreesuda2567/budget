@@ -176,6 +176,10 @@ export class RqpaymentComponent implements OnInit {
   updatedata() {
     if (this.dataAdd.FNDEKA_REMARK=='' ) {
       this.toastr.warning("แจ้งเตือน:กรุณาระบุเรื่อง");
+    }else  if (this.dataAdd.FNPAYMENT_CREDITOR=='' ) {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุเจ้าหนี้");
+    }else  if (this.dataAdd.FNPAYMENT_MONEY=='' || this.dataAdd.FNPAYMENT_MONEY=='0.00' ) {
+      this.toastr.warning("แจ้งเตือน:กรุณาระบุจำนวนเงิน");
     } else {
 
       this.dataAdd.opt = "update";

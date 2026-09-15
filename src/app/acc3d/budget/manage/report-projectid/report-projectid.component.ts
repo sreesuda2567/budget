@@ -380,23 +380,19 @@ exportexcel(): void {
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
     const range = XLSX.utils.decode_range(ws['!ref']!);
   
-    // 📏 ปรับความกว้างคอลัมน์อัตโนมัติ
+    // 📏 ปรับความกว้างคอลัมน์ให้เหมาะสม
     const colWidths = [];
     for (let C = range.s.c; C <= range.e.c; ++C) {
-      let max_width = 10;
-      for (let R = range.s.r; R <= range.e.r; ++R) {
-        const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
-        if (cell && cell.v != null) {
-          const length = String(cell.v).length;
-          if (length > max_width) max_width = length;
-        }
+      if (C >= 0 && C <= 3) {
+        colWidths.push({ wch: 45 }); // คอลัมน์ข้อความ แผนงาน/โครงการ ถึง ตัวชี้วัด
+      } else {
+        colWidths.push({ wch: 18 }); // คอลัมน์ตัวเลข
       }
-      colWidths.push({ wch: max_width + 2 });
     }
     ws['!cols'] = colWidths;
   
-    const moneyCols = [1,2, 3, 4, 5];
-    const rightAlignCols = [1,2, 3, 4, 5];
+    const moneyCols = [ 4, 5,6,7,8,9];
+    const rightAlignCols = [ 4, 5,6,7,8,9];
   
     for (let R = range.s.r; R <= range.e.r; ++R) {
       const firstCellRef = XLSX.utils.encode_cell({ c: 0, r: R });
@@ -404,8 +400,8 @@ exportexcel(): void {
   
       // 🎨 กำหนดสีพื้นหลังตามแถวข้อมูล
       let bgColor = undefined;
-      if (R >= 3 && this.datalist && this.datalist[R - 3]) {
-        const itemBg = this.datalist[R - 3].bg_color;
+      if (R >= 2 && this.datalist && this.datalist[R - 2]) {
+        const itemBg = this.datalist[R - 2].bg_color;
         if (itemBg) {
           bgColor = itemBg.replace('#', '');
         }
@@ -414,14 +410,25 @@ exportexcel(): void {
       for (let C = range.s.c; C <= range.e.c; ++C) {
         const cell_ref = XLSX.utils.encode_cell({ c: C, r: R });
   
-        // 🧱 สร้าง cell ว่างถ้ายังไม่มี
+        // 🧱 สร้าง cell ว่างถ้ายังไม่มี หรือถ้ามีแต่ว่างเปล่า ให้ใส่ space เพื่อบังคับให้ Excel แสดงสีพื้นหลัง
         if (!ws[cell_ref]) {
-          ws[cell_ref] = { t: 's', v: '' };
+          ws[cell_ref] = { t: 's', v: ' ' };
+        } else if (ws[cell_ref].v == null || String(ws[cell_ref].v).trim() === '') {
+          ws[cell_ref].t = 's';
+          ws[cell_ref].v = ' ';
         }
   
         const cell = ws[cell_ref];
-        const isHeader = R <= 2;
-        const isBold = (R <= 2 ) || !!bgColor;
+        const isHeader = R <= 1;
+        
+        // 🔠 ตัวหนาตามระดับ Level เหมือนหน้าเว็บ
+        let isBoldRow = false;
+        if (isHeader) {
+          isBoldRow = true;
+        } else if (this.datalist && this.datalist[R - 2]) {
+          isBoldRow = this.isBoldLevel(this.datalist[R - 2].level);
+        }
+
         const isMoneyColumn = moneyCols.includes(C);
         const isNumber = isMoneyColumn && typeof cell.v === 'number';
         const isRightAlign = rightAlignCols.includes(C);
@@ -433,14 +440,14 @@ exportexcel(): void {
             : isLastRow
               ? { patternType: 'solid', fgColor: { rgb: 'FFE699' } }
               : (isHeader
-                  ? { patternType: 'solid', fgColor: { rgb: '5084f2' } }
+                  ? { patternType: 'solid', fgColor: { rgb: '9bd5f3' } } // สีฟ้าอ่อนแบบ bg-info
                   : undefined),
-          font: isBold
+          font: isBoldRow
             ? { bold: true, color: { rgb: '000000' } }
             : undefined,
           alignment: {
             horizontal:
-              (R <= 2 ) ? 'center' :
+              (R <= 1 ) ? 'center' :
               (isRightAlign ? 'right' : 'left'),
             vertical: 'center',
             wrapText: true,
