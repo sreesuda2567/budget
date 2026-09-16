@@ -2058,7 +2058,7 @@
              <div class="col-md-12">
                   <label for="name"><strong>คณะ /หน่วยงาน</strong> </label>
                   <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
-                    (change)="fetchDataByTab()">
+                    (change)="dataAdd.FACULTY_CODE1 = dataAdd.FACULTY_CODE; fetchDataByTab()">
                     <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
                   </select>
                 </div> 

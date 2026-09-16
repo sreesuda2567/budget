@@ -47,6 +47,7 @@ import { ReportpaymentComponent } from './report/reportpayment/reportpayment.com
 import { ReportdekaComponent } from './report/reportdeka/reportdeka.component';
 import { ReportProjectcnComponent } from './manage/report-projectcn/report-projectcn.component';
 import { ReportProjectidComponent } from './manage/report-projectid/report-projectid.component';
+import { ReportprojectmoreComponent } from './manage/reportprojectmore/reportprojectmore.component';
 
 
 import { BudgetComponent } from './budget.component';
@@ -104,6 +105,7 @@ import { AutocompleteLibModule} from 'angular-ng-autocomplete';
     ReportdekaComponent,
     ReportProjectcnComponent,
     ReportProjectidComponent,
+    ReportprojectmoreComponent,
   ],
   imports: [
     CommonModule,

@@ -175,7 +175,7 @@
                                             <i class="fa-solid fa-arrow-rotate-left"></i> ส่งคืน
                                         </a>
                                     </li>
-                                    <li *ngIf="p.linkclear || p.linkreport">
+                                    <li *ngIf="p.linkreport">
                                         <a class="dropdown-item text-info" href="javascript:void(0)" title="ลงนาม"
                                             (click)="openPdfAnnotator(p)">
                                             <i class="fa-solid fa-file-pen"></i> ลงนาม
@@ -188,12 +188,12 @@
                                             <i class="fa fa-plus-circle"></i> ใบเบิก
                                         </a>
                                     </li>
-                                    <li *ngIf="p.linkreport">
+                                  <!-- <li *ngIf="p.linkreport">
                                         <a class="dropdown-item text-secondary" href="javascript:void(0)" title="รวมไฟล์ส่งสารบรรณ"
                                             (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)">
                                             <i class="fa-solid fa-file-arrow-up"></i> รวมไฟล์ส่งสารบรรณ
                                         </a>
-                                    </li>
+                                    </li>--> 
                                     <li>
                                         <a class="dropdown-item text-primary" href="javascript:void(0)" data-bs-toggle="modal"
                                             data-bs-target="#exampleModalupdate"

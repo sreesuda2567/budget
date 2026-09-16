@@ -295,6 +295,15 @@
                                     {{p.disbursement_pages}}
                                 </span>
                             </span>
+                            <span *ngIf="p.linkreport && p.FNANNALSMAP_RSTATUS=='0'" class="position-relative d-inline-block me-2"><a role="button"
+                                    title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
+                                    (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
+                                <span *ngIf="p.linkreport_pages"
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
+                                    style="font-size: 0.65rem; z-index: 10;">
+                                    {{p.linkreport_pages}}
+                                </span>
+                            </span>
 
                         </td>
                         <td align="center" data-label="เลือก:">
@@ -314,12 +323,6 @@
                                         <a class="dropdown-item py-2 d-flex justify-content-between align-items-center" href="javascript:void(0)" title="รายงานใบล้างหนี้" (click)="previewPdf(p.clearcheck)">
                                             <span><i class="fa-solid fa-file-contract text-secondary me-2"></i> รายงานใบล้างหนี้</span>
                                             <span *ngIf="p.clearcheck_pages" class="badge rounded-pill bg-danger">{{p.clearcheck_pages}}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item py-2 d-flex justify-content-between align-items-center" href="javascript:void(0)" title="รายงานใบเบิกเงิน" (click)="previewPdf(p.linkreport)">
-                                            <span><i class="fa-solid fa-file-contract text-info me-2"></i> รายงานใบเบิกเงิน</span>
-                                            <span *ngIf="p.linkreport_pages" class="badge rounded-pill bg-danger">{{p.linkreport_pages}}</span>
                                         </a>
                                     </li>
                                     <li *ngIf="p.FNANNALSMAP_RSTATUS=='0'">

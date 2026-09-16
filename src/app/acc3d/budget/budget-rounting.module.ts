@@ -48,6 +48,7 @@ import { ReportcincomeComponent } from './report/reportcincome/reportcincome.com
 import { PodayComponent } from './approve/poday/poday.component';
 import { ReportProjectidComponent } from './manage/report-projectid/report-projectid.component';
 import { ReportProjectcnComponent } from './manage/report-projectcn/report-projectcn.component';
+import { ReportprojectmoreComponent } from './manage/reportprojectmore/reportprojectmore.component';
 
 const routes: Routes = [
   { path: '', component: BudgetComponent , children : [
@@ -95,6 +96,7 @@ const routes: Routes = [
     { path: 'reportdeka', component : ReportdekaComponent , canActivate: [AuthGuard]},   
     { path: 'reportprojectid', component : ReportProjectidComponent , canActivate: [AuthGuard]},
     { path: 'reportprojectcn', component : ReportProjectcnComponent , canActivate: [AuthGuard]},
+    { path: 'reportprojectmore', component : ReportprojectmoreComponent , canActivate: [AuthGuard]},
     { path: '**', redirectTo: '' }
   ]
 },

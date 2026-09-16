@@ -59,7 +59,7 @@ export class AppepschoolComponent implements OnInit {
   dataEdoc: any;
   datachief: any;
   dataIncome: any;
-  number: any = [0, 1, 2];
+  number: any = [0, 1, 2,3];
   datacampus: any;
   dataAcc: any;
   dataProduct: any;

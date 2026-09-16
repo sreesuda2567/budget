@@ -52,7 +52,7 @@ export class AppepmedicalComponent implements OnInit {
   url1 = "/acc3d/welfare/userpermission.php";
   page = 1;
   count = 0;
-  number: any = [0, 1, 2];
+  number: any = [0, 1, 2,3];
   tableSize = 20;
   tableSizes = [20, 30, 40, 80, 100];
   rowpbi: any;

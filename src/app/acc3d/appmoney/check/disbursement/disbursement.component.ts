@@ -786,13 +786,25 @@ export class DisbursementComponent implements OnInit {
     if (data && data.saved && data.blob) {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-
-      this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '52')
+    
+      this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '57')
         .subscribe((event: any) => {
-          if (event.type == 4) { // HttpEventType.Response
-            this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
-            this.fetchdatalist();
-          }
+          if (event.type == 4) {
+                // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ
+                this.dataAdd.opt = "sendfile";
+                this.dataAdd.FNANNALSMAP_CODE=p.FNANNALSMAP_CODE;
+                this.apiService.getdata(this.dataAdd, this.url)
+                  .pipe(first())
+                  .subscribe((data: any) => {
+                    if (data.status == 1) {
+                      Swal.close();
+                      this.toastr.success("แจ้งเตือน:ส่งสารบรรณเรียบร้อยแล้ว");
+                      this.fetchdatalist();
+                    } else {
+                      Swal.fire('ข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ', 'error');
+                    }
+                  });
+              }
         });
 
     }
