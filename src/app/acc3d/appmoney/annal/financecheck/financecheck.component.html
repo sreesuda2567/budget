@@ -190,11 +190,11 @@
                                     <i class="fa-solid fa-gear me-1"></i> จัดการ
                                 </button>
                                 <ul class="dropdown-menu shadow-sm">
-                                  <!-- <li>
-                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="ลงนาม" (click)="openPdfAnnotator(p)">
+                                   <li *ngIf="p.linkreport">
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="ลงนาม" (click)="openPdfAnnotator1(p)">
                                             <i class="fa-solid fa-file-pen text-info me-2"></i> ลงนาม
                                         </a>
-                                    </li>--> 
+                                    </li>
                                     <li *ngIf="p.clearcheck">
                                         <a class="dropdown-item py-2" href="javascript:void(0)" title="ใบเบิก" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNLISTBW_VOUC_M,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.clearcheck); onChangeRadio(1)">
                                             <i class="fa fa-plus-circle text-success me-2"></i> ใบเบิก

@@ -6342,7 +6342,7 @@ export class PdfAnnotatorModalComponent implements OnInit, AfterViewInit, OnDest
                 if (tb.align === 'center') alignXVisual += (maxW / 2) - (finalLineWidth / 2);
                 if (tb.align === 'right') alignXVisual += maxW - finalLineWidth;
 
-                const baselineVisualY = currentVisualY + (tb.fontSize * 0.95);
+                const baselineVisualY = currentVisualY + (tb.fontSize * 0.8) + 2.1;
                 drawLineText(line, this.getPdfPlacement((alignXVisual / vW) * 100, (baselineVisualY / vH) * 100, 0, 0, width, height, rotationAngle));
                 line = word.replace(/^\s+/, '');
                 currentVisualY += lineHeight;
@@ -6356,7 +6356,7 @@ export class PdfAnnotatorModalComponent implements OnInit, AfterViewInit, OnDest
               if (tb.align === 'center') alignXVisual += (maxW / 2) - (finalLineWidth / 2);
               if (tb.align === 'right') alignXVisual += maxW - finalLineWidth;
 
-              const baselineVisualY = currentVisualY + (tb.fontSize * 0.95);
+              const baselineVisualY = currentVisualY + (tb.fontSize * 0.8) + 2.1;
               drawLineText(line, this.getPdfPlacement((alignXVisual / vW) * 100, (baselineVisualY / vH) * 100, 0, 0, width, height, rotationAngle));
               currentVisualY += lineHeight;
             }

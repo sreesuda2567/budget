@@ -802,14 +802,67 @@ export class FinancecheckComponent implements OnInit {
     }
   }
   async openPdfAnnotator1(p: any) {
-    const cacheBuster = new Date().getTime();
-    const reportLink = p.linkclear + (p.linkclear.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const link1 = p.clearcheck;
+    const link2 = p.linkreport;
+
+    if (!link1 && !link2) {
+      this.toastr.warning("ไม่มีไฟล์สำหรับลงนาม");
+      return;
+    }
+
     const user = this.tokenStorage.getUser();
+    let finalPdfUrl = '';
+
+    if (link1 && link2) {
+      Swal.fire({ title: 'กำลังเตรียมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+      try {
+        const pdf1Bytes = await fetch(link1).then(res => res.arrayBuffer());
+        const pdf2Bytes = await fetch(link2).then(res => res.arrayBuffer());
+        
+        const pdf1 = await PDFDocument.load(pdf1Bytes);
+        const pdf2 = await PDFDocument.load(pdf2Bytes);
+        const mergedPdf = await PDFDocument.create();
+
+        const count1 = pdf1.getPageCount();
+        const count2 = pdf2.getPageCount();
+
+        // Determine the order: put the single-page file first
+        let firstPdf = pdf1;
+        let secondPdf = pdf2;
+        
+        if (count2 === 1 && count1 > 1) {
+          firstPdf = pdf2;
+          secondPdf = pdf1;
+        } else if (count2 < count1) {
+          firstPdf = pdf2;
+          secondPdf = pdf1;
+        }
+
+        const copiedPages1 = await mergedPdf.copyPages(firstPdf, firstPdf.getPageIndices());
+        copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+        const copiedPages2 = await mergedPdf.copyPages(secondPdf, secondPdf.getPageIndices());
+        copiedPages2.forEach((page) => mergedPdf.addPage(page));
+
+        const finalPdfBytes = await mergedPdf.save();
+        const blob = new Blob([finalPdfBytes as any], { type: 'application/pdf' });
+        finalPdfUrl = URL.createObjectURL(blob);
+        Swal.close();
+      } catch (error) {
+        console.error("Error merging PDFs:", error);
+        Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเตรียมไฟล์ได้', 'error');
+        return;
+      }
+    } else {
+      const link = link1 || link2;
+      const cacheBuster = new Date().getTime();
+      finalPdfUrl = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    }
 
     const modal = await this.modalCtrl.create({
       component: PdfAnnotatorModalComponent,
       componentProps: {
-        pdfUrl: reportLink,
+        pdfUrl: finalPdfUrl,
         userId: user.citizen,
         userName: user.fullname || user.username
       },
@@ -822,12 +875,24 @@ export class FinancecheckComponent implements OnInit {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
              
-          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '56')
+          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '56')
             .subscribe((event: any) => {
-              if (event.type == 4) { // HttpEventType.Response
-                 this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยแล้ว");
-                 this.fetchdatalist();
-              }
+              if (event.type == 4) {
+                              // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ
+                              this.dataAdd.opt = "sendfile";
+                              this.dataAdd.FNANNALSMAP_CODE=p.FNANNALSMAP_CODE;
+                              this.apiService.getdata(this.dataAdd, this.url)
+                                .pipe(first())
+                                .subscribe((data: any) => {
+                                  if (data.status == 1) {
+                                    Swal.close();
+                                    this.toastr.success("แจ้งเตือน:ส่งสารบรรณเรียบร้อยแล้ว");
+                                    this.fetchdatalist();
+                                  } else {
+                                    Swal.fire('ข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ', 'error');
+                                  }
+                                });
+                            }
             });
     
     }

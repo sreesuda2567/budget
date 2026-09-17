@@ -208,6 +208,11 @@
                                         ใบเบิก
                                     </a>
                                 </li>
+                                <li *ngIf="p.linkreport">
+                                        <a class="dropdown-item py-2" href="javascript:void(0)" title="ลงนาม" (click)="openPdfAnnotator1(p)">
+                                            <i class="fa-solid fa-file-pen text-info me-2"></i> ลงนาม
+                                        </a>
+                                    </li>
                                 <li>
                                     <a class="dropdown-item py-2" href="javascript:void(0)" data-bs-toggle="modal"
                                         data-bs-target="#modalEditf"
