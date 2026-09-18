@@ -60,6 +60,39 @@ export class FinancecheckComponent implements OnInit {
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   pdfUrlToView: SafeResourceUrl | null = null;
+
+  get totalMoney(): number {
+    let total = 0;
+    if (this.dataAdd && this.dataAdd.FRACCMONEY) {
+      for (let i of this.number) {
+        total += parseFloat(this.dataAdd.FRACCMONEY[i]) || 0;
+      }
+    }
+    return total;
+  }
+
+  get totalMoneyP(): number {
+    let total = 0;
+    if (this.dataAdd && this.dataAdd.FRACCMONEYP) {
+      for (let i of this.number) {
+        total += parseFloat(this.dataAdd.FRACCMONEYP[i]) || 0;
+      }
+    }
+    return total;
+  }
+
+  onAmountChange(i: number) {
+    if (this.dataAdd.FRACCMONEY[i]) {
+      if (this.dataAdd.FRACCMONEYP[i] === undefined || this.dataAdd.FRACCMONEYP[i] === null || this.dataAdd.FRACCMONEYP[i] === '') {
+        this.dataAdd.FRACCMONEYP[i] = 0;
+      }
+    } else {
+       if (this.dataAdd.FRACCMONEYP[i] === 0 || this.dataAdd.FRACCMONEYP[i] === '0') {
+         this.dataAdd.FRACCMONEYP[i] = '';
+       }
+    }
+  }
+
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,

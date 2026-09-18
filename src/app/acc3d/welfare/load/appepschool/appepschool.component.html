@@ -114,10 +114,10 @@
                                 <i class="fa-solid fa-eye"></i></button>
                             &nbsp;
                             <span *ngIf="(p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A')">
-                            <a  role="button"
+                            <!-- <a  role="button"
                                 title="รวมไฟล์ส่งสารบรรณ" class="btn btn-primary text-white"
                                 (click)="sendfile(p.FNANNALSMAP_CODE,p.link3)"><i class="fa-solid fa-file-arrow-up"></i>
-                            </a>&nbsp;
+                            </a>&nbsp; -->
                             <a  *ngIf="(p.FNANNALSMAP_RSTATUS=='T' ||dataAdd.PRIVILEGE_RSTATUS=='A' || !p.link)" role="button"
                                 title="ลงนาม" class="btn btn-info text-white" (click)="openPdfAnnotator(p)"><i
                                     class="fa-solid fa-file-pen">

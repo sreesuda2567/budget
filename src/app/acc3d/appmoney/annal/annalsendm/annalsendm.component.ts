@@ -62,6 +62,17 @@ export class AnnalsendmComponent implements OnInit {
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
   pdfUrlToView: SafeResourceUrl | null = null;
+
+  get totalMoney(): number {
+    let total = 0;
+    if (this.dataAdd && this.dataAdd.FRACCMONEY) {
+      for (let i of this.number) {
+        total += parseFloat(this.dataAdd.FRACCMONEY[i]) || 0;
+      }
+    }
+    return total;
+  }
+
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,

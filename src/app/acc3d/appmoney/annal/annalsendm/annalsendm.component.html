@@ -313,14 +313,7 @@
                                 (click)="fetchdataloadshow(p.FNANNALSMAP_CODE)">
                                 <i class="fa-solid fa-eye"></i></button>
                             &nbsp;
-                        <span *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' ">
-                            <button *ngIf="p.linkclear" type="submit" title="ใบเบิก" class="btn btn-success text-white"
-                                id="submitupdate" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;ใบเบิก</button>&nbsp;
-                        </span>
-                        <a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
-                            (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a> &nbsp;
+                        
                         <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2"><a role="button"
                                 title="รายงานใบเบิก" class="btn btn-success text-white"
                                 (click)="previewPdf(p.linkclear)"><i class="fa-solid fa-file-contract"></i></a>
@@ -328,16 +321,33 @@
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
                                 style="font-size: 0.65rem; z-index: 10;">
                                 {{p.linkclear_pages}}
-                            </span>
+                            </span>&nbsp;
                         </span>
+                        <a *ngIf="p.FNANNALSMAP_RSTATUS=='1' && p.linkreport" role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
+                            (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a> 
                     </td>
                     <td align="center" data-label="เลือก:">
-
-                        <button *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A' " type="submit"
-                            class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
-                            data-bs-target="#exampleModalupdate"
-                            (click)="editdatapp(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.linkclear,p.CITIZEN_IDA,p.FNANNALS_AMOUNT,p.FNRESTATUS_CODE); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;"><i
-                                class="fa fa-arrow-circle-right"></i>&nbsp;แก้ไข</button>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa-solid fa-gear me-1"></i> จัดการ
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A'">
+                                    <a class="dropdown-item text-success" *ngIf="p.linkclear" href="javascript:void(0)" title="ใบเบิก"
+                                        data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                        (click)="editdatapr(p.FNANNALSMAP_CODE,p.FNANNALSMAP_CODE,p.FNANNALS_CODE,p.FNANNALS_AMOUNT,p.USERNAME_CISCO,p.FNANNALS_BOOK_AT,p.FSTF_FNAME,p.USERNAME_CISCOA,p.linkclear,p.linkclear_pages); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;">
+                                        <i class="fa fa-plus-circle"></i> ใบเบิก
+                                    </a>
+                                </li>
+                                <li *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A'">
+                                    <a class="dropdown-item text-primary" href="javascript:void(0)" title="แก้ไข"
+                                        data-bs-toggle="modal" data-bs-target="#exampleModalupdate"
+                                        (click)="editdatapp(p.FNANNALS_CODE,p.FNANNALSMAP_CODE,p.linkclear,p.CITIZEN_IDA,p.FNANNALS_AMOUNT,p.FNRESTATUS_CODE); dataAdd.linkclear=p.linkclear; dataAdd.linkreport=p.linkreport;">
+                                        <i class="fa fa-arrow-circle-right"></i> แก้ไข
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
                 <tr *ngIf="!rownum1">
@@ -698,6 +708,15 @@
                             <div class="col-md-4">
                                 <input type="number" class="form-control form-control-lg fs-6" placeholder="จำนวนเงิน"
                                     [(ngModel)]="dataAdd.FRACCMONEY[i]">
+                            </div>
+                        </div>
+                        <div class="row g-3 align-items-center mb-3">
+                            <div class="col-md-8 text-end">
+                                <span class="fw-bold text-secondary">รวม</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control form-control-lg fs-6 fw-bold bg-light"
+                                    readonly [value]="totalMoney | number : '1.2-2'" placeholder="0.00">
                             </div>
                         </div>
                     </div>

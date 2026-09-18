@@ -583,14 +583,62 @@ export class AppepschoolComponent implements OnInit {
     this.safePdfUrl = '';
   }
   async openPdfAnnotator(p: any) {
-    const cacheBuster = new Date().getTime();
-    const reportLink = p.link + (p.link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.editdata(p.FNANNALSMAP_CODE);
     const user = this.tokenStorage.getUser();
+    let finalPdfUrl = '';
+
+    Swal.fire({ title: 'กำลังเตรียมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+
+    try {
+      const mainLink = p.link3 || p.link;
+      
+      const data: any = await this.apiService.getById(p.FNANNALSMAP_CODE, this.url).pipe(first()).toPromise();
+      if (data && data.data && data.data.length > 0) {
+          this.dataAdd.FACULTY_CODE = data.data[0].FACULTY_CODE;
+      }
+      
+      this.dataAdd.FNANNALSMAP_CODE = p.FNANNALSMAP_CODE;
+      this.dataAdd.opt = "viewpschoolapp";
+      const dataLoad: any = await this.apiService.getdata(this.dataAdd, this.url1).pipe(first()).toPromise();
+      
+      let linkArray: any[] = [];
+      if (dataLoad.status == '1' && dataLoad.data2) {
+         linkArray = dataLoad.data2.map((item: any) => item.link);
+      }
+
+      const pdf1Bytes = await fetch(mainLink).then(res => res.arrayBuffer());
+      const pdf1 = await PDFDocument.load(pdf1Bytes);
+      const mergedPdf = await PDFDocument.create();
+
+      const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+      copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+      if (linkArray && linkArray.length > 0) {
+        for (let i = 0; i < linkArray.length; i++) {
+          if (linkArray[i]) {
+            const pdfBytes = await fetch(linkArray[i]).then(res => res.arrayBuffer());
+            const pdfDoc = await PDFDocument.load(pdfBytes);
+            const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
+          }
+        }
+      }
+
+      const finalPdfBytes = await mergedPdf.save();
+      const blob = new Blob([finalPdfBytes as any], { type: 'application/pdf' });
+      finalPdfUrl = URL.createObjectURL(blob);
+      Swal.close();
+
+    } catch (error) {
+      console.error("Error merging PDFs:", error);
+      Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเตรียมไฟล์ได้', 'error');
+      return;
+    }
 
     const modal = await this.modalCtrl.create({
       component: PdfAnnotatorModalComponent,
       componentProps: {
-        pdfUrl: reportLink,
+        pdfUrl: finalPdfUrl,
         userId: user.citizen,
         userName: user.fullname || user.username
       },
@@ -598,10 +646,10 @@ export class AppepschoolComponent implements OnInit {
     });
     await modal.present();
 
-    const { data } = await modal.onDidDismiss();
-    if (data && data.saved && data.blob) {
+    const { data: modalData } = await modal.onDidDismiss();
+    if (modalData && modalData.saved && modalData.blob) {
       // Create a File object from the blob
-      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+      const file = new File([modalData.blob], 'signed_document.pdf', { type: 'application/pdf' });
 
       this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '117')
         .subscribe((event: any) => {
@@ -610,7 +658,6 @@ export class AppepschoolComponent implements OnInit {
             this.fetchdatalist();
           }
         });
-
     }
   }
   exportpdf(link: any) {
