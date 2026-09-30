@@ -35,6 +35,9 @@ export class HomeComponent implements OnInit {
     this.apiService.getdata(this.url,'readmenu','','',this.tokenStorage.getUser().citizen)
     .pipe(first())
     .subscribe((data: any) => {
+        if (data && data.status) {
+          sessionStorage.setItem('acc3d_status', data.status);
+        }
         this.datastatusfn=data.statusfn;
         this.datastatusas=data.statusas;
         this.datastatusau=data.statusau;

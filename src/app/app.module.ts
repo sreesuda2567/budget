@@ -25,6 +25,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { Login3dComponent } from './login3d/login3d.component';
 import { Login3dplanComponent } from './login3dplan/login3dplan.component';
 import { SafeUrlPipe } from './shared/pipes/safe-url.pipe';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { SsoSettingsComponent } from './sso-settings/sso-settings.component';
 
 
 
@@ -42,7 +44,8 @@ import { SafeUrlPipe } from './shared/pipes/safe-url.pipe';
     MainComponent,
     Login3dComponent,
     Login3dplanComponent,
-    SafeUrlPipe
+    SafeUrlPipe,
+    SsoSettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ import { SafeUrlPipe } from './shared/pipes/safe-url.pipe';
     NgChartsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    OAuthModule.forRoot(),
     BrowserAnimationsModule,
     Acc3dModule,
     BsDatepickerModule.forRoot(),

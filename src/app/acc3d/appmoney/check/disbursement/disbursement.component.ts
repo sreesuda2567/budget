@@ -820,6 +820,33 @@ export class DisbursementComponent implements OnInit {
 
     }
   }
+  // ฟังก์ชันสำหรับการลบข้อมูล
+    deleteData(id: any) {
+      this.dataAdd.opt = "delete";
+      this.dataAdd.id = id;
+      this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
+      Swal.fire({
+        title: 'ต้องการลบข้อมูล?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        if (result.value) {
+          this.apiService
+            .getdata(this.dataAdd, this.url)
+            .pipe(first())
+            .subscribe((data: any) => {
+              if (data.status == 1) {
+                Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+                this.fetchdatalistapp();
+              }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+        }
+      });
+    }
   async openPdfAnnotator1(p: any) {
     // console.log(p.EBOOKREQ_LINK);
     const cacheBuster = new Date().getTime();

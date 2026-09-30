@@ -23,6 +23,13 @@ export class ReportpaperComponent implements OnInit {
   title = 'angular-app';
   fileName = 'report.xlsx';
   totalReportPages: number = 0;
+  totalReport2Pages: number = 0;
+  groupedFacultyList: any[] = [];
+  totalGroupCount: number = 0;
+  totalGroupAmount: number = 0;
+  totalGroupPages1: number = 0;
+  totalGroupPages2: number = 0;
+  totalGroupPagesAll: number = 0;
   userList = [{}];
 
   dataYear: any;
@@ -181,7 +188,14 @@ fetchdata() {
   fetchdatalist() {
     this.loading = true;
     this.datalist = null;
+    this.groupedFacultyList = [];
+    this.totalGroupCount = 0;
+    this.totalGroupAmount = 0;
+    this.totalGroupPages1 = 0;
+    this.totalGroupPages2 = 0;
+    this.totalGroupPagesAll = 0;
     this.dataAdd.totalReportPages = 0;
+    this.dataAdd.totalReport2Pages = 0;
     this.dataAdd.opt = 'readAll';
     this.dataAdd.check = [];
     this.dataAdd.FNEXACC_CODE = [];
@@ -204,10 +218,12 @@ fetchdata() {
           this.dataAdd.PLINCOME_NAME = data.PLINCOME_NAME;
           this.loading = null;
           this.rownum = 1;
+          this.groupDataByFaculty();
           // Count pages for PDFs
           if (this.datalist && this.datalist.length > 0) {
             this.datalist.forEach((p: any) => {
               if (p.REPORT_LINK) this.countPdfPages(p.REPORT_LINK, p, 'REPORT_LINK_pages');
+              if (p.REPORT_LINK2) this.countPdfPages(p.REPORT_LINK2, p, 'REPORT_LINK2_pages');
               this.dataAdd.PAPERPAGE.push(p.CONTRACT_LINK);
             });
           }
@@ -226,6 +242,7 @@ fetchdata() {
           this.rownum = null;
           this.loading = null;
           this.datalist = data.data;
+          this.groupedFacultyList = [];
           this.toastr.warning('แจ้งเตือน:ไม่มีข้อมูล');
         }
       });
@@ -329,13 +346,67 @@ fetchdata() {
 
   calculateTotalPages() {
     this.dataAdd.totalReportPages = 0;
+    this.dataAdd.totalReport2Pages = 0;
     if (this.datalist && this.datalist.length > 0) {
       this.datalist.forEach((p: any) => {
         if (p.REPORT_LINK_pages) {
           this.dataAdd.totalReportPages += p.REPORT_LINK_pages;
         }
+        if (p.REPORT_LINK2_pages) {
+          this.dataAdd.totalReport2Pages += p.REPORT_LINK2_pages;
+        }
       });
     }
+    this.groupDataByFaculty();
+  }
+
+  groupDataByFaculty() {
+    if (!this.datalist || this.datalist.length === 0) {
+      this.groupedFacultyList = [];
+      this.totalGroupCount = 0;
+      this.totalGroupAmount = 0;
+      this.totalGroupPages1 = 0;
+      this.totalGroupPages2 = 0;
+      this.totalGroupPagesAll = 0;
+      return;
+    }
+
+    const map = new Map<string, any>();
+
+    this.datalist.forEach((p: any) => {
+      const facName = (p.FACULTY_TNAME || 'ไม่ระบุหน่วยงาน').trim();
+      const amount = parseFloat(p.FNANNALS_AMOUNT) || 0;
+      const pages1 = parseInt(p.REPORT_LINK_pages, 10) || 0;
+      const pages2 = parseInt(p.REPORT_LINK2_pages, 10) || 0;
+
+      if (!map.has(facName)) {
+        map.set(facName, {
+          FACULTY_TNAME: facName,
+          count: 0,
+          amount: 0,
+          pages1: 0,
+          pages2: 0,
+          totalPages: 0
+        });
+      }
+
+      const group = map.get(facName);
+      group.count += 1;
+      group.amount += amount;
+      group.pages1 += pages1;
+      group.pages2 += pages2;
+      group.totalPages += (pages1 + pages2);
+    });
+
+    this.groupedFacultyList = Array.from(map.values()).sort((a, b) =>
+      a.FACULTY_TNAME.localeCompare(b.FACULTY_TNAME, 'th')
+    );
+
+    this.totalGroupCount = this.groupedFacultyList.reduce((sum, g) => sum + g.count, 0);
+    this.totalGroupAmount = this.groupedFacultyList.reduce((sum, g) => sum + g.amount, 0);
+    this.totalGroupPages1 = this.groupedFacultyList.reduce((sum, g) => sum + g.pages1, 0);
+    this.totalGroupPages2 = this.groupedFacultyList.reduce((sum, g) => sum + g.pages2, 0);
+    this.totalGroupPagesAll = this.groupedFacultyList.reduce((sum, g) => sum + g.totalPages, 0);
   }
 
   previewPdf(url: string) {

@@ -20,12 +20,26 @@
                     <div class="panel-heading">
                         <div class="shadow alert alert-info" role="alert">
                             <div class="row">
-                                <div align="right" class="col-md-4"></div>
-
+                                
+                                <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                                    
+                                    <input type="hidden" class="form-control" name="PRIVILEGE_RSTATUS"
+                                        id="PRIVILEGE_RSTATUS" [(ngModel)]="dataAdd.PRIVILEGE_RSTATUS">
+                                    <select name="f_code" id="f_code" class="form-select"
+                                        [(ngModel)]="dataAdd.CAMPUS_CODE">
+                                        <option value=""
+                                            *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A' || dataAdd.PRIVILEGE_RSTATUS !='1'">
+                                            ทุกวิทยาเขต
+                                        </option>
+                                        <option [value]="cam.CAMPUS_CODE" *ngFor="let cam of dataCam">
+                                            {{cam.CAMPUS_TNAME}}</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-2 text-secondary">
                                     <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.type">
                                         <option value="01">ไปราชการ</option>
-                                        <option value="02">เงินทดรองจ่ายสวัสดิการ</option>
+                                        <option value="02">สวัสดิการรายหน่วยงาน</option>
+                                        <option value="03">สวัสดิการหน่วยเบิกจ่าย</option>
                                     </select>
                                 </div>
                                 <div class="col-md-1 " style="font-size: 10pt">
@@ -80,7 +94,7 @@
         <div class="row justify-content-center center-screen" *ngIf="loading">
             <div class="spinner-border " role="status" id="loading"></div>
         </div>
-        <div class="table-responsive-lg">
+       <div class="table-responsive-lg">
             <table width="100%" id="example"
                 class="shadow-lg table table-bordered  table-striped table-hover btn-font3">
                 <thead>
@@ -96,7 +110,7 @@
                         </th>
 
                         <th>
-                            <div align="center">ผู้ส่งรายงาน</div>
+                            <div align="center">หน่วยงาน</div>
                         </th>
 
                         <th>
@@ -109,18 +123,21 @@
                             <div align="center">รายงาน</div>
                         </th>
                         <th>
-                            <div align="center">จำนวนหน้า</div>
+                            <div align="center">จำนวนหน้ารายงาน 1</div>
+                        </th>
+                        <th>
+                            <div align="center">จำนวนหน้ารายงาน 2</div>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+                    
 
                     <tr *ngFor="let p of datalist ; let i = index">
                         <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
                         <td align="center">{{p.FNANNALSMAPR_DATE1}}</td>
                         <td>{{p.FSTF_FNAME}}</td>
-                        <td>{{p.FNANNALSMAPR_NAME}}</td>
+                        <td>{{p.FACULTY_TNAME}}</td>
                         <td data-label="จำนวนเงิน:" align="right">{{p.FNANNALS_AMOUNT| number :
                             '1.2-2'}}</td>
                         <td align="center" data-label="เลขฎีกา:">{{p.FNEXPENSES_DEKA}}</td>
@@ -130,9 +147,17 @@
                                     (click)="previewPdf(p.REPORT_LINK)"><i class="fas fa-file-alt">
                                     </i></a>
                             </span>
+                            <span *ngIf="p.REPORT_LINK2" class="position-relative d-inline-block me-2">
+                                <a role="button" title="รายงาน2" class="btn btn-info text-white"
+                                    (click)="previewPdf(p.REPORT_LINK2)"><i class="fas fa-file-alt">
+                                    </i></a>
+                            </span>
                         </td>
                         <td align="center">
                             {{p.REPORT_LINK_pages}}
+                        </td>
+                        <td align="center">
+                            {{p.REPORT_LINK2_pages}}
                         </td>
                     </tr>
                     <tr *ngIf="!rownum">
@@ -143,9 +168,55 @@
                     <tr class="fw-bold bg-light">
                         <td colspan="7" align="right">จำนวนหน้าทั้งหมด</td>
                         <td align="center">{{ dataAdd.totalReportPages | number }}</td>
+                        <td align="center">{{ dataAdd.totalReport2Pages | number }}</td>
                     </tr>
                 </tfoot>
             </table>
+        </div>
+
+        <!-- ตารางสรุปจำนวนการใช้กระดาษ แยกตามหน่วยงาน -->
+        <div class="mt-4 pt-3 border-top" *ngIf="groupedFacultyList && groupedFacultyList.length > 0">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="fw-bold mb-0 text-primary">
+                    <i class="fa-solid fa-layer-group me-2"></i>สรุปจำนวนการใช้กระดาษ แยกตามหน่วยงาน
+                </h5>
+            </div>
+            <div class="table-responsive-lg">
+                <table width="100%" class="shadow table table-bordered table-striped table-hover btn-font3">
+                    <thead>
+                        <tr class="bg-primary text-white">
+                            <th width="5%"><div align="center">ที่</div></th>
+                            <th><div align="center">หน่วยงาน</div></th>
+                            <th width="10%"><div align="center">จำนวนรายการ</div></th>
+                            <th width="15%"><div align="center">จำนวนเงิน (บาท)</div></th>
+                            <th width="12%"><div align="center">จำนวนหน้ารายงาน 1</div></th>
+                            <th width="12%"><div align="center">จำนวนหน้ารายงาน 2</div></th>
+                            <th width="12%"><div align="center">รวมจำนวนหน้า</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let g of groupedFacultyList; let i = index">
+                            <td align="center">{{ i + 1 }}</td>
+                            <td>{{ g.FACULTY_TNAME }}</td>
+                            <td align="center">{{ g.count | number }}</td>
+                            <td align="right">{{ g.amount | number: '1.2-2' }}</td>
+                            <td align="center">{{ g.pages1 | number }}</td>
+                            <td align="center">{{ g.pages2 | number }}</td>
+                            <td align="center" class="fw-bold text-primary">{{ g.totalPages | number }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold bg-light">
+                            <td colspan="2" align="right">รวมทั้งสิ้น</td>
+                            <td align="center">{{ totalGroupCount | number }}</td>
+                            <td align="right">{{ totalGroupAmount | number: '1.2-2' }}</td>
+                            <td align="center">{{ totalGroupPages1 | number }}</td>
+                            <td align="center">{{ totalGroupPages2 | number }}</td>
+                            <td align="center" class="text-primary">{{ totalGroupPagesAll | number }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>

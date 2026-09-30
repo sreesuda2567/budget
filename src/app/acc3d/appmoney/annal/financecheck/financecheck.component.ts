@@ -908,7 +908,7 @@ export class FinancecheckComponent implements OnInit {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
              
-          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '56')
+          this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '81')
             .subscribe((event: any) => {
               if (event.type == 4) {
                               // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ

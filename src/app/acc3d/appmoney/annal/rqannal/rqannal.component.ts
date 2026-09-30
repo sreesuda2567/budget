@@ -265,7 +265,7 @@ fetchdata() {
     this.dataAdd.CITIZEN_IDC1 = '';
     this.dataAdd.CITIZEN_IDC2 = '';
     this.dataAdd.FNANNALS_MONEYC = '';
-    this.dataAdd.FNALLBW_AMOUNT = '';
+    this.dataAdd.FNALLBW_AMOUNT = 0;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any,id2: any,mon: any,mon1: any,link: any) {
@@ -275,7 +275,7 @@ fetchdata() {
     this.dataAdd.FNANNALS_CODE = id;
     this.dataAdd.FNANNALSMAP_CODE = id2;
     this.dataAdd.FNANNALS_MONEYC = mon;
-    this.dataAdd.FNALLBW_AMOUNT = mon1;
+   // this.dataAdd.FNALLBW_AMOUNT = mon1;
     this.dataAdd.EBOOKREQ_LINK = link;
     /*this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.CITIZEN_IDA = ciz;
@@ -305,6 +305,8 @@ fetchdata() {
     if (this.dataAdd.EBOOKREQ_FILE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
       
+    } else if (this.dataAdd.FNALLBW_AMOUNT == 0) {
+        this.toastr.warning("แจ้งเตือน:กรุณาใส่จำนวนเงิน");
     } else {
       this.dataAdd.opt = "insert";
       this.apiService

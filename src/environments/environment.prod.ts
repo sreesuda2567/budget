@@ -15,4 +15,14 @@ export const environment = {
     apiUrlPHP:'https://budget.rmutsv.ac.th/api',
     apiUrlLogin:'https://budget.rmutsv.ac.th/api',
 
+    oidc: {
+      issuer: 'https://sso.apps.rmutsv.ac.th/realms/apps',
+      clientId: 'ruts-budget',
+      dummyClientSecret: 'oOM8pJSvPCUDQd9dSuHO7vBUzAiDdoxTF5xj9vNB4NPUUYFDpxrrjvB7jeoq80rG6r754DVM6CYJ9ExjO820Mq',
+      redirectUri: window.location.origin + '/login',
+      postLogoutRedirectUri: window.location.origin + '/login',
+      scope: 'openid profile email',
+      usePkce: true,
+      healthCheckTimeoutMs: 2000,
+    }
 };

@@ -19,11 +19,16 @@
     <!-- <li class="nav-item btn-home display_sm_hide" *ngIf="isLoggedIn">
          <i class="fa fa-fw fa-2x fa-home" style="cursor: pointer;margin-top:5px;" routerLink="home"></i>
       </li>--> 
-      <li class="nav-item mx-3" *ngIf="isLoggedIn">
+      <li class="nav-item mx-3 nav-user-item" *ngIf="isLoggedIn">
         <span class="txt-font">
-          <i class="fa fa-user" style="position: absolute;font-size: 16px;margin-top: 2px; margin-left: -16px;"></i>
-          {{username}}</span>
-        <i class="fa fa-fw fa-2x  fa-power-off" style="cursor: pointer;margin-top:5px;" (click)="logout()"></i>
+          <i class="fa fa-user me-2" style="font-size: 16px;"></i>
+          {{username}}
+        </span>
+        <!-- แสดงปุ่มตั้งค่า SSO เฉพาะผู้ใช้งานที่มี status เป็น 'A' เท่านั้น -->
+        <a *ngIf="isAdmin" routerLink="/sso-settings" class="nav-icon-btn" title="ตั้งค่า RUTS SSO">
+          <i class="fa fa-cog"></i>
+        </a>
+        <i class="fa fa-fw fa-power-off nav-icon-btn" title="ออกจากระบบ" (click)="logout()"></i>
       </li>
     </ul>
 

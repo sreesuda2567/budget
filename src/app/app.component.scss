@@ -39,12 +39,39 @@
   //font-family: 'Kanit-Regular', sans-serif;
   font-size: 14px;
 }
+
+.nav-user-item {
+  display: flex !important;
+  align-items: center;
+  gap: 16px;
+}
+
 .txt-font {
-  //font-family: 'Kanit-Regular', sans-serif;
-  position: absolute;
-  font-size: 16px;
-  margin-top: 11px;
-  margin-left: -80px;
+  position: static !important;
+  font-size: 15px;
+  margin: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.nav-icon-btn {
+  color: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+    color: #ffffff;
+    transform: scale(1.1);
+  }
 }
 .txt_version {
   //font-family: 'Kanit-Regular', sans-serif;

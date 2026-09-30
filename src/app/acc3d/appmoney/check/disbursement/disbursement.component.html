@@ -181,6 +181,7 @@
                                             <i class="fa-solid fa-file-pen"></i> ลงนาม
                                         </a>
                                     </li>
+
                                     <li *ngIf="p.linkclear">
                                         <a class="dropdown-item text-success" href="javascript:void(0)" title="ใบเบิก"
                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
@@ -194,6 +195,11 @@
                                             <i class="fa-solid fa-file-arrow-up"></i> รวมไฟล์ส่งสารบรรณ
                                         </a>
                                     </li>--> 
+                                    <li *ngIf="p.linkreport">
+                                            <a class="dropdown-item py-2 text-danger" href="javascript:void(0)" title="ลบข้อมูล" (click)="deleteData(p.FNANNALSMAP_CODE)">
+                                                <i class="fa fa-trash me-2"></i> ลบข้อมูล
+                                            </a>
+                                        </li>
                                     <li>
                                         <a class="dropdown-item text-primary" href="javascript:void(0)" data-bs-toggle="modal"
                                             data-bs-target="#exampleModalupdate"
@@ -242,7 +248,7 @@
                             <div align="center">รายงาน</div>
                         </th>
                         <th>
-                            <div align="center">แก้ไข</div>
+                            <div align="center">จัดการข้อมูล</div>
                         </th>
 
                     </tr>
@@ -269,35 +275,18 @@
                                 (click)="fetchdataloadshow(p.FNANNALSMAP_CODE)">
                                 <i class="fa-solid fa-eye"></i></button>
                             &nbsp;
-                            <span *ngIf="p.CONTRACT_LINK" class="position-relative d-inline-block me-2"><button
+                            <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2"><button
                                     role="button" title="รายงานใบปะหน้า" class="btn btn-success text-white"
-                                    (click)="previewPdf(p.CONTRACT_LINK)"><i
+                                    (click)="previewPdf(p.linkclear)"><i
                                         class="fa-solid fa-file-contract"></i></button>
-                                <span *ngIf="p.CONTRACT_LINK_pages"
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
-                                    style="font-size: 0.65rem; z-index: 10;">
-                                    {{p.CONTRACT_LINK_pages}}
-                                </span>
-                            </span>
-                            <span *ngIf="p.correct" class="position-relative d-inline-block me-2"><button role="button"
-                                    title="รายงานใบปะหน้า(แก้ไข)" class="btn btn-danger text-white"
-                                    (click)="previewPdf(p.correct)"><i class="fa-solid fa-file-contract"></i></button>
-                                <span *ngIf="p.correct_pages"
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
-                                    style="font-size: 0.65rem; z-index: 10;">
-                                    {{p.correct_pages}}
-                                </span>
-                            </span>
-                            <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2">
-                                <a role="button" title="รายงานใบเบิกค่าใช้จ่าย" class="btn btn-secondary text-white"
-                                    (click)="previewPdf(p.linkclear)"><i class="fa-solid fa-file-contract"></i></a>
                                 <span *ngIf="p.linkclear_pages"
                                     class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm"
                                     style="font-size: 0.65rem; z-index: 10;">
                                     {{p.linkclear_pages}}
                                 </span>
                             </span>
-                            <span *ngIf="p.linkclear" class="position-relative d-inline-block me-2">
+
+                            <span *ngIf="p.FNANNALSMAP_RSTATUS=='A' || p.FNANNALSMAP_RSTATUS=='E'" class="position-relative d-inline-block me-2">
                                 <a role="button" title="รายงานใบเบิกเงิน" class="btn btn-info text-white"
                                     (click)="previewPdf(p.linkreport)"><i class="fa-solid fa-file-contract"></i></a>
                                 <span *ngIf="p.linkreport_pages"

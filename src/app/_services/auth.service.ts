@@ -33,4 +33,8 @@ export class AuthService {
     }, httpOptions);
   }
 
+  loginSSO(claims: any): Observable<any> {
+    return this.http.post(AUTH_API + '/loginJWT/loginSSO.php', claims, httpOptions);
+  }
+
 }

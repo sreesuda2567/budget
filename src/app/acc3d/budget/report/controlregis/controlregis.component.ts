@@ -383,17 +383,143 @@ exportexcel(): void {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'รายงาน.xlsx');
   }
-exportexceldetail(): void
-{
-  /* pass here the table id */
-  let element = document.getElementById('excel-tabledetail');
-  const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+  exportexceldetail(): void {
+    /* pass here the table id */
+    const element = document.getElementById('excel-tabledetail');
+    if (!element) {
+      this.toastr.warning('ไม่พบข้อมูลสำหรับส่งออก');
+      return;
+    }
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element, { raw: false });
+    if (!ws['!ref']) {
+      this.toastr.warning('ไม่พบข้อมูลสำหรับส่งออก');
+      return;
+    }
 
-  /* generate workbook and add the worksheet */
-  const wb: XLSX.WorkBook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const range = XLSX.utils.decode_range(ws['!ref']);
 
-  /* save to file */  
-  XLSX.writeFile(wb, this.fileName);
-} 
+    // ปรับความกว้างคอลัมน์อัตโนมัติ
+    const colWidths = [];
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      let max_width = 10;
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
+        if (cell && cell.v != null) {
+          const length = String(cell.v).length;
+          if (length > max_width) max_width = length;
+        }
+      }
+      colWidths.push({ wch: Math.min(max_width + 4, 60) });
+    }
+    ws['!cols'] = colWidths;
+
+    // ดึงชื่อหัวตารางเพื่อเช็คคอลัมน์เงิน
+    const headerCols: string[] = [];
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const cellRef = XLSX.utils.encode_cell({ c: C, r: 0 });
+      headerCols.push((ws[cellRef]?.v || '').toString().trim());
+    }
+
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      // ตรวจสอบว่าเป็นแถวสรุปยอดรวมหรือไม่
+      let isSummaryRow = (R === range.e.r);
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellRef = XLSX.utils.encode_cell({ c: C, r: R });
+        const val = (ws[cellRef]?.v || '').toString();
+        if (val.includes('รวม') || val.includes('ยอดรวม')) {
+          isSummaryRow = true;
+          break;
+        }
+      }
+
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_ref = XLSX.utils.encode_cell({ c: C, r: R });
+        if (!ws[cell_ref]) {
+          ws[cell_ref] = { t: 's', v: '' };
+        }
+        const cell = ws[cell_ref];
+        const isHeader = (R === 0);
+        const colTitle = headerCols[C] || '';
+        const isSeqCol = (C === 0) || colTitle.includes('ลำดับ') || colTitle === 'ที่';
+        const isMoneyCol = !isSeqCol && (colTitle.includes('จำนวนเงิน') || colTitle.includes('เงิน'));
+
+        // แปลงค่าเงินเป็น number เพื่อให้ Excel คำนวณและแสดงผล format สวยงาม
+        if (isMoneyCol && !isHeader && cell.v != null && cell.v !== '') {
+          const cleanVal = String(cell.v).replace(/,/g, '').trim();
+          const numVal = parseFloat(cleanVal);
+          if (!isNaN(numVal) && isFinite(numVal)) {
+            cell.v = numVal;
+            cell.t = 'n';
+          }
+        }
+
+        // หากเป็นคอลัมน์ลำดับ แปลงเป็นจำนวนเต็ม
+        if (isSeqCol && !isHeader && cell.v != null && cell.v !== '') {
+          const intVal = parseInt(String(cell.v), 10);
+          if (!isNaN(intVal)) {
+            cell.v = intVal;
+            cell.t = 'n';
+          }
+        }
+
+        const isNumber = cell.t === 'n';
+
+        // กำหนดการจัดตำแหน่งข้อความ
+        let horizontalAlign: 'left' | 'center' | 'right' = 'left';
+        if (isHeader) {
+          horizontalAlign = 'center';
+        } else if (isSeqCol || colTitle.includes('วันที่') || colTitle.includes('เลข')) {
+          horizontalAlign = 'center';
+        } else if (isMoneyCol || (isNumber && !isSeqCol)) {
+          horizontalAlign = 'right';
+        }
+
+        // กำหนด format ตัวเลข
+        let numFmt: string | undefined = undefined;
+        if (isMoneyCol) {
+          numFmt = '#,##0.00';
+        } else if (isSeqCol && isNumber) {
+          numFmt = '0';
+        }
+
+        // กำหนดสีพื้นหลังและฟอนต์
+        let bgColor = undefined;
+        const isBold = isHeader || isSummaryRow;
+
+        if (isHeader) {
+          bgColor = '83BBF3'; // สีฟ้าตามหัวตารางในระบบ
+        } else if (isSummaryRow) {
+          bgColor = 'FB863D'; // สีส้มตามแถวสรุปยอดรวมในระบบ
+        }
+
+        cell.s = {
+          fill: bgColor
+            ? { patternType: 'solid', fgColor: { rgb: bgColor } }
+            : undefined,
+          font: isBold
+            ? { bold: true, color: { rgb: '000000' } }
+            : undefined,
+          alignment: {
+            horizontal: horizontalAlign,
+            vertical: 'center',
+            wrapText: true,
+          },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+          ...(numFmt ? { numFmt } : {}),
+        };
+      }
+    }
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'รายละเอียด');
+
+    /* save to file */  
+    XLSX.writeFile(wb, 'รายละเอียดทะเบียนคุม.xlsx');
+  }
 }

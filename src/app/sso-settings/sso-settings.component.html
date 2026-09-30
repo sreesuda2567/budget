@@ -1,0 +1,135 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      
+      <!-- Header Card -->
+      <div class="card shadow-sm border-0 mb-4 rounded-3">
+        <div class="card-header bg-primary text-white py-3 px-4 rounded-top-3 d-flex align-items-center justify-content-between">
+          <div>
+            <h5 class="mb-0 fw-bold"><i class="fa fa-cogs me-2"></i>การตั้งค่า RUTS SSO (Single Sign-On)</h5>
+            <small class="text-white-50">จัดการการเปิด/ปิด และโหมดการเชื่อมต่อระบบเข้าสู่ระบบกลางของมหาวิทยาลัย</small>
+          </div>
+          <a routerLink="/home" class="btn btn-sm btn-outline-light rounded-pill px-3">
+            <i class="fa fa-arrow-left me-1"></i> กลับหน้าหลัก
+          </a>
+        </div>
+
+        <div class="card-body p-4">
+          <!-- Loading State -->
+          <div *ngIf="loading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">กำลังโหลดข้อมูลการตั้งค่า...</p>
+          </div>
+
+          <div *ngIf="!loading">
+            <!-- Server Status & Health Check Section -->
+            <div class="alert mb-4 border-0 rounded-3" 
+                 [ngClass]="{
+                   'alert-success bg-success bg-opacity-10 text-success': healthStatus === 'online',
+                   'alert-danger bg-danger bg-opacity-10 text-danger': healthStatus === 'offline',
+                   'alert-secondary bg-light text-muted': healthStatus === 'unknown'
+                 }">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <i class="fa fa-2x me-3" 
+                     [ngClass]="{
+                       'fa-check-circle text-success': healthStatus === 'online',
+                       'fa-exclamation-triangle text-danger': healthStatus === 'offline',
+                       'fa-circle-notch fa-spin text-secondary': testingHealth,
+                       'fa-info-circle text-secondary': healthStatus === 'unknown' && !testingHealth
+                     }"></i>
+                  <div>
+                    <h6 class="mb-1 fw-bold">สถานะ SSO Server (Keycloak): 
+                      <span class="badge" 
+                            [ngClass]="{
+                              'bg-success': healthStatus === 'online',
+                              'bg-danger': healthStatus === 'offline',
+                              'bg-secondary': healthStatus === 'unknown'
+                            }">
+                        {{ healthStatus === 'online' ? 'พร้อมใช้งาน (Online)' : (healthStatus === 'offline' ? 'ไม่สามารถเชื่อมต่อได้ (Offline)' : 'ยังไม่ได้ตรวจสอบ') }}
+                      </span>
+                    </h6>
+                    <small>{{ healthMessage }}</small>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-outline-primary rounded-pill px-3" (click)="checkHealth()" [disabled]="testingHealth">
+                  <i class="fa fa-refresh me-1" [class.fa-spin]="testingHealth"></i> ทดสอบการเชื่อมต่อ
+                </button>
+              </div>
+            </div>
+
+            <!-- Settings Form -->
+            <div class="list-group list-group-flush mb-4">
+
+              <!-- Toggle 1: Enable SSO -->
+              <div class="list-group-item px-0 py-3 d-flex align-items-center justify-content-between">
+                <div>
+                  <h6 class="mb-1 fw-bold text-dark">
+                    <i class="fa fa-id-card me-2 text-primary"></i>RUTS SSO: เปิด/ปิดการใช้งาน
+                  </h6>
+                  <p class="text-muted small mb-0">
+                    เปิดใช้งานปุ่ม "เข้าสู่ระบบด้วย RUTS SSO" บนหน้า Login เพื่อให้บุคลากรเข้าใช้งานผ่านระบบ e-Passport กลาง
+                  </p>
+                </div>
+                <div class="form-check form-switch fs-4">
+                  <input class="form-check-input" type="checkbox" id="ssoEnabledSwitch" 
+                         [(ngModel)]="settings.sso_enabled" (change)="onToggleSso()">
+                </div>
+              </div>
+
+              <!-- Toggle 2: Auto-Redirect -->
+              <div class="list-group-item px-0 py-3 d-flex align-items-center justify-content-between"
+                   [class.opacity-50]="!settings.sso_enabled">
+                <div>
+                  <h6 class="mb-1 fw-bold text-dark">
+                    <i class="fa fa-external-link-square me-2 text-primary"></i>Auto-Redirect: นำทางอัตโนมัติ
+                  </h6>
+                  <p class="text-muted small mb-0">
+                    เมื่อผู้ใช้เข้าหน้า Login ระบบจะตรวจสอบ Health Check (Timeout 2 วินาที) แล้ว Redirect ไปหน้า SSO อัตโนมัติทันที
+                    <br><span class="text-info"><i class="fa fa-shield me-1"></i>มีระบบ Fallback อัตโนมัติ: หาก SSO ขัดข้อง ระบบจะตัดสลับมาแสดงหน้า Login เดิมทันที</span>
+                  </p>
+                </div>
+                <div class="form-check form-switch fs-4">
+                  <input class="form-check-input" type="checkbox" id="autoRedirectSwitch" 
+                         [(ngModel)]="settings.auto_redirect" [disabled]="!settings.sso_enabled">
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Configuration Summary Box -->
+            <div class="p-3 bg-light rounded-3 mb-4">
+              <h6 class="fw-bold mb-2 text-secondary"><i class="fa fa-info-circle me-2"></i>ข้อมูล OIDC Client Configuration</h6>
+              <div class="row small text-muted g-2">
+                <div class="col-sm-4 fw-bold">SSO Server:</div>
+                <div class="col-sm-8">https://sso.apps.rmutsv.ac.th</div>
+                <div class="col-sm-4 fw-bold">Realm:</div>
+                <div class="col-sm-8">apps</div>
+                <div class="col-sm-4 fw-bold">Client ID:</div>
+                <div class="col-sm-8"><code>ruts-budget</code></div>
+                <div class="col-sm-4 fw-bold">Protocol:</div>
+                <div class="col-sm-8">OpenID Connect (OIDC / OAuth 2.0 PKCE)</div>
+                <div class="col-sm-4 fw-bold">Health Check Timeout:</div>
+                <div class="col-sm-8">2,000 ms (2.0 วินาที)</div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex justify-content-end gap-2 pt-2">
+              <button class="btn btn-light px-4 rounded-pill" routerLink="/home">
+                ยกเลิก
+              </button>
+              <button class="btn btn-primary px-4 rounded-pill shadow-sm" (click)="saveSettings()" [disabled]="saving">
+                <i class="fa fa-save me-1" *ngIf="!saving"></i>
+                <span class="spinner-border spinner-border-sm me-1" *ngIf="saving"></span>
+                บันทึกการตั้งค่า
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

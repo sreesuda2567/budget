@@ -255,7 +255,7 @@
                         </th>
 
                         <th>
-                            <div align="center">แก้ไข</div>
+                            <div align="center">จัดการข้อมูล</div>
                         </th>
 
                     </tr>
@@ -330,11 +330,11 @@
                                             <i class="fa fa-plus-circle text-success me-2"></i> ใบเบิก
                                         </a>
                                     </li>
-                                    <li *ngIf="p.FNANNALSMAP_RSTATUS=='0'">
+                                  <!--<li *ngIf="p.FNANNALSMAP_RSTATUS=='0'">
                                         <a class="dropdown-item py-2" href="javascript:void(0)" title="รวมไฟล์ส่งสารบรรณ" (click)="sendfile(p.FNANNALSMAP_CODE,p.linkreport,p.linkclear)">
                                             <i class="fa-solid fa-file-arrow-up text-secondary me-2"></i> รวมไฟล์ส่งสารบรรณ
                                         </a>
-                                    </li>
+                                    </li>-->  
                                     <li *ngIf="p.FNANNALSMAP_RSTATUS=='0' || dataAdd.PRIVILEGE_RSTATUS=='A'">
                                         <a class="dropdown-item py-2" href="javascript:void(0)" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#exampleModalupdate" (click)="editdatapp(p.FNANNALSMAP_CODE,p.disbursement,p.FNLISTBW_VOUC_M,p.FNRESTATUS_CODE,p.linkreport)">
                                             <i class="fa fa-arrow-circle-right text-primary me-2"></i> แก้ไข

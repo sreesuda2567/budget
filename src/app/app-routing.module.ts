@@ -6,6 +6,7 @@ import { AuthGuard } from './_services/auth.guard';
 import { LoginV2Component } from './login-v2/login-v2.component';
 import { Login3dComponent } from './login3d/login3d.component';
 import { Login3dplanComponent } from './login3dplan/login3dplan.component';
+import { SsoSettingsComponent } from './sso-settings/sso-settings.component';
 const acc3dModule = () => import('./acc3d/acc3d.module').then(x => x.Acc3dModule);
 const routes: Routes = [
  { path: 'login3d/:token', component: Login3dComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'login', component: LoginV2Component },
   { path: 'home', component: HomeComponent, canActivate : [AuthGuard] },
   { path: 'acc3d', loadChildren: acc3dModule, canActivate: [AuthGuard] },
+  { path: 'sso-settings', component: SsoSettingsComponent, canActivate: [AuthGuard] },
   { path: '**', component: LoginV2Component }
 ];
 

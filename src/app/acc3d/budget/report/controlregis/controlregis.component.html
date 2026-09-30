@@ -213,14 +213,19 @@
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title " id="exampleModalLabel">รายละเอียด</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="exampleModalLabel">รายละเอียด</h5>
+        <div class="d-flex align-items-center">
+          <button type="button" class="btn btn-success btn-sm me-2" (click)="exportexceldetail()">
+            <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export Excel
+          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
       </div>
       <div class="modal-body">
         <div class="row justify-content-center center-screen" *ngIf="loadingdetail">
           <div class="spinner-border " role="status" id="loadingdetail"></div>
         </div>
-        <table *ngIf="dataAdd.FNEXACC_TYPE !='4'" width="100%" border="1" cellpadding="0" cellspacing="0"
+        <table *ngIf="dataAdd.FNEXACC_TYPE !='4'" id="excel-tabledetail" width="100%" border="1" cellpadding="0" cellspacing="0"
           class="table table-bordered  table-striped ">
           <thead>
             <tr style="background-color:rgb(131, 187, 243);">
@@ -269,7 +274,7 @@
           </tbody>
 
         </table>
-        <table *ngIf="dataAdd.FNEXACC_TYPE =='4'" width="100%" border="1" cellpadding="0" cellspacing="0"
+        <table *ngIf="dataAdd.FNEXACC_TYPE =='4'" id="excel-tabledetail" width="100%" border="1" cellpadding="0" cellspacing="0"
           class="table table-bordered  table-striped ">
           <thead>
             <tr class="bg-primary text-white">
