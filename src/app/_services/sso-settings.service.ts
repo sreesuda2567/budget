@@ -28,10 +28,23 @@ export class SsoSettingsService {
   constructor(private http: HttpClient) {}
 
   /**
-   * ล้าง Cache ใน sessionStorage เพื่อให้ได้ค่าที่อัปเดตล่าสุดเสมอ (ป้องกันปัญหา Blueprint ข้อ 7)
+   * ล้าง Cache ใน sessionStorage และปรับค่า auto_redirect ใน localStorage ให้เป็น false เสมอ
+   * ป้องกันปัญหา Browser ค้างค่า auto_redirect: true จากการตั้งค่าเก่า
    */
   public clearCache(): void {
     sessionStorage.removeItem(SETTINGS_CACHE_KEY);
+    try {
+      const local = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (parsed.auto_redirect) {
+          parsed.auto_redirect = false;
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
+        }
+      }
+    } catch (e) {
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
   }
 
   /**
@@ -42,20 +55,20 @@ export class SsoSettingsService {
     const cached = sessionStorage.getItem(SETTINGS_CACHE_KEY);
     if (cached) {
       try {
-        return Promise.resolve(JSON.parse(cached));
+        const parsed = JSON.parse(cached);
+        if (parsed.auto_redirect) {
+          parsed.auto_redirect = false;
+        }
+        return Promise.resolve(parsed);
       } catch (e) {
         sessionStorage.removeItem(SETTINGS_CACHE_KEY);
       }
     }
 
-    // 2. หากมีค่าใน LocalStorage ให้ใช้ค่าทันที (ป้องกัน 404 / CORS error ใน Dev environment)
+    // 2. ดึงค่า Local หรือ Fallback (บังคับ auto_redirect = false เสมอ)
     const local = this.getLocalOrFallback();
-    if (localStorage.getItem(LOCAL_STORAGE_KEY)) {
-      this.setLocalCache(local);
-      return Promise.resolve(local);
-    }
 
-    // 3. หากยังไม่มีค่าใน LocalStorage ให้ลองดึงจาก Backend
+    // 3. ดึงจาก Backend เสมอเพื่อตรวจสอบสถานะล่าสุด
     return this.http.get<any>(this.apiUrl).pipe(
       map(res => {
         if (res && res.status && res.data) {
@@ -71,7 +84,7 @@ export class SsoSettingsService {
         return local;
       }),
       catchError(err => {
-        // Fallback ไปใช้ LocalStorage หรือ Default เมื่อเซิร์ฟเวอร์ยังไม่ได้วางไฟล์ ssoSettings.php
+        // Fallback ไปใช้ Local/Default (auto_redirect = false) เมื่อเซิร์ฟเวอร์ยังไม่มีไฟล์ ssoSettings.php
         this.setLocalCache(local);
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(local));
         return of(local);
@@ -109,9 +122,19 @@ export class SsoSettingsService {
     const local = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (local) {
       try {
-        return JSON.parse(local);
+        const parsed = JSON.parse(local);
+        // ทำความสะอาดและแก้ไข auto_redirect ที่ค้างเป็น true ให้เป็น false ทันที
+        if (parsed.auto_redirect) {
+          parsed.auto_redirect = false;
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
+        }
+        return {
+          sso_enabled: parsed.sso_enabled !== undefined ? !!parsed.sso_enabled : true,
+          auto_redirect: false,
+          updated_at: parsed.updated_at
+        };
       } catch (e) {
-        // ignore
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
       }
     }
     return { ...this.defaultSettings };

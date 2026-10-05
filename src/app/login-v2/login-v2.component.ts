@@ -74,7 +74,9 @@ export class LoginV2Component implements OnInit {
     const noAuto = urlParams.get('no_auto') === '1';
 
     // 5. ตัดสินใจแสดงผล UI / จัดการ Auto-Redirect
-    if (this.ssoSettings.sso_enabled && this.ssoSettings.auto_redirect && !noAuto) {
+    // Smart SSO: ถ้าเครื่องนี้เคยเข้าใช้งานผ่าน SSO (isSsoUser) และไม่ได้กด Logout มา (?no_auto=1) ให้นำทางเข้า SSO อัตโนมัติเพื่อประสบการณ์ Single Sign-On
+    const isSsoUser = localStorage.getItem('sso_logged_in') === 'true';
+    if (this.ssoSettings.sso_enabled && (this.ssoSettings.auto_redirect || isSsoUser) && !noAuto) {
       await this.handleAutoRedirect();
     } else {
       // แสดงฟอร์มปกติ (มีปุ่ม SSO หาก sso_enabled = true)
@@ -95,6 +97,7 @@ export class LoginV2Component implements OnInit {
     try {
       const result = await this.oidcAuth.handleCallback();
       if (result && result.success) {
+        localStorage.setItem('sso_logged_in', 'true');
         this.isLoggedIn = true;
         this.toastr.success('เข้าสู่ระบบสำเร็จ', 'ยินดีต้อนรับ');
         this.router.navigate(['/home']);
@@ -141,6 +144,7 @@ export class LoginV2Component implements OnInit {
    * ตัดสลับมาแสดงหน้า Login เดิมเมื่อ SSO ล่มหรือมีข้อผิดพลาด
    */
   public fallbackToOriginalForm(message: string): void {
+    localStorage.removeItem('sso_logged_in');
     this.isCheckingSSO = false;
     this.showLoginForm = true;
     this.ssoError = true;
@@ -170,6 +174,7 @@ export class LoginV2Component implements OnInit {
     const { username, password } = this.form;
     this.authService.login(username, password).subscribe(
       data => {
+        localStorage.removeItem('sso_logged_in');
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(data);
         this.isLoginFailed = false;

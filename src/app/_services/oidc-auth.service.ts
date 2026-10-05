@@ -94,6 +94,7 @@ export class OidcAuthService {
       const idToken = this.oauthService.getIdToken();
       if (idToken) {
         sessionStorage.setItem('sso-id-token', idToken);
+        localStorage.setItem('sso-id-token', idToken);
       }
 
       // 3. ดึง Claims จาก Identity Token และ UserInfo
@@ -156,11 +157,13 @@ export class OidcAuthService {
    * ★ ส่ง id_token_hint + post_logout_redirect_uri พร้อมพารามิเตอร์ ?no_auto=1
    */
   public logout(): void {
-    const idToken = sessionStorage.getItem('sso-id-token');
+    const idToken = sessionStorage.getItem('sso-id-token') || localStorage.getItem('sso-id-token');
     
     // เคลียร์ session ภายในแอป
     this.tokenStorage.signOut();
     sessionStorage.removeItem('sso-id-token');
+    localStorage.removeItem('sso-id-token');
+    localStorage.removeItem('sso_logged_in');
 
     if (idToken) {
       const issuer = environment.oidc.issuer;
@@ -177,6 +180,6 @@ export class OidcAuthService {
    * ตรวจสอบว่าผู้ใช้ล็อกอินผ่าน SSO หรือไม่
    */
   public isSsoLoggedIn(): boolean {
-    return !!sessionStorage.getItem('sso-id-token') || this.oauthService.hasValidAccessToken();
+    return !!sessionStorage.getItem('sso-id-token') || !!localStorage.getItem('sso-id-token') || this.oauthService.hasValidAccessToken();
   }
 }

@@ -17,22 +17,30 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       const token = this.tokenStorage.getToken();
       if(token != null){
-        const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
-        if(token && ((Math.floor((new Date).getTime() / 1000)) <= expiry)){
-          return true;
-        }else{
-          this.tokenStorage.signOut();
-          console.log("logout Expire");
-          this.reloadPage();
-          return false;
+        try {
+          const parts = token.split('.');
+          if (parts.length >= 2) {
+            const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            const payload = JSON.parse(jsonPayload);
+            const expiry = payload.exp;
+            if(!expiry || ((Math.floor((new Date).getTime() / 1000)) <= expiry)){
+              return true;
+            }else{
+              this.tokenStorage.signOut();
+              console.log("logout Expire");
+              this.router.navigate(['/login']);
+              return false;
+            }
+          }
+        } catch (e) {
+          console.error("Token parse error in AuthGuard:", e);
         }
-
       }
-    this.router.navigate(['/login-V2'])
+    this.router.navigate(['/login']);
     return false;
-  }
-  reloadPage(): void {
-    window.location.reload();
   }
 
 }
