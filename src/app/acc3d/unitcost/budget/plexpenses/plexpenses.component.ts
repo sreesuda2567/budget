@@ -382,6 +382,10 @@ export class PlexpensesComponent implements OnInit {
     this.localeService.use(this.locale);
   }
   datenow(datenow: any) {
+    if (!datenow) return '';
+    if (typeof datenow === 'string') {
+      return datenow;
+    }
     const yyyy = datenow.getFullYear();
     let mm = datenow.getMonth() + 1; // Months start at 0!
     let dd = datenow.getDate();
@@ -534,7 +538,7 @@ export class PlexpensesComponent implements OnInit {
       }
 
       for (let i = 0; i < this.dataAdd.FNEXACCRDATE.length; i++) {
-        if (parseFloat(this.dataAdd.FNEXACCMONEY[i]) > 0) {
+        if (this.dataAdd.FNEXACCRDATE[i]) {
           //  console.log(i);
           //  console.log(this.dataAdd.FNEXACCMONEY[i] + '..' + this.datenow(this.dataAdd.FNEXACCRDATE[i]));
           this.dataAdd.FNEXACC_RDATE1[i] = this.datenow(this.dataAdd.FNEXACCRDATE[i]);

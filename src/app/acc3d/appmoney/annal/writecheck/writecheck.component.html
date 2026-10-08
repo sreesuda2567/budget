@@ -34,7 +34,7 @@
                                 <div class="col-md-4 text-secondary">
                                     <label for="name">คณะ /หน่วยงาน</label>
                                     <select name="f_code" id="f_code" class="form-select"
-                                        [(ngModel)]="dataAdd.FACULTY_CODE">
+                                        [(ngModel)]="dataAdd.FACULTY_CODE" (change)="rownum1 ? fetchdatalistapp() : fetchdatalist()">
                                          <option *ngIf="dataAdd.PRIVILEGE_RSTATUS=='A'" value="" >ทั้งหมด</option>
                                         <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">
                                             {{fac.FACULTY_TNAME}}</option>
@@ -186,6 +186,9 @@
                         </span>     
                     </td>
                     <td align="center" data-label="เลือก:">
+                        <a *ngIf="p.CONTRACT_LINK || p.linkclear" role="button" title="ลงนาม" class="btn btn-info text-white"
+                                (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
+                                </i></a> &nbsp;
                         <button type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate" (click)="editdata(p.FNANNALS_CODE,p.FNANNALSMAP_CODE)"
                             ><i class="fa fa-arrow-circle-right"></i>&nbsp;เสนอ</button>
@@ -290,6 +293,9 @@
                         </span>         
                     </td>
                     <td align="center" data-label="เลือก:">
+                        <a *ngIf="p.CONTRACT_LINK || p.linkclear || p.disbursement" role="button" title="ลงนาม" class="btn btn-info text-white"
+                                (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
+                                </i></a> &nbsp;
                         <button *ngIf="p.FNANNALSMAP_RSTATUS=='1' || p.FNANNALSMAP_RSTATUS=='2' || dataAdd.PRIVILEGE_RSTATUS=='A'  " type="submit" class="btn btn-primary" id="submitinsert" data-bs-toggle="modal"
                             data-bs-target="#exampleModalupdate"
                             (click)="editdatapp(p.FNANNALSMAP_CODE,p.CITIZEN_IDC1,p.CITIZEN_IDC2)"

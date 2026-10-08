@@ -204,6 +204,7 @@
                                 <thead>
                                     <tr style="background-color:#9bc2e6;">
                                         <th width="5%" class="text-center">ลำดับ</th>
+                                        <th class="text-center">วันที่จ่าย</th>
                                         <th class="text-center">ฎีกา</th>
                                         <th class="text-center">ชื่อ-สกุล</th>
                                         <th class="text-center">หน่วยงาน</th>
@@ -213,6 +214,7 @@
                                 <tbody>
                                     <tr *ngFor="let p of datalistdetail; let i = index ">
                                         <td class="text-center">{{i+1}}</td>
+                                        <td class="text-center">{{p.FNANNALSMAP_DATEK1}}</td>
                                         <td class="text-center">{{p.FNANNALSMAP_DEKA}}</td>
                                         <td>{{p.FSTF_FNAME}}</td>
                                         <td>{{p.FACULTY_TNAME}}</td>
@@ -309,6 +311,7 @@
                                     <thead>
                                         <tr style="background-color:#9bc2e6;">
                                             <th width="5%" class="text-center">ลำดับ</th>
+                                            <th class="text-center">วันที่จ่าย</th>
                                             <th class="text-center">ฎีกา</th>
                                             <th class="text-center">ชื่อ-สกุล</th>
                                             <th class="text-center">หน่วยงาน</th>
@@ -318,6 +321,7 @@
                                     <tbody>
                                         <tr *ngFor="let p of datalistdetail; let i = index ">
                                             <td class="text-center">{{i+1}}</td>
+                                            <td class="text-center">{{p.FNANNALSMAP_DATEK1}}</td>
                                             <td class="text-center">{{p.FNANNALSMAP_DEKA}}</td>
                                             <td>{{p.FSTF_FNAME}}</td>
                                             <td>{{p.FACULTY_TNAME}}

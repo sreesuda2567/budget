@@ -13,6 +13,8 @@ import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'src/app/shared/pdf-annotator/public-api';
 
 @Component({
   selector: 'app-writecheck',
@@ -39,11 +41,11 @@ export class WritecheckComponent implements OnInit {
   locale = 'th-be';
   locales = listLocales();
   datalistapp: any;
-   page = 1;
+  page = 1;
   count = 0;
   number = 0;
   tableSize = 20;
-  tableSizes = [20, 30,40,100,200];
+  tableSizes = [20, 30, 40, 100, 200];
   searchTerm: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
@@ -58,7 +60,8 @@ export class WritecheckComponent implements OnInit {
     private Uploadfiles: UploadfileserviceService,
     private localeService: BsLocaleService,
     private sanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private modalCtrl: ModalController,
   ) { }
 
   ngOnInit(): void {
@@ -71,33 +74,7 @@ export class WritecheckComponent implements OnInit {
     this.dataAdd.DATENOWT = '';
   }
   fetchdata() {
-    //ดึงคณะตามสังกัด
-    var varN = {
-      "opt": "viewufac",
-      "citizen": this.tokenStorage.getUser().citizen
-    }
-    this.apiService
-      .getdata(varN, this.url1)
-      .pipe(first())
-      .subscribe((data: any) => {
-        this.dataAdd.UFACULTY_CODE = data[0].FACULTY_CODE;
-        this.dataAdd.UCAMPUS_CODE = data[0].CAMPUS_CODE;
-        var varN1 = {
-          "opt": "viewnamecheckc1",
-          "citizen": this.tokenStorage.getUser().citizen,
-          "FACULTY_CODE": data[0].FACULTY_CODE
-        }
-        this.apiService
-          .getdata(varN1, this.url1)
-          .pipe(first())
-          .subscribe((data: any) => {
-            this.dataName = data;
-           // this.dataAdd.CITIZEN_IDC1 = data[0].CITIZEN_ID;
-           // this.dataAdd.CITIZEN_IDC2 = data[1].CITIZEN_ID;
 
-          });
-
-      });
     var varP = {
       "opt": "viewp",
       "citizen": this.tokenStorage.getUser().citizen
@@ -107,7 +84,7 @@ export class WritecheckComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.datarstatus = data;
-         this.dataAdd.PRIVILEGE_RSTATUS= data[0].PRIVILEGE_RSTATUS;
+        this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
         var varNf = {
           "opt": "viewfacreport",
           "citizen": this.tokenStorage.getUser().citizen,
@@ -121,24 +98,52 @@ export class WritecheckComponent implements OnInit {
             // console.log(data[0].FACULTY_CODE);
             this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
             this.fetchdatareport();
-           
+            //ดึงคณะตามสังกัด
+            //รายการปี
+            var Table = {
+              "opt": "viewyear"
+            }
+            this.apiService
+              .getdata(Table, this.url1)
+              .pipe(first())
+              .subscribe((datay: any) => {
+                this.dataYear = datay;
+                if (datay && datay.length > 0) {
+                  this.dataAdd.PLYEARBUDGET_CODE = datay[0].PLYEARBUDGET_CODE;
+                }
+                var varN = {
+                  "opt": "viewufac",
+                  "citizen": this.tokenStorage.getUser().citizen
+                }
+                this.apiService
+                  .getdata(varN, this.url1)
+                  .pipe(first())
+                  .subscribe((data: any) => {
+                    this.dataAdd.UFACULTY_CODE = data[0].FACULTY_CODE;
+                    this.dataAdd.UCAMPUS_CODE = data[0].CAMPUS_CODE;
+                    var varN1 = {
+                      "opt": "viewnamecheckc1",
+                      "citizen": this.tokenStorage.getUser().citizen,
+                      "FACULTY_CODE": data[0].FACULTY_CODE
+                    }
+                    this.apiService
+                      .getdata(varN1, this.url1)
+                      .pipe(first())
+                      .subscribe((data: any) => {
+                        this.dataName = data;
+                        // this.dataAdd.CITIZEN_IDC1 = data[0].CITIZEN_ID;
+                        // this.dataAdd.CITIZEN_IDC2 = data[1].CITIZEN_ID;
+
+                      });
+                    this.fetchdatalist();
+                  });
+
+              });
 
           });
       });
 
 
-    //รายการปี
-    var Table = {
-      "opt": "viewyear"
-    }
-    this.apiService
-      .getdata(Table, this.url1)
-      .pipe(first())
-      .subscribe((data: any) => {
-        this.dataYear = data;
-        this.dataAdd.PLYEARBUDGET_CODE = data[0].PLYEARBUDGET_CODE;
-
-      });
   }
   fetchdatareport() {
     this.dataName = null;
@@ -152,8 +157,8 @@ export class WritecheckComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataName = data;
-       // this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
-       // this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
+        // this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
+        // this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
 
       });
   }
@@ -257,7 +262,7 @@ export class WritecheckComponent implements OnInit {
     this.dataAdd.CITIZEN_IDC2 = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any,id2: any) {
+  editdata(id: any, id2: any) {
     this.setshowbti();
     this.fetchdatareport();
     this.dataAdd.FNANNALS_CODE = id;
@@ -283,9 +288,9 @@ export class WritecheckComponent implements OnInit {
 
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
-    if (this.dataAdd.CITIZEN_IDC1  == this.dataAdd.CITIZEN_IDC2) {
-        this.toastr.warning("แจ้งเตือน:กรุณาคนลงในเช็คไม่ซ้ำกัน");
-      
+    if (this.dataAdd.CITIZEN_IDC1 == this.dataAdd.CITIZEN_IDC2) {
+      this.toastr.warning("แจ้งเตือน:กรุณาคนลงในเช็คไม่ซ้ำกัน");
+
     } else {
       this.dataAdd.opt = "insert";
       this.apiService
@@ -299,7 +304,7 @@ export class WritecheckComponent implements OnInit {
             this.apiService
               .getupdate(this.dataAdd, this.url)
               .pipe(first())
-              .subscribe((data: any) => {   
+              .subscribe((data: any) => {
 
               });
 
@@ -323,20 +328,20 @@ export class WritecheckComponent implements OnInit {
       .subscribe((data: any) => {
         //console.log(data.status);       
         if (data.status == 1) {
-        /* this.dataAdd.opt = "sendemail";
-            this.apiService
-              .getupdate(this.dataAdd, this.url)
-              .pipe(first())
-              .subscribe((data: any) => {   
-
-              });*/
+          /* this.dataAdd.opt = "sendemail";
+              this.apiService
+                .getupdate(this.dataAdd, this.url)
+                .pipe(first())
+                .subscribe((data: any) => {   
+  
+                });*/
           this.fetchdatalistapp();
           this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
           document.getElementById("ModalClose")?.click();
         }
       });
   }
-          // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
     this.fetchdatalistapp();
@@ -346,7 +351,7 @@ export class WritecheckComponent implements OnInit {
     this.page = 1;
     this.fetchdatalistapp();
   }
-    previewPdf(url: string) {
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
@@ -360,7 +365,7 @@ export class WritecheckComponent implements OnInit {
     try {
       // Fetch only if not already counted
       if (item[propertyName]) return;
-      
+
       const response = await fetch(url);
       const pdfBytes = await response.arrayBuffer();
       const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
@@ -368,6 +373,42 @@ export class WritecheckComponent implements OnInit {
       this.cdr.detectChanges();
     } catch (error) {
       console.error('Error counting PDF pages for URL:', url, error);
+    }
+  }
+  async openPdfAnnotator(p: any) {
+    const rawLink = p?.CONTRACT_LINK || p?.linkclear || p?.disbursement;
+    if (!rawLink) {
+      this.toastr.warning("ไม่มีไฟล์สำหรับลงนาม");
+      return;
+    }
+    const cacheBuster = new Date().getTime();
+    const reportLink = rawLink + (rawLink.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const user = this.tokenStorage.getUser();
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: reportLink,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.saved && data.blob) {
+      // Create a File object from the blob
+      const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
+
+      this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '80')
+        .subscribe((event: any) => {
+          if (event.type == 4) { // HttpEventType.Response
+            this.toastr.success("แจ้งเตือน: อัปโหลดข้อมูลเรียบร้อยแล้ว");
+            this.fetchdatalist();
+          }
+        });
+
     }
   }
 }

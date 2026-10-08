@@ -1948,7 +1948,7 @@
                 <label class="form-label fw-bold text-secondary mb-1">
                   <i class="fa-solid fa-file-invoice-dollar text-warning me-2"></i>หมวดรายจ่าย
                 </label>
-                <select class="form-select text-dark" [(ngModel)]="dataAdd.PLMONEYPAY_CODE">
+                <select class="form-select text-dark" [(ngModel)]="dataAdd.PLMONEYPAY_CODE" (change)="onChangeSubplmoney()">
                   <option [value]="fac.PLMONEYPAY_CODE" *ngFor="let fac of dataPlmoneypay">
                     {{fac.PLMONEYPAY_NAME}}
                   </option>
@@ -1970,7 +1970,7 @@
                 <label class="form-label fw-bold text-secondary mb-1">
                   <i class="fa-solid fa-list-check text-primary me-2"></i>หมวดรายจ่ายย่อย
                 </label>
-                <select class="form-select text-dark" [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE">
+                <select class="form-select text-dark" [(ngModel)]="dataAdd.PLSUBMONEYPAY_CODE" >
                   <option [value]="fac.PLSUBMONEYPAY_CODE" *ngFor="let fac of dataSubplmoneypay">
                     {{fac.PLSUBMONEYPAY_NAME}}</option>
                 </select>
