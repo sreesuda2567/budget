@@ -55,6 +55,7 @@ import { PdfAnnotatorModule, PDF_ANNOTATOR_CONFIG } from 'src/app/shared/pdf-ann
 import { ReportpaperComponent } from './report/reportpaper/reportpaper.component';
 import { ReportpaymentappComponent } from './report/reportpaymentapp/reportpaymentapp.component';
 import { ReportdekaappComponent } from './report/reportdekaapp/reportdekaapp.component';
+import { NomoneyComponent } from './check/nomoney/nomoney.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,8 @@ import { ReportdekaappComponent } from './report/reportdekaapp/reportdekaapp.com
     ReportamendComponent,
     ReportpaperComponent,
     ReportpaymentappComponent,
-    ReportdekaappComponent
+    ReportdekaappComponent,
+    NomoneyComponent
   ],
   imports: [
         CommonModule,
