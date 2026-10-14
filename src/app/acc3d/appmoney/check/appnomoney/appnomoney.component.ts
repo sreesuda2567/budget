@@ -1,0 +1,758 @@
+import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { PDFDocument } from 'pdf-lib';
+import { ApiPdoService } from '../../../../_services/api-pui.service';
+import { TokenStorageService } from '../../../../_services/token-storage.service';
+import { first, map, startWith } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UploadfileserviceService } from '../../../../acc3d/_services/uploadfileservice.service';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { listLocales } from 'ngx-bootstrap/chronos';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { thBeLocale } from 'ngx-bootstrap/locale';
+import { ModalController } from '@ionic/angular';
+import { PdfAnnotatorModalComponent } from 'src/app/shared/pdf-annotator/public-api';
+import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+@Component({
+  selector: 'app-appnomoney',
+  templateUrl: './appnomoney.component.html',
+  styleUrls: ['./appnomoney.component.scss']
+})
+export class AppnomoneyComponent implements OnInit {
+  title = 'angular-app';
+  fileName = 'report.xlsx';
+  userList = [{}]
+
+  dataYear: any;
+  dataCam: any;
+  dataFac: any;
+  dataCrpart: any;
+  dataPlmoneypay: any;
+  datalist: any;
+  datalistdetail: any;
+  datalistlink: any;
+  loading: any;
+  loadingdetail: any;
+  dataAdd: any = { check: [], FEREIM_CODE: [], FEREIMDT_WMONEY: [], FEREIMDT_LINK: [], FRACCCODE: [], FRACCMONEY: [] };
+  searchTerm: any;
+  show: any;
+  dataPro: any;
+  datarstatus: any;
+  dataStafftype: any;
+  datacampus: any;
+  numrow: any;
+  locale = 'th-be';
+  locales = listLocales();
+  rownum: any;
+  dataSeq: any;
+  dataName: any;
+  pdfUrlToView: any;
+  url = "/acc3d/appmoney/check/appnomoney.php";
+  url1 = "/acc3d/appmoney/userpermission.php";
+  page = 1;
+  count = 0;
+  number: any = [0, 1, 2, 3];
+  tableSize = 20;
+  tableSizes = [20, 30, 40, 80, 100];
+  rowpbi: any;
+  rowpbu: any;
+  file: any;
+  dataNameb: any;
+  dataEdoc: any;
+  datachief: any;
+  dataIncome: any;
+  dataAcc: any;
+  dataProduct: any;
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
+  constructor(
+    private tokenStorage: TokenStorageService,
+    private apiService: ApiPdoService,
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private eRef: ElementRef,
+    private formBuilder: FormBuilder,
+    private localeService: BsLocaleService,
+    private Uploadfiles: UploadfileserviceService,
+    private sanitizer: DomSanitizer,
+    private modalCtrl: ModalController
+  ) { }
+
+  ngOnInit(): void {
+    this.localeService.use(this.locale);
+    this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
+    this.fetchdata();
+  }
+  fetchdata() {
+    var varP = {
+      "opt": "viewp",
+      "citizen": this.tokenStorage.getUser().citizen
+    }
+    //ดึงรายการคณะตามสิทธิ์
+    this.apiService.getdata(varP, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.datarstatus = data;
+        this.dataAdd.PRIVILEGE_RSTATUS = data[0].PRIVILEGE_RSTATUS;
+
+        //หน่วยเบิกจ่าย
+        var Tablein = {
+          "opt": "viewCAMPUS",
+          "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS,
+          "citizen": this.tokenStorage.getUser().citizen
+        }
+        this.apiService
+          .getdata(Tablein, this.url1)
+          .pipe(first())
+          .subscribe((data: any) => {
+            this.datacampus = data;
+            this.dataAdd.CAMPUS_CODE = data[0].CAMPUS_CODE;
+          });
+
+        //รายการปี
+        var Table = {
+          "opt": "viewyear"
+        }
+        this.apiService
+          .getdata(Table, this.url1)
+          .pipe(first())
+          .subscribe((datay: any) => {
+            this.dataYear = datay;
+            if (datay && datay.length > 0) {
+              this.dataAdd.PLYEARBUDGET_CODE = datay[0].PLYEARBUDGET_CODE;
+            }
+            var varNf = {
+              "opt": "viewfacreport",
+              "citizen": this.tokenStorage.getUser().citizen,
+              "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS || ''
+            }
+            this.apiService
+              .getdata(varNf, this.url1)
+              .pipe(first())
+              .subscribe((dataf: any) => {
+                this.dataFac = dataf;
+                // console.log(dataf[0].FACULTY_CODE);
+                if (dataf && dataf.length > 0) {
+                  this.dataAdd.FACULTY_CODE = dataf[0].FACULTY_CODE;
+                }
+                var varN1 = {
+                  "opt": "viewnamecheckb",
+                  "citizen": this.tokenStorage.getUser().citizen,
+                  "FACULTY_CODE": this.dataAdd.FACULTY_CODE
+                }
+                this.apiService
+                  .getdata(varN1, this.url1)
+                  .pipe(first())
+                  .subscribe((data: any) => {
+                    this.dataName = data;
+                    //  this.dataAdd.CITIZEN_IDB = data[0].CITIZEN_ID;
+
+                  });
+                //ประเภทบุคลากร
+                var Tablein = {
+                  "opt": "viewCRPARTAN",
+                   "PLYEARBUDGET_CODE": this.dataAdd.PLYEARBUDGET_CODE,
+                   "PLINCOME_CODE": this.dataAdd.PLINCOME_CODE
+                }
+                this.apiService
+                  .getdata(Tablein, this.url1)
+                  .pipe(first())
+                  .subscribe((data: any) => {
+                    this.dataCrpart = data;
+                  });
+                this.fetchdatalist();
+                this.onChangePlmoney();
+                // this.fetchdatareportnamea();
+              });
+
+          });
+      });
+    //รายการประเภทเงิน
+    var Tablein = {
+      "opt": "viewPLINCOME"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataIncome = data;
+        this.dataAdd.PLINCOME_CODE = data[0].PLINCOME_CODE;
+      });
+
+    this.dataAdd.opt = "viewFRACCE";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAcc = data;
+        //console.log(data);
+      });
+    //รายการผลผลิต
+    var Tablein = {
+      "opt": "viewPLGPRODUCT"
+    }
+    this.apiService
+      .getdata(Tablein, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataProduct = data;
+        // this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
+      });
+  }
+    onChangePlmoney() {
+    this.dataPlmoneypay = null;
+    this.dataAdd.opt = "viewPLMONEYPAY";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataPlmoneypay = data;
+      });
+  }
+  fetchdatacrpart() {
+    this.dataCrpart = null;
+    var varN1 = {
+      "opt": "viewCRPARTAN",
+       "PLYEARBUDGET_CODE": this.dataAdd.PLYEARBUDGET_CODE,
+       "PLINCOME_CODE": this.dataAdd.PLINCOME_CODE
+    }
+    this.apiService
+      .getdata(varN1, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataCrpart = data;
+
+      });
+  }
+  fetchdatareport() {
+    this.dataNameb = null;
+    var varN1 = {
+      "opt": "viewnamecheckc",
+      "citizen": this.tokenStorage.getUser().citizen,
+      "FACULTY_CODE": this.dataAdd.FACULTY_CODE
+    }
+    this.apiService
+      .getdata(varN1, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataNameb = data;
+        // this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
+        // this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
+
+      });
+  }
+  onChangepdf(event: any) {
+    this.file = event.target.files[0];
+  }
+
+  showinput() {
+    this.rowpbi = 1;
+    this.rowpbu = '';
+  }
+  fetchdataFac() {
+    this.dataFac = null;
+    this.dataAdd.opt = "viewfacload";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataFac = data;
+        this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
+      });
+  }
+  fetchdataload() {
+    this.datalistdetail = null;
+    this.datalistlink = null;
+    this.dataAdd.FEREIM_CODE = [];
+    this.dataAdd.FEREIMDT_WMONEY = [];
+    this.dataAdd.check = [];
+    this.dataAdd.FEREIMDT_LINK = [];
+    this.dataAdd.opt = "viewenomoney";
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == '1') {
+          this.datalistdetail = data.data;
+          this.datalistlink = data.data2;
+          for (let i = 0; i < this.datalistdetail.length; i++) {
+            this.dataAdd.FEREIM_CODE[i] = this.datalistdetail[i].FEPSTATE_CODE;
+            this.dataAdd.FEREIMDT_WMONEY[i] = this.datalistdetail[i].FEPSTATE_TMONEY;
+            if (this.datalistdetail[i].FNANNALSMAP_CODE == '') {
+              this.dataAdd.check[i] = false;
+            }
+            if (this.datalistdetail[i].FNANNALSMAP_CODE == '1') {
+              this.dataAdd.check[i] = true;
+            }
+            for (let i = 0; i < this.datalistlink.length; i++) {
+              this.dataAdd.FEREIMDT_LINK[i] = this.datalistlink[i].link;
+
+            }
+          }
+        }
+      });
+  }
+  applyLocale(pop: any) {
+    this.localeService.use(this.locale);
+  }
+  datenow(datenow: any) {
+    const yyyy = datenow.getFullYear();
+    let mm = datenow.getMonth() + 1; // Months start at 0!
+    let dd = datenow.getDate();
+    return yyyy + '-' + mm + '-' + dd;
+  }
+  fetchdatalist() {
+    this.loading = true;
+    this.datalist = null;
+    this.dataAdd.opt = "readAll";
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == '1') {
+          this.datalist = data.data;
+          this.dataAdd.CAMPUS_NAME = data.CAMPUS_NAME;
+          this.dataAdd.PLINCOME_NAME = data.PLINCOME_NAME;
+          this.loading = null;
+          this.rownum = 1;
+
+        } else {
+          this.rownum = null;
+          this.loading = null;
+          this.datalist = data.data;
+          this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+        }
+      });
+  }
+  onChangeedoc() {
+    this.dataEdoc = null;
+    this.dataAdd.opt = "viewedoc";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataEdoc = data.data;
+        this.dataAdd.DEPARTMENT_CODE = data.data[0].mapSectionCode;
+      });
+  }
+  onChangechief() {
+    this.datachief = null;
+    this.dataAdd.opt = "viewCHIEFANNAL";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.datachief = data;
+        // this.dataAdd.CHIEF_CODE = data[0].CHIEF_CODE;
+      });
+  }
+  fetchdatadetail(CODE: any, name: any) {
+    this.dataAdd.MCITIZEN_ID = CODE;
+    this.dataAdd.FEREIM_NAME = name;
+    this.dataAdd.opt = 'reportdetail';
+    this.datalistdetail = null;
+    this.loading = true;
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == 1) {
+          this.datalistdetail = data.data;
+          this.loading = null;
+        } else {
+          this.loading = null;
+          this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
+          this.datalistdetail = data.data;
+        }
+      });
+
+  }
+  // ฟังก์ชันสำหรับการลบข้อมูล
+  deleteData(id: any) {
+    this.dataAdd.opt = "delete";
+    this.dataAdd.id = id;
+    Swal.fire({
+      title: 'ต้องการลบข้อมูล?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.value) {
+        this.apiService
+          .getdata(this.dataAdd, this.url)
+          .pipe(first())
+          .subscribe((data: any) => {
+            if (data.status == 1) {
+              Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+              this.fetchdatalist();
+            }
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+      }
+    });
+  }
+  // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+  editdata(id: any) {
+    this.setshowbti();
+    this.apiService
+      .getById(id, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataAdd.FACULTY_CODE = data.data[0].FACULTY_CODE;
+        this.dataAdd.FNANNALSMAP_CODE = data.data[0].FNANNALSMAP_CODE;
+        this.dataAdd.DEPARTMENT_CODE = data.data[0].DEPARTMENT_CODE;
+        this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
+        this.dataAdd.CHIEF_CODE = data.data[0].CHIEF_CODE;
+        this.dataAdd.PLINCOME_CODE = data.data[0].PLINCOME_CODE;
+        this.fetchdatacrpart();
+        this.dataAdd.PLMONEYPAY_CODE = data.data[0].PLMONEYPAY_CODE;
+        this.dataAdd.CRPART_ID = data.data[0].CRPART_ID;
+        this.dataAdd.FNANNALSMAPTS_CODE = data.data[0].FNANNALSMAPTS_CODE;
+        this.dataAdd.CAMPUS_CODE = data.data[0].CAMPUS_CODE;
+        this.dataAdd.CITIZEN_IDP1 = data.data[0].CITIZEN_IDP1;
+        this.dataAdd.CITIZEN_IDP2 = data.data[0].CITIZEN_IDP2;
+        this.dataAdd.CITIZEN_IDP3 = data.data[0].CITIZEN_IDP3;
+        this.dataAdd.CITIZEN_IDP4 = data.data[0].CITIZEN_IDP4;
+        for (let i = 0; i < data.data2.length; i++) {
+
+          this.dataAdd.FRACCCODE[i] = data.data2[i].FRACC_CODE;
+          this.dataAdd.FRACCMONEY[i] = parseFloat(data.data2[i].FNANNALSMAPACC_MONEY).toFixed(2);
+
+        }
+        // console.log(this.dataAdd.FRACCCODE);
+        this.fetchdataload();
+      });
+    this.rowpbi = null;
+    this.rowpbu = true;
+  }
+  setshowbti() {
+    this.onChangeedoc();
+    this.onChangechief();
+    this.fetchdatareport();
+    this.dataAdd.FNANNALSMAP_CODE = '';
+    this.dataAdd.DEPARTMENT_CODE = '';
+    this.dataAdd.CHIEF_CODE = '';
+    this.dataAdd.PLINCOME_CODE = '01';
+    this.dataAdd.FNANNALSMAPTS_CODE = '';
+    this.dataAdd.CAMPUS_CODE = '';
+    this.dataAdd.CITIZEN_IDP1 = '';
+    this.dataAdd.CITIZEN_IDP2 = '';
+    this.dataAdd.CITIZEN_IDP3 = '';
+    this.dataAdd.CITIZEN_IDP4 = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
+
+    for (let i = 0; i < this.number.length; i++) {
+      this.dataAdd.FRACCCODE[i] = '';
+      this.dataAdd.FRACCMONEY[i] = '';
+    }
+
+  }
+  // ฟังก์ขันสำหรับการเพิ่มข้อมูล
+  insertdata() {
+    this.loading = true;
+    let num = 0;
+    for (let i = 0; i < this.dataAdd.check.length; i++) {
+      // console.log(this.dataAdd.check[i]);
+      if (this.dataAdd.check[i] == true) {
+        num = 1;
+      }
+    }
+    if (num == 0) {
+      this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูล");
+    } else if (this.dataAdd.EBOOKREQ_FILE == '') {
+      this.toastr.warning("แจ้งเตือน:ยังไม่ได้แนบไฟล์");
+    } else {
+      this.dataAdd.opt = "insert";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);       
+          if (data.status == 1) {
+            this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, data.id, this.dataAdd.citizen, '112')
+              .subscribe((event: any) => {
+                // 
+                if (event.type == 4) {
+                  this.fetchdatalist();
+                }
+              }
+              );
+            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+            this.fetchdatalist();
+            document.getElementById("ModalClose")?.click();
+          } else {
+            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+          }
+        });
+    }
+  }
+  //แก้ไขข้อมูล
+  updatedata() {
+    let num = 0;
+    for (let i = 0; i < this.dataAdd.check.length; i++) {
+      // console.log(this.dataAdd.check[i]);
+      if (this.dataAdd.check[i] == true) {
+        num = 1;
+      }
+    }
+    if (num == 0) {
+      this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูล");
+    } else {
+
+      this.dataAdd.opt = "update";
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          //console.log(data.status);       
+          if (data.status == 1) {
+            this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, data.id, this.dataAdd.citizen, '112')
+              .subscribe((event: any) => {
+                // 
+                if (event.type == 4) {
+                  this.fetchdatalist();
+                }
+              }
+              );
+            this.fetchdatalist();
+            //this.fetchdatalist();
+            this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
+            document.getElementById("ModalClose")?.click();
+          }
+        });
+    }
+    this.rowpbi = null;
+    this.rowpbu = true;
+  }
+  async sendfile(id: any, link3: any) {
+    this.editdata(id);
+    // this.dataAdd.link2 = link;
+    this.dataAdd.link3 = link3;
+    Swal.fire({
+      title: 'ต้องการรวมไฟล์',
+      text: 'กำลังรวมไฟล์ PDF...',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then(async (result) => {
+      if (result.value) {
+        Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+        try {
+          const pdf1Bytes = await fetch(link3).then(res => res.arrayBuffer());
+          const pdf1 = await PDFDocument.load(pdf1Bytes);
+          const mergedPdf = await PDFDocument.create();
+
+          const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+          copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+
+
+          if (this.dataAdd.FEREIMDT_LINK && this.dataAdd.FEREIMDT_LINK.length > 0) {
+            for (let i = 0; i < this.dataAdd.FEREIMDT_LINK.length; i++) {
+              if (this.dataAdd.FEREIMDT_LINK[i]) {
+                const pdfBytes = await fetch(this.dataAdd.FEREIMDT_LINK[i]).then(res => res.arrayBuffer());
+                const pdfDoc = await PDFDocument.load(pdfBytes);
+                const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+                copiedPages.forEach((page) => mergedPdf.addPage(page));
+              }
+            }
+          }
+
+          const mergedPdfBytes = await mergedPdf.save();
+          const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
+          const user = this.tokenStorage.getUser();
+
+          // หมายเหตุ: ใช้รหัสอัปโหลด '121' หากต้องการเปลี่ยนเป็นเลขอื่น (เช่น 112) สามารถแก้ได้เลยครับ
+          this.Uploadfiles.uploadcontract(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '113')
+            .subscribe((event: any) => {
+              if (event.type == 4) {
+                Swal.close();
+                this.toastr.success("แจ้งเตือน:รวมไฟล์เรียบร้อยแล้ว");
+                this.fetchdatalist();
+              }
+            });
+        } catch (error) {
+          console.error("Error merging PDFs:", error);
+          Swal.fire('ข้อผิดพลาด', 'ไม่สามารถรวมไฟล์ได้ (อาจเกิดจากไฟล์ไม่มีอยู่จริง หรือติดปัญหา Cross-Origin)', 'error');
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการรวมไฟล์', 'error');
+      }
+    });
+  }
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  onTableDataChange(event: any) {
+    this.page = event;
+    this.fetchdatalist();
+  }
+  onTableSizeChange(event: any): void {
+    this.tableSize = event.target.value;
+    this.page = 1;
+    this.fetchdatalist();
+  }
+  exportexcel(): void {
+    /* pass here the table id */
+    let element = document.getElementById('excel-table');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, this.fileName);
+
+  }
+  previewPdf(url: string) {
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
+  }
+  async openPdfAnnotator(p: any) {
+    this.editdata(p.FNANNALSMAP_CODE);
+    const user = this.tokenStorage.getUser();
+    let finalPdfUrl = '';
+
+    Swal.fire({ title: 'กำลังเตรียมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+
+    try {
+      const mainLink = p.link3 || p.link;
+
+      const data: any = await this.apiService.getById(p.FNANNALSMAP_CODE, this.url).pipe(first()).toPromise();
+      if (data && data.data && data.data.length > 0) {
+        this.dataAdd.FACULTY_CODE = data.data[0].FACULTY_CODE;
+      }
+
+      this.dataAdd.FNANNALSMAP_CODE = p.FNANNALSMAP_CODE;
+      this.dataAdd.opt = "viewepmedicalapp";
+      const dataLoad: any = await this.apiService.getdata(this.dataAdd, this.url1).pipe(first()).toPromise();
+
+      let linkArray: any[] = [];
+      if (dataLoad.status == '1' && dataLoad.data2) {
+        linkArray = dataLoad.data2.map((item: any) => item.link);
+      }
+
+      const pdf1Bytes = await fetch(mainLink).then(res => res.arrayBuffer());
+      const pdf1 = await PDFDocument.load(pdf1Bytes);
+      const mergedPdf = await PDFDocument.create();
+
+      const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+      copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+      if (linkArray && linkArray.length > 0) {
+        for (let i = 0; i < linkArray.length; i++) {
+          if (linkArray[i]) {
+            const pdfBytes = await fetch(linkArray[i]).then(res => res.arrayBuffer());
+            const pdfDoc = await PDFDocument.load(pdfBytes);
+            const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
+          }
+        }
+      }
+
+      const finalPdfBytes = await mergedPdf.save();
+      const blob = new Blob([finalPdfBytes as any], { type: 'application/pdf' });
+      finalPdfUrl = URL.createObjectURL(blob);
+      Swal.close();
+
+    } catch (error) {
+      console.error("Error merging PDFs:", error);
+      Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเตรียมไฟล์ได้', 'error');
+      return;
+    }
+
+    const modal = await this.modalCtrl.create({
+      component: PdfAnnotatorModalComponent,
+      componentProps: {
+        pdfUrl: finalPdfUrl,
+        userId: user.citizen,
+        userName: user.fullname || user.username
+      },
+      cssClass: 'pdf-modal-right-side'
+    });
+    await modal.present();
+
+    const { data: modalData } = await modal.onDidDismiss();
+    if (modalData && modalData.saved && modalData.blob) {
+      // Create a File object from the blob
+      const file = new File([modalData.blob], 'signed_document.pdf', { type: 'application/pdf' });
+
+      this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '113')
+        .subscribe((event: any) => {
+          if (event.type == 4) { // HttpEventType.Response
+            this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยพร้อมส่งสารบรรณ");
+            this.fetchdatalist();
+          }
+        });
+    }
+  }
+  fetchdataloadshow(id: any) {
+    this.pdfUrlToView = null;
+    this.dataAdd.FNANNALSMAP_CODE = id;
+    this.dataAdd.opt = "viewshow";
+
+    this.apiService
+      .getdata(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        if (data.status == '1') {
+          this.dataSeq = data.data;
+        }
+      });
+  }
+  exportpdf(link: any) {
+    const cacheBuster = new Date().getTime();
+    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
+  }
+
+  updateTotalMoney() {
+    this.dataAdd.FRACCMONEY[0] = this.getTotalSelected();
+  }
+
+  getTotalSelected(): number {
+    let total = 0;
+    if (this.dataAdd && this.dataAdd.check && this.dataAdd.FEREIMDT_WMONEY) {
+      for (let i = 0; i < this.dataAdd.check.length; i++) {
+        if (this.dataAdd.check[i]) {
+          total += Number(this.dataAdd.FEREIMDT_WMONEY[i]) || 0;
+        }
+      }
+    }
+    return total;
+  }
+  deliver(id: any) {
+    this.dataAdd.opt = "deliver";
+    this.dataAdd.id = id;
+    Swal.fire({
+      title: 'ต้องการนำส่งสารบรรณ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.value) {
+        this.apiService
+          .getdata(this.dataAdd, this.url)
+          .pipe(first())
+          .subscribe((data: any) => {
+            if (data.status == 1) {
+              Swal.fire('นำส่งข้อมูล!', 'นำส่งข้อมูลเรียบร้อยแล้ว', 'success');
+              this.fetchdatalist();
+            }
+          });
+      }
+    });
+  }
+
+}

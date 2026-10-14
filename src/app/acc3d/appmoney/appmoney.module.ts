@@ -56,6 +56,7 @@ import { ReportpaperComponent } from './report/reportpaper/reportpaper.component
 import { ReportpaymentappComponent } from './report/reportpaymentapp/reportpaymentapp.component';
 import { ReportdekaappComponent } from './report/reportdekaapp/reportdekaapp.component';
 import { NomoneyComponent } from './check/nomoney/nomoney.component';
+import { AppnomoneyComponent } from './check/appnomoney/appnomoney.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { NomoneyComponent } from './check/nomoney/nomoney.component';
     ReportpaperComponent,
     ReportpaymentappComponent,
     ReportdekaappComponent,
-    NomoneyComponent
+    NomoneyComponent,
+    AppnomoneyComponent
   ],
   imports: [
         CommonModule,

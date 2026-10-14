@@ -47,6 +47,7 @@ import { ReportpaperComponent } from './report/reportpaper/reportpaper.component
 import { ReportpaymentappComponent } from './report/reportpaymentapp/reportpaymentapp.component';
 import { ReportdekaappComponent } from './report/reportdekaapp/reportdekaapp.component';
 import { NomoneyComponent } from './check/nomoney/nomoney.component';
+import { AppnomoneyComponent } from './check/appnomoney/appnomoney.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent , children : [
@@ -95,7 +96,7 @@ const routes: Routes = [
     { path: 'reportpaymentapp', component : ReportpaymentappComponent , canActivate: [AuthGuard]},
     { path: 'reportdekaapp', component : ReportdekaappComponent , canActivate: [AuthGuard]},
     { path: 'nomoney', component : NomoneyComponent , canActivate: [AuthGuard]},
-    
+    { path: 'appnomoney', component : AppnomoneyComponent , canActivate: [AuthGuard]},
     
     { path: '**', redirectTo: '' }
 ]

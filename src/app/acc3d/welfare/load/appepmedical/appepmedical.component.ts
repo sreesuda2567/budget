@@ -221,9 +221,9 @@ export class AppepmedicalComponent implements OnInit {
     this.dataAdd.FEREIMDT_WMONEY = [];
     this.dataAdd.check = [];
     this.dataAdd.FEREIMDT_LINK = [];
-    this.dataAdd.opt = "viewepmedicalapp";
+    this.dataAdd.opt = "viewenomoney";
     this.apiService
-      .getdata(this.dataAdd, this.url1)
+      .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
         if (data.status == '1') {
