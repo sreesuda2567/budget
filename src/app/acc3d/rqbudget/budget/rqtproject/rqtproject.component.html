@@ -530,50 +530,49 @@
                       </div>
                     </div>
                   </div>
-                  <div *ngFor="let p of number1;let i = index" class="row"><!--*ngIf="ptype"-->
-                    <div class="col-md-4">
-                      <label for="name"><strong><i
-                            class="fa-solid fa-user-graduate me-2 text-danger"></i>จำนวนผู้เข้าร่วม นักศึกษา <span
+                  <div *ngFor="let p of number1;let i = index" class="row mb-2"><!--*ngIf="ptype"-->
+                    <div class="col-md-3">
+                      <label for="p_sdate_{{i}}"><strong><i
+                            class="fa-regular fa-calendar-days me-2 text-danger"></i>ระยะเวลาดำเนินโครงการ ตั้งแต่ <span
                             *ngIf="dataAdd.PRPLPROJECT_TIME>1"><strong>กิจกรรมที่
                               {{i+1}}</strong></span></strong></label>
-                      <input type="text" name="p_bname" id="p_bname" class="form-control" placeholder="นักศึกษา"
-                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONS[i]" (keypress)="CheckNum($event)">
-                    </div>
-                    <div class="col-md-4">
-                      <label for="name"><strong><i class="fa-solid fa-user-tie me-2 text-danger"></i>จำนวนผู้เข้าร่วม
-                          บุคลากร</strong></label>
-                      <input type="text" name="p_number" id="p_number" class="form-control" placeholder="บุคลากร"
-                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONP[i]" (keypress)="CheckNum($event)">
-                    </div>
-                    <div class="col-md-4">
-                      <label for="name"><strong><i class="fa-solid fa-users me-2 text-danger"></i>จำนวนผู้เข้าร่วม
-                          บุคคลภายนอก</strong></label>
-                      <input type="text" name="p_number" id="p_number" class="form-control" placeholder="บุคคลภายนอก"
-                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONO[i]" (keypress)="CheckNum($event)">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3">
-                      <label for="name"><strong><i
-                            class="fa-regular fa-calendar-days me-2 text-danger"></i>ระยะเวลาดำเนินโครงการ ตั้งแต่
-                        </strong></label>
-                      <input type="text" name="p_bname" id="p_bname" bsDatepicker #dp="bsDatepicker"
-                        class="form-control" placeholder="ตั้งแต่" [(ngModel)]="dataAdd.PRPLPROJECT_SDATE">
+                      <input type="text" name="p_sdate_{{i}}" id="p_sdate_{{i}}" bsDatepicker #dp="bsDatepicker"
+                        class="form-control" placeholder="ตั้งแต่" [(ngModel)]="dataAdd.PRPLPROJECT_SDATE[i]">
                       <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
                         class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
                       </i>
                     </div>
                     <div class="col-md-3">
-                      <label for="name"><strong><i
+                      <label for="p_edate_{{i}}"><strong><i
                             class="fa-regular fa-calendar-check me-2 text-danger"></i>ถึงวันที่</strong></label>
-                      <input type="text" name="p_number" id="p_number" bsDatepicker #dp2="bsDatepicker"
-                        class="form-control" placeholder="ถึงวันที่" [(ngModel)]="dataAdd.PRPLPROJECT_EDATE">
+                      <input type="text" name="p_edate_{{i}}" id="p_edate_{{i}}" bsDatepicker #dp2="bsDatepicker"
+                        class="form-control" placeholder="ถึงวันที่" [(ngModel)]="dataAdd.PRPLPROJECT_EDATE[i]">
                       <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
                         class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp2.toggle()">
                       </i>
                     </div>
-                    <div class="col-md-6">
-                      <label for="name"><strong><i
+                    <div class="col-md-2">
+                      <label for="p_persons_{{i}}"><strong><i
+                            class="fa-solid fa-user-graduate me-2 text-danger"></i>ผู้เข้าร่วม นักศึกษา</strong></label>
+                      <input type="text" name="p_persons_{{i}}" id="p_persons_{{i}}" class="form-control" placeholder="นักศึกษา"
+                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONS[i]" (keypress)="CheckNum($event)">
+                    </div>
+                    <div class="col-md-2">
+                      <label for="p_personp_{{i}}"><strong><i class="fa-solid fa-user-tie me-2 text-danger"></i>ผู้เข้าร่วม
+                          บุคลากร</strong></label>
+                      <input type="text" name="p_personp_{{i}}" id="p_personp_{{i}}" class="form-control" placeholder="บุคลากร"
+                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONP[i]" (keypress)="CheckNum($event)">
+                    </div>
+                    <div class="col-md-2">
+                      <label for="p_persono_{{i}}"><strong><i class="fa-solid fa-users me-2 text-danger"></i>ผู้เข้าร่วม
+                          บุคคลภายนอก</strong></label>
+                      <input type="text" name="p_persono_{{i}}" id="p_persono_{{i}}" class="form-control" placeholder="บุคคลภายนอก"
+                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONO[i]" (keypress)="CheckNum($event)">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="PRPLPROJECT_LOCATION"><strong><i
                             class="fa-solid fa-location-dot me-2 text-danger"></i>สถานที่ดำเนินโครงการ
                           ณ</strong></label>
                       <input type="text" name="PRPLPROJECT_LOCATION" id="PRPLPROJECT_LOCATION" class="form-control"

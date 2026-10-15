@@ -18,7 +18,7 @@
                                         <a class="nav-link active" aria-current="page" routerLink="disbursement"><i
                                                         class="fas fa-search-dollar text-info me-1"></i>ตรวจสอบหลักฐานการเบิก</a>
                                 </li>
-                                <li *ngIf="datastatus=='A' || datastatus=='1'" class="nav-item dropdown">
+                                <li *ngIf="datastatus=='A' || datastatus=='2'  || datastatus=='3'" class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fas fa-file-alt text-info me-1"></i>ตรวจสอบเอกสาร
@@ -30,7 +30,15 @@
                                                 </li>
                                                 <li>
                                                         <a class="dropdown-item" routerLink="appnomoney"><i
-                                                                        class="fas fa-file-contract text-info me-1"></i>ออกใบปะหน้าเบิก</a>
+                                                                        class="fas fa-file-invoice text-primary me-1"></i>ออกใบปะหน้าเบิก</a>
+                                                </li>
+                                                <li>
+                                                        <a class="dropdown-item" routerLink="load3dapp"><i
+                                                                        class="fas fa-download text-warning me-1"></i>ออกใบโหลด(ขบ)</a>
+                                                </li>
+                                                <li>
+                                                        <a class="dropdown-item" routerLink="load3dfapp"><i
+                                                                        class="fas fa-file-export text-danger me-1"></i>ออกใบปะหน้าจ่าย</a>
                                                 </li>
 
                                         </ul>

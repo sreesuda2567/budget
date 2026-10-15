@@ -57,6 +57,8 @@ import { ReportpaymentappComponent } from './report/reportpaymentapp/reportpayme
 import { ReportdekaappComponent } from './report/reportdekaapp/reportdekaapp.component';
 import { NomoneyComponent } from './check/nomoney/nomoney.component';
 import { AppnomoneyComponent } from './check/appnomoney/appnomoney.component';
+import { Load3dappComponent } from './check/load3dapp/load3dapp.component';
+import { Load3dfappComponent } from './check/load3dfapp/load3dfapp.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +108,9 @@ import { AppnomoneyComponent } from './check/appnomoney/appnomoney.component';
     ReportpaymentappComponent,
     ReportdekaappComponent,
     NomoneyComponent,
-    AppnomoneyComponent
+    AppnomoneyComponent,
+    Load3dappComponent,
+    Load3dfappComponent
   ],
   imports: [
         CommonModule,

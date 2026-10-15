@@ -92,7 +92,7 @@ export class Load3dComponent implements OnInit {
             this.dataAdd.UFACULTY_CODE = data[0].FACULTY_CODE;
             this.dataAdd.UCAMPUS_CODE = data[0].CAMPUS_CODE;
             var varN1 = {
-              "opt": "viewnamecheckc1",
+              "opt": "viewnamecheckb",
               "citizen": this.tokenStorage.getUser().citizen,
               "FACULTY_CODE": data[0].FACULTY_CODE
             }
@@ -159,7 +159,7 @@ export class Load3dComponent implements OnInit {
     }
     fetchdataFac() {
       this.dataFac = null;
-      this.dataAdd.opt = "viewfacreport";
+      this.dataAdd.opt = "viewnamecheckb";
       this.apiService
         .getdata(this.dataAdd, this.url1)
         .pipe(first())

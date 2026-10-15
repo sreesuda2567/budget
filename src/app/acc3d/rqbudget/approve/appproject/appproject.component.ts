@@ -118,7 +118,7 @@ export class AppprojectComponent implements OnInit {
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
     , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: [], checkimport: [], IMPORTASSET_CODE: []
     , PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
-    , PLPROJECTEXPENSES_CODE: [], TOTAL_MONEY: []
+    , PLPROJECTEXPENSES_CODE: [], TOTAL_MONEY: [], PRPLPROJECT_SDATE: [], PRPLPROJECT_EDATE: []
   };
   searchTerm: any;
   selectedDevice: any;
@@ -683,8 +683,8 @@ export class AppprojectComponent implements OnInit {
     //this.dataAdd.PRPLPROJECT_PERSONO = 0;
     this.dataAdd.PLPROJECT_MONEYT = 0;
     this.dataAdd.PLPROJECT_MONEY = 0;
-    this.dataAdd.PRPLPROJECT_SDATE = '';
-    this.dataAdd.PRPLPROJECT_EDATE = '';
+    this.dataAdd.PRPLPROJECT_SDATE = [];
+    this.dataAdd.PRPLPROJECT_EDATE = [];
     this.dataAdd.PLPROJECTMORE_LOCATION = '';
     this.dataAdd.PLPROJECTMORE_PRINCIPLE = '';
     this.dataAdd.PLPROJECTMORE_ACTIVITY = '';
@@ -1016,12 +1016,16 @@ export class AppprojectComponent implements OnInit {
         if (data) {
           this.dataProjectact = data.data;
           if (data.data) {
+            if (!Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) this.dataAdd.PRPLPROJECT_SDATE = [];
+            if (!Array.isArray(this.dataAdd.PRPLPROJECT_EDATE)) this.dataAdd.PRPLPROJECT_EDATE = [];
             for (let i = 0; i < data.data.length; i++) {
               this.dataAdd.PRPLPROJECTACT_NAME[i] = data.data[i].PRPLPROJECTACT_NAME || '';
               this.dataAdd.PRPLPROJECTACT_ACT[i] = data.data[i].PRPLPROJECTACT_ACT || '';
               this.dataAdd.PRPLPROJECT_PERSONS[i] = data.data[i].PRPLPROJECT_PERSONS || '';
               this.dataAdd.PRPLPROJECT_PERSONP[i] = data.data[i].PRPLPROJECT_PERSONP || '';
               this.dataAdd.PRPLPROJECT_PERSONO[i] = data.data[i].PRPLPROJECT_PERSONO || '';
+              this.dataAdd.PRPLPROJECT_SDATE[i] = data.data[i].PRPLPROJECT_SDATE ? new Date(data.data[i].PRPLPROJECT_SDATE) : '';
+              this.dataAdd.PRPLPROJECT_EDATE[i] = data.data[i].PRPLPROJECT_EDATE ? new Date(data.data[i].PRPLPROJECT_EDATE) : '';
             }
           }
         }
@@ -1045,9 +1049,12 @@ export class AppprojectComponent implements OnInit {
 
   }
   datenow(datenow: any) {
-    const yyyy = datenow.getFullYear();
-    let mm = datenow.getMonth() + 1; // Months start at 0!
-    let dd = datenow.getDate();
+    if (!datenow) return '';
+    const d = datenow instanceof Date ? datenow : new Date(datenow);
+    if (isNaN(d.getTime())) return '';
+    const yyyy = d.getFullYear();
+    let mm = d.getMonth() + 1; // Months start at 0!
+    let dd = d.getDate();
     return yyyy + '-' + mm + '-' + dd;
   }
   // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
@@ -1198,6 +1205,8 @@ export class AppprojectComponent implements OnInit {
     this.dataAdd.PLINDICATOR_CODE = [];
     this.dataAdd.PLPROJECTD_RSTATUS = [];
     this.dataAdd.PLPROJECTD_CODE = [];
+    this.dataAdd.PRPLPROJECT_SDATE = [];
+    this.dataAdd.PRPLPROJECT_EDATE = [];
     this.apiService
       .getById(id, this.url)
       .pipe(first())
@@ -1215,8 +1224,16 @@ export class AppprojectComponent implements OnInit {
         this.dataAdd.PLPLAND_CODE = data.data[0].PLPLAND_CODE;
         this.dataAdd.PLPROJECT_TIME = data.data[0].PRPLPROJECT_TIME;
         this.dataAdd.PLPROJECTTYPE_CODE = data.data[0].PLPROJECTTYPE_CODE;
-        this.dataAdd.PRPLPROJECT_SDATE = new Date(data.data[0].PRPLPROJECT_SDATE);
-        this.dataAdd.PRPLPROJECT_EDATE = new Date(data.data[0].PRPLPROJECT_EDATE);
+        if (!Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) {
+          this.dataAdd.PRPLPROJECT_SDATE = [];
+          this.dataAdd.PRPLPROJECT_EDATE = [];
+        }
+        if (data.data[0].PRPLPROJECT_SDATE != null && !this.dataAdd.PRPLPROJECT_SDATE[0]) {
+          this.dataAdd.PRPLPROJECT_SDATE[0] = new Date(data.data[0].PRPLPROJECT_SDATE);
+        }
+        if (data.data[0].PRPLPROJECT_EDATE != null && !this.dataAdd.PRPLPROJECT_EDATE[0]) {
+          this.dataAdd.PRPLPROJECT_EDATE[0] = new Date(data.data[0].PRPLPROJECT_EDATE);
+        }
        // console.log(data.data[0].PRPLPROJECT_SDATE);
         
         
@@ -1227,6 +1244,8 @@ export class AppprojectComponent implements OnInit {
           this.dataAdd.PRPLPROJECT_PERSONS[i] = data.dataexp[i].PRPLPROJECT_PERSONS;
           this.dataAdd.PRPLPROJECT_PERSONP[i] = data.dataexp[i].PRPLPROJECT_PERSONP;
           this.dataAdd.PRPLPROJECT_PERSONO[i] = data.dataexp[i].PRPLPROJECT_PERSONO;
+          this.dataAdd.PRPLPROJECT_SDATE[i] = data.dataexp[i].PRPLPROJECT_SDATE ? new Date(data.dataexp[i].PRPLPROJECT_SDATE) : '';
+          this.dataAdd.PRPLPROJECT_EDATE[i] = data.dataexp[i].PRPLPROJECT_EDATE ? new Date(data.dataexp[i].PRPLPROJECT_EDATE) : '';
           this.dataAdd.TOTAL_MONEY[i] = this.numberWithCommas(parseFloat(data.dataexp[i].TOTAL_MONEY).toFixed(2));
         }
         for (let i = 0; i < data.datahead.length; i++) {
@@ -1269,13 +1288,23 @@ export class AppprojectComponent implements OnInit {
       this.toastr.warning("แจ้งเตือน:กรุณาเลือกแผนงาน");
     } else {
       this.dataAdd.opt = "insertdataimportall";
-      if (this.dataAdd.PRPLPROJECT_SDATE != '') {
-      this.dataAdd.PRPLPROJECT_SDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_SDATE);
-      this.dataAdd.PRPLPROJECT_EDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_EDATE);
-    } else {
-      this.dataAdd.PRPLPROJECT_SDATE1 = '';
-      this.dataAdd.PRPLPROJECT_EDATE1 = '';
-    }
+      if (this.dataAdd.PRPLPROJECT_SDATE && Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) {
+        this.dataAdd.PRPLPROJECT_SDATE1 = [];
+        this.dataAdd.PRPLPROJECT_EDATE1 = [];
+        const count = this.dataAdd.PRPLPROJECTACT_NAME?.length || this.dataAdd.PRPLPROJECT_TIME || this.dataAdd.PLPROJECT_TIME || 0;
+        for (let i = 0; i < count; i++) {
+          const s = this.dataAdd.PRPLPROJECT_SDATE[i];
+          const e = this.dataAdd.PRPLPROJECT_EDATE[i];
+          this.dataAdd.PRPLPROJECT_SDATE1[i] = s ? this.datenow(s) : '';
+          this.dataAdd.PRPLPROJECT_EDATE1[i] = e ? this.datenow(e) : '';
+        }
+      } else if (this.dataAdd.PRPLPROJECT_SDATE != '') {
+        this.dataAdd.PRPLPROJECT_SDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_SDATE);
+        this.dataAdd.PRPLPROJECT_EDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_EDATE);
+      } else {
+        this.dataAdd.PRPLPROJECT_SDATE1 = '';
+        this.dataAdd.PRPLPROJECT_EDATE1 = '';
+      }
       this.apiService
         .getupdate(this.dataAdd, this.url)
         .pipe(first())
@@ -1501,9 +1530,15 @@ export class AppprojectComponent implements OnInit {
         this.showbuid();
         this.fetchdataPLMISSION();
         // console.log(data.data[0].PRPLPROJECT_SDATE);
-        if (data.data[0].PRPLPROJECT_SDATE != null) {
-          this.dataAdd.PRPLPROJECT_SDATE = new Date(data.data[0].PRPLPROJECT_SDATE);
-          this.dataAdd.PRPLPROJECT_EDATE = new Date(data.data[0].PRPLPROJECT_EDATE);
+        if (!Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) {
+          this.dataAdd.PRPLPROJECT_SDATE = [];
+          this.dataAdd.PRPLPROJECT_EDATE = [];
+        }
+        if (data.data[0].PRPLPROJECT_SDATE != null && !this.dataAdd.PRPLPROJECT_SDATE[0]) {
+          this.dataAdd.PRPLPROJECT_SDATE[0] = new Date(data.data[0].PRPLPROJECT_SDATE);
+        }
+        if (data.data[0].PRPLPROJECT_EDATE != null && !this.dataAdd.PRPLPROJECT_EDATE[0]) {
+          this.dataAdd.PRPLPROJECT_EDATE[0] = new Date(data.data[0].PRPLPROJECT_EDATE);
         }
         this.dataAdd.PRPLPROJECT_LOCATION = data.data[0].PRPLPROJECT_LOCATION;
         if (data.data[0].PRPLPROJECT_PRINCIPLE != null) {
@@ -1633,11 +1668,21 @@ export class AppprojectComponent implements OnInit {
 
     }else{*/
     // console.log(1);
-    if (this.dataAdd.PRPLPROJECT_SDATE != '') {
+    if (this.dataAdd.PRPLPROJECT_SDATE && Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) {
+      this.dataAdd.PRPLPROJECT_SDATE1 = [];
+      this.dataAdd.PRPLPROJECT_EDATE1 = [];
+      for (let i = 0; i < this.dataAdd.PRPLPROJECT_TIME; i++) {
+        const s = this.dataAdd.PRPLPROJECT_SDATE[i];
+        const e = this.dataAdd.PRPLPROJECT_EDATE[i];
+        this.dataAdd.PRPLPROJECT_SDATE1[i] = s ? this.datenow(s) : '';
+        this.dataAdd.PRPLPROJECT_EDATE1[i] = e ? this.datenow(e) : '';
+      }
+    } else if (this.dataAdd.PRPLPROJECT_SDATE != '') {
       this.dataAdd.PRPLPROJECT_SDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_SDATE);
       this.dataAdd.PRPLPROJECT_EDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_EDATE);
     } else {
       this.dataAdd.PRPLPROJECT_SDATE1 = '';
+      this.dataAdd.PRPLPROJECT_EDATE1 = '';
     }
     if (this.dataAdd.PLPROJECTMORE_PRINCIPLE != '') {
       this.dataAdd.PLPROJECTMORE_PRINCIPLE = this.dataAdd.PLPROJECTMORE_PRINCIPLE.replaceAll("<br>", "<br/>");
@@ -1702,11 +1747,21 @@ export class AppprojectComponent implements OnInit {
   }
   updatedata1() {
 
-    if (this.dataAdd.PRPLPROJECT_SDATE != '') {
+    if (this.dataAdd.PRPLPROJECT_SDATE && Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) {
+      this.dataAdd.PRPLPROJECT_SDATE1 = [];
+      this.dataAdd.PRPLPROJECT_EDATE1 = [];
+      for (let i = 0; i < this.dataAdd.PRPLPROJECT_TIME; i++) {
+        const s = this.dataAdd.PRPLPROJECT_SDATE[i];
+        const e = this.dataAdd.PRPLPROJECT_EDATE[i];
+        this.dataAdd.PRPLPROJECT_SDATE1[i] = s ? this.datenow(s) : '';
+        this.dataAdd.PRPLPROJECT_EDATE1[i] = e ? this.datenow(e) : '';
+      }
+    } else if (this.dataAdd.PRPLPROJECT_SDATE != '') {
       this.dataAdd.PRPLPROJECT_SDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_SDATE);
       this.dataAdd.PRPLPROJECT_EDATE1 = this.datenow(this.dataAdd.PRPLPROJECT_EDATE);
     } else {
       this.dataAdd.PRPLPROJECT_SDATE1 = '';
+      this.dataAdd.PRPLPROJECT_EDATE1 = '';
     }
     if (this.dataAdd.PLPROJECTMORE_PRINCIPLE != '') {
       this.dataAdd.PLPROJECTMORE_PRINCIPLE = this.dataAdd.PLPROJECTMORE_PRINCIPLE.replaceAll("<br>", "<br/>");
@@ -1783,6 +1838,8 @@ export class AppprojectComponent implements OnInit {
       this.dataAdd.PRPLPROJECT_PERSONS[i] = this.dataAdd.PRPLPROJECT_PERSONS[i] !== undefined ? this.dataAdd.PRPLPROJECT_PERSONS[i] : 0;
       this.dataAdd.PRPLPROJECT_PERSONP[i] = this.dataAdd.PRPLPROJECT_PERSONP[i] !== undefined ? this.dataAdd.PRPLPROJECT_PERSONP[i] : 0;
       this.dataAdd.PRPLPROJECT_PERSONO[i] = this.dataAdd.PRPLPROJECT_PERSONO[i] !== undefined ? this.dataAdd.PRPLPROJECT_PERSONO[i] : 0;
+      this.dataAdd.PRPLPROJECT_SDATE[i] = this.dataAdd.PRPLPROJECT_SDATE[i] !== undefined ? this.dataAdd.PRPLPROJECT_SDATE[i] : '';
+      this.dataAdd.PRPLPROJECT_EDATE[i] = this.dataAdd.PRPLPROJECT_EDATE[i] !== undefined ? this.dataAdd.PRPLPROJECT_EDATE[i] : '';
     }
 
   }

@@ -130,7 +130,7 @@
                                         (click)="deliver(p.FNANNALSMAP_CODE)" class="fa fa-arrow-right"></i> </a>&nbsp;
                             </span>
 
-                            <a role="button" title="รายงาน" class="btn btn-success text-white"
+                            <a *ngIf="p.link"role="button" title="รายงาน" class="btn btn-success text-white"
                                 (click)="previewPdf(p.link)"><i class="fas fa-file-alt">
                                 </i></a> &nbsp;
 
@@ -297,6 +297,14 @@
                             </option>
                         </select>
                     </div>
+                   <div class="col-md-12">
+                                <label class="form-label fw-bold text-secondary mb-2"><i
+                                        class="fa-solid fa-map-location-dot me-1"></i>สถานที่</label>
+                                <textarea id="FNANNALSMAP_AT" name="FNANNALSMAP_AT"
+                                    [(ngModel)]="dataAdd.FNANNALSMAP_AT" rows="1"
+                                    class="form-control bg-light border-0"
+                                    placeholder="ระบุสถานที่..."></textarea>
+                            </div> 
                 </div>
                 <div class="row px-3">
                     <div class="form-group col-md-12 mb-2">

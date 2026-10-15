@@ -410,6 +410,7 @@ export class AppnomoneyComponent implements OnInit {
         this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
         this.dataAdd.CHIEF_CODE = data.data[0].CHIEF_CODE;
         this.dataAdd.PLINCOME_CODE = data.data[0].PLINCOME_CODE;
+        this.dataAdd.FNANNALSMAP_AT = data.data[0].FNANNALSMAP_AT;
         this.fetchdatacrpart();
         this.dataAdd.PLMONEYPAY_CODE = data.data[0].PLMONEYPAY_CODE;
         this.dataAdd.CRPART_ID = data.data[0].CRPART_ID;
@@ -446,6 +447,8 @@ export class AppnomoneyComponent implements OnInit {
     this.dataAdd.CITIZEN_IDP3 = '';
     this.dataAdd.CITIZEN_IDP4 = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
+    this.dataAdd.FNANNALSMAP_AT = '';
+    this.dataAdd.PLMONEYPAY_CODE = '';
 
     for (let i = 0; i < this.number.length; i++) {
       this.dataAdd.FRACCCODE[i] = '';
@@ -545,22 +548,34 @@ export class AppnomoneyComponent implements OnInit {
       if (result.value) {
         Swal.fire({ title: 'กำลังรวมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
         try {
-          const pdf1Bytes = await fetch(link3).then(res => res.arrayBuffer());
-          const pdf1 = await PDFDocument.load(pdf1Bytes);
+          const cleanLink3 = this.normalizePdfUrl(link3);
+          const pdf1Bytes = await fetch(cleanLink3).then(res => {
+            if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+            return res.arrayBuffer();
+          });
+          const pdf1 = await PDFDocument.load(pdf1Bytes, { ignoreEncryption: true });
           const mergedPdf = await PDFDocument.create();
 
           const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
           copiedPages1.forEach((page) => mergedPdf.addPage(page));
 
-
-
           if (this.dataAdd.FEREIMDT_LINK && this.dataAdd.FEREIMDT_LINK.length > 0) {
             for (let i = 0; i < this.dataAdd.FEREIMDT_LINK.length; i++) {
-              if (this.dataAdd.FEREIMDT_LINK[i]) {
-                const pdfBytes = await fetch(this.dataAdd.FEREIMDT_LINK[i]).then(res => res.arrayBuffer());
-                const pdfDoc = await PDFDocument.load(pdfBytes);
-                const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-                copiedPages.forEach((page) => mergedPdf.addPage(page));
+              const attachUrl = this.normalizePdfUrl(this.dataAdd.FEREIMDT_LINK[i]);
+              if (attachUrl) {
+                try {
+                  const res = await fetch(attachUrl);
+                  if (res.ok) {
+                    const pdfBytes = await res.arrayBuffer();
+                    const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+                    const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+                    copiedPages.forEach((page) => mergedPdf.addPage(page));
+                  } else {
+                    console.warn(`Attachment HTTP error ${res.status} (${attachUrl})`);
+                  }
+                } catch (err) {
+                  console.warn(`Could not merge attachment PDF (${attachUrl}):`, err);
+                }
               }
             }
           }
@@ -569,7 +584,7 @@ export class AppnomoneyComponent implements OnInit {
           const mergedFile = new File([mergedPdfBytes as any], "merged_document.pdf", { type: "application/pdf" });
           const user = this.tokenStorage.getUser();
 
-          // หมายเหตุ: ใช้รหัสอัปโหลด '121' หากต้องการเปลี่ยนเป็นเลขอื่น (เช่น 112) สามารถแก้ได้เลยครับ
+          // หมายเหตุ: ใช้รหัสอัปโหลด '113'
           this.Uploadfiles.uploadcontract(mergedFile, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, id, user.citizen, '113')
             .subscribe((event: any) => {
               if (event.type == 4) {
@@ -610,9 +625,18 @@ export class AppnomoneyComponent implements OnInit {
     XLSX.writeFile(wb, this.fileName);
 
   }
+  normalizePdfUrl(url: string): string {
+    if (!url) return '';
+    let cleanUrl = (url + '').trim();
+    if (cleanUrl.startsWith('http://') && !cleanUrl.includes('localhost') && !cleanUrl.includes('127.0.0.1')) {
+      cleanUrl = cleanUrl.replace(/^http:\/\//i, 'https://');
+    }
+    return cleanUrl;
+  }
   previewPdf(url: string) {
-    this.previewPdfUrl = url;
-    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+    const cleanUrl = this.normalizePdfUrl(url);
+    this.previewPdfUrl = cleanUrl;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cleanUrl + '#navpanes=0');
   }
   closePdfPreview() {
     this.previewPdfUrl = '';
@@ -626,7 +650,7 @@ export class AppnomoneyComponent implements OnInit {
     Swal.fire({ title: 'กำลังเตรียมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
     try {
-      const mainLink = p.link3 || p.link;
+      const mainLink = this.normalizePdfUrl(p.link3 || p.link);
 
       const data: any = await this.apiService.getById(p.FNANNALSMAP_CODE, this.url).pipe(first()).toPromise();
       if (data && data.data && data.data.length > 0) {
@@ -634,16 +658,45 @@ export class AppnomoneyComponent implements OnInit {
       }
 
       this.dataAdd.FNANNALSMAP_CODE = p.FNANNALSMAP_CODE;
-      this.dataAdd.opt = "viewepmedicalapp";
-      const dataLoad: any = await this.apiService.getdata(this.dataAdd, this.url1).pipe(first()).toPromise();
+      this.dataAdd.opt = "viewenomoney";
+      const dataLoad: any = await this.apiService.getdata(this.dataAdd, this.url).pipe(first()).toPromise();
 
       let linkArray: any[] = [];
       if (dataLoad.status == '1' && dataLoad.data2) {
-        linkArray = dataLoad.data2.map((item: any) => item.link);
+        linkArray = dataLoad.data2
+          .map((item: any) => this.normalizePdfUrl(item.link))
+          .filter((link: string) => !!link);
       }
 
-      const pdf1Bytes = await fetch(mainLink).then(res => res.arrayBuffer());
-      const pdf1 = await PDFDocument.load(pdf1Bytes);
+      let pdf1Bytes: ArrayBuffer | null = null;
+      try {
+        const res = await fetch(mainLink);
+        if (res.ok) {
+          pdf1Bytes = await res.arrayBuffer();
+        } else {
+          throw new Error(`HTTP error ${res.status}`);
+        }
+      } catch (err) {
+        console.warn(`Failed to fetch mainLink (${mainLink}):`, err);
+        // Fallback to p.link if p.link3 failed
+        if (p.link && p.link3 && mainLink !== this.normalizePdfUrl(p.link)) {
+          try {
+            const fallbackLink = this.normalizePdfUrl(p.link);
+            const res = await fetch(fallbackLink);
+            if (res.ok) {
+              pdf1Bytes = await res.arrayBuffer();
+            }
+          } catch (e) {
+            console.warn(`Failed fallback link (${p.link}):`, e);
+          }
+        }
+      }
+
+      if (!pdf1Bytes) {
+        throw new Error('ไม่สามารถโหลดเอกสารหลักได้');
+      }
+
+      const pdf1 = await PDFDocument.load(pdf1Bytes, { ignoreEncryption: true });
       const mergedPdf = await PDFDocument.create();
 
       const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
@@ -651,11 +704,21 @@ export class AppnomoneyComponent implements OnInit {
 
       if (linkArray && linkArray.length > 0) {
         for (let i = 0; i < linkArray.length; i++) {
-          if (linkArray[i]) {
-            const pdfBytes = await fetch(linkArray[i]).then(res => res.arrayBuffer());
-            const pdfDoc = await PDFDocument.load(pdfBytes);
-            const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-            copiedPages.forEach((page) => mergedPdf.addPage(page));
+          const attachUrl = linkArray[i];
+          if (attachUrl) {
+            try {
+              const res = await fetch(attachUrl);
+              if (res.ok) {
+                const pdfBytes = await res.arrayBuffer();
+                const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+                const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+                copiedPages.forEach((page) => mergedPdf.addPage(page));
+              } else {
+                console.warn(`Attachment HTTP error ${res.status} (${attachUrl})`);
+              }
+            } catch (err) {
+              console.warn(`Could not merge attachment PDF (${attachUrl}):`, err);
+            }
           }
         }
       }
@@ -687,7 +750,7 @@ export class AppnomoneyComponent implements OnInit {
       // Create a File object from the blob
       const file = new File([modalData.blob], 'signed_document.pdf', { type: 'application/pdf' });
 
-      this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '113')
+      this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALSMAP_CODE, user.citizen, '57')
         .subscribe((event: any) => {
           if (event.type == 4) { // HttpEventType.Response
             this.toastr.success("แจ้งเตือน: อัปเดตข้อมูลเรียบร้อยพร้อมส่งสารบรรณ");
@@ -711,8 +774,9 @@ export class AppnomoneyComponent implements OnInit {
       });
   }
   exportpdf(link: any) {
+    const cleanLink = this.normalizePdfUrl(link);
     const cacheBuster = new Date().getTime();
-    const reportLink = link + (link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    const reportLink = cleanLink + (cleanLink.includes('?') ? '&' : '?') + 't=' + cacheBuster;
     this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
   }
 
