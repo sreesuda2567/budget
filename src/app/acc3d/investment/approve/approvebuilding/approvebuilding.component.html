@@ -321,9 +321,9 @@
                   <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
                   <td width="15%" align="right">{{p.PRBUILDING_MONEY| number : '1.2-2'}}</td>
                   <td width="15%">
-                    <a role="button" title="รายงาน" class="btn btn-success text-white"
+                    <a *ngIf="p.PRBUILDING_PAT" role="button" title="รายงาน" class="btn btn-success text-white"
                       (click)="previewPdf(p.PRBUILDING_PAT)">แบบรูป</a>&nbsp;
-                    <a role="button" title="รายงาน" class="btn btn-success text-white"
+                    <a *ngIf="p.PRBUILDING_PRICE" role="button" title="รายงาน" class="btn btn-success text-white"
                       (click)="previewPdf(p.PRBUILDING_PRICE)">ราคากลาง</a>&nbsp;
                     <span *ngIf="p.PRBUILDING_SLINK"> <a role="button" title="แนบไฟล์แบบเสนอรายการสิ่งก่อสร้าง"
                         class="btn btn-success text-white"

@@ -817,7 +817,7 @@ export class RqtprojectComponent implements OnInit {
 
           if (data.status == 1) {
             this.cleardat();
-            this.fetchdatadt();
+            this.fetchdatadt(true);
           } else {
             this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
           }
@@ -905,7 +905,7 @@ export class RqtprojectComponent implements OnInit {
         this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
         this.rowpbi = true;
         this.rowpbu = null;
-        this.fetchdatadt();
+        this.fetchdatadt(true);
         this.cleardat();
       });
   }
@@ -922,7 +922,7 @@ export class RqtprojectComponent implements OnInit {
     this.dataAdd.PLPROJECTGROUPDT_MONEY = '';
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลประมาณการ
-  fetchdatadt() {
+  fetchdatadt(isSaveAction: boolean = false) {
     //console.log(1);
     this.dataProjectexd = null;
     this.dataAdd.opt = "readdt";
@@ -932,21 +932,23 @@ export class RqtprojectComponent implements OnInit {
       .subscribe((data: any) => {
         this.dataProjectexd = data.data;
         let sum = 0;
-        for (var j = 0; j < data.data.length; j++) {
-          // console.log(1);
-          if (data.data[j].PLPROJECTGROUPDT_NUM == 0) {
-            sum += data.data[j].PLPROJECTGROUPDT_MONEY;
+        if (data && data.data && Array.isArray(data.data)) {
+          for (var j = 0; j < data.data.length; j++) {
+            // console.log(1);
+            if (data.data[j].PLPROJECTGROUPDT_NUM == 0) {
+              sum += parseFloat(data.data[j].PLPROJECTGROUPDT_MONEY) || 0;
+            }
           }
         }
         this.dataAdd.PLPROJECT_MONEY = sum;
         this.dataAdd.PLPROJECT_MONEYT = sum;
         this.dataAdd.PRBUILDING_YEAR = (this.dataAdd.PRPLPROJECTM_EYEAR - this.dataAdd.PRPLPROJECTM_SYEAR) + 1;
 
-        for (let i = 0; i < this.dataAdd.PRBUILDING_YEAR; i++) {
-          console.log(this.dataAdd.PRPLPROJECTM_YEAR[i]);
-          if (this.dataAdd.PRPLPROJECTM_YEAR[i] == this.dataAdd.PRYEARASSET_CODE) {
-            this.dataAdd.PRPLPROJECTM_MONEY[i] = this.dataAdd.PLPROJECT_MONEYT;
-          }
+        if (!this.dataAdd.PRPLPROJECTM_MONEY) {
+          this.dataAdd.PRPLPROJECTM_MONEY = [];
+        }
+        if (isSaveAction || sum > 0) {
+          this.dataAdd.PRPLPROJECTM_MONEY[0] = this.dataAdd.PLPROJECT_MONEYT;
         }
       });
 
@@ -1052,7 +1054,7 @@ export class RqtprojectComponent implements OnInit {
           .subscribe((data: any) => {
             if (data.status == 1) {
               Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
-              this.fetchdatadt();
+              this.fetchdatadt(true);
             }
           });
       } else if (result.dismiss === Swal.DismissReason.cancel) {

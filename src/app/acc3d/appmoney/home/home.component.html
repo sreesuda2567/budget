@@ -13,12 +13,9 @@
                                         <a class="nav-link active" aria-current="page" routerLink="../"><i
                                                         class="fas fa-home text-primary me-1"></i>หน้าหลัก</a>
                                 </li>
-                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'  || datastatus=='3' || datastatus=='8' || datastatus=='7'"
-                                        class="nav-item">
-                                        <a class="nav-link active" aria-current="page" routerLink="disbursement"><i
-                                                        class="fas fa-search-dollar text-info me-1"></i>ตรวจสอบหลักฐานการเบิก</a>
-                                </li>
-                                <li *ngIf="datastatus=='A' || datastatus=='2'  || datastatus=='3'" class="nav-item dropdown">
+
+                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'  || datastatus=='3'"
+                                        class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fas fa-file-alt text-info me-1"></i>ตรวจสอบเอกสาร
@@ -50,7 +47,12 @@
                                                 <i class="fas fa-hand-holding-usd text-success me-1"></i>เงินทดรองจ่าย
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-
+                                                <li *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='2'  || datastatus=='3' || datastatus=='8' || datastatus=='7'"
+                                                        class="nav-item">
+                                                        <a class="nav-link active" aria-current="page"
+                                                                routerLink="disbursement"><i
+                                                                        class="fas fa-search-dollar text-info me-1"></i>ตรวจสอบหลักฐานการเบิก</a>
+                                                </li>
                                                 <li
                                                         *ngIf="datastatus=='A' || datastatus=='1'|| datastatus=='7' || datastatus=='2'">
                                                         <a class="dropdown-item" routerLink="contractnumber"><i

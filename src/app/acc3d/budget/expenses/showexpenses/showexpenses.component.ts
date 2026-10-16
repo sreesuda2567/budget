@@ -55,7 +55,7 @@ export class ShowexpensesComponent implements OnInit {
   };
   searchTerm: any;
   selectedDevice: any;
-  number: any = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,25,26,27,28,29,30];
+  number: any = [1];
   number1: any = [1, 2, 3];
   page = 1;
   count = 0;
@@ -280,9 +280,12 @@ export class ShowexpensesComponent implements OnInit {
     this.localeService.use(this.locale);
   }
   datenow(datenow: any) {
-    const yyyy = datenow.getFullYear();
-    let mm = datenow.getMonth() + 1; // Months start at 0!
-    let dd = datenow.getDate();
+    if (!datenow) return '';
+    let d = datenow instanceof Date ? datenow : new Date(datenow);
+    if (isNaN(d.getTime())) return '';
+    const yyyy = d.getFullYear();
+    let mm = d.getMonth() + 1; // Months start at 0!
+    let dd = d.getDate();
     return yyyy + '-' + mm + '-' + dd;
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลรายการขอเบิก
@@ -378,16 +381,16 @@ export class ShowexpensesComponent implements OnInit {
     this.dataAdd.FNEXPENSES_EXTEND = '';
     this.dataFAdd.DEPARTMENT_CODE = '';
     this.dataFAdd.CRPART_ID = '';
-    for (let i = 0; i < 30; i++) {
-      this.dataFAdd.FNEXACCCODE[i] = '';
-      this.dataFAdd.FRACCCODE[i] = '';
-      this.dataFAdd.FNEXACCRDATE[i] = '';
-      this.dataFAdd.FNEXACCDEKA[i] = '';
-      this.dataFAdd.FNEXACCMONEY[i] = '';
-      this.dataFAdd.FNEXACC_CSTATUS[i] = '';
-      this.dataFAdd.FNEXACC_TYPE[i] = '';
-      this.dataFAdd.FNEXACC_NUMBER[i] = null;
-    }
+    this.number = [1];
+    this.dataFAdd.FNEXACCCODE = [''];
+    this.dataFAdd.FRACCCODE = [''];
+    this.dataFAdd.FNEXACCRDATE = [''];
+    this.dataFAdd.FNEXACCDEKA = [''];
+    this.dataFAdd.FNEXACCMONEY = [''];
+    this.dataFAdd.FNEXACC_CSTATUS = [''];
+    this.dataFAdd.FNEXACC_TYPE = [''];
+    this.dataFAdd.FNEXACC_NUMBER = [null];
+    this.dataFAdd.apstatus = [null];
     for (let i = 0; i < 2; i++) {
       this.dataFAdd.FNEXACCCODEC[i] = '';
       this.dataFAdd.FRACCCODEC[i] = '';
@@ -405,7 +408,8 @@ export class ShowexpensesComponent implements OnInit {
     let summoney = 0;
     let sumfr = 0;
     let remon = 0;
-    for (let i = 0; i < 30; i++) {
+    const len = this.number ? this.number.length : 0;
+    for (let i = 0; i < len; i++) {
       //console.log(this.dataFAdd.FNEXACCMONEY[i]+'..'+this.dataFAdd.FRACCCODE[i]);
       if ((this.dataFAdd.FNEXACCMONEY[i] > 0 || this.dataFAdd.FNEXACCMONEY[i] < 0) && this.dataFAdd.FRACCCODE[i] != '2116010104' && this.dataFAdd.FRACCCODE[i] != '1102010101'&& this.dataFAdd.FRACCCODE[i] != '1102010102') {
        // console.log(this.dataFAdd.FNEXACCMONEY[i]);
@@ -433,6 +437,62 @@ export class ShowexpensesComponent implements OnInit {
       }
     }
     this.dataFAdd.FNEXPENSES_CMONEY = summoney;
+  }
+
+  //เพิ่มแถวรายการจ่ายจริง
+  addRow() {
+    if (!this.number) {
+      this.number = [];
+    }
+    this.number.push(this.number.length + 1);
+    const i = this.number.length - 1;
+    if (!this.dataFAdd.FNEXACCCODE) this.dataFAdd.FNEXACCCODE = [];
+    if (!this.dataFAdd.FRACCCODE) this.dataFAdd.FRACCCODE = [];
+    if (!this.dataFAdd.FNEXACCRDATE) this.dataFAdd.FNEXACCRDATE = [];
+    if (!this.dataFAdd.FNEXACCDEKA) this.dataFAdd.FNEXACCDEKA = [];
+    if (!this.dataFAdd.FNEXACCMONEY) this.dataFAdd.FNEXACCMONEY = [];
+    if (!this.dataFAdd.FNEXACC_CSTATUS) this.dataFAdd.FNEXACC_CSTATUS = [];
+    if (!this.dataFAdd.FNEXACC_TYPE) this.dataFAdd.FNEXACC_TYPE = [];
+    if (!this.dataFAdd.FNEXACC_NUMBER) this.dataFAdd.FNEXACC_NUMBER = [];
+    if (!this.dataFAdd.apstatus) this.dataFAdd.apstatus = [];
+
+    this.dataFAdd.FNEXACCCODE[i] = '';
+    this.dataFAdd.FRACCCODE[i] = '';
+    this.dataFAdd.FNEXACCRDATE[i] = '';
+    this.dataFAdd.FNEXACCDEKA[i] = '';
+    this.dataFAdd.FNEXACCMONEY[i] = '';
+    this.dataFAdd.FNEXACC_CSTATUS[i] = '';
+    this.dataFAdd.FNEXACC_TYPE[i] = '';
+    this.dataFAdd.FNEXACC_NUMBER[i] = null;
+    this.dataFAdd.apstatus[i] = null;
+  }
+
+  //ลบแถวรายการจ่ายจริง
+  removeRow(index: number) {
+    if (this.number && this.number.length > 1) {
+      this.number.splice(index, 1);
+      if (this.dataFAdd.FNEXACCCODE) this.dataFAdd.FNEXACCCODE.splice(index, 1);
+      if (this.dataFAdd.FRACCCODE) this.dataFAdd.FRACCCODE.splice(index, 1);
+      if (this.dataFAdd.FNEXACCRDATE) this.dataFAdd.FNEXACCRDATE.splice(index, 1);
+      if (this.dataFAdd.FNEXACCDEKA) this.dataFAdd.FNEXACCDEKA.splice(index, 1);
+      if (this.dataFAdd.FNEXACCMONEY) this.dataFAdd.FNEXACCMONEY.splice(index, 1);
+      if (this.dataFAdd.FNEXACC_CSTATUS) this.dataFAdd.FNEXACC_CSTATUS.splice(index, 1);
+      if (this.dataFAdd.FNEXACC_TYPE) this.dataFAdd.FNEXACC_TYPE.splice(index, 1);
+      if (this.dataFAdd.FNEXACC_NUMBER) this.dataFAdd.FNEXACC_NUMBER.splice(index, 1);
+      if (this.dataFAdd.apstatus) this.dataFAdd.apstatus.splice(index, 1);
+      this.sumdatafr();
+    } else {
+      this.dataFAdd.FNEXACCCODE[0] = '';
+      this.dataFAdd.FRACCCODE[0] = '';
+      this.dataFAdd.FNEXACCRDATE[0] = '';
+      this.dataFAdd.FNEXACCDEKA[0] = '';
+      this.dataFAdd.FNEXACCMONEY[0] = '';
+      this.dataFAdd.FNEXACC_CSTATUS[0] = '';
+      this.dataFAdd.FNEXACC_TYPE[0] = '';
+      this.dataFAdd.FNEXACC_NUMBER[0] = null;
+      this.dataFAdd.apstatus[0] = null;
+      this.sumdatafr();
+    }
   }
 
     //เลือกสาขา
@@ -665,6 +725,14 @@ export class ShowexpensesComponent implements OnInit {
   //บัญชีแยกประเภท(จ่ายจริง)
   fetchdatalistfrm(id: any) {
     this.dataFAdd.apstatus = [];
+    this.dataFAdd.FNEXACCCODE = [];
+    this.dataFAdd.FRACCCODE = [];
+    this.dataFAdd.FNEXACCRDATE = [];
+    this.dataFAdd.FNEXACCDEKA = [];
+    this.dataFAdd.FNEXACC_TYPE = [];
+    this.dataFAdd.FNEXACC_NUMBER = [];
+    this.dataFAdd.FNEXACC_CSTATUS = [];
+    this.dataFAdd.FNEXACCMONEY = [];
     var varP = {
       "opt": "viewFRM",
       "id": id
@@ -675,10 +743,15 @@ export class ShowexpensesComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataEfrm = data;
-        for (let i = 0; i < this.dataEfrm.length; i++) {
+        const count = this.dataEfrm && this.dataEfrm.length > 0 ? this.dataEfrm.length : 1;
+        this.number = [];
+        for (let k = 0; k < count; k++) {
+          this.number.push(k + 1);
+        }
+        for (let i = 0; i < (this.dataEfrm ? this.dataEfrm.length : 0); i++) {
           this.dataFAdd.FNEXACCCODE[i] = this.dataEfrm[i].FNEXACC_CODE;
           this.dataFAdd.FRACCCODE[i] = this.dataEfrm[i].FRACC_CODE;
-          this.dataFAdd.FNEXACCRDATE[i] = new Date(this.dataEfrm[i].FNEXACC_RDATE);
+          this.dataFAdd.FNEXACCRDATE[i] = this.dataEfrm[i].FNEXACC_RDATE ? new Date(this.dataEfrm[i].FNEXACC_RDATE) : '';
           this.dataFAdd.FNEXACCDEKA[i] = this.dataEfrm[i].FNEXACC_DEKA;
           this.dataFAdd.FNEXACC_TYPE[i] = data[i].FNEXACC_TYPE;
           this.dataFAdd.FNEXACC_NUMBER[i] = data[i].FNEXACC_NUMBER;
