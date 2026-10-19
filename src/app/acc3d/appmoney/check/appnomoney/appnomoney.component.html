@@ -1,4 +1,4 @@
-<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+﻿<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
     <div class="row mb-3">
         <div class="col-md-10">
             <h5 class="fw-bold"><i class="fa-solid fa-file-medical me-2 text-primary"></i>ออกใบปะหน้าเบิก</h5>
@@ -125,7 +125,7 @@
                                     (click)="openPdfAnnotator(p)"><i class="fa-solid fa-file-pen">
                                     </i></a> &nbsp;
                             </span>
-                            <span *ngIf="(p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A' )">
+                            <span  *ngIf="(p.link && p.FNANNALSMAP_RSTATUS=='T') || dataAdd.PRIVILEGE_RSTATUS=='A' ">
                                 <a role="button" title="ส่งสารบรรณ" class="btn btn-primary text-white"><i
                                         (click)="deliver(p.FNANNALSMAP_CODE)" class="fa fa-arrow-right"></i> </a>&nbsp;
                             </span>
@@ -135,7 +135,7 @@
                                 </i></a> &nbsp;
 
                             <span *ngIf="p.link3">
-                                <a role="button" title="รายงานเบิกค่ารักษาพยาบาล" class="btn btn-secondary text-white"
+                                <a role="button" title="รายงานใบเบิก" class="btn btn-secondary text-white"
                                     (click)="previewPdf(p.link3)" target="_blank"><i class="fas fa-file-alt">
                                     </i></a> &nbsp;
                             </span>
@@ -424,53 +424,58 @@
     </div>
 </div>
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" data-bs-backdrop="static"
-    aria-labelledby="offcanvasRightLabel" [style.width]="pdfUrlToView ? '90vw' : '400px'"
-    style="transition: width 0.3s ease;">
+    aria-labelledby="offcanvasRightLabel" [class.has-pdf]="pdfUrlToView" [class.maximized-pdf]="isPdfMaximized">
     <div class="offcanvas-header bg-primary text-white">
         <h5 id="offcanvasRightLabel">สถานะดำเนินการ</h5>
         <button type="button" class="btn-close text-reset bg-white" data-bs-dismiss="offcanvas" aria-label="Close"
-            (click)="pdfUrlToView = null"></button>
+            (click)="closePdfView()"></button>
     </div>
-    <div class="offcanvas-body p-0">
-        <div class="row m-0 h-100">
-            <!-- Left side: PDF Viewer (Only show if pdfUrlToView is not null) -->
-            <div class="col-md-8 p-0 h-100 border-end d-flex flex-column bg-dark" *ngIf="pdfUrlToView">
-                <div class="p-2 d-flex justify-content-between align-items-center bg-white">
-                    <span class="fw-bold"><i class="fa-solid fa-file-pdf text-danger"></i> ดูเอกสาร</span>
-                    <div>
-                        <a [href]="pdfUrlToView" target="_blank" class="btn btn-outline-primary btn-sm"><i
-                                class="fa-solid fa-external-link-alt"></i></a>
-                        <button type="button" class="btn btn-outline-secondary btn-sm ms-1"
-                            (click)="pdfUrlToView = null"><i class="fa-solid fa-times"></i></button>
-                    </div>
-                </div>
-                <div class="flex-grow-1">
-                    <iframe [src]="pdfUrlToView" width="100%" height="100%" style="border: none;"></iframe>
+    <div class="offcanvas-body p-0 status-canvas-body">
+        <!-- Left side: PDF Viewer (สไลด์ออกไปทางซ้าย) -->
+        <div class="status-pdf-slide-container" [class.open]="pdfUrlToView">
+            <div class="p-2 d-flex justify-content-between align-items-center bg-white border-bottom shadow-sm flex-shrink-0">
+                <span class="fw-bold"><i class="fa-solid fa-file-pdf text-danger me-1"></i> ดูเอกสาร</span>
+                <div class="d-flex align-items-center gap-1">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                        (click)="toggleMaximizePdf()"
+                        [title]="isPdfMaximized ? 'ย่อขนาด' : 'ขยายเต็มจอ'">
+                        <i class="fa-solid" [ngClass]="isPdfMaximized ? 'fa-compress' : 'fa-expand'"></i>
+                    </button>
+                    <a [href]="rawPdfUrlToView || pdfUrlToView" target="_blank" class="btn btn-outline-primary btn-sm" title="เปิดแท็บใหม่">
+                        <i class="fa-solid fa-external-link-alt"></i>
+                    </a>
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                        (click)="closePdfView()" title="ปิดเอกสาร">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
                 </div>
             </div>
+            <div class="status-pdf-iframe-wrapper flex-grow-1">
+                <iframe *ngIf="pdfUrlToView" [src]="pdfUrlToView" width="100%" height="100%" style="border: none;"></iframe>
+            </div>
+        </div>
 
-            <!-- Right side: Timeline -->
-            <div class="p-4 h-100" [ngClass]="pdfUrlToView ? 'col-md-4' : 'col-md-12'" style="overflow-y: auto;">
-                <ul class="timeline-with-icons">
-                    <li class="timeline-item mb-5" *ngFor="let item of dataSeq">
-                        <span class="timeline-icon">
-                            <i class="fa-solid fa-eye text-success"></i>
-                        </span>
-                        <h6 class="fw-bold">{{item.ESTATUSREQ_NAME}}</h6>
-                        <p class="text-muted mb-2 fw-bold">{{item.EBOOKSEQ_DATE}}</p>
-                        <p class="text-muted" align="right">
-                            ผู้ทำรายการ : {{item.STF_FNAME}}
-                        </p>
-                        <p *ngIf="item.FNANNALSSEQ_LINK" class="text-muted">
-                            ไฟล์ : <button type="button" class="btn btn-success"
-                                (click)="exportpdf(item.FNANNALSSEQ_LINK)"><i class="fa-solid fa-file-pdf"></i></button>
-                        </p>
-                        <p *ngIf="item.FNANNALSSEQ_DETAIL" class="text-muted">
-                            หมายเหตุ : {{item.FNANNALSSEQ_DETAIL}}
-                        </p>
-                    </li>
-                </ul>
-            </div>
+        <!-- Right side: Timeline -->
+        <div class="status-timeline-container p-4" [class.d-none]="isPdfMaximized">
+            <ul class="timeline-with-icons">
+                <li class="timeline-item mb-5" *ngFor="let item of dataSeq">
+                    <span class="timeline-icon">
+                        <i class="fa-solid fa-eye text-success"></i>
+                    </span>
+                    <h6 class="fw-bold">{{item.ESTATUSREQ_NAME}}</h6>
+                    <p class="text-muted mb-2 fw-bold">{{item.EBOOKSEQ_DATE}}</p>
+                    <p class="text-muted" align="right">
+                        ผู้ทำรายการ : {{item.STF_FNAME}}
+                    </p>
+                    <p *ngIf="item.FNANNALSSEQ_LINK" class="text-muted">
+                        ไฟล์ : <button type="button" class="btn btn-success"
+                            (click)="exportpdf(item.FNANNALSSEQ_LINK)" title="ดูเอกสาร"><i class="fa-solid fa-file-pdf"></i></button>
+                    </p>
+                    <p *ngIf="item.FNANNALSSEQ_DETAIL" class="text-muted">
+                        หมายเหตุ : {{item.FNANNALSSEQ_DETAIL}}
+                    </p>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

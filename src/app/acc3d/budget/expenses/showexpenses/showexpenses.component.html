@@ -625,9 +625,9 @@
                                   name="FNEXPENSES_DELIVERRY" class="form-control"
                                   [(ngModel)]="dataFAdd.FNEXPENSES_DELIVERRY[i]" [disabled]="dataFAdd.apstatus[i]"></td>
                               <td width="10%"><input type="text" name="FRACCDATEC" placeholder="วันที่"
-                                  class="form-control" bsDatepicker #dp="bsDatepicker"
+                                  class="form-control" bsDatepicker #dp="bsDatepicker" placement="top" container="body"
                                   [(ngModel)]="dataFAdd.FRACCDATEC[i]" readonly [disabled]="dataFAdd.apstatus[i]"><i
-                                  style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                                  style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px; pointer-events: none;"
                                   class="fa fa-calendar text-primary"></i></td>
                               <td width="10%"><input type="text" name="FRACCDEKAC[0]" class="form-control"
                                   placeholder="เลขฎีกา" [(ngModel)]="dataFAdd.FRACCDEKAC[i]"
@@ -676,9 +676,9 @@
                                   [disabled]="dataFAdd.apstatus[i]"></td>
 
                               <td width="15%"><input type="text" name="fneacc_date_{{i}}" placeholder="วันที่ผ่านรายการเบิก"
-                                  class="form-control" bsDatepicker #dp="bsDatepicker"
+                                  class="form-control" bsDatepicker #dp="bsDatepicker" placement="top" container="body"
                                   [(ngModel)]="dataFAdd.FNEXACCRDATE[i]" readonly [disabled]="dataFAdd.apstatus[i]">
-                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;"
+                                <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px; pointer-events: none;"
                                   class="fa fa-calendar text-primary"></i>
                               </td>
                               <td width="14%"><input type="text" name="fneacc_deka_{{i}}" class="form-control"

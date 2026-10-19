@@ -41,11 +41,11 @@ export class ClearcheckComponent implements OnInit {
   locale = 'th-be';
   locales = listLocales();
   datalistapp: any;
-    page = 1;
+  page = 1;
   count = 0;
   number = 0;
   tableSize = 40;
-  tableSizes = [40,100,200];
+  tableSizes = [40, 100, 200];
   searchTerm: any;
   previewPdfUrl: string = '';
   safePdfUrl: SafeResourceUrl = '';
@@ -163,8 +163,8 @@ export class ClearcheckComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataNameb = data;
-       // this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
-       // this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
+        // this.dataAdd.CITIZEN_IDA = data[0].CITIZEN_ID;
+        // this.dataAdd.CITIZEN_IDB = data[1].CITIZEN_ID;
 
       });
   }
@@ -260,8 +260,8 @@ export class ClearcheckComponent implements OnInit {
   }
   setshowbti() {
     this.dataAdd.EBOOKREQ_FILE = '';
-    this.dataAdd.FNANNALS_MONEYC= '';
-    this.dataAdd.USERNAME_CISCO= '';
+    this.dataAdd.FNANNALS_MONEYC = '';
+    this.dataAdd.USERNAME_CISCO = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any, link: any, money: any, mail: any) {
@@ -275,7 +275,7 @@ export class ClearcheckComponent implements OnInit {
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไขFNANNALSMAP_CODE
-  editdatapp(id: any,id2: any, link: any, ciz: any, money: any) {
+  editdatapp(id: any, id2: any, link: any, ciz: any, money: any) {
     this.setshowbti();
     this.fetchdatareport();
     this.dataAdd.FNANNALS_CODE = id;
@@ -298,35 +298,37 @@ export class ClearcheckComponent implements OnInit {
       }
 
     } else {
-      this.dataAdd.opt = "insert";
-      this.apiService
-        .getupdate(this.dataAdd, this.url)
-        .pipe(first())
-        .subscribe((data: any) => {
-          //console.log(data.status);   uploadbook    
-          if (data.status == 1) {
-            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '56')
-              .subscribe((event: any) => {
-                // 
-                if (event.type == 4) {
+
+      this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '56')
+        .subscribe((event: any) => {
+          // 
+          if (event.type == 4) {
+            this.dataAdd.opt = "insert";
+            this.apiService
+              .getupdate(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                //console.log(data.status);   uploadbook    
+                if (data.status == 1) {
+                  this.fetchdatalist();
+                  this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+                  document.getElementById("ModalClose")?.click();
+                } else {
+                  this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
                 }
-              }
-              );
-               if (this.dataAdd.FNRESTATUS_CODE == '0') {
-              this.dataAdd.opt = "sendemailNRE";
-              this.apiService
-                .getupdate(this.dataAdd, this.url)
-                .pipe(first())
-                .subscribe((data: any) => {
-                });
-            }
-            this.fetchdatalist();
-            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-            document.getElementById("ModalClose")?.click();
-          } else {
-            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+              });
           }
-        });
+        }
+        );
+      if (this.dataAdd.FNRESTATUS_CODE == '0') {
+        this.dataAdd.opt = "sendemailNRE";
+        this.apiService
+          .getupdate(this.dataAdd, this.url)
+          .pipe(first())
+          .subscribe((data: any) => {
+          });
+      }
+
 
 
     }
@@ -372,7 +374,7 @@ export class ClearcheckComponent implements OnInit {
     }
 
   }
-           // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
     if (this.rownum1) {
@@ -389,8 +391,8 @@ export class ClearcheckComponent implements OnInit {
     } else {
       this.fetchdatalist();
     }
-  } 
-    previewPdf(url: string) {
+  }
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
@@ -399,7 +401,7 @@ export class ClearcheckComponent implements OnInit {
     this.safePdfUrl = '';
   }
   async openPdfAnnotator(p: any) {
-      console.log(p.EBOOKREQ_LINK);
+    console.log(p.EBOOKREQ_LINK);
     const cacheBuster = new Date().getTime();
     const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
     const user = this.tokenStorage.getUser();
@@ -419,10 +421,10 @@ export class ClearcheckComponent implements OnInit {
     if (data && data.saved && data.blob) {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-      
+
       this.file = file;
       this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
-      
+
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       if (fileInput) {
         const dataTransfer = new DataTransfer();
@@ -437,7 +439,7 @@ export class ClearcheckComponent implements OnInit {
     try {
       // Fetch only if not already counted
       if (item[propertyName]) return;
-      
+
       const response = await fetch(url);
       const pdfBytes = await response.arrayBuffer();
       const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });

@@ -81,10 +81,10 @@ export class RqtprojectComponent implements OnInit {
   dataProjectgrouptd: any;
   dataProjecttd: any;
   dataSearchtype: any;
-  dataProjectexd: any;
+  dataProjectexd: any = [];
   dataProjectact: any;
-  dataProjectdt: any;
-  dataProjectasset: any;
+  dataProjectdt: any = [];
+  dataProjectasset: any = [];
   dataProjecthead: any;
   dataPlm: any;
   dataPls: any;
@@ -104,6 +104,7 @@ export class RqtprojectComponent implements OnInit {
   dataYearimport: any;
   loadingimport: any;
   datalistimport: any;
+  dataGtype: any;
   rownumimport: any;
   url = "/acc3d/rqbudget/budget/rqproject.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
@@ -433,16 +434,7 @@ export class RqtprojectComponent implements OnInit {
         this.dataUnit = data;
         //this.dataAdd.GCUNIT_CODE= data[0].GCUNIT_CODE;
       });
-    var Tablegc = {
-      "opt": "viewPLPROJECTGROUPDTT"
-    }
-    this.apiService
-      .getdata(Tablegc, this.url1)
-      .pipe(first())
-      .subscribe((data: any) => {
-        this.dataProjectdt = data;
-        //this.dataAdd.GCUNIT_CODE= data[0].GCUNIT_CODE;
-      });
+   
     var Tablegc = {
       "opt": "viewPLPROJECTGROUPDTD"
     }
@@ -493,9 +485,32 @@ export class RqtprojectComponent implements OnInit {
         this.datastatus = data;
         this.dataAdd.PRSTATUS_CODE = data[0].PRSTATUS_CODE;
       });
+   var Tablegt = {
+      "opt": "viewPLPROJECTGTYPE"
+    }
+    this.apiService
+      .getdata(Tablegt, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataGtype = data;
+        this.dataAdd.PLPROJECTGTYPE_CODE = data[0].PLPROJECTGTYPE_CODE;
+        this.fetchdataPLPROJECTGROUPDTT();
+      });
     this.dataAdd.opt = "readAll";
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
 
+  }
+    //ประเภทรายจ่าย
+  fetchdataPLPROJECTGROUPDTT() {
+    this.dataProjectdt = [];
+    this.dataAdd.opt = "viewPLPROJECTGROUPDTT";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataProjectdt = data || [];
+        //this.dataAdd.GCUNIT_CODE= data[0].GCUNIT_CODE;
+      });
   }
   projecttype() {
     if (this.dataAdd.FPLPROJECTTYPE == 1) {
@@ -512,10 +527,12 @@ export class RqtprojectComponent implements OnInit {
   }
   calexpenses() {
     let sum = 0;
-    for (let i = 0; i < this.dataProjectexd.length; i++) {
-      //console.log(this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY);
-      if (this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY > 0) {
-        sum += parseFloat(this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY);
+    if (this.dataProjectexd && this.dataProjectexd.length) {
+      for (let i = 0; i < this.dataProjectexd.length; i++) {
+        //console.log(this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY);
+        if (this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY > 0) {
+          sum += parseFloat(this.dataProjectexd[i].PLPROJECTGROUPDT_MONEY);
+        }
       }
     }
     this.dataAdd.PLPROJECT_MONEY = sum;
@@ -712,6 +729,8 @@ export class RqtprojectComponent implements OnInit {
     this.dataAdd.money3 = 1;
     this.dataAdd.money4 = 1;
     this.dataAdd.money5 = 1;
+    this.dataAdd.PLPROJECTESTTYPE_CODE = 1;
+    this.dataAdd.PLPROJECTGTYPE_CODE = '01';
     //this.dataAdd.PRBUILDING_YEAR='1';
     this.showbuid();
     for (let i = 0; i < 5; i++) {
@@ -876,8 +895,12 @@ export class RqtprojectComponent implements OnInit {
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
+        
+        this.dataAdd.PLPROJECTGTYPE_CODE = data[0].PLPROJECTGTYPE_CODE;
         this.dataAdd.PLPROJECTGROUPDT_CODE = data[0].PLPROJECTGROUPDT_CODE;
+        this.fetchdataPLPROJECTGROUPDTT();
         this.showestimate();
+        this.dataAdd.PLPROJECTESTTYPE_CODE = data[0].PLPROJECTESTTYPE_CODE;
         this.dataAdd.GCUNIT_ACODE = data[0].GCUNIT_ACODE;
         this.dataAdd.GCUNIT_BCODE = data[0].GCUNIT_BCODE;
         this.dataAdd.GCUNIT_CCODE = data[0].GCUNIT_CCODE;
@@ -981,13 +1004,13 @@ export class RqtprojectComponent implements OnInit {
   // ฟังก์ขันสำหรับการดึงครุภัณฑ์
   fetchdatasset() {
     //console.log(1);
-    this.dataProjectasset = null;
+    this.dataProjectasset = [];
     this.dataAdd.opt = "readasset";
     this.apiService
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataProjectasset = data.data;
+        this.dataProjectasset = data.data || [];
       });
 
   }
@@ -1689,7 +1712,8 @@ export class RqtprojectComponent implements OnInit {
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0217' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0209'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0305' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0304'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0302' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0303'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0301' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0306'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0104'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0301' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0306'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0104'
     ) {
       this.dataAdd.GCUNIT_ACODE = '';
       this.dataAdd.GCUNIT_BCODE = '';
@@ -1702,22 +1726,24 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT4 = 1;
       this.dataAdd.moneydt = null;
     }
-    for (let i = 0; i < this.dataProjectdt.length; i++) {
-      if (this.dataProjectdt[i].PLPROJECTGROUPDT_CODE == this.dataAdd.PLPROJECTGROUPDT_CODE) {
-        this.dataAdd.PLPROJECTGROUPDT_MONEY = this.dataProjectdt[i].PLPROJECTGROUPDT_MONEYE;
+    if (this.dataProjectdt && this.dataProjectdt.length) {
+      for (let i = 0; i < this.dataProjectdt.length; i++) {
+        if (this.dataProjectdt[i].PLPROJECTGROUPDT_CODE == this.dataAdd.PLPROJECTGROUPDT_CODE) {
+          this.dataAdd.PLPROJECTGROUPDT_MONEY = this.dataProjectdt[i].PLPROJECTGROUPDT_MONEYE;
+        }
       }
-
     }
   }
   showasset() {
-    for (let i = 0; i < this.dataProjectasset.length; i++) {
-      if (this.dataProjectasset[i].PRASSET_CODE == this.dataAdd.PRASSET_CODE) {
-        this.dataAdd.PLPROJECTGROUPDT_DETAIL = this.dataProjectasset[i].PRREGISASSET_NAME;
-        this.dataAdd.PLPROJECTGROUPDT_MONEY = (parseFloat(this.dataProjectasset[i].PRASSET_MONEY).toFixed(2));//this.dataProjectasset[i].PRASSET_MONEY;
-        this.dataAdd.PLPROJECTGROUPDT_NUMA = this.dataProjectasset[i].PRASSET_NUMBER;
-        this.dataAdd.GCUNIT_ACODE = this.dataProjectasset[i].GCUNIT_CODE;
+    if (this.dataProjectasset && this.dataProjectasset.length) {
+      for (let i = 0; i < this.dataProjectasset.length; i++) {
+        if (this.dataProjectasset[i].PRASSET_CODE == this.dataAdd.PRASSET_CODE) {
+          this.dataAdd.PLPROJECTGROUPDT_DETAIL = this.dataProjectasset[i].PRREGISASSET_NAME;
+          this.dataAdd.PLPROJECTGROUPDT_MONEY = (parseFloat(this.dataProjectasset[i].PRASSET_MONEY).toFixed(2));//this.dataProjectasset[i].PRASSET_MONEY;
+          this.dataAdd.PLPROJECTGROUPDT_NUMA = this.dataProjectasset[i].PRASSET_NUMBER;
+          this.dataAdd.GCUNIT_ACODE = this.dataProjectasset[i].GCUNIT_CODE;
+        }
       }
-
     }
   }
   insertappfac() {

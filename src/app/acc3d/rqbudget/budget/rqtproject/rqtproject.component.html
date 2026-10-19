@@ -771,7 +771,26 @@
                           </option>
                         </select>
                       </div>
-                      <div class="col-md-12">
+                      <div class="col-md-2">
+                        <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>ประเภทโครงการ</strong>
+                        </label>
+                        <select name="PLPROJECTGTYPE_CODE" id="PLPROJECTGTYPE_CODE" class="form-select"
+                          [(ngModel)]="dataAdd.PLPROJECTGTYPE_CODE" (change)="fetchdataPLPROJECTGROUPDTT()">
+                          <option [value]="d.PLPROJECTGTYPE_CODE" *ngFor="let d of dataGtype">
+                            {{d.PLPROJECTGTYPE_NAME}}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>ประเภทอัตราเบิกจ่าย</strong>
+                        </label>
+                        <select name="PLPROJECTESTTYPE_CODE" id="PLPROJECTESTTYPE_CODE" class="form-select"
+                          [(ngModel)]="dataAdd.PLPROJECTESTTYPE_CODE" >
+                          <option [value]="1">อัตราเบิกจ่ายตามระเบียบ</option>
+                          <option [value]="2">อัตราเบิกจ่ายตามมาตรการประหยัด</option>
+                        </select>
+                      </div>
+                      <div class="col-md-8">
                         <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>รายการ</strong>
                         </label>
                         <select name="PLPROJECTGROUPDT_CODE" id="PLPROJECTGROUPDT_CODE" class="form-select"

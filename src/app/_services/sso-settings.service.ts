@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap, timeout } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface SsoSettings {
@@ -19,36 +19,24 @@ const LOCAL_STORAGE_KEY = 'ruts_budget_sso_settings';
 export class SsoSettingsService {
   private apiUrl = `${environment.apiUrlLogin}/loginJWT/ssoSettings.php`;
 
-  // Default values
+  // Default values: เปิดใช้งาน SSO และ Auto-Redirect เพื่อให้วิ่งไป SSO ทันที
   private defaultSettings: SsoSettings = {
     sso_enabled: true,
-    auto_redirect: false
+    auto_redirect: true
   };
 
   constructor(private http: HttpClient) {}
 
   /**
-   * ล้าง Cache ใน sessionStorage และปรับค่า auto_redirect ใน localStorage ให้เป็น false เสมอ
-   * ป้องกันปัญหา Browser ค้างค่า auto_redirect: true จากการตั้งค่าเก่า
+   * ล้าง Cache ใน sessionStorage
    */
   public clearCache(): void {
     sessionStorage.removeItem(SETTINGS_CACHE_KEY);
-    try {
-      const local = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (local) {
-        const parsed = JSON.parse(local);
-        if (parsed.auto_redirect) {
-          parsed.auto_redirect = false;
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
-        }
-      }
-    } catch (e) {
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
-    }
   }
 
   /**
    * ดึงค่าการตั้งค่า SSO (มี Fallback หลายชั้น: Backend -> LocalStorage -> Default)
+   * เพิ่ม timeout(2500) เพื่อป้องกันอาการค้างหรือ 504 Gateway Timeout จากเซิร์ฟเวอร์
    */
   public getSettings(): Promise<SsoSettings> {
     // 1. ตรวจสอบ sessionStorage cache ก่อน
@@ -56,26 +44,25 @@ export class SsoSettingsService {
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
-        if (parsed.auto_redirect) {
-          parsed.auto_redirect = false;
-        }
         return Promise.resolve(parsed);
       } catch (e) {
         sessionStorage.removeItem(SETTINGS_CACHE_KEY);
       }
     }
 
-    // 2. ดึงค่า Local หรือ Fallback (บังคับ auto_redirect = false เสมอ)
+    // 2. ดึงค่า Local หรือ Fallback
     const local = this.getLocalOrFallback();
 
-    // 3. ดึงจาก Backend เสมอเพื่อตรวจสอบสถานะล่าสุด
+    // 3. ดึงจาก Backend (ตั้ง timeout 2.5 วินาที ป้องกัน 504 Gateway Timeout ทำให้หน้าค้าง)
     return this.http.get<any>(this.apiUrl).pipe(
+      timeout(2500),
       map(res => {
-        if (res && res.status && res.data) {
+        const data = res?.data || res?.settings;
+        if (res && (res.status || res.success) && data) {
           const settings: SsoSettings = {
-            sso_enabled: !!res.data.sso_enabled,
-            auto_redirect: !!res.data.auto_redirect,
-            updated_at: res.data.updated_at
+            sso_enabled: data.sso_enabled !== undefined ? !!data.sso_enabled : (data.ssoEnabled !== undefined ? !!data.ssoEnabled : true),
+            auto_redirect: data.auto_redirect !== undefined ? !!data.auto_redirect : (data.autoRedirect !== undefined ? !!data.autoRedirect : true),
+            updated_at: data.updated_at
           };
           this.setLocalCache(settings);
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(settings));
@@ -84,7 +71,7 @@ export class SsoSettingsService {
         return local;
       }),
       catchError(err => {
-        // Fallback ไปใช้ Local/Default (auto_redirect = false) เมื่อเซิร์ฟเวอร์ยังไม่มีไฟล์ ssoSettings.php
+        // Fallback ไปใช้ Local/Default (auto_redirect = true) เมื่อเซิร์ฟเวอร์ยังไม่มีไฟล์ ssoSettings.php หรือ Timeout 504
         this.setLocalCache(local);
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(local));
         return of(local);
@@ -123,14 +110,9 @@ export class SsoSettingsService {
     if (local) {
       try {
         const parsed = JSON.parse(local);
-        // ทำความสะอาดและแก้ไข auto_redirect ที่ค้างเป็น true ให้เป็น false ทันที
-        if (parsed.auto_redirect) {
-          parsed.auto_redirect = false;
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsed));
-        }
         return {
           sso_enabled: parsed.sso_enabled !== undefined ? !!parsed.sso_enabled : true,
-          auto_redirect: false,
+          auto_redirect: parsed.auto_redirect !== undefined ? !!parsed.auto_redirect : true,
           updated_at: parsed.updated_at
         };
       } catch (e) {

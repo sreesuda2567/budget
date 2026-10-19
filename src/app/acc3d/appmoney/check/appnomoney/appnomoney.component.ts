@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PDFDocument } from 'pdf-lib';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
@@ -50,6 +50,8 @@ export class AppnomoneyComponent implements OnInit {
   dataSeq: any;
   dataName: any;
   pdfUrlToView: any;
+  rawPdfUrlToView: string | null = null;
+  isPdfMaximized: boolean = false;
   url = "/acc3d/appmoney/check/appnomoney.php";
   url1 = "/acc3d/appmoney/userpermission.php";
   page = 1;
@@ -760,7 +762,7 @@ export class AppnomoneyComponent implements OnInit {
     }
   }
   fetchdataloadshow(id: any) {
-    this.pdfUrlToView = null;
+    this.closePdfView();
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.opt = "viewshow";
 
@@ -777,7 +779,25 @@ export class AppnomoneyComponent implements OnInit {
     const cleanLink = this.normalizePdfUrl(link);
     const cacheBuster = new Date().getTime();
     const reportLink = cleanLink + (cleanLink.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+    this.rawPdfUrlToView = reportLink;
     this.pdfUrlToView = this.sanitizer.bypassSecurityTrustResourceUrl(reportLink);
+  }
+
+  closePdfView() {
+    this.pdfUrlToView = null;
+    this.rawPdfUrlToView = null;
+    this.isPdfMaximized = false;
+  }
+
+  toggleMaximizePdf() {
+    this.isPdfMaximized = !this.isPdfMaximized;
+  }
+
+  @HostListener('window:keydown.escape')
+  onKeydownEscape() {
+    if (this.pdfUrlToView) {
+      this.closePdfView();
+    }
   }
 
   updateTotalMoney() {

@@ -66,7 +66,7 @@ export class LoginV2Component implements OnInit {
       this.ssoSettings = await this.ssoSettingsService.getSettings();
     } catch (e) {
       console.warn('Could not load SSO settings:', e);
-      this.ssoSettings = { sso_enabled: true, auto_redirect: false };
+      this.ssoSettings = { sso_enabled: true, auto_redirect: true };
     }
 
     // 4. ตรวจสอบพารามิเตอร์ ?no_auto=1 เพื่อป้องกัน Auto-Redirect Loop หลัง Logout (ปัญหาข้อ 8)

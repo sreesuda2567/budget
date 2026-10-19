@@ -108,6 +108,7 @@ export class AppprojectComponent implements OnInit {
   rownumimport: any;
   dataSubplmoneypay: any;
   datalistimportall: any;
+  dataGtype: any;
   url = "/acc3d/rqbudget/approve/appproject.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   locale = 'th-be';
@@ -442,15 +443,17 @@ export class AppprojectComponent implements OnInit {
         this.dataUnit = data;
         //this.dataAdd.GCUNIT_CODE= data[0].GCUNIT_CODE;
       });
-    var Tablegc = {
-      "opt": "viewPLPROJECTGROUPDTT"
+  
+    var Tablegt = {
+      "opt": "viewPLPROJECTGTYPE"
     }
     this.apiService
-      .getdata(Tablegc, this.url1)
+      .getdata(Tablegt, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataProjectdt = data;
-        //this.dataAdd.GCUNIT_CODE= data[0].GCUNIT_CODE;
+        this.dataGtype = data;
+        this.dataAdd.PLPROJECTGTYPE_CODE = data[0].PLPROJECTGTYPE_CODE;
+        this.fetchdataPLPROJECTGROUPDTT();
       });
     var Tablegc = {
       "opt": "viewPLPROJECTGROUPDTD"
@@ -505,6 +508,18 @@ export class AppprojectComponent implements OnInit {
     this.dataAdd.opt = "readAll";
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
 
+  }
+     //ประเภทรายจ่าย
+  fetchdataPLPROJECTGROUPDTT() {
+    this.dataProjectdt = null;
+    this.dataAdd.opt = "viewPLPROJECTGROUPDTT";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataProjectdt = data;
+        //this.dataAdd.GCUNIT_CODE= data[0].GCUNIT_CODE;
+      });
   }
   fetchDataByTab() {
     if (this.activeTab === 1) {
@@ -707,6 +722,8 @@ export class AppprojectComponent implements OnInit {
     this.dataAdd.PRPLPROJECT_ANOTHER = '';
     this.dataAdd.PRPLPROJECT_PDEVELOP = '';
     this.dataAdd.PRPLPROJECT_SUPPORT = '';
+    this.dataAdd.PLPROJECTESTTYPE_CODE = 1;
+    this.dataAdd.PLPROJECTGTYPE_CODE = '01';
     this.dataAdd.money1 = 1;
     this.dataAdd.money2 = 1;
     this.dataAdd.money3 = 1;
@@ -925,8 +942,11 @@ export class AppprojectComponent implements OnInit {
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataAdd.PLPROJECTGROUPDT_CODE = data[0].PLPROJECTGROUPDT_CODE;
+         this.dataAdd.PLPROJECTGTYPE_CODE = data[0].PLPROJECTGTYPE_CODE;
+        this.fetchdataPLPROJECTGROUPDTT();
         this.showestimate();
+        this.dataAdd.PLPROJECTGROUPDT_CODE = data[0].PLPROJECTGROUPDT_CODE;
+        this.dataAdd.PLPROJECTESTTYPE_CODE = data[0].PLPROJECTESTTYPE_CODE;
         this.dataAdd.GCUNIT_ACODE = data[0].GCUNIT_ACODE;
         this.dataAdd.GCUNIT_BCODE = data[0].GCUNIT_BCODE;
         this.dataAdd.GCUNIT_CCODE = data[0].GCUNIT_CCODE;

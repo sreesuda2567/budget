@@ -338,7 +338,7 @@ export class NomoneyComponent implements OnInit {
         }
       });
   }
-   fetchdatalistreturn() {
+  fetchdatalistreturn() {
     // console.log(1);
     this.loading = true;
     this.datalist = null;
@@ -519,37 +519,37 @@ export class NomoneyComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
-    if (this.dataAdd.EBOOKREQ_FILE == '' || this.dataAdd.FNANNALS_MONEYC == '') {
+    if (this.dataAdd.EBOOKREQ_FILE == '') {
       if (this.dataAdd.EBOOKREQ_FILE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
       }
-      if (this.dataAdd.FNANNALS_MONEYC == '') {
-        this.toastr.warning("แจ้งเตือน:กรุณากรอกจำนวนเงิน");
-      }
+
 
     } else {
-      this.dataAdd.opt = "insert";
-      this.apiService
-        .getupdate(this.dataAdd, this.url)
-        .pipe(first())
-        .subscribe((data: any) => {
-          //console.log(data.status);   uploadbook    
-          if (data.status == 1) {
-            this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, data.id, this.dataAdd.citizen, '57')
-              .subscribe((event: any) => {
-                // 
-                if (event.type == 4) {
+
+      this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '124')
+        .subscribe((event: any) => {
+          // 
+          if (event.type == 4) {
+            this.dataAdd.opt = "insert";
+            this.apiService
+              .getupdate(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                //console.log(data.status);   uploadbook    
+                if (data.status == 1) {
                   this.fetchdatalist();
+                  this.toastr.success("แจ้งเตือน:ตรวจสอบข้อมูลเรียบร้อยแล้ว");
+                  document.getElementById("ModalClose")?.click();
+                } else {
+                  this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
                 }
-              }
-              );
-            this.fetchdatalist();
-            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-            document.getElementById("ModalClose")?.click();
-          } else {
-            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+              });
+
           }
-        });
+        }
+        );
+
 
 
     }
@@ -656,7 +656,7 @@ export class NomoneyComponent implements OnInit {
       .subscribe((data: any) => {
         //console.log(data.status);       
         if (data.status == 1) {
-          this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '57')
+          this.Uploadfiles.uploadcheck(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '124')
             .subscribe((event: any) => {
               // 
               if (event.type == 4) {
@@ -785,7 +785,7 @@ export class NomoneyComponent implements OnInit {
       try {
         const pdf1Bytes = await fetch(link1).then(res => res.arrayBuffer());
         const pdf2Bytes = await fetch(link2).then(res => res.arrayBuffer());
-        
+
         const pdf1 = await PDFDocument.load(pdf1Bytes);
         const pdf2 = await PDFDocument.load(pdf2Bytes);
         const mergedPdf = await PDFDocument.create();
@@ -795,7 +795,7 @@ export class NomoneyComponent implements OnInit {
 
         let firstPdf = pdf1;
         let secondPdf = pdf2;
-        
+
         if (count2 === 1 && count1 > 1) {
           firstPdf = pdf2;
           secondPdf = pdf1;
@@ -840,56 +840,56 @@ export class NomoneyComponent implements OnInit {
     if (data && data.saved && data.blob) {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-    
+
       this.Uploadfiles.uploadcheck(file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, p.FNANNALS_CODE, user.citizen, '124')
         .subscribe((event: any) => {
           if (event.type == 4) {
-                // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ
-                this.dataAdd.opt = "sendfile";
-                this.dataAdd.FNANNALS_CODE=p.FNANNALS_CODE;
-                this.apiService.getdata(this.dataAdd, this.url)
-                  .pipe(first())
-                  .subscribe((data: any) => {
-                    if (data.status == 1) {
-                      Swal.close();
-                      this.toastr.success("แจ้งเตือน:ส่งสารบรรณเรียบร้อยแล้ว");
-                      this.fetchdatalist();
-                    } else {
-                      Swal.fire('ข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ', 'error');
-                    }
-                  });
-              }
+            // หลังจากอัปโหลดสำเร็จ ให้บันทึกสถานะ
+            this.dataAdd.opt = "sendfile";
+            this.dataAdd.FNANNALS_CODE = p.FNANNALS_CODE;
+            this.apiService.getdata(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                if (data.status == 1) {
+                  Swal.close();
+                  this.toastr.success("แจ้งเตือน:ส่งสารบรรณเรียบร้อยแล้ว");
+                  this.fetchdatalist();
+                } else {
+                  Swal.fire('ข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ', 'error');
+                }
+              });
+          }
         });
 
     }
   }
   // ฟังก์ชันสำหรับการลบข้อมูล
-    deleteData(id: any) {
-      this.dataAdd.opt = "delete";
-      this.dataAdd.id = id;
-      this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
-      Swal.fire({
-        title: 'ต้องการลบข้อมูล?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'ตกลง',
-        cancelButtonText: 'ยกเลิก',
-      }).then((result) => {
-        if (result.value) {
-          this.apiService
-            .getdata(this.dataAdd, this.url)
-            .pipe(first())
-            .subscribe((data: any) => {
-              if (data.status == 1) {
-                Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
-                this.fetchdatalistapp();
-              }
-            });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
-        }
-      });
-    }
+  deleteData(id: any) {
+    this.dataAdd.opt = "delete";
+    this.dataAdd.id = id;
+    this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
+    Swal.fire({
+      title: 'ต้องการลบข้อมูล?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.value) {
+        this.apiService
+          .getdata(this.dataAdd, this.url)
+          .pipe(first())
+          .subscribe((data: any) => {
+            if (data.status == 1) {
+              Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+              this.fetchdatalistapp();
+            }
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+      }
+    });
+  }
   async openPdfAnnotator1(p: any) {
     const link1 = p.linkclear;
     const link2 = p.linkreport;
@@ -908,7 +908,7 @@ export class NomoneyComponent implements OnInit {
       try {
         const pdf1Bytes = await fetch(link1).then(res => res.arrayBuffer());
         const pdf2Bytes = await fetch(link2).then(res => res.arrayBuffer());
-        
+
         const pdf1 = await PDFDocument.load(pdf1Bytes);
         const pdf2 = await PDFDocument.load(pdf2Bytes);
         const mergedPdf = await PDFDocument.create();
@@ -918,7 +918,7 @@ export class NomoneyComponent implements OnInit {
 
         let firstPdf = pdf1;
         let secondPdf = pdf2;
-        
+
         if (count2 === 1 && count1 > 1) {
           firstPdf = pdf2;
           secondPdf = pdf1;

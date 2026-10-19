@@ -41,14 +41,14 @@ export class ContractnumberComponent implements OnInit {
   dataSeq: any;
   //locales = listLocales();
   datalistapp: any;
-   page = 1;
+  page = 1;
   count = 0;
   number = 0;
   tableSize = 40;
-  tableSizes = [40,100,200];
+  tableSizes = [40, 100, 200];
   searchTerm: any;
-   previewPdfUrl: string = '';
-   safePdfUrl: SafeResourceUrl = '';
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -235,8 +235,8 @@ export class ContractnumberComponent implements OnInit {
   }
   setshowbti() {
     this.dataAdd.EBOOKREQ_FILE = '';
-    this.dataAdd.FNANNALS_MONEYC= '';
-    this.dataAdd.FNANNALS_NUMBER= '';
+    this.dataAdd.FNANNALS_MONEYC = '';
+    this.dataAdd.FNANNALS_NUMBER = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any, link: any, number: any, date: any, date1: any, money: any, mail: any) {
@@ -290,35 +290,36 @@ export class ContractnumberComponent implements OnInit {
       }
 
     } else {
-      this.dataAdd.opt = "insert";
-      if (this.dataAdd.DATENOWR == '') {
-        this.dataAdd.DATENOWR1 = '';
-        this.dataAdd.DATENOWE1 = '';
-      } else {
-        this.dataAdd.DATENOWR1 = this.datenow(this.dataAdd.DATENOWR);
-        this.dataAdd.DATENOWE1 = this.datenow(this.dataAdd.DATENOWE);
-      }
-      this.apiService
-        .getupdate(this.dataAdd, this.url)
-        .pipe(first())
-        .subscribe((data: any) => {
-          //console.log(data.status);   uploadbook    
-          if (data.status == 1) {
-            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '21')
-              .subscribe((event: any) => {
-                // 
-                if (event.type == 4) {
+
+      this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '21')
+        .subscribe((event: any) => {
+          // 
+          if (event.type == 4) {
+            this.dataAdd.opt = "insert";
+            if (this.dataAdd.DATENOWR == '') {
+              this.dataAdd.DATENOWR1 = '';
+              this.dataAdd.DATENOWE1 = '';
+            } else {
+              this.dataAdd.DATENOWR1 = this.datenow(this.dataAdd.DATENOWR);
+              this.dataAdd.DATENOWE1 = this.datenow(this.dataAdd.DATENOWE);
+            }
+            this.apiService
+              .getupdate(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                //console.log(data.status);   uploadbook    
+                if (data.status == 1) {
                   this.fetchdatalist();
+                  this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+                  document.getElementById("ModalClose")?.click();
+                } else {
+                  this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
                 }
-              }
-              );
-            this.fetchdatalist();
-            this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-            document.getElementById("ModalClose")?.click();
-          } else {
-            this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
+              });
           }
-        });
+        }
+        );
+
 
 
     }
@@ -365,7 +366,7 @@ export class ContractnumberComponent implements OnInit {
         }
       });
   }
-          // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
     if (this.rownum1) {
@@ -383,7 +384,7 @@ export class ContractnumberComponent implements OnInit {
       this.fetchdatalist();
     }
   }
-    previewPdf(url: string) {
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
@@ -391,7 +392,7 @@ export class ContractnumberComponent implements OnInit {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
   }
-    async openPdfAnnotator(p: any) {
+  async openPdfAnnotator(p: any) {
     //  console.log(p.EBOOKREQ_LINK);
     const cacheBuster = new Date().getTime();
     const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
@@ -412,10 +413,10 @@ export class ContractnumberComponent implements OnInit {
     if (data && data.saved && data.blob) {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-      
+
       this.file = file;
       this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
-      
+
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       if (fileInput) {
         const dataTransfer = new DataTransfer();
@@ -430,7 +431,7 @@ export class ContractnumberComponent implements OnInit {
     try {
       // Fetch only if not already counted
       if (item[propertyName]) return;
-      
+
       const response = await fetch(url);
       const pdfBytes = await response.arrayBuffer();
       const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
@@ -440,7 +441,7 @@ export class ContractnumberComponent implements OnInit {
       console.error('Error counting PDF pages for URL:', url, error);
     }
   }
- //ส่งอีเมลสถานะใบเสร็จ
+  //ส่งอีเมลสถานะใบเสร็จ
   sendemail() {
     if (this.dataAdd.FNEXACCTD_NOTE == '') {
       this.toastr.warning("แจ้งเตือน:กรุณากรอกหมายเหตุ");
@@ -458,5 +459,5 @@ export class ContractnumberComponent implements OnInit {
 
     }
 
-  }  
+  }
 }
