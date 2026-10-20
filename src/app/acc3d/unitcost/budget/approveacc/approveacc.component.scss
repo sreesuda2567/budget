@@ -112,10 +112,99 @@
       font-size: 12px;
       
     }
-    .tableFixHead          {  overflow: scroll; }
-    .tableFixHead thead  { position: sticky; top: -17px; z-index: 1; }
-    
-    /* Just common table stuff. Really. */
-    table  { border-collapse: collapse; width: 100%; }
-    th, td { padding: 8px 16px; }
-    th     { background:#b2e3fa; }
+
+    .btn-font2 {
+      font-family: 'Prompt-Regular', sans-serif;
+      font-size: 14px;
+    }
+
+    .tableFixHead {
+      overflow: auto;
+    }
+
+    .tableFixHead thead {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .tableFixHead thead th {
+      background-color: #0d6efd;
+      color: #fff;
+      vertical-align: middle;
+      border-color: #0b5ed7;
+    }
+
+    .tableFixHead td {
+      vertical-align: middle;
+    }
+
+    // สไตล์เน้นฟิลด์สำคัญในตาราง (จำนวนเงิน, เลขฎีกา, ประเภทเอกสาร, เลขเอกสาร) ให้เห็นเด่นชัด
+    .badge-amount {
+      display: inline-block;
+      font-size: 15px;
+      font-weight: 700;
+      color: #0d6efd;
+      background-color: #f0f7ff;
+      border: 1px solid #cce2ff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+      box-shadow: 0 1px 2px rgba(13, 110, 253, 0.08);
+    }
+
+    .badge-acccode {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #581c87;
+      background-color: #f3e8ff;
+      border: 1px solid #d8b4fe;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+      box-shadow: 0 1px 2px rgba(88, 28, 135, 0.08);
+    }
+
+    .badge-deka {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #856404;
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+      box-shadow: 0 1px 2px rgba(133, 100, 4, 0.08);
+    }
+
+    .badge-doctype {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #055160;
+      background-color: #cff4fc;
+      border: 1px solid #b6effb;
+      padding: 4px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-docnum {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f5132;
+      background-color: #d1e7dd;
+      border: 1px solid #badbcc;
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+      box-shadow: 0 1px 2px rgba(15, 81, 50, 0.08);
+    }

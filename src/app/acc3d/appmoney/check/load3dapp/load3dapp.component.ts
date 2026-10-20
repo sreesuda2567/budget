@@ -295,8 +295,51 @@ export class Load3dappComponent implements OnInit {
     this.file = event.target.files[0];
   }
 
+  // ฟังก์ชันตรวจสอบการคีย์ตัวเลข
+  checkNum(event: any): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // อนุญาตเฉพาะ 0-9 (ASCII 48 - 57)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  CheckNum(event: any): boolean {
+    return this.checkNum(event);
+  }
+
+  // ฟังก์ชันกรองเฉพาะตัวเลขและจำกัดไม่เกิน 10 หลัก (รองรับกรณี Copy-Paste)
+  onNumberInput(field: string) {
+    if (this.dataAdd && this.dataAdd[field] !== undefined && this.dataAdd[field] !== null) {
+      this.dataAdd[field] = this.dataAdd[field].toString().replace(/\D/g, '').slice(0, 10);
+    }
+  }
+
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
+    const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const doc = (this.dataAdd.FNANNALSMAP_DOC || '').toString().trim();
+
+    if (!deka) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
+      return;
+    }
+    if (deka.length !== 10 || !/^\d{10}$/.test(deka)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
+    if (!doc) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสาร");
+      return;
+    }
+    if (doc.length !== 10 || !/^\d{10}$/.test(doc)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสารเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
     if (this.dataAdd.EBOOKREQ_FILE == '' || this.dataAdd.DEPARTMENT_CODE == '' || this.dataAdd.CHIEF_CODE == '') {
       if (this.dataAdd.EBOOKREQ_FILE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
@@ -307,7 +350,7 @@ export class Load3dappComponent implements OnInit {
       if (this.dataAdd.CHIEF_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกเรียน");
       }
-
+      return;
     } else {
       this.dataAdd.opt = "insert";
       if (this.dataAdd.DATENOWST != '') {
@@ -394,6 +437,26 @@ export class Load3dappComponent implements OnInit {
     });
   }
   updatedata() {
+    const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const doc = (this.dataAdd.FNANNALSMAP_DOC || '').toString().trim();
+
+    if (!deka) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
+      return;
+    }
+    if (deka.length !== 10 || !/^\d{10}$/.test(deka)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
+    if (!doc) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสาร");
+      return;
+    }
+    if (doc.length !== 10 || !/^\d{10}$/.test(doc)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสารเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
 
     this.dataAdd.opt = "update";
     if (this.dataAdd.DATENOWST != '') {

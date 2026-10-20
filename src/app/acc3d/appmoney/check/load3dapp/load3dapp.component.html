@@ -231,16 +231,30 @@
             <div class="modal-body">
                 <div class="row px-3 pt-3">
                     <div class="form-group col-md-5 mb-3">
-                        <label for="name" class="mb-2"><strong><i
-                                    class="fa-solid fa-hashtag me-2 text-warning"></i>เลขฎีกา</strong></label>
+                        <label for="FNANNALSMAP_DEKA" class="mb-2"><strong><i
+                                    class="fa-solid fa-hashtag me-2 text-warning"></i>เลขฎีกา</strong>
+                            <small class="text-muted ms-1">(ตัวเลข 10 หลัก)</small>
+                        </label>
                         <input type="text" name="FNANNALSMAP_DEKA" class="form-control rounded-3" id="FNANNALSMAP_DEKA"
-                            placeholder="เลขฎีกา" [(ngModel)]="dataAdd.FNANNALSMAP_DEKA">
+                            placeholder="เลขฎีกา (10 หลัก)" [(ngModel)]="dataAdd.FNANNALSMAP_DEKA"
+                            maxlength="10" (keypress)="checkNum($event)" (input)="onNumberInput('FNANNALSMAP_DEKA')"
+                            [class.is-invalid]="dataAdd.FNANNALSMAP_DEKA && dataAdd.FNANNALSMAP_DEKA.length > 0 && dataAdd.FNANNALSMAP_DEKA.length < 10">
+                        <div *ngIf="dataAdd.FNANNALSMAP_DEKA && dataAdd.FNANNALSMAP_DEKA.length > 0 && dataAdd.FNANNALSMAP_DEKA.length < 10" class="text-danger small mt-1">
+                            กรอกแล้ว {{dataAdd.FNANNALSMAP_DEKA.length}}/10 หลัก (ต้องเป็นตัวเลข 10 หลัก)
+                        </div>
                     </div>
                     <div class="form-group col-md-4 mb-3">
-                        <label for="name" class="mb-2"><strong><i
-                                    class="fa-solid fa-file-lines me-2 text-info"></i>เลขเอกสาร</strong></label>
+                        <label for="FNANNALSMAP_DOC" class="mb-2"><strong><i
+                                    class="fa-solid fa-file-lines me-2 text-info"></i>เลขเอกสาร</strong>
+                            <small class="text-muted ms-1">(ตัวเลข 10 หลัก)</small>
+                        </label>
                         <input type="text" name="FNANNALSMAP_DOC" class="form-control rounded-3" id="FNANNALSMAP_DOC"
-                            placeholder="เลขเอกสาร" [(ngModel)]="dataAdd.FNANNALSMAP_DOC">
+                            placeholder="เลขเอกสาร (10 หลัก)" [(ngModel)]="dataAdd.FNANNALSMAP_DOC"
+                            maxlength="10" (keypress)="checkNum($event)" (input)="onNumberInput('FNANNALSMAP_DOC')"
+                            [class.is-invalid]="dataAdd.FNANNALSMAP_DOC && dataAdd.FNANNALSMAP_DOC.length > 0 && dataAdd.FNANNALSMAP_DOC.length < 10">
+                        <div *ngIf="dataAdd.FNANNALSMAP_DOC && dataAdd.FNANNALSMAP_DOC.length > 0 && dataAdd.FNANNALSMAP_DOC.length < 10" class="text-danger small mt-1">
+                            กรอกแล้ว {{dataAdd.FNANNALSMAP_DOC.length}}/10 หลัก (ต้องเป็นตัวเลข 10 หลัก)
+                        </div>
                     </div>
                     <div class="col-md-3 mb-3 text-secondary" style="font-size: 10pt">
                         <label class="mb-2"><strong><i

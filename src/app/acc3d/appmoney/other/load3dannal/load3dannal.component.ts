@@ -308,30 +308,64 @@ export class Load3dannalComponent implements OnInit {
     this.file = event.target.files[0];
   }
 
+  // ฟังก์ชันตรวจสอบการคีย์ตัวเลข
+  checkNum(event: any): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // อนุญาตเฉพาะ 0-9 (ASCII 48 - 57)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  CheckNum(event: any): boolean {
+    return this.checkNum(event);
+  }
+
+  // ฟังก์ชันกรองเฉพาะตัวเลขและจำกัดไม่เกิน 10 หลัก (รองรับกรณี Copy-Paste)
+  onNumberInput(field: string) {
+    if (this.dataAdd && this.dataAdd[field] !== undefined && this.dataAdd[field] !== null) {
+      this.dataAdd[field] = this.dataAdd[field].toString().replace(/\D/g, '').slice(0, 10);
+    }
+  }
+
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
+    const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const doc = (this.dataAdd.FNANNALSMAP_DOC || '').toString().trim();
+
+    if (!deka) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
+      return;
+    }
+    if (deka.length !== 10 || !/^\d{10}$/.test(deka)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
+    if (!doc) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสาร");
+      return;
+    }
+    if (doc.length !== 10 || !/^\d{10}$/.test(doc)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสารเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
     if ( this.dataAdd.EBOOKREQ_FILE == ''
       || this.dataAdd.DEPARTMENT_CODE == '' 
-    || this.dataAdd.CHIEF_CODE == '') {
+      || this.dataAdd.CHIEF_CODE == '') {
       if (this.dataAdd.EBOOKREQ_FILE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
       }
-    /*  if (this.dataAdd.CITIZEN_IDC1 == this.dataAdd.CITIZEN_IDC2) {
-        this.toastr.warning("แจ้งเตือน:กรุณาคนลงในเช็คไม่ซ้ำกัน");
-      }*/
       if (this.dataAdd.DEPARTMENT_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกสารบรรณ");
       }
-   /*   if (this.dataAdd.CITIZEN_IDC1 == '') {
-        this.toastr.warning("แจ้งเตือน:กรุณาเลือก อม.1");
-      }
-      if (this.dataAdd.CITIZEN_IDC2 == '') {
-        this.toastr.warning("แจ้งเตือน:กรุณาเลือก อม. 2");
-      }*/
-       if (this.dataAdd.CHIEF_CODE == '') {
+      if (this.dataAdd.CHIEF_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกเรียน");
       }
-
+      return;
     } else {
       this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '27')
         .subscribe((event: any) => {
@@ -360,24 +394,38 @@ export class Load3dannalComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdataload() {
-    if (this.dataAdd.DATENOWF == ''||this.dataAdd.FNANNALSMAP_DEKA == ''|| this.dataAdd.FNANNALSMAP_DOC == ''|| this.dataAdd.DEPARTMENT_CODE == '' || this.dataAdd.CHIEF_CODE == '') {
+    const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const doc = (this.dataAdd.FNANNALSMAP_DOC || '').toString().trim();
+
+    if (!deka) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
+      return;
+    }
+    if (deka.length !== 10 || !/^\d{10}$/.test(deka)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
+    if (!doc) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสาร");
+      return;
+    }
+    if (doc.length !== 10 || !/^\d{10}$/.test(doc)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสารเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
+    if (this.dataAdd.DATENOWF == '' || this.dataAdd.DEPARTMENT_CODE == '' || this.dataAdd.CHIEF_CODE == '') {
       if (this.dataAdd.DATENOWF == '') {
         this.toastr.warning("แจ้งเตือน:กรุณากรอกวันที่ผ่านรายการ");
-      }
-      if (this.dataAdd.FNANNALSMAP_DEKA == '') {
-        this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฏีกา");
-      }
-      if (this.dataAdd.FNANNALSMAP_DOC == '') {
-        this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขที่หนังสือ");
       }
       if (this.dataAdd.DEPARTMENT_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกสารบรรณ");
       }
-
-       if (this.dataAdd.CHIEF_CODE == '') {
+      if (this.dataAdd.CHIEF_CODE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาเลือกเรียน");
       }
-
+      return;
     } else {
       this.dataAdd.opt = "insertload";
       if (this.dataAdd.DATENOWF != '') {
@@ -443,27 +491,67 @@ export class Load3dannalComponent implements OnInit {
       
         }
   updatedata() {
-    this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '27')
-      .subscribe((event: any) => {
-        if (event.type == 4) {
-          this.dataAdd.opt = "update";
-          if (this.dataAdd.DATENOWF != '') {
-            this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWF);
-          } else {
-            this.dataAdd.FNANNALSMAP_DDATE = '';
+    const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const doc = (this.dataAdd.FNANNALSMAP_DOC || '').toString().trim();
+
+    if (!deka) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
+      return;
+    }
+    if (deka.length !== 10 || !/^\d{10}$/.test(deka)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
+    if (!doc) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสาร");
+      return;
+    }
+    if (doc.length !== 10 || !/^\d{10}$/.test(doc)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสารเป็นตัวเลขให้ครบ 10 หลัก");
+      return;
+    }
+
+    if (this.file) {
+      this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALSMAP_CODE, this.dataAdd.citizen, '27')
+        .subscribe((event: any) => {
+          if (event.type == 4) {
+            this.dataAdd.opt = "update";
+            if (this.dataAdd.DATENOWF != '') {
+              this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWF);
+            } else {
+              this.dataAdd.FNANNALSMAP_DDATE = '';
+            }
+            this.apiService
+              .getupdate(this.dataAdd, this.url)
+              .pipe(first())
+              .subscribe((data: any) => {
+                if (data.status == 1) {
+                  this.fetchdatalistapp();
+                  this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
+                  document.getElementById("ModalClose")?.click();
+                }
+              });
           }
-          this.apiService
-            .getupdate(this.dataAdd, this.url)
-            .pipe(first())
-            .subscribe((data: any) => {
-              if (data.status == 1) {
-                this.fetchdatalistapp();
-                this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
-                document.getElementById("ModalClose")?.click();
-              }
-            });
-        }
-      });
+        });
+    } else {
+      this.dataAdd.opt = "update";
+      if (this.dataAdd.DATENOWF != '') {
+        this.dataAdd.FNANNALSMAP_DDATE = this.datenow(this.dataAdd.DATENOWF);
+      } else {
+        this.dataAdd.FNANNALSMAP_DDATE = '';
+      }
+      this.apiService
+        .getupdate(this.dataAdd, this.url)
+        .pipe(first())
+        .subscribe((data: any) => {
+          if (data.status == 1) {
+            this.fetchdatalistapp();
+            this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
+            document.getElementById("ModalClose")?.click();
+          }
+        });
+    }
   }
   onChangeedoc() {
     this.dataEdoc = null;

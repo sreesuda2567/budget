@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
@@ -59,6 +60,8 @@ export class DailyComponent implements OnInit {
   rownum: any;
   url = "/acc3d/budget/approve/daily.php";
   url1 = "/acc3d/budget/userpermission.php";
+  previewPdfUrl: string = '';
+  safePdfUrl: SafeResourceUrl = '';
   constructor(
     private tokenStorage: TokenStorageService,
     private apiService: ApiPdoService,
@@ -68,6 +71,7 @@ export class DailyComponent implements OnInit {
     private eRef: ElementRef,
     private formBuilder: FormBuilder,
     private localeService: BsLocaleService,
+    private sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit(): void {
@@ -305,5 +309,26 @@ export class DailyComponent implements OnInit {
     /* save to file */
     XLSX.writeFile(wb, this.fileName);
 
+  }
+
+  previewPdf(url: string) {
+    if (!url || url.trim() === '') {
+      this.toastr.warning('แจ้งเตือน: ไม่พบไฟล์เอกสารรายงาน PDF');
+      return;
+    }
+    this.previewPdfUrl = url;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
+  }
+
+  closePdfPreview() {
+    this.previewPdfUrl = '';
+    this.safePdfUrl = '';
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onKeydownHandler(event: KeyboardEvent) {
+    if (this.previewPdfUrl) {
+      this.closePdfPreview();
+    }
   }
 }

@@ -93,11 +93,11 @@
       </div>
     </div>
     <div class="table-responsive-lg">
-    <table *ngIf="rownum" id="excel-table" class="table btn-font3" width="150%"
-      class="table table-bordered table-striped table-hover tableFixHead btn-font3">
+    <table *ngIf="rownum" id="excel-table" width="100%"
+      class="table table-bordered table-striped table-hover tableFixHead btn-font3 align-middle">
       <thead>
         <tr class="bg-primary text-white">
-          <th>
+          <th class="text-nowrap">
             <div align="center">ที่</div>
           </th>
           <th>
@@ -106,7 +106,7 @@
           <th>
             <div align="center">ชื่อโครงการ/ชื่อเรื่อง</div>
           </th>
-          <th>
+          <th class="text-nowrap">
             <div align="center">เงิน</div>
           </th>
           <th>
@@ -118,35 +118,35 @@
           <th>
             <div align="center">ผลผลิต</div>
           </th>
-          <th>
+          <th class="text-nowrap">
             <div align="center">จำนวนเงิน</div>
           </th>
-          <th>
+          <th class="text-nowrap">
             <div align="center">รหัสบัญชีแยกประเภท</div>
           </th>
           <th>
             <div align="center">ชื่อบัญชีแยกประเภท</div>
           </th>
-          <th>
+          <th class="text-nowrap">
             <div align="center">วันที่ผ่านเอกสารเบิก</div>
           </th>
-          <th>
+          <th class="text-nowrap">
             <div align="center">เลข3ดี</div>
           </th>
-          <th>
+          <th class="text-nowrap">
             <div align="center">เลขฎีกา</div>
           </th>
-          <th>
+          <th class="text-nowrap">
             <div align="center">ประเภทเอกสาร</div>
           </th>
-          <th>
+          <th class="text-nowrap">
             <div align="center">เลขเอกสาร</div>
           </th>
           <th>
             <div align="center">ชื่อผู้ทำรายการ</div>
           </th>
-          <th>
-            <div align="center">เลือก(ทั้งหมด)<input class="form-check-input filled-in" name="cnk_code" id="cnk_code4"
+          <th class="text-nowrap">
+            <div align="center">เลือก(ทั้งหมด)<input class="form-check-input filled-in ms-1" name="cnk_code" id="cnk_code4"
                 type="checkbox" [(ngModel)]="dataAdd.checkall" (click)="checkall()"></div>
           </th>
         </tr>
@@ -154,34 +154,50 @@
       <tbody>
         <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
-        <tr class="btn-font2" *ngFor="let p of datalist; let i = index">
-          <td width="5%" align="center">{{+i+1}}</td>
-          <td width="30%">{{p.FACULTY_TNAME}}</td>
-          <td width="30%">{{p.FNEXPENSES_TITLE}}
-            <span *ngIf="p.CONTRACT_LINK"><a role="button" title="รายงานสัญญา" class="btn btn-primary text-white"
-                href="{{p.CONTRACT_LINK}}" target="_blank"><i class="fa-solid fa-file-contract"></i></a>
-              &nbsp;</span>
-            <span *ngIf="p.load3d"><a role="button" title="รายงานใบโหลด" class="btn btn-secondary text-white"
-                href="{{p.load3d}}" target="_blank"><i class="fa-solid fa-file-contract"></i></a>
-              &nbsp;</span>
+        <tr class="btn-font2 align-middle" *ngFor="let p of datalist; let i = index">
+          <td align="center">{{+i+1}}</td>
+          <td>{{p.FACULTY_TNAME}}</td>
+          <td>{{p.FNEXPENSES_TITLE}}
+            
+            
           </td>
           <td>{{p.PLINCOME_NAME}}</td>
-          <td width="20%">{{p.PLMONEYPAY_NAME}}</td>
-          <td width="20%">{{p.PLSUBMONEYPAY_NAME}}</td>
-          <td width="20%">{{p.PLGPRODUCT_SHORTNAME}}</td>
-          <td width="20%" align="right">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
-          <td width="20%" align="center">{{p.FRACC_CODE}}</td>
-          <td width="20%" align="center">{{p.FRACC_TNAME}}</td>
-          <td>{{p.FNEXPENSES_MDATE1}}</td>
-          <td>{{p.FNEXPENSES_STEP}}</td>
-          <td>{{p.FNEXACC_DEKA}}</td>
-          <td>{{p.FNEXACC_TYPE}}</td>
-          <td>{{p.FNEXACC_NUMBER}}</td>
-          <td width="30%">{{p.STF_FNAME}}</td>
+          <td>{{p.PLMONEYPAY_NAME}}</td>
+          <td>{{p.PLSUBMONEYPAY_NAME}}</td>
+          <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
+          <td align="right" class="text-nowrap">
+            <span class="badge-amount">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</span>
+          </td>
+          <td align="center" class="text-nowrap">
+            <span class="badge-acccode" *ngIf="p.FRACC_CODE">{{p.FRACC_CODE}}</span>
+            <span *ngIf="!p.FRACC_CODE">-</span>
+          </td>
+          <td>{{p.FRACC_TNAME}}</td>
+          <td align="center" class="text-nowrap">{{p.FNEXPENSES_MDATE1}}</td>
+          <td align="center" class="text-nowrap">{{p.FNEXPENSES_STEP}}</td>
+          <td align="center" class="text-nowrap">
+            <span class="badge-deka" *ngIf="p.FNEXACC_DEKA">{{p.FNEXACC_DEKA}}</span>
+            <span *ngIf="!p.FNEXACC_DEKA">-</span>
+            <span *ngIf="p.link">
+              <br>
+              <button type="button" [title]="p.link ? 'รายงาน' : 'ยังไม่มีไฟล์รายงาน'"
+                class="btn btn-sm ms-1" [ngClass]="p.link ? 'btn-primary text-white' : 'btn-secondary text-white opacity-50'"
+                (click)="previewPdf(p.link)"><i class="fa-solid fa-file-contract"></i></button>
+              &nbsp;</span>
+          </td>
+          <td align="center" class="text-nowrap">
+            <span class="badge-doctype" *ngIf="p.FNEXACC_TYPE">{{p.FNEXACC_TYPE}}</span>
+            <span *ngIf="!p.FNEXACC_TYPE">-</span>
+          </td>
+          <td align="center" class="text-nowrap">
+            <span class="badge-docnum" *ngIf="p.FNEXACC_NUMBER">{{p.FNEXACC_NUMBER}}</span>
+            <span *ngIf="!p.FNEXACC_NUMBER">-</span>
+          </td>
+          <td>{{p.STF_FNAME}}</td>
           <td align="center">
-            <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
+            <input class="form-check-input filled-in" name="cnk_code_{{i}}" id="cnk_code_{{i}}" type="checkbox"
               [(ngModel)]="dataAdd.check[i]">
-            <input name="VMREQUEST_CODE" type="hidden" id="VMREQUEST_CODE" size="10"
+            <input name="VMREQUEST_CODE_{{i}}" type="hidden" id="VMREQUEST_CODE_{{i}}" size="10"
               [(ngModel)]="dataAdd.FNEXACC_CODE[i]" />
           </td>
 
@@ -213,5 +229,24 @@
         <button type="button" class="btn btn-primary" (click)="returnData('0')">ส่งกลับแก้ไข</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- PDF Preview Side Panel -->
+<div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
+<div class="pdf-preview-panel" [class.open]="previewPdfUrl">
+  <div class="pdf-preview-header bg-primary text-white">
+    <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
+    <div>
+      <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
+        <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+      </a>
+      <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
+        <i class="fa fa-times me-1"></i> ปิด
+      </button>
+    </div>
+  </div>
+  <div class="pdf-preview-body">
+    <iframe *ngIf="safePdfUrl" [src]="safePdfUrl" width="100%" height="100%"></iframe>
   </div>
 </div>

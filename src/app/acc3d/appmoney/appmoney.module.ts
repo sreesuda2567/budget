@@ -59,6 +59,7 @@ import { NomoneyComponent } from './check/nomoney/nomoney.component';
 import { AppnomoneyComponent } from './check/appnomoney/appnomoney.component';
 import { Load3dappComponent } from './check/load3dapp/load3dapp.component';
 import { Load3dfappComponent } from './check/load3dfapp/load3dfapp.component';
+import { AnnalsendckComponent } from './check/annalsendck/annalsendck.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import { Load3dfappComponent } from './check/load3dfapp/load3dfapp.component';
     NomoneyComponent,
     AppnomoneyComponent,
     Load3dappComponent,
-    Load3dfappComponent
+    Load3dfappComponent,
+    AnnalsendckComponent
   ],
   imports: [
         CommonModule,

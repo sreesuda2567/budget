@@ -26,6 +26,10 @@
                                                                         class="fas fa-plus text-success me-1"></i>ไม่ยืมเงิน</a>
                                                 </li>
                                                 <li>
+                                                        <a class="dropdown-item" routerLink="annalsendck"><i
+                                                                        class="fas fa-dollar-sign text-danger me-1"></i>ใบสำคัญค้างจ่าย</a>
+                                                </li>
+                                                <li>
                                                         <a class="dropdown-item" routerLink="appnomoney"><i
                                                                         class="fas fa-file-invoice text-primary me-1"></i>ออกใบปะหน้าเบิก</a>
                                                 </li>
@@ -105,7 +109,7 @@
                                                 </li>
 
                                                 <li
-                                                        *ngIf="datastatus=='A' || datastatus=='1' || datastatus=='3' || datastatus=='2'">
+                                                        *ngIf="datastatus=='A' "><!--|| datastatus=='1' || datastatus=='3' || datastatus=='2'-->
                                                         <a class="dropdown-item" routerLink="annalsendm"><i
                                                                         class="fas fa-clock text-warning me-1"></i>ใบสำคัญค้างจ่าย</a>
                                                 </li>

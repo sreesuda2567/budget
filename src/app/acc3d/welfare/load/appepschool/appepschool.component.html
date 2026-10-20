@@ -123,7 +123,7 @@
                                     class="fa-solid fa-file-pen">
                                 </i></a> &nbsp;
                             </span>    
-                            <span *ngIf="(p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A' )">
+                            <span *ngIf="p.link && (p.FNANNALSMAP_RSTATUS=='T' || dataAdd.PRIVILEGE_RSTATUS=='A' )">
                             <a  role="button"
                                 title="ส่งสารบรรณ" class="btn btn-primary text-white"><i (click)="deliver(p.FNANNALSMAP_CODE)"
                                     class="fa fa-arrow-right"></i> </a>&nbsp;
