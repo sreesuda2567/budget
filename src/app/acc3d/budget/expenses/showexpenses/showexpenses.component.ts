@@ -425,7 +425,7 @@ export class ShowexpensesComponent implements OnInit {
         remon++;
       }*/
     }
-    this.dataFAdd.FNEXPENSES_RMONEY = summoney.toFixed(2) /*- sumfr*/;
+    this.dataFAdd.FNEXPENSES_RMONEY = this.numberWithCommas(summoney.toFixed(2)) /*- sumfr*/;
   }
   //ผลรวมเงินผูกพัน
   sumdatafc() {
@@ -469,6 +469,48 @@ export class ShowexpensesComponent implements OnInit {
 
   //ลบแถวรายการจ่ายจริง
   removeRow(index: number) {
+    const fnexaccCode = this.dataFAdd.FNEXACCCODE ? this.dataFAdd.FNEXACCCODE[index] : null;
+
+    if (fnexaccCode) {
+      Swal.fire({
+        title: 'ต้องการลบข้อมูล?',
+        text: 'ต้องการลบรายการนี้ออกจากฐานข้อมูลใช่หรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ตกลง',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        if (result.value) {
+          const param = {
+            opt: "deleteEX",
+            id: fnexaccCode,
+            FNEXACC_CODE: fnexaccCode,
+            FNEXPENSES_CODE: this.dataFAdd.FNEXPENSES_CODE,
+            citizen: this.dataAdd.citizen
+          };
+          this.apiService
+            .getdata(param, this.url)
+            .pipe(first())
+            .subscribe((data: any) => {
+              if (data && (data.status == 1 || data.status == '1')) {
+                Swal.fire('ลบข้อมูล!', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+                this.deleteRowLocal(index);
+                this.sumdatafr();
+                this.fetchdatalist();
+              } else {
+                Swal.fire('ผิดพลาด', 'ไม่สามารถลบข้อมูลได้', 'error');
+              }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire('ยกเลิก', 'ยกเลิกการลบข้อมูล', 'error');
+        }
+      });
+    } else {
+      this.deleteRowLocal(index);
+    }
+  }
+
+  deleteRowLocal(index: number) {
     if (this.number && this.number.length > 1) {
       this.number.splice(index, 1);
       if (this.dataFAdd.FNEXACCCODE) this.dataFAdd.FNEXACCCODE.splice(index, 1);
@@ -480,19 +522,18 @@ export class ShowexpensesComponent implements OnInit {
       if (this.dataFAdd.FNEXACC_TYPE) this.dataFAdd.FNEXACC_TYPE.splice(index, 1);
       if (this.dataFAdd.FNEXACC_NUMBER) this.dataFAdd.FNEXACC_NUMBER.splice(index, 1);
       if (this.dataFAdd.apstatus) this.dataFAdd.apstatus.splice(index, 1);
-      this.sumdatafr();
     } else {
-      this.dataFAdd.FNEXACCCODE[0] = '';
-      this.dataFAdd.FRACCCODE[0] = '';
-      this.dataFAdd.FNEXACCRDATE[0] = '';
-      this.dataFAdd.FNEXACCDEKA[0] = '';
-      this.dataFAdd.FNEXACCMONEY[0] = '';
-      this.dataFAdd.FNEXACC_CSTATUS[0] = '';
-      this.dataFAdd.FNEXACC_TYPE[0] = '';
-      this.dataFAdd.FNEXACC_NUMBER[0] = null;
-      this.dataFAdd.apstatus[0] = null;
-      this.sumdatafr();
+      if (this.dataFAdd.FNEXACCCODE) this.dataFAdd.FNEXACCCODE[0] = '';
+      if (this.dataFAdd.FRACCCODE) this.dataFAdd.FRACCCODE[0] = '';
+      if (this.dataFAdd.FNEXACCRDATE) this.dataFAdd.FNEXACCRDATE[0] = '';
+      if (this.dataFAdd.FNEXACCDEKA) this.dataFAdd.FNEXACCDEKA[0] = '';
+      if (this.dataFAdd.FNEXACCMONEY) this.dataFAdd.FNEXACCMONEY[0] = '';
+      if (this.dataFAdd.FNEXACC_CSTATUS) this.dataFAdd.FNEXACC_CSTATUS[0] = '';
+      if (this.dataFAdd.FNEXACC_TYPE) this.dataFAdd.FNEXACC_TYPE[0] = '';
+      if (this.dataFAdd.FNEXACC_NUMBER) this.dataFAdd.FNEXACC_NUMBER[0] = null;
+      if (this.dataFAdd.apstatus) this.dataFAdd.apstatus[0] = null;
     }
+    this.sumdatafr();
   }
 
     //เลือกสาขา

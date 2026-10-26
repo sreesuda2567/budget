@@ -692,7 +692,7 @@
                                   (click)="addRow()" title="เพิ่มแถว" style="width: 30px; height: 30px; padding: 0;">
                                   <i class="fa fa-plus"></i>
                                 </button>
-                                <button type="button" *ngIf="number.length > 1" class="btn btn-sm btn-outline-danger rounded-circle"
+                                <button type="button" *ngIf="number.length > 1 || (dataFAdd.FNEXACCCODE && dataFAdd.FNEXACCCODE[i])" [disabled]="dataFAdd.apstatus[i]" class="btn btn-sm btn-outline-danger rounded-circle"
                                   (click)="removeRow(i)" title="ลบแถว" style="width: 30px; height: 30px; padding: 0;">
                                   <i class="fa fa-trash"></i>
                                 </button>

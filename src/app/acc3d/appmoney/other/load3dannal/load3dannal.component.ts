@@ -267,6 +267,7 @@ export class Load3dannalComponent implements OnInit {
     this.dataAdd.CITIZEN_IDC2 = '';
     this.dataAdd.CHIEF_CODE = '';
     this.dataAdd.FNANNALSMAP_DEKA = '';
+    this.dataAdd.FNANNALSMAP_DEKA_NUM = '';
     this.dataAdd.FNANNALSMAP_DOC = '';
     this.dataAdd.DATENOWS = '';
   }
@@ -296,6 +297,7 @@ export class Load3dannalComponent implements OnInit {
     this.dataAdd.CHIEF_CODE = chief;
     this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.FNANNALSMAP_DEKA = deka;
+    this.initDekaFromExisting(deka);
     this.dataAdd.FNANNALSMAP_DOC = doc;
     if(ddate != null){
       this.dataAdd.DATENOWF =  new Date(ddate);
@@ -330,17 +332,70 @@ export class Load3dannalComponent implements OnInit {
     }
   }
 
+  getYearSuffix(): string {
+    const year = String(this.dataAdd?.PLYEARBUDGET_CODE || '').trim();
+    return year.length >= 2 ? year.slice(-2) : year;
+  }
+
+  getDekaPrefix(): string {
+    return 'P' + this.getYearSuffix();
+  }
+
+  initDekaFromExisting(deka: any) {
+    if (!deka) {
+      this.dataAdd.FNANNALSMAP_DEKA_NUM = '';
+    } else {
+      const str = deka.toString().trim();
+      if (/^[pP]/i.test(str)) {
+        this.dataAdd.FNANNALSMAP_DEKA_NUM = str.slice(3).replace(/\D/g, '').slice(0, 7);
+      } else {
+        this.dataAdd.FNANNALSMAP_DEKA_NUM = str.replace(/\D/g, '').slice(-7);
+      }
+    }
+    this.updateFullDeka();
+  }
+
+  onDekaNumberInput() {
+    if (this.dataAdd && this.dataAdd.FNANNALSMAP_DEKA_NUM !== undefined && this.dataAdd.FNANNALSMAP_DEKA_NUM !== null) {
+      let val = this.dataAdd.FNANNALSMAP_DEKA_NUM.toString().trim();
+      if (/^[pP]/i.test(val)) {
+        val = val.substring(1);
+        const ySuffix = this.getYearSuffix();
+        if (val.startsWith(ySuffix)) {
+          val = val.substring(ySuffix.length);
+        }
+      }
+      this.dataAdd.FNANNALSMAP_DEKA_NUM = val.replace(/\D/g, '').slice(0, 7);
+      this.updateFullDeka();
+    }
+  }
+
+  updateFullDeka() {
+    const num = (this.dataAdd?.FNANNALSMAP_DEKA_NUM || '').toString().trim();
+    if (num) {
+      this.dataAdd.FNANNALSMAP_DEKA = this.getDekaPrefix() + num;
+    } else {
+      this.dataAdd.FNANNALSMAP_DEKA = '';
+    }
+  }
+
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
+    this.updateFullDeka();
     const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const dekaNum = (this.dataAdd.FNANNALSMAP_DEKA_NUM || '').toString().trim();
     const doc = (this.dataAdd.FNANNALSMAP_DOC || '').toString().trim();
 
-    if (!deka) {
+    if (!dekaNum) {
       this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
       return;
     }
-    if (deka.length !== 10 || !/^\d{10}$/.test(deka)) {
-      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 10 หลัก");
+    if (dekaNum.length !== 7 || !/^\d{7}$/.test(dekaNum)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 7 หลัก (รวมคำนำหน้าเป็น 10 หลัก)");
+      return;
+    }
+    if (deka.length !== 10) {
+      this.toastr.warning("แจ้งเตือน:เลขฎีกาต้องครบ 10 หลัก");
       return;
     }
 
@@ -394,15 +449,21 @@ export class Load3dannalComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdataload() {
+    this.updateFullDeka();
     const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const dekaNum = (this.dataAdd.FNANNALSMAP_DEKA_NUM || '').toString().trim();
     const doc = (this.dataAdd.FNANNALSMAP_DOC || '').toString().trim();
 
-    if (!deka) {
+    if (!dekaNum) {
       this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
       return;
     }
-    if (deka.length !== 10 || !/^\d{10}$/.test(deka)) {
-      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 10 หลัก");
+    if (dekaNum.length !== 7 || !/^\d{7}$/.test(dekaNum)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 7 หลัก (รวมคำนำหน้าเป็น 10 หลัก)");
+      return;
+    }
+    if (deka.length !== 10) {
+      this.toastr.warning("แจ้งเตือน:เลขฎีกาต้องครบ 10 หลัก");
       return;
     }
 
@@ -491,15 +552,30 @@ export class Load3dannalComponent implements OnInit {
       
         }
   updatedata() {
+    this.updateFullDeka();
     const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const dekaNum = (this.dataAdd.FNANNALSMAP_DEKA_NUM || '').toString().trim();
     const doc = (this.dataAdd.FNANNALSMAP_DOC || '').toString().trim();
 
-    if (!deka) {
+    if (!dekaNum) {
       this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
       return;
     }
-    if (deka.length !== 10 || !/^\d{10}$/.test(deka)) {
-      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 10 หลัก");
+    if (dekaNum.length !== 7 || !/^\d{7}$/.test(dekaNum)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 7 หลัก (รวมคำนำหน้าเป็น 10 หลัก)");
+      return;
+    }
+    if (deka.length !== 10) {
+      this.toastr.warning("แจ้งเตือน:เลขฎีกาต้องครบ 10 หลัก");
+      return;
+    }
+
+    if (!doc) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสาร");
+      return;
+    }
+    if (doc.length !== 10 || !/^\d{10}$/.test(doc)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขเอกสารเป็นตัวเลขให้ครบ 10 หลัก");
       return;
     }
 

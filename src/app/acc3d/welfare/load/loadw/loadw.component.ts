@@ -246,6 +246,7 @@ export class LoadwComponent implements OnInit {
     this.dataAdd.CITIZEN_IDC2 = '';
     this.dataAdd.CHIEF_CODE = '';
     this.dataAdd.FNANNALSMAP_DEKA = '';
+    this.dataAdd.FNANNALSMAP_DEKA_NUM = '';
     this.dataAdd.FNANNALSMAP_DOC = '';
     this.dataAdd.DATENOWS = '';
   }
@@ -274,6 +275,7 @@ export class LoadwComponent implements OnInit {
     this.dataAdd.FNANNALS_CODE = code;
     this.dataAdd.CHIEF_CODE = chief;
     this.dataAdd.FNANNALSMAP_DEKA = deka;
+    this.initDekaFromExisting(deka);
     this.dataAdd.EBOOKREQ_LINK = load3d;
     this.dataAdd.DATENOWST = new Date(ddate);
     this.dataAdd.FNANNALSMAP_DOC = doc;
@@ -285,8 +287,93 @@ export class LoadwComponent implements OnInit {
     this.file = event.target.files[0];
   }
 
+  // ฟังก์ชันตรวจสอบการคีย์ตัวเลข
+  checkNum(event: any): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // อนุญาตเฉพาะ 0-9 (ASCII 48 - 57)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  CheckNum(event: any): boolean {
+    return this.checkNum(event);
+  }
+
+  // ฟังก์ชันกรองเฉพาะตัวเลขและจำกัดไม่เกิน 10 หลัก (รองรับกรณี Copy-Paste)
+  onNumberInput(field: string) {
+    if (this.dataAdd && this.dataAdd[field] !== undefined && this.dataAdd[field] !== null) {
+      this.dataAdd[field] = this.dataAdd[field].toString().replace(/\D/g, '').slice(0, 10);
+    }
+  }
+
+  getYearSuffix(): string {
+    const year = String(this.dataAdd?.PLYEARBUDGET_CODE || '').trim();
+    return year.length >= 2 ? year.slice(-2) : year;
+  }
+
+  getDekaPrefix(): string {
+    return 'P' + this.getYearSuffix();
+  }
+
+  initDekaFromExisting(deka: any) {
+    if (!deka) {
+      this.dataAdd.FNANNALSMAP_DEKA_NUM = '';
+    } else {
+      const str = deka.toString().trim();
+      if (/^[pP]/i.test(str)) {
+        this.dataAdd.FNANNALSMAP_DEKA_NUM = str.slice(3).replace(/\D/g, '').slice(0, 7);
+      } else {
+        this.dataAdd.FNANNALSMAP_DEKA_NUM = str.replace(/\D/g, '').slice(-7);
+      }
+    }
+    this.updateFullDeka();
+  }
+
+  onDekaNumberInput() {
+    if (this.dataAdd && this.dataAdd.FNANNALSMAP_DEKA_NUM !== undefined && this.dataAdd.FNANNALSMAP_DEKA_NUM !== null) {
+      let val = this.dataAdd.FNANNALSMAP_DEKA_NUM.toString().trim();
+      if (/^[pP]/i.test(val)) {
+        val = val.substring(1);
+        const ySuffix = this.getYearSuffix();
+        if (val.startsWith(ySuffix)) {
+          val = val.substring(ySuffix.length);
+        }
+      }
+      this.dataAdd.FNANNALSMAP_DEKA_NUM = val.replace(/\D/g, '').slice(0, 7);
+      this.updateFullDeka();
+    }
+  }
+
+  updateFullDeka() {
+    const num = (this.dataAdd?.FNANNALSMAP_DEKA_NUM || '').toString().trim();
+    if (num) {
+      this.dataAdd.FNANNALSMAP_DEKA = this.getDekaPrefix() + num;
+    } else {
+      this.dataAdd.FNANNALSMAP_DEKA = '';
+    }
+  }
+
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล
   insertdata() {
+    this.updateFullDeka();
+    const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const dekaNum = (this.dataAdd.FNANNALSMAP_DEKA_NUM || '').toString().trim();
+
+    if (!dekaNum) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
+      return;
+    }
+    if (dekaNum.length !== 7 || !/^\d{7}$/.test(dekaNum)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 7 หลัก (รวมคำนำหน้าเป็น 10 หลัก)");
+      return;
+    }
+    if (deka.length !== 10) {
+      this.toastr.warning("แจ้งเตือน:เลขฎีกาต้องครบ 10 หลัก");
+      return;
+    }
     if (this.dataAdd.EBOOKREQ_FILE == '' || this.dataAdd.DEPARTMENT_CODE == '' || this.dataAdd.CHIEF_CODE == '') {
       if (this.dataAdd.EBOOKREQ_FILE == '') {
         this.toastr.warning("แจ้งเตือน:กรุณาแนบไฟล์");
@@ -384,6 +471,22 @@ export class LoadwComponent implements OnInit {
     });
   }
   updatedata() {
+    this.updateFullDeka();
+    const deka = (this.dataAdd.FNANNALSMAP_DEKA || '').toString().trim();
+    const dekaNum = (this.dataAdd.FNANNALSMAP_DEKA_NUM || '').toString().trim();
+
+    if (!dekaNum) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกา");
+      return;
+    }
+    if (dekaNum.length !== 7 || !/^\d{7}$/.test(dekaNum)) {
+      this.toastr.warning("แจ้งเตือน:กรุณากรอกเลขฎีกาเป็นตัวเลขให้ครบ 7 หลัก (รวมคำนำหน้าเป็น 10 หลัก)");
+      return;
+    }
+    if (deka.length !== 10) {
+      this.toastr.warning("แจ้งเตือน:เลขฎีกาต้องครบ 10 หลัก");
+      return;
+    }
 
     this.dataAdd.opt = "update";
     if (this.dataAdd.DATENOWST != '') {
