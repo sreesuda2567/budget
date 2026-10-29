@@ -424,34 +424,28 @@
                     </div>
                     <div class="row">
                       <div class="col-md-12">
-                        <input name="FNEXPENSES_TITLE" list="list-timezone" id="FNEXPENSES_TITLE" type="text"
-                          class="form-control" placeholder="ชื่อเรื่อง/ชื่อโครงการ"
-                          [(ngModel)]="dataAdd.FNEXPENSES_TITLE">
-                        <datalist id="list-timezone">
-                          <option>เงินเดือน ข้าราชการ ประจำเดือน</option>
-                          <option>ค่าตอบแทน พนักงานราชการ ประจำเดือน </option>
-                          <option>ค่าตอบแทนพิเศษ ข้าราชการ ประจำเดือน</option>
-                          <option>ค่าตอบแทนพิเศษ ลูกจ้างประจำ ประจำเดือน</option>
-                          <option>ประกันสังคม พนักงานราชการ ประจำเดือน </option>
-                          <option>กองทุนทดแทน พนักงานราชการ ประจำเดือน</option>
-                          <option>ปจต.บริหาร พนม. ประจำเดือน</option>
-                          <option>เงินเดือน พนม. ประจำเดือน</option>
-                          <option>ค่าตอบแทนพิเศษ พนม. ประจำเดือน</option>
-                          <option>ประกันสังคม พนม. ประจำเดือน</option>
-                          <option>กองทุนทดแทน พนม. ประจำเดือน</option>
-                          <option>ค่าตอบแทน ตำแหน่งนิติกร ประจำเดือน</option>
-                          <option>ค่าตอบแทนวิชาชีพเฉพาะ พนม. ประจำเดือน</option>
-                          <option>ปจต.วิชาการ ประจำเดือน</option>
-                          <option>พนักงานเงินรายได้ ประจำเดือน</option>
-                          <option>ค่าจ้างผู้เชี่ยวชาญเฉพาะด้าน ประจำเดือน</option>
-                          <option>ปจต.บริหาร ประจำเดือน</option>
-                          <option>ค่าตอบแทนหัวหน้างาน ประจำเดือน</option>
-                          <option>ค่ารักษาพยาบาล พนม.</option>
-                          <option>ค่าเล่าเรียนบุตร พนม.</option>
-                          <option>พนักงานเงินรายได้ ประจำเดือน</option>
-                          <option>ประกันสังคม พนักงานเงินรายได้ ประจำเดือน</option>
-                          <option>กองทุนทดแทน พนักงานเงินรายได้ ประจำเดือน</option>
-                        </datalist>
+                        <div class="title-autocomplete-wrapper position-relative w-100">
+                          <input name="FNEXPENSES_TITLE" id="FNEXPENSES_TITLE" type="text"
+                            class="form-control" placeholder="ชื่อเรื่อง/ชื่อโครงการ"
+                            autocomplete="off"
+                            [(ngModel)]="dataAdd.FNEXPENSES_TITLE"
+                            (focus)="openTitleDropdown(true)"
+                            (click)="openTitleDropdown(true)"
+                            (input)="openTitleDropdown(false)"
+                            (keydown)="onTitleKeydown($event)"
+                            (blur)="closeTitleDropdown()">
+
+                          <div class="title-dropdown-menu shadow-lg"
+                            *ngIf="isTitleDropdownOpen && getFilteredTitles().length > 0">
+                            <div class="title-dropdown-item"
+                              *ngFor="let title of getFilteredTitles(); let i = index"
+                              [class.active]="i === activeTitleIndex"
+                              (mousedown)="selectTitle(title)">
+                              <i class="fa-solid fa-file-lines me-2 text-primary" style="font-size: 13px; opacity: 0.7; flex-shrink: 0;"></i>
+                              <span class="title-text">{{ title }}</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </td>

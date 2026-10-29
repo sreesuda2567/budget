@@ -53,6 +53,8 @@ export class AppComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.checkLoginStatus();
     });
+
+    this.setupPdfPreviewHandlers();
   }
 
   ngOnDestroy(): void {
@@ -138,5 +140,97 @@ export class AppComponent implements OnInit, OnDestroy {
 
       }
     })
+  }
+
+  setupPdfPreviewHandlers(): void {
+    if (typeof document === 'undefined') return;
+
+    document.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target) return;
+
+      // 1. Print button
+      const printBtn = target.closest('.pdf-print-btn') as HTMLElement;
+      if (printBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = printBtn.closest('.pdf-preview-panel') || document.querySelector('.pdf-preview-panel.open');
+        const iframe = panel?.querySelector('iframe') as HTMLIFrameElement;
+        if (iframe && iframe.contentWindow) {
+          try {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            return;
+          } catch (e) {
+            console.warn('Direct iframe print failed, trying window.open fallback', e);
+          }
+        }
+        const openLink = panel?.querySelector('a[href]') as HTMLAnchorElement;
+        if (openLink && openLink.href) {
+          const printWin = window.open(openLink.href, '_blank');
+          if (printWin) {
+            printWin.focus();
+            setTimeout(() => {
+              try { printWin.print(); } catch (err) {}
+            }, 500);
+          }
+        }
+        return;
+      }
+
+      // 2. Maximize / Fullscreen toggle button
+      const maxBtn = target.closest('.pdf-maximize-btn') as HTMLElement;
+      if (maxBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = maxBtn.closest('.pdf-preview-panel') as HTMLElement;
+        if (panel) {
+          const isMaximized = panel.classList.toggle('maximized');
+          const icon = maxBtn.querySelector('i');
+          if (icon) {
+            if (isMaximized) {
+              icon.className = 'fa-solid fa-compress';
+              maxBtn.setAttribute('title', 'ย่อขนาด');
+            } else {
+              icon.className = 'fa-solid fa-expand';
+              maxBtn.setAttribute('title', 'ขยายเต็มจอ');
+            }
+          }
+        }
+        return;
+      }
+
+      // 3. Reset maximize state when close button or overlay is clicked
+      const closeBtn = target.closest('.pdf-preview-header button[title="ปิด"], .pdf-preview-overlay');
+      if (closeBtn) {
+        const panels = document.querySelectorAll('.pdf-preview-panel');
+        panels.forEach(p => {
+          p.classList.remove('maximized');
+          const icon = p.querySelector('.pdf-maximize-btn i');
+          if (icon) icon.className = 'fa-solid fa-expand';
+        });
+      }
+
+      // 4. Reset maximize state when a new preview trigger is clicked
+      const previewTrigger = target.closest('[click*="previewPdf"], [title*="รายงาน"]');
+      if (previewTrigger) {
+        const panels = document.querySelectorAll('.pdf-preview-panel');
+        panels.forEach(p => {
+          p.classList.remove('maximized');
+          const icon = p.querySelector('.pdf-maximize-btn i');
+          if (icon) icon.className = 'fa-solid fa-expand';
+        });
+      }
+    });
+
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        const openPanel = document.querySelector('.pdf-preview-panel.open');
+        if (openPanel) {
+          const closeBtn = openPanel.querySelector('.pdf-preview-header button[title="ปิด"]') as HTMLButtonElement;
+          if (closeBtn) closeBtn.click();
+        }
+      }
+    });
   }
 }

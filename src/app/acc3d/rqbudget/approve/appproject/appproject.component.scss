@@ -194,3 +194,235 @@ p.a-half {
   }
 }
 
+// Activity Schedule & Participants Table
+.activity-schedule-card {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden;
+
+  .card-header {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+  }
+
+  .activity-icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 8px;
+    font-size: 16px;
+  }
+}
+
+.activity-schedule-table {
+  border-color: #e2e8f0;
+
+  thead {
+    tr.header-main th {
+      background-color: #f1f5f9;
+      color: #334155;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 8px;
+      border-bottom: 1px solid #cbd5e1;
+    }
+
+    tr.header-sub th {
+      background-color: #f8fafc;
+      color: #475569;
+      font-weight: 500;
+      font-size: 13px;
+      padding: 8px 6px;
+      border-bottom: 2px solid #cbd5e1;
+    }
+
+    .th-activity { width: 14%; min-width: 130px; }
+    .th-date { width: 44%; min-width: 320px; }
+    .th-participants { width: 42%; min-width: 330px; }
+    .th-sub-date { width: 22%; min-width: 160px; }
+    .th-sub-part { width: 14%; min-width: 110px; }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.15s ease;
+      &:hover {
+        background-color: #f8fafc;
+      }
+    }
+
+    .col-activity {
+      background-color: rgba(248, 250, 252, 0.6);
+
+      .badge-activity {
+        background-color: #e0f2fe;
+        color: #0284c7;
+        border: 1px solid #bae6fd;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+
+      .badge-single-activity {
+        background-color: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+
+      .activity-subname {
+        font-size: 12px;
+        color: #64748b;
+        max-width: 150px;
+        display: block;
+      }
+    }
+
+    .date-input {
+      font-size: 14px;
+      background-color: #fff;
+      border-color: #cbd5e1;
+      &:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+    }
+
+    .date-btn {
+      border-color: #cbd5e1;
+      background-color: #fff;
+      padding: 0.375rem 0.65rem;
+      &:hover {
+        background-color: #f1f5f9;
+        border-color: #94a3b8;
+      }
+    }
+
+    .part-input {
+      font-size: 14px;
+      border-color: #cbd5e1;
+      font-weight: 500;
+      &:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+    }
+
+    .part-unit {
+      border-color: #cbd5e1;
+      font-size: 12px;
+      color: #64748b;
+      padding: 0.375rem 0.5rem;
+    }
+  }
+
+  .activity-schedule-footer {
+    .footer-subtotal {
+      background-color: #f8fafc;
+      border-top: 2px solid #cbd5e1;
+      font-size: 13px;
+    }
+
+    .footer-total {
+      background-color: #eff6ff;
+      border-top: 1px solid #bfdbfe;
+    }
+  }
+
+  .text-purple {
+    color: #7c3aed !important;
+  }
+}
+
+// Activity Location Table
+.activity-location-card {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden;
+
+  .card-header {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+  }
+
+  .activity-icon-badge-location {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background-color: rgba(220, 53, 69, 0.1);
+    border-radius: 8px;
+    font-size: 16px;
+  }
+}
+
+.activity-location-table {
+  border-color: #e2e8f0;
+
+  thead {
+    tr.header-location th {
+      background-color: #f1f5f9;
+      color: #334155;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 8px;
+      border-bottom: 2px solid #cbd5e1;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.15s ease;
+      &:hover {
+        background-color: #f8fafc;
+      }
+    }
+
+    .col-activity {
+      background-color: rgba(248, 250, 252, 0.6);
+
+      .badge-activity {
+        background-color: #e0f2fe;
+        color: #0284c7;
+        border: 1px solid #bae6fd;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+
+      .badge-single-activity {
+        background-color: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        font-weight: 600;
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+
+      .activity-subname {
+        font-size: 12px;
+        color: #64748b;
+        max-width: 150px;
+        display: block;
+      }
+    }
+
+    .form-select-sm, .form-control-sm {
+      font-size: 13.5px;
+      border-color: #cbd5e1;
+      &:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+    }
+  }
+}
+

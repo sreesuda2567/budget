@@ -22,6 +22,7 @@ export class ListexpensesComponent implements OnInit {
   dataIncome: any;
   dataCrpart: any;
   dataMoneypay: any;
+  dataFndetail: any;
   dataYear: any;
   dataPlmoneypay: any;
   dataSubplmoneypay: any;
@@ -74,6 +75,91 @@ export class ListexpensesComponent implements OnInit {
   }
   keyword = 'name';
   datacomplete: any;
+
+  isTitleDropdownOpen: boolean = false;
+  activeTitleIndex: number = -1;
+  showAllTitlesOnFocus: boolean = false;
+
+  getFilteredTitles(): string[] {
+    const list: string[] = [];
+    if (this.dataFndetail && Array.isArray(this.dataFndetail)) {
+      for (const item of this.dataFndetail) {
+        if (item && item.FNEXDETAIL_NAME && !list.includes(item.FNEXDETAIL_NAME)) {
+          list.push(item.FNEXDETAIL_NAME);
+        }
+      }
+    }
+    if (this.showAllTitlesOnFocus) {
+      return list;
+    }
+    const search = (this.dataAdd && this.dataAdd.FNEXPENSES_TITLE ? this.dataAdd.FNEXPENSES_TITLE : '').trim().toLowerCase();
+    if (!search) {
+      return list;
+    }
+    return list.filter(t => t && t.toLowerCase().includes(search));
+  }
+
+  selectTitle(title: string): void {
+    this.dataAdd.FNEXPENSES_TITLE = title;
+    this.isTitleDropdownOpen = false;
+    this.showAllTitlesOnFocus = false;
+    this.activeTitleIndex = -1;
+  }
+
+  openTitleDropdown(showAll: boolean = false): void {
+    this.showAllTitlesOnFocus = showAll;
+    this.isTitleDropdownOpen = true;
+    this.activeTitleIndex = -1;
+  }
+
+  closeTitleDropdown(): void {
+    setTimeout(() => {
+      this.isTitleDropdownOpen = false;
+      this.showAllTitlesOnFocus = false;
+      this.activeTitleIndex = -1;
+    }, 200);
+  }
+
+  onTitleKeydown(event: KeyboardEvent): void {
+    if (!this.isTitleDropdownOpen) {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        this.openTitleDropdown(true);
+        return;
+      }
+    }
+    const titles = this.getFilteredTitles();
+    if (!titles || titles.length === 0) return;
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.showAllTitlesOnFocus = false;
+      this.activeTitleIndex = (this.activeTitleIndex + 1) % titles.length;
+      this.scrollToActiveItem();
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.showAllTitlesOnFocus = false;
+      this.activeTitleIndex = (this.activeTitleIndex - 1 + titles.length) % titles.length;
+      this.scrollToActiveItem();
+    } else if (event.key === 'Enter') {
+      if (this.activeTitleIndex >= 0 && this.activeTitleIndex < titles.length) {
+        event.preventDefault();
+        this.selectTitle(titles[this.activeTitleIndex]);
+      }
+    } else if (event.key === 'Escape') {
+      this.isTitleDropdownOpen = false;
+      this.showAllTitlesOnFocus = false;
+      this.activeTitleIndex = -1;
+    }
+  }
+
+  private scrollToActiveItem(): void {
+    setTimeout(() => {
+      const activeEl = document.querySelector('.title-dropdown-item.active') as HTMLElement;
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: 'nearest' });
+      }
+    }, 10);
+  }
 
   selectEvent(item: any) {
     this.dataAdd.FNCREDITOR_CODE = item.id;
@@ -330,6 +416,17 @@ export class ListexpensesComponent implements OnInit {
     this.showdatapl(PLTRBUDGET_CODE);
     this.onChangannalreq(); 
   }
+    //หมวดรายจ่าย
+  onChangeFNEXDETAIL() {
+    this.dataFndetail = null;
+    this.dataAdd.opt = "viewFNEXDETAIL";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataFndetail = data;
+      });
+  }
   showdatalist(mcode: any, msubcode: any, prcode: any, ycode: any, faccode: any, incode: any, crcode: any, pcode: any, sub1: any, sub2: any, money: any) {
     this.dataAdd.PLMONEYPAY_CODE1 = mcode;
     this.dataAdd.PLYEARBUDGET_CODE1 = ycode;
@@ -337,6 +434,7 @@ export class ListexpensesComponent implements OnInit {
     this.dataAdd.CRPART_ID1 = crcode;
     this.dataAdd.PLGPRODUCT_CODE = prcode.substring(sub1, sub2);
     this.dataAdd.PLSUBMONEYPAY_CODE = msubcode;
+     this.onChangeFNEXDETAIL();
     this.dataAdd.MONEY = money.replace(/,/g, "");
     this.dataAdd.CODEMONEY = msubcode.substring(0, 4);
     this.rowpm = mcode;
@@ -606,6 +704,8 @@ export class ListexpensesComponent implements OnInit {
     this.dataAdd.FNEXPENSES_NUMBOOK = '';
     this.dataAdd.FNEXPENSES_CCDATE = '';
     this.dataAdd.FNEXPENSES_TITLE = '';
+    this.isTitleDropdownOpen = false;
+    this.activeTitleIndex = -1;
     this.dataAdd.FNCREDITOR_CODE1 = '';
     this.dataAdd.FNEXPENSES_OMONEY = '';
     this.dataAdd.FNEXPENSES_EXTEND = '';

@@ -770,54 +770,293 @@
                       </div>
                     </div>
                   </div>
-                  <div *ngFor="let p of number1;let i = index" class="row mb-2"><!--*ngIf="ptype"-->
-                    <div class="col-md-3">
-                      <label for="p_sdate_{{i}}"><strong><i
-                            class="fa-regular fa-calendar-days me-2 text-danger"></i>ระยะเวลาดำเนินโครงการ ตั้งแต่ <span
-                            *ngIf="dataAdd.PRPLPROJECT_TIME>1"><strong>กิจกรรมที่
-                              {{i+1}}</strong></span></strong></label>
-                      <input type="text" name="p_sdate_{{i}}" id="p_sdate_{{i}}" bsDatepicker #dp="bsDatepicker"
-                        class="form-control" placeholder="ตั้งแต่" [(ngModel)]="dataAdd.PRPLPROJECT_SDATE[i]">
-                      <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
-                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp.toggle()">
-                      </i>
+                  <!-- ตารางกำหนดการดำเนินโครงการและจำนวนผู้เข้าร่วม -->
+                  <div class="activity-schedule-card card border shadow-sm rounded-3 my-3">
+                    <div
+                      class="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                      <div class="d-flex align-items-center">
+                        <span class="activity-icon-badge me-2">
+                          <i class="fa-solid fa-calendar-days text-primary"></i>
+                        </span>
+                        <div>
+                          <strong class="text-dark"
+                            style="font-size: 15px;">ระยะเวลาดำเนินโครงการและจำนวนผู้เข้าร่วม</strong>
+                          <span
+                            class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle ms-2 rounded-pill px-2 py-1"
+                            *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                            {{ dataAdd.PRPLPROJECT_TIME }} กิจกรรม
+                          </span>
+                        </div>
+                      </div>
+                      <div class="text-muted small">
+                        <i
+                          class="fa-solid fa-circle-info text-info me-1"></i>ระบุช่วงเวลาและจำนวนผู้เข้าร่วมแต่ละกิจกรรม
+                      </div>
                     </div>
-                    <div class="col-md-3">
-                      <label for="p_edate_{{i}}"><strong><i
-                            class="fa-regular fa-calendar-check me-2 text-danger"></i>ถึงวันที่</strong></label>
-                      <input type="text" name="p_edate_{{i}}" id="p_edate_{{i}}" bsDatepicker #dp2="bsDatepicker"
-                        class="form-control" placeholder="ถึงวันที่" [(ngModel)]="dataAdd.PRPLPROJECT_EDATE[i]">
-                      <i style="margin-top: -1.6rem;float: right;font-size:15px; margin-right: 6px;cursor:pointer;"
-                        class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dp2.toggle()">
-                      </i>
-                    </div>
-                    <div class="col-md-2">
-                      <label for="p_persons_{{i}}"><strong><i
-                            class="fa-solid fa-user-graduate me-2 text-danger"></i>ผู้เข้าร่วม นักศึกษา</strong></label>
-                      <input type="text" name="p_persons_{{i}}" id="p_persons_{{i}}" class="form-control" placeholder="นักศึกษา"
-                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONS[i]" (keypress)="CheckNum($event)">
-                    </div>
-                    <div class="col-md-2">
-                      <label for="p_personp_{{i}}"><strong><i class="fa-solid fa-user-tie me-2 text-danger"></i>ผู้เข้าร่วม
-                          บุคลากร</strong></label>
-                      <input type="text" name="p_personp_{{i}}" id="p_personp_{{i}}" class="form-control" placeholder="บุคลากร"
-                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONP[i]" (keypress)="CheckNum($event)">
-                    </div>
-                    <div class="col-md-2">
-                      <label for="p_persono_{{i}}"><strong><i class="fa-solid fa-users me-2 text-danger"></i>ผู้เข้าร่วม
-                          บุคคลภายนอก</strong></label>
-                      <input type="text" name="p_persono_{{i}}" id="p_persono_{{i}}" class="form-control" placeholder="บุคคลภายนอก"
-                        [(ngModel)]="dataAdd.PRPLPROJECT_PERSONO[i]" (keypress)="CheckNum($event)">
+
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle mb-0 activity-schedule-table">
+                          <thead>
+                            <tr class="text-center align-middle header-main">
+                              <th rowspan="2" class="th-activity">
+                                <i class="fa-solid fa-list-ol text-primary me-1"></i> กิจกรรม
+                              </th>
+                              <th colspan="2" class="th-date">
+                                <i class="fa-regular fa-calendar-days text-primary me-1"></i> ระยะเวลาดำเนินโครงการ
+                              </th>
+                              <th colspan="3" class="th-participants">
+                                <i class="fa-solid fa-users text-primary me-1"></i> จำนวนผู้เข้าร่วม (คน)
+                              </th>
+                            </tr>
+                            <tr class="text-center align-middle header-sub">
+                              <th class="th-sub-date">
+                                <i class="fa-regular fa-calendar text-danger me-1"></i> ตั้งแต่วันที่
+                              </th>
+                              <th class="th-sub-date">
+                                <i class="fa-regular fa-calendar-check text-success me-1"></i> ถึงวันที่
+                              </th>
+                              <th class="th-sub-part">
+                                <i class="fa-solid fa-user-graduate text-primary me-1"></i> นักศึกษา
+                              </th>
+                              <th class="th-sub-part">
+                                <i class="fa-solid fa-user-tie text-success me-1"></i> บุคลากร
+                              </th>
+                              <th class="th-sub-part">
+                                <i class="fa-solid fa-users text-purple me-1"></i> บุคคลภายนอก
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let p of number1; let i = index">
+                              <!-- ลำดับ / ชื่อกิจกรรม -->
+                              <td class="text-center py-2 px-3 col-activity">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                  <span class="badge rounded-pill badge-activity" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                                    กิจกรรมที่ {{ i + 1 }}
+                                  </span>
+                                  <span class="badge rounded-pill badge-single-activity"
+                                    *ngIf="!(dataAdd.PRPLPROJECT_TIME > 1)">
+                                    โครงการหลัก
+                                  </span>
+                                  <span class="activity-subname text-truncate mt-1"
+                                    *ngIf="dataAdd.PRPLPROJECTACT_NAME && dataAdd.PRPLPROJECTACT_NAME[i]"
+                                    [title]="dataAdd.PRPLPROJECTACT_NAME[i]">
+                                    {{ dataAdd.PRPLPROJECTACT_NAME[i] }}
+                                  </span>
+                                </div>
+                              </td>
+
+                              <!-- ตั้งแต่วันที่ -->
+                              <td class="py-2 px-2 col-date">
+                                <div class="input-group">
+                                  <input type="text" name="p_sdate_{{i}}" id="p_sdate_{{i}}" bsDatepicker
+                                    #dp="bsDatepicker" class="form-control text-center date-input"
+                                    placeholder="วว/ดด/ปปปป" [(ngModel)]="dataAdd.PRPLPROJECT_SDATE[i]">
+                                  <button class="btn btn-outline-secondary date-btn" type="button" title="เลือกวันที่"
+                                    (click)="dp.toggle()">
+                                    <i class="fa-solid fa-calendar-days text-primary"></i>
+                                  </button>
+                                </div>
+                              </td>
+
+                              <!-- ถึงวันที่ -->
+                              <td class="py-2 px-2 col-date">
+                                <div class="input-group">
+                                  <input type="text" name="p_edate_{{i}}" id="p_edate_{{i}}" bsDatepicker
+                                    #dp2="bsDatepicker" class="form-control text-center date-input"
+                                    placeholder="วว/ดด/ปปปป" [(ngModel)]="dataAdd.PRPLPROJECT_EDATE[i]">
+                                  <button class="btn btn-outline-secondary date-btn" type="button" title="เลือกวันที่"
+                                    (click)="dp2.toggle()">
+                                    <i class="fa-solid fa-calendar-days text-primary"></i>
+                                  </button>
+                                </div>
+                              </td>
+
+                              <!-- ผู้เข้าร่วม นักศึกษา -->
+                              <td class="py-2 px-2 col-part">
+                                <div class="input-group">
+                                  <input type="text" name="p_persons_{{i}}" id="p_persons_{{i}}"
+                                    class="form-control text-end part-input" placeholder="0"
+                                    [(ngModel)]="dataAdd.PRPLPROJECT_PERSONS[i]" (keypress)="CheckNum($event)">
+                                  <span class="input-group-text bg-light text-muted part-unit">คน</span>
+                                </div>
+                              </td>
+
+                              <!-- ผู้เข้าร่วม บุคลากร -->
+                              <td class="py-2 px-2 col-part">
+                                <div class="input-group">
+                                  <input type="text" name="p_personp_{{i}}" id="p_personp_{{i}}"
+                                    class="form-control text-end part-input" placeholder="0"
+                                    [(ngModel)]="dataAdd.PRPLPROJECT_PERSONP[i]" (keypress)="CheckNum($event)">
+                                  <span class="input-group-text bg-light text-muted part-unit">คน</span>
+                                </div>
+                              </td>
+
+                              <!-- ผู้เข้าร่วม บุคคลภายนอก -->
+                              <td class="py-2 px-2 col-part">
+                                <div class="input-group">
+                                  <input type="text" name="p_persono_{{i}}" id="p_persono_{{i}}"
+                                    class="form-control text-end part-input" placeholder="0"
+                                    [(ngModel)]="dataAdd.PRPLPROJECT_PERSONO[i]" (keypress)="CheckNum($event)">
+                                  <span class="input-group-text bg-light text-muted part-unit">คน</span>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+
+                          <!-- สรุปผลรวมจำนวนผู้เข้าร่วม -->
+                          <tfoot class="activity-schedule-footer">
+                            <tr class="align-middle footer-subtotal" *ngIf="number1 && number1.length > 1">
+                              <td class="text-center fw-bold text-dark py-2">
+                                รวมแต่ละกลุ่ม
+                              </td>
+                              <td colspan="2" class="text-center text-muted small py-2">
+                                ทั้งหมด {{ number1.length }} กิจกรรม
+                              </td>
+                              <td class="text-end fw-bold text-primary py-2 px-2">
+                                {{ getTotalPersons() | number }} <span class="text-muted small fw-normal">คน</span>
+                              </td>
+                              <td class="text-end fw-bold text-success py-2 px-2">
+                                {{ getTotalPersonp() | number }} <span class="text-muted small fw-normal">คน</span>
+                              </td>
+                              <td class="text-end fw-bold text-purple py-2 px-2">
+                                {{ getTotalPersono() | number }} <span class="text-muted small fw-normal">คน</span>
+                              </td>
+                            </tr>
+                            <tr class="align-middle footer-total">
+                              <td colspan="3" class="text-end fw-bold py-2 pe-3 text-secondary">
+                                <i class="fa-solid fa-users text-primary me-1"></i> ยอดผู้เข้าร่วมโครงการรวมทั้งหมด:
+                              </td>
+                              <td colspan="3" class="text-center fw-bold py-2 text-primary fs-6">
+                                <span class="badge bg-primary px-3 py-2 fs-6 rounded-pill">
+                                  {{ getTotalAllParticipants() | number }} คน
+                                </span>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                  <div class="row">
 
-                    <div class="col-md-12">
-                      <label for="name"><strong><i
-                            class="fa-solid fa-location-dot me-2 text-danger"></i>สถานที่ดำเนินโครงการ
-                          ณ</strong></label>
-                      <input type="text" name="PRPLPROJECT_LOCATION" id="PRPLPROJECT_LOCATION" class="form-control"
-                        placeholder="สถานที่ดำเนินโครงการ ณ" [(ngModel)]="dataAdd.PRPLPROJECT_LOCATION">
+                                    <!-- ตารางสถานที่ดำเนินโครงการตามกิจกรรมย่อย -->
+                  <div class="activity-location-card card border shadow-sm rounded-3 my-3">
+                    <div class="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                      <div class="d-flex align-items-center">
+                        <span class="activity-icon-badge-location me-2">
+                          <i class="fa-solid fa-map-location-dot text-danger"></i>
+                        </span>
+                        <div>
+                          <strong class="text-dark" style="font-size: 15px;">สถานที่ดำเนินโครงการ</strong>
+                          <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle ms-2 rounded-pill px-2 py-1" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                            ตาม {{ dataAdd.PRPLPROJECT_TIME }} กิจกรรมย่อย
+                          </span>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="copyLocationToAll()" title="คัดลอกสถานที่จากกิจกรรมที่ 1 ไปยังทุกกิจกรรม">
+                          <i class="fa-solid fa-clone me-1"></i> ใช้สถานที่เดียวกันทุกกิจกรรม
+                        </button>
+                        <span class="text-muted small d-none d-md-inline">
+                          <i class="fa-solid fa-circle-info text-info me-1"></i>ระบุสถานที่และพื้นที่ของแต่ละกิจกรรม
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                      <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle mb-0 activity-location-table">
+                          <thead>
+                            <tr class="text-center align-middle header-location">
+                              <th style="width: 15%; min-width: 140px;">
+                                <i class="fa-solid fa-list-ol text-primary me-1"></i> กิจกรรม
+                              </th>
+                              <th style="width: 12%; min-width: 110px;">
+                                <i class="fa-solid fa-building-circle-check text-secondary me-1"></i> สถานที่
+                              </th>
+                              <th style="width: 25%; min-width: 200px;">
+                                <i class="fa-solid fa-location-dot text-danger me-1"></i> ระบุสถานที่
+                              </th>
+                              <th style="width: 18%; min-width: 150px;">
+                                <i class="fa-solid fa-map-location-dot text-success me-1"></i> จังหวัด
+                              </th>
+                              <th style="width: 15%; min-width: 140px;">
+                                <i class="fa-solid fa-map-pin text-info me-1"></i> อำเภอ
+                              </th>
+                              <th style="width: 15%; min-width: 140px;">
+                                <i class="fa-solid fa-location-arrow text-warning me-1"></i> ตำบล
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let p of number1; let i = index">
+                              <!-- กิจกรรม -->
+                              <td class="text-center py-2 px-3 col-activity">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                  <span class="badge rounded-pill badge-activity" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                                    กิจกรรมที่ {{ i + 1 }}
+                                  </span>
+                                  <span class="badge rounded-pill badge-single-activity" *ngIf="!(dataAdd.PRPLPROJECT_TIME > 1)">
+                                    โครงการหลัก
+                                  </span>
+                                  <span class="activity-subname text-truncate mt-1" *ngIf="dataAdd.PRPLPROJECTACT_NAME && dataAdd.PRPLPROJECTACT_NAME[i]" [title]="dataAdd.PRPLPROJECTACT_NAME[i]">
+                                    {{ dataAdd.PRPLPROJECTACT_NAME[i] }}
+                                  </span>
+                                </div>
+                              </td>
+
+                              <!-- สถานที่ (ภายใน/ภายนอก) -->
+                              <td class="py-2 px-2">
+                                <select name="PRPLPROJECT_AT_{{i}}" id="PRPLPROJECT_AT_{{i}}" class="form-select form-select-sm"
+                                  [(ngModel)]="dataAdd.PRPLPROJECT_AT[i]">
+                                  <option value="1">ภายใน</option>
+                                  <option value="2">ภายนอก</option>
+                                </select>
+                              </td>
+
+                              <!-- ระบุสถานที่ -->
+                              <td class="py-2 px-2">
+                                <input type="text" name="PRPLPROJECT_LOCATION_{{i}}" id="PRPLPROJECT_LOCATION_{{i}}" class="form-control form-control-sm"
+                                  placeholder="ระบุสถานที่ ณ..." [(ngModel)]="dataAdd.PRPLPROJECT_LOCATION[i]">
+                              </td>
+
+                              <!-- จังหวัด -->
+                              <td class="py-2 px-2">
+                                <select name="PROVINCE_ID_{{i}}" id="PROVINCE_ID_{{i}}" class="form-select form-select-sm"
+                                  (change)="onChangedistrict(i)" [(ngModel)]="dataAdd.PROVINCE_ID[i]">
+                                  <option value="">เลือกจังหวัด</option>
+                                  <option [value]="provice.PROVINCE_ID" *ngFor="let provice of dataProvince">
+                                    {{ provice.PROVINCE_TNAME }}
+                                  </option>
+                                </select>
+                              </td>
+
+                              <!-- อำเภอ -->
+                              <td class="py-2 px-2">
+                                <select name="DISTRICT_ID_{{i}}" id="DISTRICT_ID_{{i}}" class="form-select form-select-sm"
+                                  (change)="onChangesubdistrict(i)" [(ngModel)]="dataAdd.DISTRICT_ID[i]">
+                                  <option value="">เลือกอำเภอ</option>
+                                  <option [value]="district.DISTRICT_ID" *ngFor="let district of (dataDistrictList && dataDistrictList[i] ? dataDistrictList[i] : dataDistrict)">
+                                    {{ district.DISTRICT_NAME_TH }}
+                                  </option>
+                                </select>
+                              </td>
+
+                              <!-- ตำบล -->
+                              <td class="py-2 px-2">
+                                <select name="SUB_DISTRICT_ID_{{i}}" id="SUB_DISTRICT_ID_{{i}}" class="form-select form-select-sm"
+                                  [(ngModel)]="dataAdd.SUB_DISTRICT_ID[i]">
+                                  <option value="">เลือกตำบล</option>
+                                  <option [value]="subdistrict.SUB_DISTRICT_ID" *ngFor="let subdistrict of (dataSubdistrictList && dataSubdistrictList[i] ? dataSubdistrictList[i] : dataSubdistrict)">
+                                    {{ subdistrict.SUB_DISTRICT_NAME_TH }}
+                                  </option>
+                                </select>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                   <div class="row">
@@ -2254,14 +2493,22 @@
 <!-- PDF Preview Side Panel -->
 <div class="pdf-preview-overlay" *ngIf="previewPdfUrl" (click)="closePdfPreview()"></div>
 <div class="pdf-preview-panel" [class.open]="previewPdfUrl">
-  <div class="pdf-preview-header bg-primary text-white">
-    <h5 class="mb-0"><i class="fa-solid fa-file-pdf me-2"></i>พรีวิวเอกสาร</h5>
-    <div>
-      <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm me-1">
-        <i class="fa-solid fa-up-right-from-square me-1"></i> เปิดในแท็บใหม่
+    <div class="pdf-preview-header bg-primary text-white">
+    <h5 class="mb-0 d-flex align-items-center">
+      <i class="fa-solid fa-file-pdf me-2"></i>เธเธฃเธตเธงเธดเธงเน€เธญเธเธชเธฒเธฃ
+    </h5>
+    <div class="d-flex align-items-center gap-1">
+      <button type="button" class="btn btn-outline-light btn-sm pdf-print-btn" title="เธเธดเธกเธเน">
+        <i class="fa-solid fa-print me-1"></i> เธเธดเธกเธเน
+      </button>
+      <button type="button" class="btn btn-outline-light btn-sm pdf-maximize-btn" title="เธเธขเธฒเธขเน€เธ•เนเธกเธเธญ">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+      <a [href]="previewPdfUrl" target="_blank" class="btn btn-outline-light btn-sm" title="เน€เธเธดเธ”เนเธ—เนเธเนเธซเธกเน">
+        <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> เน€เธเธดเธ”เนเธ—เนเธเนเธซเธกเน
       </a>
-      <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()">
-        <i class="fa fa-times me-1"></i> ปิด
+      <button type="button" class="btn btn-outline-light btn-sm" (click)="closePdfPreview()" title="เธเธดเธ”">
+        <i class="fa-solid fa-xmark me-1"></i> เธเธดเธ”
       </button>
     </div>
   </div>

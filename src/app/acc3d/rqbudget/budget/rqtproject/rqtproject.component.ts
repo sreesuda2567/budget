@@ -66,6 +66,8 @@ export class RqtprojectComponent implements OnInit {
   dataProvince: any;
   dataSubdistrict: any;
   dataDistrict: any;
+  dataDistrictList: any = [];
+  dataSubdistrictList: any = [];
   dataPlmoneypay: any;
   datalist: any;
   datalistresearch: any;
@@ -116,6 +118,7 @@ export class RqtprojectComponent implements OnInit {
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
     , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: []
     , PRPLPROJECT_SDATE: [], PRPLPROJECT_EDATE: [], checkimport: [], IMPORTASSET_CODE: []
+    , PRPLPROJECT_AT: [], PRPLPROJECT_LOCATION: [], PROVINCE_ID: [], DISTRICT_ID: [], SUB_DISTRICT_ID: []
     /*, PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
     , PLPROJECTEXPENSES_CODE: []*/
   };
@@ -682,6 +685,13 @@ export class RqtprojectComponent implements OnInit {
     this.dataAdd.PRPLPROJECT_PERSONS = [];
     this.dataAdd.PRPLPROJECT_PERSONP = [];
     this.dataAdd.PRPLPROJECT_PERSONO = [];
+    this.dataAdd.PRPLPROJECT_AT = [];
+    this.dataAdd.PRPLPROJECT_LOCATION = [];
+    this.dataAdd.PROVINCE_ID = [];
+    this.dataAdd.DISTRICT_ID = [];
+    this.dataAdd.SUB_DISTRICT_ID = [];
+    this.dataDistrictList = [];
+    this.dataSubdistrictList = [];
     this.dataAdd.RPLINCOME_CODE = '';
     this.dataAdd.RCRPART_ID = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
@@ -996,6 +1006,23 @@ export class RqtprojectComponent implements OnInit {
           this.dataAdd.PRPLPROJECT_PERSONO[i] = data.data[i].PRPLPROJECT_PERSONO;
           this.dataAdd.PRPLPROJECT_SDATE[i] = data.data[i].PRPLPROJECT_SDATE ? new Date(data.data[i].PRPLPROJECT_SDATE) : '';
           this.dataAdd.PRPLPROJECT_EDATE[i] = data.data[i].PRPLPROJECT_EDATE ? new Date(data.data[i].PRPLPROJECT_EDATE) : '';
+          if (data.data[i].PRPLPROJECT_AT !== undefined && data.data[i].PRPLPROJECT_AT !== null) {
+            this.dataAdd.PRPLPROJECT_AT[i] = data.data[i].PRPLPROJECT_AT;
+          }
+          if (data.data[i].PRPLPROJECT_LOCATION) {
+            this.dataAdd.PRPLPROJECT_LOCATION[i] = data.data[i].PRPLPROJECT_LOCATION;
+          }
+          if (data.data[i].PROVINCE_ID) {
+            this.dataAdd.PROVINCE_ID[i] = data.data[i].PROVINCE_ID;
+            this.onChangedistrict(i, data.data[i].PROVINCE_ID);
+          }
+          if (data.data[i].DISTRICT_ID) {
+            this.dataAdd.DISTRICT_ID[i] = data.data[i].DISTRICT_ID;
+            this.onChangesubdistrict(i, data.data[i].DISTRICT_ID);
+          }
+          if (data.data[i].SUB_DISTRICT_ID) {
+            this.dataAdd.SUB_DISTRICT_ID[i] = data.data[i].SUB_DISTRICT_ID;
+          }
         }
 
       });
@@ -1164,30 +1191,73 @@ export class RqtprojectComponent implements OnInit {
         //console.log(this.dataSub);
       });
   }
-  onChangedistrict(deviceValue: any) {
-    this.dataAdd.opt = "viewdistrict";
-    if (deviceValue != '') {
-      this.dataAdd.PROVINCE_ID = deviceValue;
-    }
-    this.apiService
-      .getdata(this.dataAdd, this.url1)
-      .pipe(first())
-      .subscribe((data: any) => {
-        this.dataDistrict = data;
-      });
-  }
-  onChangesubdistrict(deviceValue: any) {
-    this.dataAdd.opt = "viewsubdistrict";
-    if (deviceValue != '') {
-      this.dataAdd.DISTRICT_ID = deviceValue;
-    }
-    this.apiService
-      .getdata(this.dataAdd, this.url1)
-      .pipe(first())
-      .subscribe((data: any) => {
-        this.dataSubdistrict = data;
+  onChangedistrict(indexOrValue: any = '', deviceValue: any = '') {
+    if (typeof indexOrValue === 'number') {
+      const i = indexOrValue;
+      const provId = deviceValue || (this.dataAdd.PROVINCE_ID && this.dataAdd.PROVINCE_ID[i]);
+      if (!this.dataDistrictList) this.dataDistrictList = [];
+      if (!this.dataSubdistrictList) this.dataSubdistrictList = [];
 
-      });
+      if (!provId) {
+        this.dataDistrictList[i] = [];
+        this.dataSubdistrictList[i] = [];
+        if (this.dataAdd.DISTRICT_ID) this.dataAdd.DISTRICT_ID[i] = '';
+        if (this.dataAdd.SUB_DISTRICT_ID) this.dataAdd.SUB_DISTRICT_ID[i] = '';
+        return;
+      }
+
+      const req = { ...this.dataAdd, opt: "viewdistrict", PROVINCE_ID: provId };
+      this.apiService
+        .getdata(req, this.url1)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.dataDistrictList[i] = data;
+        });
+    } else {
+      this.dataAdd.opt = "viewdistrict";
+      if (indexOrValue != '') {
+        this.dataAdd.PROVINCE_ID = indexOrValue;
+      }
+      this.apiService
+        .getdata(this.dataAdd, this.url1)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.dataDistrict = data;
+        });
+    }
+  }
+
+  onChangesubdistrict(indexOrValue: any = '', deviceValue: any = '') {
+    if (typeof indexOrValue === 'number') {
+      const i = indexOrValue;
+      const distId = deviceValue || (this.dataAdd.DISTRICT_ID && this.dataAdd.DISTRICT_ID[i]);
+      if (!this.dataSubdistrictList) this.dataSubdistrictList = [];
+
+      if (!distId) {
+        this.dataSubdistrictList[i] = [];
+        if (this.dataAdd.SUB_DISTRICT_ID) this.dataAdd.SUB_DISTRICT_ID[i] = '';
+        return;
+      }
+
+      const req = { ...this.dataAdd, opt: "viewsubdistrict", DISTRICT_ID: distId };
+      this.apiService
+        .getdata(req, this.url1)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.dataSubdistrictList[i] = data;
+        });
+    } else {
+      this.dataAdd.opt = "viewsubdistrict";
+      if (indexOrValue != '') {
+        this.dataAdd.DISTRICT_ID = indexOrValue;
+      }
+      this.apiService
+        .getdata(this.dataAdd, this.url1)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.dataSubdistrict = data;
+        });
+    }
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
   editdata(id: any) {
@@ -1309,7 +1379,33 @@ export class RqtprojectComponent implements OnInit {
         if (data.data[0].PRPLPROJECT_EDATE != null && !this.dataAdd.PRPLPROJECT_EDATE[0]) {
           this.dataAdd.PRPLPROJECT_EDATE[0] = new Date(data.data[0].PRPLPROJECT_EDATE);
         }
-        this.dataAdd.PRPLPROJECT_LOCATION = data.data[0].PRPLPROJECT_LOCATION;
+        if (!Array.isArray(this.dataAdd.PRPLPROJECT_LOCATION)) {
+          this.dataAdd.PRPLPROJECT_LOCATION = data.data[0].PRPLPROJECT_LOCATION ? [data.data[0].PRPLPROJECT_LOCATION] : [];
+        } else if (data.data[0].PRPLPROJECT_LOCATION && !this.dataAdd.PRPLPROJECT_LOCATION[0]) {
+          this.dataAdd.PRPLPROJECT_LOCATION[0] = data.data[0].PRPLPROJECT_LOCATION;
+        }
+        if (data.data[0].PRPLPROJECT_AT !== undefined && data.data[0].PRPLPROJECT_AT !== null) {
+          if (!Array.isArray(this.dataAdd.PRPLPROJECT_AT)) this.dataAdd.PRPLPROJECT_AT = [];
+          if (!this.dataAdd.PRPLPROJECT_AT[0]) this.dataAdd.PRPLPROJECT_AT[0] = data.data[0].PRPLPROJECT_AT;
+        }
+        if (data.data[0].PROVINCE_ID) {
+          if (!Array.isArray(this.dataAdd.PROVINCE_ID)) this.dataAdd.PROVINCE_ID = [];
+          if (!this.dataAdd.PROVINCE_ID[0]) {
+            this.dataAdd.PROVINCE_ID[0] = data.data[0].PROVINCE_ID;
+            this.onChangedistrict(0, data.data[0].PROVINCE_ID);
+          }
+        }
+        if (data.data[0].DISTRICT_ID) {
+          if (!Array.isArray(this.dataAdd.DISTRICT_ID)) this.dataAdd.DISTRICT_ID = [];
+          if (!this.dataAdd.DISTRICT_ID[0]) {
+            this.dataAdd.DISTRICT_ID[0] = data.data[0].DISTRICT_ID;
+            this.onChangesubdistrict(0, data.data[0].DISTRICT_ID);
+          }
+        }
+        if (data.data[0].SUB_DISTRICT_ID) {
+          if (!Array.isArray(this.dataAdd.SUB_DISTRICT_ID)) this.dataAdd.SUB_DISTRICT_ID = [];
+          if (!this.dataAdd.SUB_DISTRICT_ID[0]) this.dataAdd.SUB_DISTRICT_ID[0] = data.data[0].SUB_DISTRICT_ID;
+        }
         if (data.data[0].PRPLPROJECT_PRINCIPLE != null) {
           this.dataAdd.PLPROJECTMORE_PRINCIPLE = data.data[0].PRPLPROJECT_PRINCIPLE;
         }
@@ -1601,6 +1697,27 @@ export class RqtprojectComponent implements OnInit {
     this.number1 = [];
     if (!Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) this.dataAdd.PRPLPROJECT_SDATE = [];
     if (!Array.isArray(this.dataAdd.PRPLPROJECT_EDATE)) this.dataAdd.PRPLPROJECT_EDATE = [];
+    if (!Array.isArray(this.dataAdd.PRPLPROJECT_AT)) {
+      const prev = this.dataAdd.PRPLPROJECT_AT;
+      this.dataAdd.PRPLPROJECT_AT = prev !== undefined && prev !== null && prev !== '' ? [prev] : [];
+    }
+    if (!Array.isArray(this.dataAdd.PRPLPROJECT_LOCATION)) {
+      const prev = this.dataAdd.PRPLPROJECT_LOCATION;
+      this.dataAdd.PRPLPROJECT_LOCATION = prev !== undefined && prev !== null && prev !== '' ? [prev] : [];
+    }
+    if (!Array.isArray(this.dataAdd.PROVINCE_ID)) {
+      const prev = this.dataAdd.PROVINCE_ID;
+      this.dataAdd.PROVINCE_ID = prev !== undefined && prev !== null && prev !== '' ? [prev] : [];
+    }
+    if (!Array.isArray(this.dataAdd.DISTRICT_ID)) {
+      const prev = this.dataAdd.DISTRICT_ID;
+      this.dataAdd.DISTRICT_ID = prev !== undefined && prev !== null && prev !== '' ? [prev] : [];
+    }
+    if (!Array.isArray(this.dataAdd.SUB_DISTRICT_ID)) {
+      const prev = this.dataAdd.SUB_DISTRICT_ID;
+      this.dataAdd.SUB_DISTRICT_ID = prev !== undefined && prev !== null && prev !== '' ? [prev] : [];
+    }
+
     for (let i = 0; i < this.dataAdd.PRPLPROJECT_TIME; i++) {
       this.number1[i] = i;
       this.dataAdd.PRPLPROJECTACT_NAME[i] = this.dataAdd.PRPLPROJECTACT_NAME[i] !== undefined ? this.dataAdd.PRPLPROJECTACT_NAME[i] : '';
@@ -1610,8 +1727,76 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PRPLPROJECT_PERSONO[i] = this.dataAdd.PRPLPROJECT_PERSONO[i] !== undefined ? this.dataAdd.PRPLPROJECT_PERSONO[i] : 0;
       this.dataAdd.PRPLPROJECT_SDATE[i] = this.dataAdd.PRPLPROJECT_SDATE[i] !== undefined ? this.dataAdd.PRPLPROJECT_SDATE[i] : '';
       this.dataAdd.PRPLPROJECT_EDATE[i] = this.dataAdd.PRPLPROJECT_EDATE[i] !== undefined ? this.dataAdd.PRPLPROJECT_EDATE[i] : '';
+      this.dataAdd.PRPLPROJECT_AT[i] = this.dataAdd.PRPLPROJECT_AT[i] !== undefined ? this.dataAdd.PRPLPROJECT_AT[i] : '1';
+      this.dataAdd.PRPLPROJECT_LOCATION[i] = this.dataAdd.PRPLPROJECT_LOCATION[i] !== undefined ? this.dataAdd.PRPLPROJECT_LOCATION[i] : '';
+      this.dataAdd.PROVINCE_ID[i] = this.dataAdd.PROVINCE_ID[i] !== undefined ? this.dataAdd.PROVINCE_ID[i] : '';
+      this.dataAdd.DISTRICT_ID[i] = this.dataAdd.DISTRICT_ID[i] !== undefined ? this.dataAdd.DISTRICT_ID[i] : '';
+      this.dataAdd.SUB_DISTRICT_ID[i] = this.dataAdd.SUB_DISTRICT_ID[i] !== undefined ? this.dataAdd.SUB_DISTRICT_ID[i] : '';
+
+      if (this.dataAdd.PROVINCE_ID[i]) {
+        this.onChangedistrict(i, this.dataAdd.PROVINCE_ID[i]);
+      }
+      if (this.dataAdd.DISTRICT_ID[i]) {
+        this.onChangesubdistrict(i, this.dataAdd.DISTRICT_ID[i]);
+      }
     }
 
+  }
+
+  copyLocationToAll() {
+    if (!this.dataAdd?.PRPLPROJECT_TIME || this.dataAdd.PRPLPROJECT_TIME <= 1) return;
+    const at = this.dataAdd.PRPLPROJECT_AT ? this.dataAdd.PRPLPROJECT_AT[0] : '1';
+    const loc = this.dataAdd.PRPLPROJECT_LOCATION ? this.dataAdd.PRPLPROJECT_LOCATION[0] : '';
+    const prov = this.dataAdd.PROVINCE_ID ? this.dataAdd.PROVINCE_ID[0] : '';
+    const dist = this.dataAdd.DISTRICT_ID ? this.dataAdd.DISTRICT_ID[0] : '';
+    const subdist = this.dataAdd.SUB_DISTRICT_ID ? this.dataAdd.SUB_DISTRICT_ID[0] : '';
+
+    for (let i = 1; i < this.dataAdd.PRPLPROJECT_TIME; i++) {
+      this.dataAdd.PRPLPROJECT_AT[i] = at;
+      this.dataAdd.PRPLPROJECT_LOCATION[i] = loc;
+      this.dataAdd.PROVINCE_ID[i] = prov;
+      this.dataAdd.DISTRICT_ID[i] = dist;
+      this.dataAdd.SUB_DISTRICT_ID[i] = subdist;
+
+      if (prov) {
+        this.onChangedistrict(i, prov);
+      }
+      if (dist) {
+        this.onChangesubdistrict(i, dist);
+      }
+    }
+    this.toastr.info("คัดลอกสถานที่จากกิจกรรมที่ 1 ไปยังทุกกิจกรรมเรียบร้อยแล้ว");
+  }
+
+  getTotalPersons(): number {
+    const val = this.dataAdd?.PRPLPROJECT_PERSONS;
+    if (!val) return 0;
+    if (Array.isArray(val)) {
+      return val.reduce((sum: number, v: any) => sum + (Number(v) || 0), 0);
+    }
+    return Number(val) || 0;
+  }
+
+  getTotalPersonp(): number {
+    const val = this.dataAdd?.PRPLPROJECT_PERSONP;
+    if (!val) return 0;
+    if (Array.isArray(val)) {
+      return val.reduce((sum: number, v: any) => sum + (Number(v) || 0), 0);
+    }
+    return Number(val) || 0;
+  }
+
+  getTotalPersono(): number {
+    const val = this.dataAdd?.PRPLPROJECT_PERSONO;
+    if (!val) return 0;
+    if (Array.isArray(val)) {
+      return val.reduce((sum: number, v: any) => sum + (Number(v) || 0), 0);
+    }
+    return Number(val) || 0;
+  }
+
+  getTotalAllParticipants(): number {
+    return this.getTotalPersons() + this.getTotalPersonp() + this.getTotalPersono();
   }
   showestimate() {
 
