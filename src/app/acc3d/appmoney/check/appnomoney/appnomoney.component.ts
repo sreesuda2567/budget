@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PDFDocument } from 'pdf-lib';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
@@ -57,6 +57,19 @@ export class AppnomoneyComponent implements OnInit {
   page = 1;
   count = 0;
   number: any = [0, 1, 2, 3];
+  get totalMoney(): number {
+    let total = 0;
+    if (this.dataAdd && this.dataAdd.FRACCMONEY) {
+      for (let i of this.number) {
+        const val = this.dataAdd.FRACCMONEY[i];
+        if (val !== undefined && val !== null && val !== '') {
+          const num = typeof val === 'string' ? parseFloat(val.replace(/,/g, '')) : Number(val);
+          total += isNaN(num) ? 0 : num;
+        }
+      }
+    }
+    return total;
+  }
   tableSize = 20;
   tableSizes = [20, 30, 40, 80, 100];
   rowpbi: any;

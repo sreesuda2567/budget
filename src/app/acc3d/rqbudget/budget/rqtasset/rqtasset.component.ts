@@ -130,7 +130,8 @@ export class RqtassetComponent implements OnInit {
   rownumimport: any;
   url = "/acc3d/rqbudget/budget/rqasset.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
-  dataAdd: any = { check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [] };
+  PRPLPROJECT_TYPE: any = 0;
+  dataAdd: any = { PRPLPROJECT_TYPE: 0, check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [] };
   searchTerm: any;
   selectedDevice: any;
   loading: any;
@@ -175,6 +176,19 @@ export class RqtassetComponent implements OnInit {
 
   ngOnInit(): void {
     document.getElementById("ModalClose")?.click();
+    this.route.queryParams.subscribe(params => {
+      const prevType = this.dataAdd.PRPLPROJECT_TYPE;
+      if (params['PRPLPROJECT_TYPE'] !== undefined) {
+        this.PRPLPROJECT_TYPE = Number(params['PRPLPROJECT_TYPE']);
+      } else {
+        const stored = sessionStorage.getItem('PRPLPROJECT_TYPE');
+        this.PRPLPROJECT_TYPE = stored !== null ? Number(stored) : 0;
+      }
+      this.dataAdd.PRPLPROJECT_TYPE = this.PRPLPROJECT_TYPE;
+      if (prevType !== undefined && prevType !== this.PRPLPROJECT_TYPE && this.dataAdd.FACULTY_CODE) {
+        this.fetchdatalist();
+      }
+    });
     this.dataAdd.RPLINCOME_CODE1 ='';
     this.fetchdata();
     this.rowpbi = null;
@@ -1332,6 +1346,7 @@ export class RqtassetComponent implements OnInit {
   }
 
   setshowbti() {
+    this.dataAdd.PRPLPROJECT_TYPE = this.PRPLPROJECT_TYPE !== undefined ? this.PRPLPROJECT_TYPE : 0;
     this.ictlink = false;
     this.dataAdd.PRASSET_CODE = '';
     this.dataAdd.PRASSET_NAME = '';

@@ -112,8 +112,10 @@ export class RqtprojectComponent implements OnInit {
   url1 = "/acc3d/rqbudget/userpermission.php";
   locale = 'th-be';
   locales = listLocales();
+  PRPLPROJECT_TYPE: any = 0;
   //dataAdd:any = {PRBOBJECT_NAME:[],PRBOBJECT_CODE:[],PRUSE_NAME:[],PRUSE_CODE:[]};PLPROJECTEXPENSES_CODE
   dataAdd: any = {
+    PRPLPROJECT_TYPE: 0,
     check: [], checkregis: [], PRREGISPROJECT_CODE: [], PRASSET_CODEA: [],
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
     , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: []
@@ -198,6 +200,19 @@ export class RqtprojectComponent implements OnInit {
 
   ngOnInit(): void {
     document.getElementById("ModalClose")?.click();
+    this.route.queryParams.subscribe(params => {
+      const prevType = this.dataAdd.PRPLPROJECT_TYPE;
+      if (params['PRPLPROJECT_TYPE'] !== undefined) {
+        this.PRPLPROJECT_TYPE = Number(params['PRPLPROJECT_TYPE']);
+      } else {
+        const stored = sessionStorage.getItem('PRPLPROJECT_TYPE');
+        this.PRPLPROJECT_TYPE = stored !== null ? Number(stored) : 0;
+      }
+      this.dataAdd.PRPLPROJECT_TYPE = this.PRPLPROJECT_TYPE;
+      if (prevType !== undefined && prevType !== this.PRPLPROJECT_TYPE && this.dataAdd.FACULTY_CODE) {
+        this.fetchdatalist();
+      }
+    });
     this.dataAdd.RPLINCOME_CODE1 ='';
     this.fetchdata();
     this.dataAdd.PLPROJECTTYPE = 1;
@@ -680,6 +695,7 @@ export class RqtprojectComponent implements OnInit {
   }
   // เคลียร์ค่า textbox
   setshowbti() {
+    this.dataAdd.PRPLPROJECT_TYPE = this.PRPLPROJECT_TYPE !== undefined ? this.PRPLPROJECT_TYPE : 0;
     this.dataAdd.PRPLPROJECTACT_NAME = [];
     this.dataAdd.PRPLPROJECTACT_ACT = [];
     this.dataAdd.PRPLPROJECT_PERSONS = [];

@@ -3,6 +3,8 @@
     <div class="col-md-8">
       <h5 class="fw-bold">
         <i class="fa-solid fa-boxes-stacked me-2 text-primary"></i>คำขอรายการครุภัณฑ์
+        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle ms-2 rounded-pill px-2 py-1 fs-6 fw-normal" *ngIf="(dataAdd.PRPLPROJECT_TYPE == 0 || PRPLPROJECT_TYPE == 0) && dataAdd.PRPLPROJECT_TYPE != 1 && PRPLPROJECT_TYPE != 1"><i class="fa-solid fa-calendar-check me-1"></i>ประจำปี</span>
+        <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle ms-2 rounded-pill px-2 py-1 fs-6 fw-normal" *ngIf="dataAdd.PRPLPROJECT_TYPE == 1 || PRPLPROJECT_TYPE == 1"><i class="fa-solid fa-circle-plus me-1"></i>อนุมัติเพิ่มระหว่างปี</span>
       </h5>
     </div>
     <div class="col-md-4" align="right">
@@ -208,6 +210,7 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <input type="hidden" name="PRPLPROJECT_TYPE" [(ngModel)]="dataAdd.PRPLPROJECT_TYPE">
         <ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
             <button (click)="showinputinnull()" class="nav-link active" id="home-tab" data-bs-toggle="tab"

@@ -31,15 +31,133 @@
             aria-expanded="false">
             <i class="fa-solid fa-hand-holding-dollar me-1 text-success"></i>คำของบประมาณ
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" routerLink="rqasset"><i
-                  class="fa-solid fa-computer me-2 text-primary"></i>ครุภัณฑ์</a></li>
-            <li><a class="dropdown-item" routerLink="rqbuilding"><i
-                  class="fa-solid fa-building me-2 text-success"></i>สิ่งก่อสร้าง</a></li>
-            <li><a class="dropdown-item" routerLink="rqproject"><i
-                  class="fa-solid fa-diagram-project me-2 text-warning"></i>โครงการ</a></li>
-            <!--<li ><a class="dropdown-item" routerLink="signproject"><i
-                  class="fa-solid fa-file-signature me-2 text-danger"></i>ลงนามโครงการ</a></li>-->
+          <ul class="dropdown-menu shadow" aria-labelledby="navbarDropdown">
+            <!-- 1. ประจำปี -->
+            <li class="dropdown-submenu">
+              <a class="dropdown-item dropdown-toggle d-flex align-items-center justify-content-between"
+                href="javascript:void(0);" (click)="toggleSubmenu($event)">
+                <span>
+                  <i class="fa-solid fa-calendar-check me-2 text-primary"></i>ประจำปี
+                </span>
+                <i class="fa-solid fa-chevron-right submenu-arrow ms-2"></i>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" [routerLink]="['rqasset']" [queryParams]="{ PRPLPROJECT_TYPE: 0 }" (click)="setProjectType(0)">
+                    <i class="fa-solid fa-computer me-2 text-primary"></i>ครุภัณฑ์
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" [routerLink]="['rqbuilding']" [queryParams]="{ PRPLPROJECT_TYPE: 0 }" (click)="setProjectType(0)">
+                    <i class="fa-solid fa-building me-2 text-success"></i>สิ่งก่อสร้าง
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" [routerLink]="['rqproject']" [queryParams]="{ PRPLPROJECT_TYPE: 0 }" (click)="setProjectType(0)">
+                    <i class="fa-solid fa-diagram-project me-2 text-warning"></i>โครงการ
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <!-- เส้นคั่น -->
+            <li><hr class="dropdown-divider my-1"></li>
+
+            <!-- 2. ระหว่างปี -->
+            <li class="dropdown-submenu">
+              <a class="dropdown-item dropdown-toggle d-flex align-items-center justify-content-between"
+                href="javascript:void(0);" (click)="toggleSubmenu($event)">
+                <span>
+                  <i class="fa-solid fa-calendar-plus me-2 text-success"></i>ระหว่างปี
+                </span>
+                <i class="fa-solid fa-chevron-right submenu-arrow ms-2"></i>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- 2.1 ครุภัณฑ์ (ระหว่างปี) -->
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle d-flex align-items-center justify-content-between"
+                    href="javascript:void(0);" (click)="toggleSubmenu($event)">
+                    <span>
+                      <i class="fa-solid fa-computer me-2 text-primary"></i>ครุภัณฑ์
+                    </span>
+                    <i class="fa-solid fa-chevron-right submenu-arrow ms-2"></i>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['rqasset']" [queryParams]="{ PRPLPROJECT_TYPE: 1, mode: 'between_year', action: 'add' }" (click)="setProjectType(1)">
+                        <i class="fa-solid fa-circle-plus me-2 text-success"></i>อนุมัติเพิ่มระหว่างปี
+                      </a>
+                    </li>
+                  <!--  <li>
+                      <a class="dropdown-item" [routerLink]="['rqasset']" [queryParams]="{ mode: 'between_year', action: 'change' }">
+                        <i class="fa-solid fa-arrows-rotate me-2 text-info"></i>เปลี่ยนแปลงโครงการ
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['rqasset']" [queryParams]="{ mode: 'between_year', action: 'cancel' }">
+                        <i class="fa-solid fa-circle-xmark me-2 text-danger"></i>ยกเลิกโครงการ
+                      </a>
+                    </li>-->
+                  </ul>
+                </li>
+                
+                <!-- 2.2 สิ่งก่อสร้าง (ระหว่างปี) -->
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle d-flex align-items-center justify-content-between"
+                    href="javascript:void(0);" (click)="toggleSubmenu($event)">
+                    <span>
+                      <i class="fa-solid fa-building me-2 text-success"></i>สิ่งก่อสร้าง
+                    </span>
+                    <i class="fa-solid fa-chevron-right submenu-arrow ms-2"></i>
+                  </a>
+                  <ul class="dropdown-menu">
+                  <li>
+                      <a class="dropdown-item" [routerLink]="['rqbuilding']" [queryParams]="{ PRPLPROJECT_TYPE: 1, mode: 'between_year', action: 'add' }" (click)="setProjectType(1)">
+                        <i class="fa-solid fa-circle-plus me-2 text-success"></i>อนุมัติเพิ่มระหว่างปี
+                      </a>
+                    </li>
+                 <!--     <li>
+                      <a class="dropdown-item" [routerLink]="['rqbuilding']" [queryParams]="{ mode: 'between_year', action: 'change' }">
+                        <i class="fa-solid fa-arrows-rotate me-2 text-info"></i>เปลี่ยนแปลงโครงการ
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['rqbuilding']" [queryParams]="{ mode: 'between_year', action: 'cancel' }">
+                        <i class="fa-solid fa-circle-xmark me-2 text-danger"></i>ยกเลิกโครงการ
+                      </a>
+                    </li>-->
+                  </ul>
+                </li>
+
+                <!-- 2.3 โครงการ (ระหว่างปี) -->
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item dropdown-toggle d-flex align-items-center justify-content-between"
+                    href="javascript:void(0);" (click)="toggleSubmenu($event)">
+                    <span>
+                      <i class="fa-solid fa-diagram-project me-2 text-warning"></i>โครงการ
+                    </span>
+                    <i class="fa-solid fa-chevron-right submenu-arrow ms-2"></i>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['rqproject']" [queryParams]="{ PRPLPROJECT_TYPE: 1, mode: 'between_year', action: 'add' }" (click)="setProjectType(1)">
+                        <i class="fa-solid fa-circle-plus me-2 text-success"></i>อนุมัติเพิ่มระหว่างปี
+                      </a>
+                    </li>
+                   <!--   <li>
+                      <a class="dropdown-item" [routerLink]="['rqproject']" [queryParams]="{ mode: 'between_year', action: 'change' }">
+                        <i class="fa-solid fa-arrows-rotate me-2 text-info"></i>เปลี่ยนแปลงโครงการ
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" [routerLink]="['rqproject']" [queryParams]="{ mode: 'between_year', action: 'cancel' }">
+                        <i class="fa-solid fa-circle-xmark me-2 text-danger"></i>ยกเลิกโครงการ
+                      </a>
+                    </li>-->
+                  </ul>
+                </li>
+              </ul>
+            </li>
           </ul>
         </li>
         <li class="nav-item">

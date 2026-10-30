@@ -40,5 +40,30 @@ export class MenuComponent implements OnInit {
     .subscribe((data: any) => {
     
   });*/
-  } 
+  }
+
+  toggleSubmenu(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const target = event.currentTarget as HTMLElement;
+    const parent = target.parentElement;
+    if (parent) {
+      const siblings = parent.parentElement?.querySelectorAll(':scope > .dropdown-submenu');
+      siblings?.forEach((sib) => {
+        if (sib !== parent) {
+          sib.classList.remove('show');
+          sib.querySelector(':scope > .dropdown-menu')?.classList.remove('show');
+        }
+      });
+      parent.classList.toggle('show');
+      const childMenu = parent.querySelector(':scope > .dropdown-menu');
+      if (childMenu) {
+        childMenu.classList.toggle('show');
+      }
+    }
+  }
+
+  setProjectType(type: any): void {
+    sessionStorage.setItem('PRPLPROJECT_TYPE', type.toString());
+  }
 }

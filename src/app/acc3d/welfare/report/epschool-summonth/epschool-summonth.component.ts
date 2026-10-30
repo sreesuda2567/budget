@@ -9,7 +9,7 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx-js-style';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -19,7 +19,7 @@ import Swal from 'sweetalert2';
 })
 export class EpschoolSummonthComponent implements OnInit {
   title = 'angular-app';
-  fileName = 'report.xlsx';
+  fileName = 'สรุปยอดการเบิกการศึกษาบุตร.xlsx';
   userList = [{}]
 
   dataYear: any;
@@ -181,16 +181,133 @@ fetchdata() {
     }, 0);
   }
   exportexcel(): void {
-    /* pass here the table id */
-    let element = document.getElementById('excel-table');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    const element = document.getElementById('excel-table');
+    if (!element) {
+      this.toastr.warning("ไม่พบตารางข้อมูลสำหรับส่งออก");
+      return;
+    }
 
-    /* generate workbook and add the worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element, { raw: true });
+    const range = XLSX.utils.decode_range(ws['!ref']!);
+
+    // ปรับความกว้างคอลัมน์อัตโนมัติ
+    const colWidths = [];
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      let max_width = 10;
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
+        if (cell && cell.v != null) {
+          const length = String(cell.v).toString().length;
+          if (length > max_width) max_width = length;
+        }
+      }
+      colWidths.push({ wch: Math.min(Math.max(max_width + 4, 10), 50) });
+    }
+    ws['!cols'] = colWidths;
+
+    const numberCols = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      const isHeader = (R === 0);
+      const isLastRow = (R === range.e.r);
+
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_ref = XLSX.utils.encode_cell({ c: C, r: R });
+        let cell = ws[cell_ref];
+        if (!cell) {
+          ws[cell_ref] = { t: 's', v: '' };
+          cell = ws[cell_ref];
+        }
+
+        if (cell.t === 'z' || cell.v == null || (typeof cell.v === 'string' && cell.v.trim() === '')) {
+          cell.t = 's';
+          cell.v = '';
+        }
+
+        // แปลงคอลัมน์ตัวเลขเงินให้เป็น number
+        if (numberCols.includes(C) && R > 0) {
+          if (cell.v && typeof cell.v === 'string') {
+            const numVal = parseFloat(cell.v.replace(/,/g, ''));
+            if (!isNaN(numVal)) {
+              cell.v = numVal;
+              cell.t = 'n';
+            }
+          }
+        }
+
+        // แปลงคอลัมน์ลำดับ ให้เป็น number ถ้าเป็นตัวเลข
+        if (C === 0 && R > 0 && !isLastRow) {
+          if (cell.v && typeof cell.v === 'string') {
+            const intVal = parseInt(cell.v.replace(/,/g, ''), 10);
+            if (!isNaN(intVal)) {
+              cell.v = intVal;
+              cell.t = 'n';
+            }
+          }
+        }
+
+        const isNumber = numberCols.includes(C) && cell.t === 'n';
+
+        let horizontalAlign: "left" | "center" | "right" = "left";
+        if (R === 0) {
+          horizontalAlign = "center";
+        } else if (isLastRow && C === 0) {
+          horizontalAlign = "center";
+        } else if (C === 0) {
+          horizontalAlign = "center";
+        } else if (numberCols.includes(C)) {
+          horizontalAlign = "right";
+        }
+
+        const baseStyle: any = {
+          alignment: {
+            horizontal: horizontalAlign,
+            vertical: "center",
+            wrapText: true,
+          },
+          border: {
+            top: { style: "thin", color: { rgb: "000000" } },
+            bottom: { style: "thin", color: { rgb: "000000" } },
+            left: { style: "thin", color: { rgb: "000000" } },
+            right: { style: "thin", color: { rgb: "000000" } },
+          },
+        };
+
+        // สไตล์หัวตาราง (แถว 0) - ตัวหนา, สีฟ้า bg-info
+        if (isHeader) {
+          baseStyle.font = {
+            bold: true,
+            color: { rgb: '000000' },
+          };
+          baseStyle.fill = {
+            patternType: "solid",
+            fgColor: { rgb: "5BC0DE" },
+          };
+        }
+
+        // สไตล์แถวรวม (แถวสุดท้าย tfoot) - ตัวหนา, สีพื้นหลัง #D1ECF1
+        if (isLastRow) {
+          baseStyle.font = {
+            bold: true,
+            color: { rgb: '000000' },
+          };
+          baseStyle.fill = {
+            patternType: "solid",
+            fgColor: { rgb: "D1ECF1" },
+          };
+        }
+
+        // รูปแบบตัวเลขเงิน #,##0.00
+        if (isNumber) {
+          baseStyle.numFmt = '#,##0.00';
+        }
+
+        cell.s = baseStyle;
+      }
+    }
+
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-    /* save to file */
-    XLSX.writeFile(wb, this.fileName);
-
+    XLSX.utils.book_append_sheet(wb, ws, 'สรุปยอดการศึกษาบุตร');
+    XLSX.writeFile(wb, this.fileName || 'สรุปยอดการเบิกการศึกษาบุตร.xlsx');
   }
 }

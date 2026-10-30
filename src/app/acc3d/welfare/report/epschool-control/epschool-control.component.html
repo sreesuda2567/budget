@@ -27,7 +27,7 @@
                                             {{cam.CAMPUS_TNAME}}</option>
                                     </select>
                                 </div>
-                                <div class="col-md-4 text-secondary" style="font-size: 10pt">
+                                <div class="col-md-3 text-secondary" style="font-size: 10pt">
                                     <label> คณะ /หน่วยงาน: </label>
                                     <select name="f_code" id="f_code" class="form-select"
                                         [(ngModel)]="dataAdd.FACULTY_CODE">
@@ -37,13 +37,21 @@
                                             {{fac.FACULTY_TNAME}}</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2 " style="font-size: 10pt">
-                                    <label>ปีการศึกษา: </label>
+                                <div class="col-md-1 " style="font-size: 10pt">
+                                    <label>ปี: </label>
                                     <select name="y_code" id="y_code" class="form-select"
                                         [(ngModel)]="dataAdd.PLYEARBUDGET_CODE">
                                         <option [value]="year.PLYEARBUDGET_CODE" *ngFor="let year of dataYear">
                                             {{year.PLYEARBUDGET_CODE}}
                                         </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 " style="font-size: 10pt">
+                                    <label>ประเภท: </label>
+                                    <select name="PLTYPE" id="PLTYPE" class="form-select"
+                                        [(ngModel)]="dataAdd.PLTYPE">
+                                        <option value="1">ปีการศึกษา</option>
+                                        <option value="2">ปีงบประมาณ</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2 text-secondary" style="font-size: 10pt">
@@ -93,7 +101,51 @@
             </div>
         </div>
         <div class="table-responsive-lg">
-            <table *ngIf="rownum" id="excel-table" class="table btn-font3" width="150%"
+            <table *ngIf="rownum && dataAdd.PLTYPE=='2'" id="excel-table" class="table btn-font3" width="150%"
+                class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr class="bg-info">
+                        <th>
+                            <div align="center">ที่</div>
+                        </th>
+                        <th>
+                            <div align="center">คณะ/หน่วยงาน</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อ-สกุล</div>
+                        </th>
+                        <th>
+                            <div align="center">เลขที่อัตรา</div>
+                        </th>
+                        <th>
+                            <div align="center">ชื่อตำแหน่ง</div>
+                        </th>
+                        <th>
+                            <div align="center">ประเภทบุคลากร</div>
+                        </th>
+
+                        <th>
+                            <div align="center">จำนวนเงิน</div>
+                        </th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
+
+                    <tr class="btn-font2" *ngFor="let p of datalist|filter:searchTerm; let i = index">
+                        <td width="5%" align="center">{{+i+1}}</td>
+                        <td>{{p.FACULTY_TNAME}}</td>
+                        <td>{{p.name}}</td>
+                        <td>{{p.ANUMBER}}</td>
+                        <td>{{p.FPOSITION_WORK}}</td>
+                        <td>{{p.STAFFTYPE_NAME}}</td>
+                        <td align="right">{{p.FEDUCAPIO_RMONEY1| number : '1.2-2'}}</td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+            <table *ngIf="rownum && dataAdd.PLTYPE=='1'" id="excel-table" class="table btn-font3" width="150%"
                 class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr class="bg-info">
@@ -170,7 +222,7 @@
 
                     </tr>
                 </tbody>
-            </table>
+            </table> 
         </div>
     </div>
 </div>

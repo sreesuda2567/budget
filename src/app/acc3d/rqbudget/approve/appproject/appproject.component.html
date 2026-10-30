@@ -118,6 +118,9 @@
                   <div align="center">จำนวนเงิน</div>
                 </th>
                 <th>
+                  <div align="center">ประเภท</div>
+                </th>
+                <th>
                   <div align="center">สถานะ</div>
                 </th>
                 <th>
@@ -160,6 +163,7 @@
                     เปลี่ยนแปลง:{{p.PRPLPROJECT_MONEYA| number : '1.2-2'}}
                   </span>
                 </td>
+                <td align="center">{{p.PLPROJECTST_NAME}}</td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td>
                   <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"><i
@@ -181,6 +185,7 @@
                 <td>{{p.PRPLPROJECT_DATE1}}
                 <td>{{p.PRREGISPROJECT_NAME}}</td>
                 <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
+                <td align="center">{{p.PLPROJECTST_NAME}}</td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td align="center">
 
@@ -215,6 +220,9 @@
                 </th>
                 <th>
                   <div align="center">จำนวนเงิน</div>
+                </th>
+                 <th>
+                  <div align="center">ประเภท</div>
                 </th>
                 <th>
                   <div align="center">สถานะ</div>
@@ -259,6 +267,7 @@
                     เปลี่ยนแปลง:{{p.PRPLPROJECT_MONEYA| number : '1.2-2'}}
                   </span>
                 </td>
+                <td align="center">{{p.PLPROJECTST_NAME}}</td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td>
                   <a role="button" title="รายงาน" class="btn btn-success text-white" (click)="previewPdf(p.link)"><i
@@ -304,6 +313,7 @@
                 <td>{{p.PRPLPROJECT_DATE1}}
                 <td>{{p.PRREGISPROJECT_NAME}}</td>
                 <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
+                <td align="center">{{p.PLPROJECTST_NAME}}</td>
                 <td align="center">{{p.PRSTATUS_NAME}}</td>
                 <td align="center">
 
@@ -2370,66 +2380,197 @@
                     {{fac.PLSUBMONEYPAY_NAME}}</option>
                 </select>
               </div>
-              <div class="col-md-12 mb-2">
-                <div class="row mb-2" *ngFor="let p of dataAdd.PRPLPROJECTACT_NAME; let i = index">
-                  <div class="col-md-3">
-                    <label for="act_name_{{i}}"><strong>ชื่อกิจกรรมที่{{i+1}}</strong></label>
-                    <textarea class="form-control form-control-sm shadow-sm" name="PRASSET_NAME_{{i}}" id="PRASSET_NAME_{{i}}" rows="2"
-                      [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]" placeholder="ชื่อกิจกรรม..."></textarea>
+              <!-- ตารางกิจกรรมและงบประมาณการนำเข้าโครงการ -->
+              <div class="col-12 my-2" *ngIf="dataAdd.PRPLPROJECTACT_NAME && dataAdd.PRPLPROJECTACT_NAME.length > 0">
+                <div class="activity-import-card card border shadow-sm rounded-3">
+                  <div class="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div class="d-flex align-items-center">
+                      <span class="activity-icon-badge me-2">
+                        <i class="fa-solid fa-calendar-days text-primary"></i>
+                      </span>
+                      <div>
+                        <strong class="text-dark" style="font-size: 15px;">ระยะเวลาดำเนินโครงการ จำนวนผู้เข้าร่วม และงบประมาณ</strong>
+                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle ms-2 rounded-pill px-2 py-1">
+                          {{ dataAdd.PRPLPROJECTACT_NAME.length }} กิจกรรม
+                        </span>
+                      </div>
+                    </div>
+                    <div class="text-muted small">
+                      <i class="fa-solid fa-circle-info text-info me-1"></i>ระบุช่วงเวลา จำนวนผู้เข้าร่วม และงบประมาณแต่ละกิจกรรม
+                    </div>
                   </div>
-                  <div class="col-md-2">
-                    <label for="act_sdate_{{i}}"><strong><i class="fa-regular fa-calendar-days me-1 text-danger"></i>ตั้งแต่</strong></label>
-                    <input type="text" name="act_sdate_{{i}}" id="act_sdate_{{i}}" bsDatepicker #dpImpS="bsDatepicker"
-                      class="form-control form-control-sm shadow-sm" placeholder="ตั้งแต่" [(ngModel)]="dataAdd.PRPLPROJECT_SDATE[i]">
-                    <i style="margin-top: -1.4rem;float: right;font-size:13px; margin-right: 6px;cursor:pointer;"
-                      class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dpImpS.toggle()">
-                    </i>
-                  </div>
-                  <div class="col-md-2">
-                    <label for="act_edate_{{i}}"><strong><i class="fa-regular fa-calendar-check me-1 text-danger"></i>ถึงวันที่</strong></label>
-                    <input type="text" name="act_edate_{{i}}" id="act_edate_{{i}}" bsDatepicker #dpImpE="bsDatepicker"
-                      class="form-control form-control-sm shadow-sm" placeholder="ถึงวันที่" [(ngModel)]="dataAdd.PRPLPROJECT_EDATE[i]">
-                    <i style="margin-top: -1.4rem;float: right;font-size:13px; margin-right: 6px;cursor:pointer;"
-                      class="fa-solid fa-calendar-days cursor-p text-primary" (click)="dpImpE.toggle()">
-                    </i>
-                  </div>
-                  <div class="col-md-1">
-                    <label for="act_persons_{{i}}"><strong>นักศึกษา</strong></label>
-                    <input type="text" name="act_persons_{{i}}" id="act_persons_{{i}}" class="form-control form-control-sm shadow-sm" placeholder="นักศึกษา"
-                      [(ngModel)]="dataAdd.PRPLPROJECT_PERSONS[i]">
-                  </div>
-                  <div class="col-md-1">
-                    <label for="act_personp_{{i}}"><strong>บุคลากร</strong></label>
-                    <input type="text" name="act_personp_{{i}}" id="act_personp_{{i}}" class="form-control form-control-sm shadow-sm" placeholder="บุคลากร"
-                      [(ngModel)]="dataAdd.PRPLPROJECT_PERSONP[i]">
-                  </div>
-                  <div class="col-md-1">
-                    <label for="act_persono_{{i}}"><strong>ภายนอก</strong></label>
-                    <input type="text" name="act_persono_{{i}}" id="act_persono_{{i}}" class="form-control form-control-sm shadow-sm" placeholder="ภายนอก"
-                      [(ngModel)]="dataAdd.PRPLPROJECT_PERSONO[i]">
-                  </div>
-                  <div class="col-md-2">
-                    <label for="act_money_{{i}}"><strong>งบประมาณ</strong></label>
-                    <input type="text" name="act_money_{{i}}" id="act_money_{{i}}" class="form-control form-control-sm shadow-sm text-end" placeholder="งบประมาณ"
-                      [(ngModel)]="dataAdd.TOTAL_MONEY[i]">
-                  </div>
-                </div>
-                <!-- Total Row for Activities -->
-                <div class="row mt-2" *ngIf="dataAdd.PRPLPROJECTACT_NAME?.length > 0">
-                  <div class="col-md-10 text-end pt-1">
-                    <strong class="text-primary fs-6">รวมทั้งหมด :</strong>
-                  </div>
-                  <div class="col-md-2">
-                    <input type="text" class="form-control text-end fw-bold text-primary bg-light" [value]="getTotalMoneySum() | number:'1.2-2'" readonly>
+
+                  <div class="card-body p-0">
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-hover align-middle mb-0 activity-import-table">
+                        <thead>
+                          <tr class="text-center align-middle header-main">
+                            <th rowspan="2" class="th-activity">
+                              <i class="fa-solid fa-list-ol text-primary me-1"></i> กิจกรรม
+                            </th>
+
+                            <th colspan="2" class="th-date">
+                              <i class="fa-regular fa-calendar-days text-primary me-1"></i> ระยะเวลาดำเนินโครงการ
+                            </th>
+                            <th colspan="3" class="th-participants">
+                              <i class="fa-solid fa-users text-primary me-1"></i> จำนวนผู้เข้าร่วม (คน)
+                            </th>
+                            <th rowspan="2" class="th-budget text-center">
+                              <i class="fa-solid fa-money-bill-wave text-success me-1"></i> งบประมาณ (บาท)
+                            </th>
+                          </tr>
+                          <tr class="text-center align-middle header-sub">
+                            <th class="th-sub-date">
+                              <i class="fa-regular fa-calendar text-danger me-1"></i> ตั้งแต่วันที่
+                            </th>
+                            <th class="th-sub-date">
+                              <i class="fa-regular fa-calendar-check text-success me-1"></i> ถึงวันที่
+                            </th>
+                            <th class="th-sub-part">
+                              <i class="fa-solid fa-user-graduate text-primary me-1"></i> นักศึกษา
+                            </th>
+                            <th class="th-sub-part">
+                              <i class="fa-solid fa-user-tie text-success me-1"></i> บุคลากร
+                            </th>
+                            <th class="th-sub-part">
+                              <i class="fa-solid fa-users text-purple me-1"></i> บุคคลภายนอก
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let p of dataAdd.PRPLPROJECTACT_NAME; let i = index">
+                            <!-- กิจกรรม -->
+                            <td class="py-2 px-3 col-activity">
+                              <div class="d-flex flex-column gap-1">
+                                <div>
+                                  <span class="badge rounded-pill badge-activity">
+                                    กิจกรรมที่ {{ i + 1 }}
+                                  </span>
+                                </div>
+                                <textarea class="form-control form-control-sm shadow-sm"
+                                  name="PRASSET_NAME_{{i}}" id="PRASSET_NAME_{{i}}" rows="2"
+                                  [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]"
+                                  placeholder="ชื่อกิจกรรม..."></textarea>
+                              </div>
+                            </td>
+
+
+                            <!-- ตั้งแต่วันที่ -->
+                            <td class="py-2 px-2 col-date">
+                              <div class="input-group input-group-sm">
+                                <input type="text" name="act_sdate_{{i}}" id="act_sdate_{{i}}" bsDatepicker
+                                  #dpImpS="bsDatepicker" class="form-control text-center date-input shadow-sm"
+                                  placeholder="วว/ดด/ปปปป" [(ngModel)]="dataAdd.PRPLPROJECT_SDATE[i]">
+                                <button class="btn btn-outline-secondary date-btn" type="button" title="เลือกวันที่"
+                                  (click)="dpImpS.toggle()">
+                                  <i class="fa-solid fa-calendar-days text-primary"></i>
+                                </button>
+                              </div>
+                            </td>
+
+                            <!-- ถึงวันที่ -->
+                            <td class="py-2 px-2 col-date">
+                              <div class="input-group input-group-sm">
+                                <input type="text" name="act_edate_{{i}}" id="act_edate_{{i}}" bsDatepicker
+                                  #dpImpE="bsDatepicker" class="form-control text-center date-input shadow-sm"
+                                  placeholder="วว/ดด/ปปปป" [(ngModel)]="dataAdd.PRPLPROJECT_EDATE[i]">
+                                <button class="btn btn-outline-secondary date-btn" type="button" title="เลือกวันที่"
+                                  (click)="dpImpE.toggle()">
+                                  <i class="fa-solid fa-calendar-days text-primary"></i>
+                                </button>
+                              </div>
+                            </td>
+
+                            <!-- ผู้เข้าร่วม นักศึกษา -->
+                            <td class="py-2 px-1 col-part">
+                              <div class="input-group input-group-sm">
+                                <input type="text" name="act_persons_{{i}}" id="act_persons_{{i}}"
+                                  class="form-control text-end part-input px-1 shadow-sm" placeholder="0"
+                                  [(ngModel)]="dataAdd.PRPLPROJECT_PERSONS[i]" (keypress)="CheckNum($event)">
+                                <span class="input-group-text bg-light text-muted part-unit px-1">คน</span>
+                              </div>
+                            </td>
+
+                            <!-- ผู้เข้าร่วม บุคลากร -->
+                            <td class="py-2 px-1 col-part">
+                              <div class="input-group input-group-sm">
+                                <input type="text" name="act_personp_{{i}}" id="act_personp_{{i}}"
+                                  class="form-control text-end part-input px-1 shadow-sm" placeholder="0"
+                                  [(ngModel)]="dataAdd.PRPLPROJECT_PERSONP[i]" (keypress)="CheckNum($event)">
+                                <span class="input-group-text bg-light text-muted part-unit px-1">คน</span>
+                              </div>
+                            </td>
+
+                            <!-- ผู้เข้าร่วม บุคคลภายนอก -->
+                            <td class="py-2 px-1 col-part">
+                              <div class="input-group input-group-sm">
+                                <input type="text" name="act_persono_{{i}}" id="act_persono_{{i}}"
+                                  class="form-control text-end part-input px-1 shadow-sm" placeholder="0"
+                                  [(ngModel)]="dataAdd.PRPLPROJECT_PERSONO[i]" (keypress)="CheckNum($event)">
+                                <span class="input-group-text bg-light text-muted part-unit px-1">คน</span>
+                              </div>
+                            </td>
+
+                            <!-- งบประมาณ -->
+                            <td class="py-2 px-2 col-budget">
+                              <div class="input-group input-group-sm">
+                                <input type="text" name="act_money_{{i}}" id="act_money_{{i}}"
+                                  class="form-control form-control-sm text-end fw-semibold text-primary budget-input shadow-sm" placeholder="0.00"
+                                  [(ngModel)]="dataAdd.TOTAL_MONEY[i]">
+                                <span class="input-group-text bg-light text-muted part-unit px-1">บาท</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+
+                        <!-- สรุปผลรวมท้ายตาราง -->
+                        <tfoot class="activity-schedule-footer">
+                          <tr class="align-middle footer-subtotal" *ngIf="dataAdd.PRPLPROJECTACT_NAME && dataAdd.PRPLPROJECTACT_NAME.length > 1">
+                            <td class="text-center fw-bold text-dark py-2">
+                              รวมแต่ละกลุ่ม
+                            </td>
+                            <td colspan="2" class="text-center text-muted small py-2">
+                              ทั้งหมด {{ dataAdd.PRPLPROJECTACT_NAME.length }} กิจกรรม
+                            </td>
+                            <td class="text-end fw-bold text-primary py-2 px-2">
+                              {{ getTotalPersons() | number }} <span class="text-muted small fw-normal">คน</span>
+                            </td>
+                            <td class="text-end fw-bold text-success py-2 px-2">
+                              {{ getTotalPersonp() | number }} <span class="text-muted small fw-normal">คน</span>
+                            </td>
+                            <td class="text-end fw-bold text-purple py-2 px-2">
+                              {{ getTotalPersono() | number }} <span class="text-muted small fw-normal">คน</span>
+                            </td>
+                            <td class="text-end fw-bold text-primary py-2 px-2 fs-6">
+                              {{ getTotalMoneySum() | number:'1.2-2' }} <span class="text-muted small fw-normal">บาท</span>
+                            </td>
+                          </tr>
+                          <tr class="align-middle footer-total">
+                            <td colspan="3" class="text-end fw-bold py-2 pe-3 text-secondary">
+                              <i class="fa-solid fa-users text-primary me-1"></i> ผู้เข้าร่วมรวม:
+                              <span class="badge bg-primary px-3 py-1 rounded-pill ms-1">
+                                {{ getTotalAllParticipants() | number }} คน
+                              </span>
+                            </td>
+                            <td colspan="4" class="text-end fw-bold py-2 pe-3 text-secondary">
+                              <i class="fa-solid fa-sack-dollar text-success me-1"></i> งบประมาณรวมทั้งหมด:
+                              <span class="badge bg-success px-3 py-2 fs-6 rounded-pill ms-1 shadow-sm">
+                                {{ getTotalMoneySum() | number:'1.2-2' }} บาท
+                              </span>
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div class="col-md-3">
-                <br>
-                <button type="button" class="btn btn-primary w-100 fw-bold rounded-pill"
+              <!-- Action Button for Importing -->
+              <div class="col-12 d-flex justify-content-end align-items-center mt-2">
+                <button type="button" class="btn btn-primary px-4 py-2 fw-bold rounded-pill shadow-sm"
                   (click)="insertdataimportall()">
-                  <i class="fa-solid fa-save me-1"></i> นำเข้าโครงการ
+                  <i class="fa-solid fa-cloud-arrow-down me-2"></i> นำเข้าโครงการ
                 </button>
               </div>
 
