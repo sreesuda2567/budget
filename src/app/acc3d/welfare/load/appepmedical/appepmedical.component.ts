@@ -53,6 +53,19 @@ export class AppepmedicalComponent implements OnInit {
   page = 1;
   count = 0;
   number: any = [0, 1, 2,3];
+  get totalMoney(): number {
+    let total = 0;
+    if (this.dataAdd && this.dataAdd.FRACCMONEY) {
+      for (let i of this.number) {
+        const val = this.dataAdd.FRACCMONEY[i];
+        if (val !== undefined && val !== null && val !== '') {
+          const num = typeof val === 'string' ? parseFloat(val.replace(/,/g, '')) : Number(val);
+          total += isNaN(num) ? 0 : num;
+        }
+      }
+    }
+    return total;
+  }
   tableSize = 20;
   tableSizes = [20, 30, 40, 80, 100];
   rowpbi: any;
@@ -412,8 +425,13 @@ export class AppepmedicalComponent implements OnInit {
       }
     }
     if (num == 0) {
+      this.loading = false;
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูล");
+    } else if (Number(this.totalMoney.toFixed(2)) !== Number(this.getTotalSelected().toFixed(2))) {
+      this.loading = false;
+      this.toastr.warning("แจ้งเตือน: ยอดรวมไม่เท่ากัน (ยอดรวมบัญชีแยกประเภท ไม่ตรงกับ ยอดรวมเงินที่เลือก)");
     } else if (this.dataAdd.EBOOKREQ_FILE == '') {
+      this.loading = false;
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้แนบไฟล์");
     } else {
       this.dataAdd.opt = "insert";
@@ -451,6 +469,8 @@ export class AppepmedicalComponent implements OnInit {
     }
     if (num == 0) {
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูล");
+    } else if (Number(this.totalMoney.toFixed(2)) !== Number(this.getTotalSelected().toFixed(2))) {
+      this.toastr.warning("แจ้งเตือน: ยอดรวมไม่เท่ากัน (ยอดรวมบัญชีแยกประเภท ไม่ตรงกับ ยอดรวมเงินที่เลือก)");
     } else {
 
       this.dataAdd.opt = "update";

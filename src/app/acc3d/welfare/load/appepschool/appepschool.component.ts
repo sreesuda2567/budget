@@ -60,6 +60,19 @@ export class AppepschoolComponent implements OnInit {
   datachief: any;
   dataIncome: any;
   number: any = [0, 1, 2,3];
+  get totalMoney(): number {
+    let total = 0;
+    if (this.dataAdd && this.dataAdd.FRACCMONEY) {
+      for (let i of this.number) {
+        const val = this.dataAdd.FRACCMONEY[i];
+        if (val !== undefined && val !== null && val !== '') {
+          const num = typeof val === 'string' ? parseFloat(val.replace(/,/g, '')) : Number(val);
+          total += isNaN(num) ? 0 : num;
+        }
+      }
+    }
+    return total;
+  }
   datacampus: any;
   dataAcc: any;
   dataProduct: any;
@@ -406,6 +419,10 @@ export class AppepschoolComponent implements OnInit {
     this.dataAdd.CITIZEN_IDP3 = '';
     this.dataAdd.CITIZEN_IDP4 = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
+    this.dataAdd.PLGPRODUCT_CODE = '';
     for (let i = 0; i < this.number.length; i++) {
       this.dataAdd.FRACCCODE[i] = '';
       this.dataAdd.FRACCMONEY[i] = '';
@@ -423,8 +440,13 @@ export class AppepschoolComponent implements OnInit {
       }
     }
     if (num == 0) {
+      this.loading = false;
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูล");
+    } else if (Number(this.totalMoney.toFixed(2)) !== Number(this.getTotalSelected().toFixed(2))) {
+      this.loading = false;
+      this.toastr.warning("แจ้งเตือน: ยอดรวมไม่เท่ากัน (ยอดรวมบัญชีแยกประเภท ไม่ตรงกับ ยอดรวมเงินที่เลือก)");
     } else if (this.dataAdd.EBOOKREQ_FILE == '') {
+      this.loading = false;
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้แนบไฟล์");
     } else {
       this.dataAdd.opt = "insert";
@@ -462,6 +484,8 @@ export class AppepschoolComponent implements OnInit {
     }
     if (num == 0) {
       this.toastr.warning("แจ้งเตือน:ยังไม่ได้เลือกข้อมูล");
+    } else if (Number(this.totalMoney.toFixed(2)) !== Number(this.getTotalSelected().toFixed(2))) {
+      this.toastr.warning("แจ้งเตือน: ยอดรวมไม่เท่ากัน (ยอดรวมบัญชีแยกประเภท ไม่ตรงกับ ยอดรวมเงินที่เลือก)");
     } else {
 
       this.dataAdd.opt = "update";
