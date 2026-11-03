@@ -1006,7 +1006,7 @@
                       <div *ngIf="dataAdd.PRPLPROJECT_TIME>1" class="col-md-12">
                         <label for="name"><strong>กิจกรรมย่อย</strong> </label>
                         <select name="PRPLPROJECTACT_CODE" id="PRPLPROJECTACT_CODE" class="form-select"
-                          [(ngModel)]="dataAdd.PRPLPROJECTACT_CODE">
+                          [(ngModel)]="dataAdd.PRPLPROJECTACT_CODE" (change)="fetchdataPLPROJECTGROUPDTT()">
                           <option [value]="d.PRPLPROJECTM_NUMBER" *ngFor="let d of dataProjectact">
                             {{d.PRPLPROJECTACT_NAME}}
                           </option>
@@ -1059,7 +1059,7 @@
                       </div>
                       <div class="col-md-12">
                         <div class="row">
-                          <div class="col-md-1">
+                          <div class="col-md-1" *ngIf="dataAdd.PLPDT3">
                             <label for="name"><strong><i
                                   class="fa-solid fa-users me-2 text-danger"></i>จำนวน{{dataAdd.PLPT1}}</strong>
                             </label>
@@ -1067,7 +1067,7 @@
                               class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMA"
                               (keypress)="CheckNum($event)">
                           </div>
-                          <div class="col-md-1">
+                          <div class="col-md-1" *ngIf="dataAdd.PLPDT3">
                             <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
                             </label>
                             <select name="GCUNIT_ACODE" id="GCUNIT_ACODE" class="form-select"

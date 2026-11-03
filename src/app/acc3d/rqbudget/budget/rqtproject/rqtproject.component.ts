@@ -511,8 +511,9 @@ export class RqtprojectComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataGtype = data;
-        this.dataAdd.PLPROJECTGTYPE_CODE = data[0].PLPROJECTGTYPE_CODE;
-        this.fetchdataPLPROJECTGROUPDTT();
+        this.dataAdd.PRPLPROJECTACT_CODE=1;
+        this.dataAdd.PLPROJECTGTYPE_CODE ='';// data[0].PLPROJECTGTYPE_CODE;
+        //this.fetchdataPLPROJECTGROUPDTT();
       });
     this.dataAdd.opt = "readAll";
     this.dataAdd.CITIZEN_ID = this.tokenStorage.getUser().citizen;
@@ -756,7 +757,7 @@ export class RqtprojectComponent implements OnInit {
     this.dataAdd.money4 = 1;
     this.dataAdd.money5 = 1;
     this.dataAdd.PLPROJECTESTTYPE_CODE = 1;
-    this.dataAdd.PLPROJECTGTYPE_CODE = '01';
+    this.dataAdd.PLPROJECTGTYPE_CODE = '';
     //this.dataAdd.PRBUILDING_YEAR='1';
     this.showbuid();
     for (let i = 0; i < 5; i++) {
@@ -1336,7 +1337,6 @@ export class RqtprojectComponent implements OnInit {
         this.dataAdd.PLSUBMONEYPAY_CODE1 = data.data[0].PLSUBMONEYPAY_CODE1;
         this.dataAdd.PRPLPROJECT_NAME = data.data[0].PRREGISPROJECT_NAME;
         this.dataAdd.PRPLPROJECT_TIME = data.data[0].PRPLPROJECT_TIME;
-        this.dataAdd.PRPLPROJECTACT_CODE = 1;
         this.showact();
         this.dataAdd.RPLPROJECTACT_CODE = 1;
         this.dataAdd.PLPROJECTGROUPDT_CODE = '0207';
@@ -1829,37 +1829,41 @@ export class RqtprojectComponent implements OnInit {
     //ค่าอาหาร
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0207' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0213'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0214' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0205'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0212' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0204') {
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0212' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0204'
+      ) {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'V04';
       this.dataAdd.GCUNIT_CCODE = '205';
       this.dataAdd.PLPDT1 = 1;
       this.dataAdd.PLPDT2 = 1;
+      this.dataAdd.PLPDT3 = 1;
       this.dataAdd.PLPT1 = 'คน';
       this.dataAdd.PLPT2 = 'วัน';
       this.dataAdd.PLPT3 = 'มื้อ';
       this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = 1;
-    }
-    //ค่าตอบแทน
+    }else//ค่าตอบแทน
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0103' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0102'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0101') {
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0101'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0105'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0106'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0104') {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'V04';
       this.dataAdd.GCUNIT_CCODE = 'Z19';
       this.dataAdd.PLPDT1 = 1;
       this.dataAdd.PLPDT2 = 1;
+      this.dataAdd.PLPDT3 = 1;
       this.dataAdd.PLPT1 = 'คน';
       this.dataAdd.PLPT2 = 'วัน';
       this.dataAdd.PLPT3 = 'ชั่วโมง';
       this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = 1;
-    }
+    }else
     //ค่าเบี้ยเลี้ยง
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0201') {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'V04';
       this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
       this.dataAdd.PLPDT1 = 1;
       this.dataAdd.PLPDT2 = '';
       this.dataAdd.PLPT1 = 'คน';
@@ -1867,13 +1871,14 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT3 = '';
       this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = 1;
-    }
+    }else
     //ค่าที่พัก
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0203' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0202'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0211' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0210') {
       this.dataAdd.GCUNIT_ACODE = 'V04';
       this.dataAdd.GCUNIT_BCODE = 'R05';
       this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
       this.dataAdd.PLPDT1 = 1;
       this.dataAdd.PLPDT2 = '';
       this.dataAdd.PLPT1 = 'วัน';
@@ -1881,12 +1886,15 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT3 = '';
       this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = 1;
-    }
+    }else
     //ค่าพาหนะ
-    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0216' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0208') {
+    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0216' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0208'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0223' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0219'
+    ) {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'T00';
       this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
       this.dataAdd.PLPDT1 = 1;
       this.dataAdd.PLPDT2 = '';
       this.dataAdd.PLPT1 = 'คน';
@@ -1894,12 +1902,13 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT3 = '';
       this.dataAdd.PLPT4 = 1;
       this.dataAdd.moneydt = null;
-    }
+    }else
     //ค่าพาหนะส่วนตัว
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0215') {
       this.dataAdd.GCUNIT_ACODE = 'Z22';
       this.dataAdd.GCUNIT_BCODE = 'T00';
       this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
       this.dataAdd.PLPDT1 = 1;
       this.dataAdd.PLPDT2 = '';
       this.dataAdd.PLPT1 = 'กิโลเมตร';
@@ -1907,20 +1916,50 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT3 = '';
       this.dataAdd.PLPT4 = 1;
       this.dataAdd.moneydt = 1;
-    }
+    }else if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0228') {//ค่าลงทะเบียน
+      this.dataAdd.GCUNIT_ACODE = 'Z21';
+      this.dataAdd.GCUNIT_BCODE = '';
+      this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
+      this.dataAdd.PLPDT1 = '';
+      this.dataAdd.PLPDT2 = '';
+      this.dataAdd.PLPT1 = 'คน';
+      this.dataAdd.PLPT2 = '';
+      this.dataAdd.PLPT3 = '';
+      this.dataAdd.PLPT4 = 1;
+      this.dataAdd.moneydt = 1;
+    }else if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0217') {//ค่าเช่า
+      this.dataAdd.GCUNIT_ACODE = 'V04';
+      this.dataAdd.GCUNIT_BCODE = '';
+      this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
+      this.dataAdd.PLPDT1 = '';
+      this.dataAdd.PLPDT2 = '';
+      this.dataAdd.PLPT1 = 'วัน';
+      this.dataAdd.PLPT2 = '';
+      this.dataAdd.PLPT3 = '';
+      this.dataAdd.PLPT4 = 1;
+      this.dataAdd.moneydt = 1;
+    }else if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0234') {//เงินรางวัล
+      this.dataAdd.GCUNIT_ACODE = 'Z27';
+      this.dataAdd.GCUNIT_BCODE = '';
+      this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
+      this.dataAdd.PLPDT1 = '';
+      this.dataAdd.PLPDT2 = '';
+      this.dataAdd.PLPT1 = 'รางวัล';
+      this.dataAdd.PLPT2 = '';
+      this.dataAdd.PLPT3 = '';
+      this.dataAdd.PLPT4 = 1;
+      this.dataAdd.moneydt = 1;
+    }else{
     //อื่นๆ
-    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0401' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0206'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0217' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0209'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0305' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0304'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0302' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0303'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0301' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0306'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0104'
-    ) {
       this.dataAdd.GCUNIT_ACODE = '';
       this.dataAdd.GCUNIT_BCODE = '';
       this.dataAdd.GCUNIT_CCODE = '';
       this.dataAdd.PLPDT1 = '';
       this.dataAdd.PLPDT2 = '';
+      this.dataAdd.PLPDT3 = '';
       this.dataAdd.PLPT1 = '';
       this.dataAdd.PLPT2 = '';
       this.dataAdd.PLPT3 = '';
