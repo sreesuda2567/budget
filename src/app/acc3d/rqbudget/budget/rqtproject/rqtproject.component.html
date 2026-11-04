@@ -1148,30 +1148,42 @@
 
                     </thead>
                     <tbody>
-                      <tr *ngFor="let p of dataProjectexd; let i = index">
-                        <td align="left" style="background-color:rgb(167, 166, 166);"
-                          *ngIf="p.PRPLPROJECTM_NUMBER && dataAdd.PRPLPROJECT_TIME>1" colspan="4">
-                          {{p.PRPLPROJECTM_NUMBER}}</td>
-                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
-                          *ngIf="p.PLPROJECTGROUPDT_MONEY">{{p.PLPROJECTGROUPDT_NAME}} {{p.PLPROJECTGROUPDT_DETAIL}}
-                        </td>
-                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
-                          *ngIf="p.PLPROJECTGROUPDT_MONEY">{{p.PLPROJECTGROUPDT_DETAILD}}
-                        </td>
-                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
-                          *ngIf="p.PLPROJECTGROUPDT_MONEY" align="right">
-                          {{p.PLPROJECTGROUPDT_MONEY|
-                          number : '1.2-2'}}</td>
-                        <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
-                          *ngIf="p.PLPROJECTGROUPDT_MONEY" align="center">
-                          <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="ลบข้อมูล"
-                            class="btn btn-danger text-white" (click)="deleteDatadt(p.PLPROJECTEXPENSES_CODE)"><i
-                              class="fa fa-trash"></i> </a>&nbsp;
-                          <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="แก้ไข"
-                            class="btn btn-warning text-white" (click)="editdatadt(p.PLPROJECTEXPENSES_CODE)"><i
-                              class="fa fa-edit"></i></a>
-                        </td>
-                      </tr>
+                      <ng-container *ngFor="let p of dataProjectexd; let i = index">
+                        <tr *ngIf="shouldShowAct(p, i)">
+                          <td align="left" style="background-color:rgb(167, 166, 166); font-weight: bold; padding: 8px 12px;" colspan="4">
+                            {{p.PRPLPROJECTM_NUMBER}}</td>
+                        </tr>
+                        <tr *ngIf="shouldShowGtype(p, i)">
+                          <td align="left" style="background-color:rgb(147, 193, 239); font-weight: bold; color: #000; padding: 8px 12px;" colspan="4">
+                            {{p.PLPROJECTGTYPE_NAME}}</td>
+                        </tr>
+                        <tr *ngIf="shouldShowGroup(p, i)">
+                          <td align="left" style="background-color:#dceaf7; font-weight: bold; color: #000; padding: 6px 12px 6px 1.5rem;" colspan="4">
+                            {{p.PLPROJECTGROUP_NAME}}</td>
+                        </tr>
+                        <tr *ngIf="p.PLPROJECTGROUPDT_MONEY">
+                          <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
+                            [style.padding-left]="p.PLPROJECTGROUPDT_NUM=='1' ? '1.5rem' : '2.5rem'">
+                            <strong *ngIf="p.PLPROJECTGROUPDT_NUM=='1'">{{p.PLPROJECTGROUPDT_NAME}}</strong>
+                            <span *ngIf="p.PLPROJECTGROUPDT_NUM!='1'">{{p.PLPROJECTGROUPDT_NAME}} {{p.PLPROJECTGROUPDT_DETAIL}}</span>
+                          </td>
+                          <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}">
+                            {{p.PLPROJECTGROUPDT_DETAILD}}
+                          </td>
+                          <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}" align="right">
+                            <strong *ngIf="p.PLPROJECTGROUPDT_NUM=='1'">{{p.PLPROJECTGROUPDT_MONEY | number : '1.2-2'}}</strong>
+                            <span *ngIf="p.PLPROJECTGROUPDT_NUM!='1'">{{p.PLPROJECTGROUPDT_MONEY | number : '1.2-2'}}</span>
+                          </td>
+                          <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}" align="center">
+                            <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="ลบข้อมูล"
+                              class="btn btn-danger text-white btn-sm" (click)="deleteDatadt(p.PLPROJECTEXPENSES_CODE)"><i
+                                class="fa fa-trash"></i> </a>&nbsp;
+                            <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="แก้ไข"
+                              class="btn btn-warning text-white btn-sm" (click)="editdatadt(p.PLPROJECTEXPENSES_CODE)"><i
+                                class="fa fa-edit"></i></a>
+                          </td>
+                        </tr>
+                      </ng-container>
                       <tr>
                         <td align="right" colspan="2"><strong>รวมทั้งหมด</strong></td>
                         <td align="right" class="text-danger" style="background-color:rgb(242, 225, 211);">

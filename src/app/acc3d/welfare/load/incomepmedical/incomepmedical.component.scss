@@ -1,5 +1,5 @@
-table { overflow: auto; font-size: 16px;}
-table thead  { position: sticky; top: 60px; z-index: 1; }
+#excel-table { overflow: auto; font-size: 16px;}
+.tableFixHead thead  { position: sticky; top: 60px; z-index: 1; }
 
 // PDF Preview Side Panel
 .pdf-preview-overlay {
@@ -25,6 +25,11 @@ table thead  { position: sticky; top: 60px; z-index: 1; }
   display: flex;
   flex-direction: column;
 
+  table thead {
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+  }
   &.open {
     right: 0;
   }

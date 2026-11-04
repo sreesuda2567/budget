@@ -14,16 +14,11 @@ import Swal from 'sweetalert2';
 import { auto } from '@popperjs/core';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const editorConfig = {
-  // ui: 'pt',
-  // language: 'pt',
   toolbar: {
     items: [
       'bold',
       'italic',
       '|',
-      'strikethrough',
-      'code',
-      '|', // Não tem ainda
       'bulletedList',
       'numberedList',
     ],
@@ -146,7 +141,10 @@ export class RqtbuildingComponent implements OnInit {
   url1 = "/acc3d/rqbudget/userpermission.php";
   PRPLPROJECT_TYPE: any = 0;
   //dataAdd:any = {PRBOBJECT_NAME:[],PRBOBJECT_CODE:[],PRUSE_NAME:[],PRUSE_CODE:[]};
-  dataAdd: any = { PRPLPROJECT_TYPE: 0, check: [], checkimport: [], IMPORTASSET_CODE: [], PRASSET_CODEA: [], checkregis: [], PRREGISBUILDING_CODE: [] };
+  dataAdd: any = {
+    PRPLPROJECT_TYPE: 0, check: [], checkimport: [], IMPORTASSET_CODE: [], PRASSET_CODEA: [], checkregis: [], PRREGISBUILDING_CODE: [],
+    PRBUILDING_REASON: '', PRBUILDING_OBJECT: '', PRBUILDING_USE: ''
+  };
   searchTerm: any;
   selectedDevice: any;
   loading: any;

@@ -17,7 +17,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const editorConfig = {
   toolbar: {
     items: [
-      'bold', 'italic', '|', 'strikethrough', 'code', '|',
+      'bold', 'italic', '|',
       'bulletedList', 'numberedList', '|',
       'imageUpload'    // อัปโหลดไฟล์จากเครื่อง
     ]
@@ -107,9 +107,8 @@ export class ListprojectComponent implements OnInit {
   dataAdd: any = {
     check: [], checkregis: [], PRREGISPROJECT_CODE: [], PRASSET_CODEA: [],
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
-    , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: []
-    /*, PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
-    , PLPROJECTEXPENSES_CODE: []*/
+    , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: [],
+    PLPROJECTMORE_PRINCIPLE: '', PLPROJECTMORE_ACTIVITY: '', PRPLPROJECT_OBJECT: '', PLPROJECTMORE_RESULT: '', PLPROJECTMORE_ESTIMATE: '', PLPROJECTMORE_FOLLOW: ''
   };
   searchTerm: any;
   selectedDevice: any;

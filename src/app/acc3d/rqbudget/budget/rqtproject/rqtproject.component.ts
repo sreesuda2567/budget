@@ -18,7 +18,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const editorConfig = {
   toolbar: {
     items: [
-      'bold', 'italic', '|', 'strikethrough', 'code', '|',
+      'bold', 'italic', '|',
       'bulletedList', 'numberedList', '|',
       'imageUpload'    // อัปโหลดไฟล์จากเครื่อง
     ]
@@ -41,9 +41,6 @@ export class RqtprojectComponent implements OnInit {
     // ใช้ CKFinder adapter (มีใน classic build)
     ckfinder: {
       uploadUrl: 'https://pis.rmutsv.ac.th/api/acc3d/investment/project/upload_image.php'   // <= เปลี่ยนให้ถูกกับโปรเจกต์
-    },
-    image: {
-      toolbar: ['imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|', 'imageTextAlternative']
     }
   };
   name = 'Angular';
@@ -121,8 +118,9 @@ export class RqtprojectComponent implements OnInit {
     , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: []
     , PRPLPROJECT_SDATE: [], PRPLPROJECT_EDATE: [], checkimport: [], IMPORTASSET_CODE: []
     , PRPLPROJECT_AT: [], PRPLPROJECT_LOCATION: [], PROVINCE_ID: [], DISTRICT_ID: [], SUB_DISTRICT_ID: []
-    /*, PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
-    , PLPROJECTEXPENSES_CODE: []*/
+    , PLPROJECTGROUPDT_NUM: [], GCUNIT_CODE: [], PLPROJECTGROUPDT_NUMA: [], GCUNIT_ACODE: [], PLPROJECTGROUPDT_MONEY: [], PLPROJECTGROUPDT_MONEYA: [], PLPROJECTGROUPDT_CODE: []
+    , PLPROJECTEXPENSES_CODE: [],
+    PLPROJECTMORE_PRINCIPLE: '', PLPROJECTMORE_ACTIVITY: '', PRPLPROJECT_OBJECT: '', PLPROJECTMORE_RESULT: '', PLPROJECTMORE_ESTIMATE: '', PLPROJECTMORE_FOLLOW: ''
   };
   searchTerm: any;
   selectedDevice: any;
@@ -460,25 +458,18 @@ export class RqtprojectComponent implements OnInit {
       .getdata(Tablegc, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
-        this.dataProjecttd = data.data;
-        // console.log(this.dataProjecttd.length);
+        this.dataProjecttd = data ? data.data : [];
+        if (!Array.isArray(this.dataAdd.PLPROJECTGROUPDT_CODE)) {
+          this.dataAdd.PLPROJECTGROUPDT_CODE = [];
+        }
         let k = 0;
-        for (let i = 0; i < this.dataProjecttd.length; i++) {
-          if (data.data[i].PLPROJECTGROUPDT_CODE != '') {
-            this.dataAdd.PLPROJECTGROUPDT_CODE[k] = data.data[i].PLPROJECTGROUPDT_CODE;
-            //console.log(data.data[i].PLPROJECTGROUPDT_CODE+' '+k);
-            // console.log(k);
-            k++;
+        if (this.dataProjecttd && Array.isArray(this.dataProjecttd)) {
+          for (let i = 0; i < this.dataProjecttd.length; i++) {
+            if (this.dataProjecttd[i].PLPROJECTGROUPDT_CODE != '') {
+              this.dataAdd.PLPROJECTGROUPDT_CODE[k] = this.dataProjecttd[i].PLPROJECTGROUPDT_CODE;
+              k++;
+            }
           }
-          /*  this.dataAdd.PLPROJECTGROUPDT_NAME[i] = '';
-            this.dataAdd.PLPROJECTGROUPDT_CODE[i] = '';
-            this.dataAdd.PLPROJECTGROUPDT_NUM[i] = '';
-            this.dataAdd.PLPROJECTGROUPDT_NUMA[i] = '';
-            this.dataAdd.PLPROJECTGROUPDT_MONEY[i] = '';
-            this.dataAdd.PLPROJECTGROUPDT_MONEYA[i] = '';
-            this.dataAdd.PLPROJECTEXPENSES_CODE[i] = '';
-            this.dataAdd.GCUNIT_CODE[i] = '';
-            this.dataAdd.GCUNIT_ACODE[i] = '';*/
         }
 
       });
@@ -850,7 +841,7 @@ export class RqtprojectComponent implements OnInit {
   }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูลประมาณการ
   insertdatadt() {
-    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '' || this.dataAdd.PLPROJECTGROUPDT_NUMA == '' || this.dataAdd.PLPROJECTGROUPDT_MONEY == '') {
+    if (this.dataAdd.PLPROJECTGROUPDT_CODE == ''  || this.dataAdd.PLPROJECTGROUPDT_MONEY == '') {
 
       this.toastr.warning("แจ้งเตือน:กรุณากรอกข้อมูลประมาณการให้ครบถ้วน");
 
@@ -981,6 +972,7 @@ export class RqtprojectComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataProjectexd = data.data;
+        this.processDataProjectexd();
         let sum = 0;
         if (data && data.data && Array.isArray(data.data)) {
           for (var j = 0; j < data.data.length; j++) {
@@ -1003,6 +995,88 @@ export class RqtprojectComponent implements OnInit {
       });
 
   }
+
+  processDataProjectexd() {
+    if (this.dataProjectexd && Array.isArray(this.dataProjectexd)) {
+      let lastAct = '';
+      let lastGtype = '';
+      let lastGroup = '';
+      for (let i = 0; i < this.dataProjectexd.length; i++) {
+        const p = this.dataProjectexd[i];
+        p._showAct = false;
+        p._showGtype = false;
+        p._showGroup = false;
+
+        if (p.PRPLPROJECTM_NUMBER && this.dataAdd && this.dataAdd.PRPLPROJECT_TIME > 1 && p.PRPLPROJECTM_NUMBER !== lastAct) {
+          p._showAct = true;
+          lastAct = p.PRPLPROJECTM_NUMBER;
+          lastGtype = '';
+          lastGroup = '';
+        }
+
+        if (p.PLPROJECTGROUPDT_NUM == 0 && p.PLPROJECTGROUPDT_MONEY) {
+          if (p.PLPROJECTGTYPE_NAME && p.PLPROJECTGTYPE_NAME.trim() && p.PLPROJECTGTYPE_NAME !== lastGtype) {
+            p._showGtype = true;
+            lastGtype = p.PLPROJECTGTYPE_NAME;
+            lastGroup = '';
+          }
+          if (p.PLPROJECTGROUP_NAME && p.PLPROJECTGROUP_NAME.trim() && p.PLPROJECTGROUP_NAME !== lastGroup) {
+            p._showGroup = true;
+            lastGroup = p.PLPROJECTGROUP_NAME;
+          }
+        }
+      }
+    }
+  }
+
+  shouldShowAct(p: any, i: number): boolean {
+    if (p && p._showAct !== undefined) return p._showAct;
+    if (!p || !p.PRPLPROJECTM_NUMBER || !this.dataAdd || this.dataAdd.PRPLPROJECT_TIME <= 1) return false;
+    if (i === 0) return true;
+    for (let prev = i - 1; prev >= 0; prev--) {
+      const prevRow = this.dataProjectexd[prev];
+      if (prevRow && prevRow.PRPLPROJECTM_NUMBER) {
+        return prevRow.PRPLPROJECTM_NUMBER !== p.PRPLPROJECTM_NUMBER;
+      }
+    }
+    return true;
+  }
+
+  shouldShowGtype(p: any, i: number): boolean {
+    if (p && p._showGtype !== undefined) return p._showGtype;
+    if (!p || !p.PLPROJECTGTYPE_NAME || !p.PLPROJECTGTYPE_NAME.trim() || p.PLPROJECTGROUPDT_NUM == 1) return false;
+    if (!p.PLPROJECTGROUPDT_MONEY && p.PLPROJECTGROUPDT_NUM != 0) return false;
+    for (let prev = i - 1; prev >= 0; prev--) {
+      const prevRow = this.dataProjectexd[prev];
+      if (prevRow && prevRow.PLPROJECTGROUPDT_NUM == 0 && prevRow.PLPROJECTGROUPDT_MONEY) {
+        if (this.dataAdd && this.dataAdd.PRPLPROJECT_TIME > 1 && prevRow.PRPLPROJECTM_NUMBER !== p.PRPLPROJECTM_NUMBER) {
+          return true;
+        }
+        return prevRow.PLPROJECTGTYPE_NAME !== p.PLPROJECTGTYPE_NAME;
+      }
+    }
+    return true;
+  }
+
+  shouldShowGroup(p: any, i: number): boolean {
+    if (p && p._showGroup !== undefined) return p._showGroup;
+    if (!p || !p.PLPROJECTGROUP_NAME || !p.PLPROJECTGROUP_NAME.trim() || p.PLPROJECTGROUPDT_NUM == 1) return false;
+    if (!p.PLPROJECTGROUPDT_MONEY && p.PLPROJECTGROUPDT_NUM != 0) return false;
+    for (let prev = i - 1; prev >= 0; prev--) {
+      const prevRow = this.dataProjectexd[prev];
+      if (prevRow && prevRow.PLPROJECTGROUPDT_NUM == 0 && prevRow.PLPROJECTGROUPDT_MONEY) {
+        if (this.dataAdd && this.dataAdd.PRPLPROJECT_TIME > 1 && prevRow.PRPLPROJECTM_NUMBER !== p.PRPLPROJECTM_NUMBER) {
+          return true;
+        }
+        if (prevRow.PLPROJECTGTYPE_NAME !== p.PLPROJECTGTYPE_NAME) {
+          return true;
+        }
+        return prevRow.PLPROJECTGROUP_NAME !== p.PLPROJECTGROUP_NAME;
+      }
+    }
+    return true;
+  }
+
   // ฟังก์ขันสำหรับการดึงกิจกรรม
   fetchdataact() {
     //console.log(1);
@@ -1926,7 +2000,7 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT1 = 'คน';
       this.dataAdd.PLPT2 = '';
       this.dataAdd.PLPT3 = '';
-      this.dataAdd.PLPT4 = 1;
+      this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = 1;
     }else if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0217') {//ค่าเช่า
       this.dataAdd.GCUNIT_ACODE = 'V04';

@@ -14,16 +14,11 @@ import Swal from 'sweetalert2';
 import { auto } from '@popperjs/core';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const editorConfig = {
-  // ui: 'pt',
-  // language: 'pt',
   toolbar: {
     items: [
       'bold',
       'italic',
       '|',
-      'strikethrough',
-      'code',
-      '|', // Não tem ainda
       'bulletedList',
       'numberedList',
     ],
@@ -144,7 +139,10 @@ export class ListbuildingComponent implements OnInit {
   url = "/acc3d/investment/building/listbuilding.php";
   url1 = "/acc3d/investment/userpermission.php";
   //dataAdd:any = {PRBOBJECT_NAME:[],PRBOBJECT_CODE:[],PRUSE_NAME:[],PRUSE_CODE:[]};
-  dataAdd:any = {check:[],checkimport:[],IMPORTASSET_CODE:[],PRASSET_CODEA:[],checkregis:[],PRREGISBUILDING_CODE:[]};
+  dataAdd: any = {
+    check: [], checkimport: [], IMPORTASSET_CODE: [], PRASSET_CODEA: [], checkregis: [], PRREGISBUILDING_CODE: [],
+    PRBUILDING_REASON: '', PRBUILDING_OBJECT: '', PRBUILDING_USE: ''
+  };
   searchTerm: any;
   selectedDevice : any;
   loading:any;

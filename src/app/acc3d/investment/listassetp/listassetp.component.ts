@@ -11,16 +11,11 @@ import { auto } from '@popperjs/core';
 import { UploadfileserviceService } from '../../../acc3d/_services/uploadfileservice.service';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const editorConfig = {
-  // ui: 'pt',
-  // language: 'pt',
   toolbar: {
     items: [
       'bold',
       'italic',
       '|',
-      'strikethrough',
-      'code',
-      '|', // Não tem ainda
       'bulletedList',
       'numberedList',
     ],
@@ -129,7 +124,10 @@ export class ListassetpComponent implements OnInit {
   rownumimport:any; 
   url = "/acc3d/investment/passet/listassetp.php";
   url1 = "/acc3d/investment/userpermission.php";
-  dataAdd:any = {check:[],checkregis:[],checkimport:[],IMPORTASSET_CODE:[],PRREGISASSET_CODE:[],PRASSET_CODEA:[],SECTION_CODE:[],PRASSETSEC_CODE:[],List:[],List1:[]};
+  dataAdd: any = {
+    check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [],
+    PRASSET_INSIDE: '', PRASSET_EXTERNAL: '', PRASSET_RESEARCH: '', PRASSET_COURSET: '', PRASSET_TARGET: '', PRASSET_REASON: ''
+  };
   searchTerm: any;
   selectedDevice : any;
   loading:any;

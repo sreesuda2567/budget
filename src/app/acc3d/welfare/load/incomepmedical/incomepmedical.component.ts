@@ -140,6 +140,18 @@ export class IncomepmedicalComponent implements OnInit {
     this.dataAdd.FSTF_FNAME = name;
     this.dataAdd.FEREIM_WMONEY = money;
   }
+    // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+editdatat(id: any) {
+ this.apiService
+      .getById(id, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.datalistdetail = data.data;
+                   
+        
+      });
+
+  }
   setshowbti() {
     this.dataAdd.FNRESTATUS_CODE ='4';
     this.dataAdd.FNEXACCTD_NOTE ='';
@@ -189,5 +201,13 @@ export class IncomepmedicalComponent implements OnInit {
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+    this.datalistdetail = null;
+  }
+
+  getTotalReceiptMoney(): number {
+    if (!this.datalistdetail || this.datalistdetail.length === 0) {
+      return 0;
+    }
+    return this.datalistdetail.reduce((sum: number, item: any) => sum + (parseFloat(item.FEREIMREC_MONEY) || 0), 0);
   }
 }

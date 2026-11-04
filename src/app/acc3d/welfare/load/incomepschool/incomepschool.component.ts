@@ -96,6 +96,20 @@ export class IncomepschoolComponent implements OnInit {
     this.dataAdd.FSTF_FNAME = name;
     this.dataAdd.FEREIM_WMONEY = money;
   }
+  // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
+  editdatat(id: any) {
+    this.loadingdetail = true;
+    this.datalistdetail = null;
+    this.apiService
+      .getById(id, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.datalistdetail = data.data;
+        this.loadingdetail = false;
+      }, () => {
+        this.loadingdetail = false;
+      });
+  }
   setshowbti() {
     this.dataAdd.FNRESTATUS_CODE ='4';
     this.dataAdd.FNEXACCTD_NOTE ='';
@@ -190,5 +204,20 @@ export class IncomepschoolComponent implements OnInit {
   closePdfPreview() {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
+    this.datalistdetail = null;
+  }
+
+  getTotalReceiptMoney(): number {
+    if (!this.datalistdetail || this.datalistdetail.length === 0) {
+      return 0;
+    }
+    return this.datalistdetail.reduce((sum: number, item: any) => sum + (parseFloat(item.FEREIMREC_MONEY || item.FEDUCREC_MONEY || item.REC_MONEY) || 0), 0);
+  }
+
+  hasReceiptLink(): boolean {
+    if (!this.datalistdetail || this.datalistdetail.length === 0) {
+      return false;
+    }
+    return this.datalistdetail.some((item: any) => !!(item.FEREIMREC_LINK || item.FEDUCREC_LINK || item.REC_LINK));
   }
 }

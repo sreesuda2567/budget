@@ -12,16 +12,11 @@ import { auto } from '@popperjs/core';
 import { UploadfileserviceService } from '../../../../acc3d/_services/uploadfileservice.service';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const editorConfig = {
-  // ui: 'pt',
-  // language: 'pt',
   toolbar: {
     items: [
       'bold',
       'italic',
       '|',
-      'strikethrough',
-      'code',
-      '|', // Não tem ainda
       'bulletedList',
       'numberedList',
     ],
@@ -131,7 +126,10 @@ export class RqtassetComponent implements OnInit {
   url = "/acc3d/rqbudget/budget/rqasset.php";
   url1 = "/acc3d/rqbudget/userpermission.php";
   PRPLPROJECT_TYPE: any = 0;
-  dataAdd: any = { PRPLPROJECT_TYPE: 0, check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [] };
+  dataAdd: any = {
+    PRPLPROJECT_TYPE: 0, check: [], checkregis: [], checkimport: [], IMPORTASSET_CODE: [], PRREGISASSET_CODE: [], PRASSET_CODEA: [], SECTION_CODE: [], PRASSETSEC_CODE: [], List: [], List1: [],
+    PRASSET_INSIDE: '', PRASSET_EXTERNAL: '', PRASSET_RESEARCH: '', PRASSET_COURSET: '', PRASSET_TARGET: '', PRASSET_REASON: ''
+  };
   searchTerm: any;
   selectedDevice: any;
   loading: any;
