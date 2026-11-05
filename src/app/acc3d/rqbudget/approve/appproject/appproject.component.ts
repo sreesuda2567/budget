@@ -2291,7 +2291,11 @@ export class AppprojectComponent implements OnInit {
     if (this.dataProjectdt && this.dataProjectdt.length) {
       for (let i = 0; i < this.dataProjectdt.length; i++) {
         if (this.dataProjectdt[i].PLPROJECTGROUPDT_CODE == this.dataAdd.PLPROJECTGROUPDT_CODE) {
+          if(this.dataAdd.PLPROJECTESTTYPE_CODE=='1'){
           this.dataAdd.PLPROJECTGROUPDT_MONEY = this.dataProjectdt[i].PLPROJECTGROUPDT_MONEYE;
+          }else{
+          this.dataAdd.PLPROJECTGROUPDT_MONEY = this.dataProjectdt[i].PLPROJECTGROUPDT_MONEYO;  
+          }
         }
       }
     }

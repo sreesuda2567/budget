@@ -28,6 +28,7 @@ export class IncomepschoolComponent implements OnInit {
   dataFac: any;
   datalist: any;
   datalistdetail: any;
+  datalisthistory: any;
   loading: any;
   loadingdetail: any;
   dataAdd: any = { };
@@ -100,11 +101,13 @@ export class IncomepschoolComponent implements OnInit {
   editdatat(id: any) {
     this.loadingdetail = true;
     this.datalistdetail = null;
+    this.datalisthistory = null;
     this.apiService
       .getById(id, this.url)
       .pipe(first())
       .subscribe((data: any) => {
         this.datalistdetail = data.data;
+        this.datalisthistory = data.data2;
         this.loadingdetail = false;
       }, () => {
         this.loadingdetail = false;
@@ -205,6 +208,7 @@ export class IncomepschoolComponent implements OnInit {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
     this.datalistdetail = null;
+    this.datalisthistory = null;
   }
 
   getTotalReceiptMoney(): number {
@@ -214,10 +218,24 @@ export class IncomepschoolComponent implements OnInit {
     return this.datalistdetail.reduce((sum: number, item: any) => sum + (parseFloat(item.FEREIMREC_MONEY || item.FEDUCREC_MONEY || item.REC_MONEY) || 0), 0);
   }
 
+  getTotalHistoryMoney(): number {
+    if (!this.datalisthistory || this.datalisthistory.length === 0) {
+      return 0;
+    }
+    return this.datalisthistory.reduce((sum: number, item: any) => sum + (parseFloat(item.FEREIMREC_MONEY || item.FEDUCREC_MONEY || item.REC_MONEY || item.FEREIM_WMONEY) || 0), 0);
+  }
+
   hasReceiptLink(): boolean {
     if (!this.datalistdetail || this.datalistdetail.length === 0) {
       return false;
     }
     return this.datalistdetail.some((item: any) => !!(item.FEREIMREC_LINK || item.FEDUCREC_LINK || item.REC_LINK));
+  }
+
+  hasHistoryLink(): boolean {
+    if (!this.datalisthistory || this.datalisthistory.length === 0) {
+      return false;
+    }
+    return this.datalisthistory.some((item: any) => !!(item.FEREIMREC_LINK || item.FEDUCREC_LINK || item.REC_LINK));
   }
 }

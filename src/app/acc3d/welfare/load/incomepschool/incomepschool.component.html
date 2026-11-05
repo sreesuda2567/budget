@@ -104,8 +104,11 @@
                     <thead>
                         <tr class="bg-primary text-white text-center">
                             <td width="5%" class="align-middle"><strong>ลำดับ</strong></td>
-                            <td class="align-middle"><strong>เลขที่ใบเสร็จ</strong></td>
+                            <td class="align-middle"><strong>ชื่อ-สกุล</strong></td>
+                            <td class="align-middle"><strong>ความสัมพันธ์</strong></td>
+                            <td class="align-middle"><strong>เล่มที่/เลขที่ใบเสร็จ</strong></td>
                             <td class="align-middle"><strong>วันที่ใบเสร็จ</strong></td>
+                            <td class="align-middle"><strong>เทอม</strong></td>
                             <td class="align-middle"><strong>จำนวนเงินใบเสร็จ</strong></td>
                             <td class="align-middle"><strong>ไฟล์แนบ</strong></td>
 
@@ -118,8 +121,11 @@
                     <tbody>
                         <tr *ngFor="let item of datalistdetail; let i = index ">
                             <td width="5%" align="center">{{i+1}}</td>
+                            <td>{{item.FEPIO_NAME}}</td>
+                            <td align="center">{{item.FERELE_NAME}}</td>
                             <td>{{item.FEREIMREC_NUMBER || item.FEDUCREC_NUMBER || item.REC_NUMBER}}</td>
                             <td align="center">{{item.FEREIMREC_DATE || item.FEDUCREC_DATE || item.REC_DATE}}</td>
+                            <td align="center">{{item.FEDUCAPIO_SCHT}}</td>
                             <td align="right">{{(item.FEREIMREC_MONEY || item.FEDUCREC_MONEY || item.REC_MONEY)| number : '1.2-2'}}</td>
                             <td align="center">
                                 <a *ngIf="item.FEREIMREC_LINK || item.FEDUCREC_LINK || item.REC_LINK" [href]="item.FEREIMREC_LINK || item.FEDUCREC_LINK || item.REC_LINK" target="_blank" class="btn btn-outline-primary btn-sm">
@@ -212,9 +218,67 @@
       </button>
     </div>
   </div>
-  <!-- ข้อมูลใบเสร็จรับเงิน -->
-  <div class="p-2 bg-light border-bottom" *ngIf="datalistdetail && datalistdetail.length > 0">
-    <div class="card shadow-sm border-0 mb-0">
+  <!-- ข้อมูลใบเสร็จรับเงิน และ ประวัติการเบิก -->
+  <div class="p-2 bg-light border-bottom" *ngIf="(datalistdetail && datalistdetail.length > 0) || (datalisthistory && datalisthistory.length > 0)">
+    
+    <!-- ประวัติเคยเบิกมาแล้วในงบประมาณนี้ -->
+    <div class="card shadow-sm border-0" [class.mb-2]="datalistdetail && datalistdetail.length > 0" *ngIf="datalisthistory && datalisthistory.length > 0">
+      <div class="card-header bg-warning bg-opacity-10 py-1 px-2 d-flex justify-content-between align-items-center">
+        <span class="fw-bold text-dark small">
+          <i class="fa-solid fa-clock-rotate-left me-1 text-warning"></i> ประวัติเคยเบิกมาแล้วในงบประมาณนี้ ({{datalisthistory.length}} รายการ)
+        </span>
+        <span class="badge bg-warning text-dark" *ngIf="datalisthistory.length > 0">
+          รวม {{getTotalHistoryMoney() | number : '1.2-2'}} บาท
+        </span>
+      </div>
+      <div class="table-responsive" style="max-height: 180px; overflow-y: auto;">
+        <table class="table table-sm table-bordered table-hover mb-0 text-nowrap" style="font-size: 13px;">
+          <thead class="table-warning text-dark text-center" style="position: static !important; top: auto !important;">
+            <tr>
+              <th width="8%">ที่</th>
+              <th>ชื่อ-สกุล</th>
+              <th>ระดับการศึกษา</th>
+              <th>เป็นของ</th>
+              <th>เลขที่ใบเสร็จ</th>
+              <th>วันที่ใบเสร็จ</th>
+              <th>เทอม</th>
+              <th>จำนวนเงินใบเสร็จ</th>
+              <th>จำนวนเงินเบิกได้</th>
+              <th width="15%" *ngIf="hasHistoryLink()">เอกสาร</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let hist of datalisthistory; let idx = index">
+              <td class="text-center">{{idx + 1}}</td>
+              <td>{{hist.FEPIO_NAME}}</td>
+              <td class="text-center">{{hist.FEDLEVEL_NAME}}</td>
+              <td class="text-center">{{hist.FETHOSP_NAME}}</td>
+              <td>{{hist.FEREIMREC_NUMBER || hist.FEDUCREC_NUMBER || hist.REC_NUMBER}}</td>
+              <td class="text-center">{{hist.FEREIMREC_DATE || hist.FEDUCREC_DATE || hist.REC_DATE}}</td>
+              <td class="text-center">{{hist.FEDUCAPIO_SCHT}}</td>
+              <td class="text-end fw-bold">{{(hist.FEREIMREC_MONEY ) | number : '1.2-2'}}</td>
+              <td class="text-end fw-bold">{{(hist.FEDUCAPIO_RMONEY ) | number : '1.2-2'}}</td>
+              <td class="text-center" *ngIf="hasHistoryLink()">
+                <a *ngIf="hist.FEREIMREC_LINK || hist.FEDUCREC_LINK || hist.REC_LINK" [href]="hist.FEREIMREC_LINK || hist.FEDUCREC_LINK || hist.REC_LINK" target="_blank" class="btn btn-sm btn-outline-warning py-0 px-2" title="ดูไฟล์แนบ">
+                  <i class="fa-solid fa-file-pdf"></i>
+                </a>
+                <span *ngIf="!(hist.FEREIMREC_LINK || hist.FEDUCREC_LINK || hist.REC_LINK)" class="text-muted">-</span>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="datalisthistory.length > 1" class="table-light fw-bold">
+            <tr>
+              <td colspan="6" class="text-end">รวมทั้งสิ้น</td>
+              <td class="text-end text-danger">{{getTotalHistoryMoney() | number : '1.2-2'}}</td>
+              <td *ngIf="hasHistoryLink()"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- ข้อมูลใบเสร็จรับเงิน -->
+    <div class="card shadow-sm border-0 mb-0" *ngIf="datalistdetail && datalistdetail.length > 0">
       <div class="card-header bg-primary bg-opacity-10 py-1 px-2 d-flex justify-content-between align-items-center">
         <span class="fw-bold text-primary small">
           <i class="fa-solid fa-receipt me-1"></i> ข้อมูลใบเสร็จรับเงิน ({{datalistdetail.length}} รายการ)
@@ -225,18 +289,28 @@
           <thead class="table-primary text-center" style="position: static !important; top: auto !important;">
             <tr>
               <th width="8%">ที่</th>
+              <th>ชื่อ-สกุล</th>
+              <th>ระดับการศึกษา</th>
+              <th>เป็นของ</th>
               <th>เลขที่ใบเสร็จ</th>
               <th>วันที่ใบเสร็จ</th>
+              <th>เทอม</th>
               <th>จำนวนเงินใบเสร็จ</th>
+              <th>จำนวนเงินเบิกได้</th>
               <th width="15%" *ngIf="hasReceiptLink()">เอกสาร</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let rec of datalistdetail; let idx = index">
               <td class="text-center">{{idx + 1}}</td>
+              <td>{{rec.FEPIO_NAME}}</td>
+              <td class="text-center">{{rec.FEDLEVEL_NAME}}</td>
+              <td class="text-center">{{rec.FETHOSP_NAME}}</td>
               <td>{{rec.FEREIMREC_NUMBER || rec.FEDUCREC_NUMBER || rec.REC_NUMBER}}</td>
               <td class="text-center">{{rec.FEREIMREC_DATE || rec.FEDUCREC_DATE || rec.REC_DATE}}</td>
-              <td class="text-end fw-bold">{{(rec.FEREIMREC_MONEY || rec.FEDUCREC_MONEY || rec.REC_MONEY) | number : '1.2-2'}}</td>
+              <td class="text-center">{{rec.FEDUCAPIO_SCHT}}</td>
+              <td class="text-end fw-bold">{{(rec.FEREIMREC_MONEY ) | number : '1.2-2'}}</td>
+              <td class="text-end fw-bold">{{(rec.FEDUCAPIO_RMONEY ) | number : '1.2-2'}}</td>
               <td class="text-center" *ngIf="hasReceiptLink()">
                 <a *ngIf="rec.FEREIMREC_LINK || rec.FEDUCREC_LINK || rec.REC_LINK" [href]="rec.FEREIMREC_LINK || rec.FEDUCREC_LINK || rec.REC_LINK" target="_blank" class="btn btn-sm btn-outline-primary py-0 px-2" title="ดูไฟล์แนบ">
                   <i class="fa-solid fa-file-pdf"></i>
@@ -247,7 +321,7 @@
           </tbody>
           <tfoot *ngIf="datalistdetail.length > 1" class="table-light fw-bold">
             <tr>
-              <td colspan="3" class="text-end">รวมทั้งสิ้น</td>
+              <td colspan="6" class="text-end">รวมทั้งสิ้น</td>
               <td class="text-end text-primary">{{getTotalReceiptMoney() | number : '1.2-2'}}</td>
               <td *ngIf="hasReceiptLink()"></td>
             </tr>

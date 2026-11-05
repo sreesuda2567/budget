@@ -28,6 +28,7 @@ export class IncomepmedicalComponent implements OnInit {
   dataFac: any;
   datalist: any;
   datalistdetail: any;
+  datalisthistory: any;
   loading: any;
   loadingdetail: any;
   dataAdd: any = { };
@@ -147,6 +148,7 @@ editdatat(id: any) {
       .pipe(first())
       .subscribe((data: any) => {
         this.datalistdetail = data.data;
+        this.datalisthistory = data.data2;
                    
         
       });
@@ -202,6 +204,7 @@ editdatat(id: any) {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
     this.datalistdetail = null;
+    this.datalisthistory = null;
   }
 
   getTotalReceiptMoney(): number {
@@ -209,5 +212,12 @@ editdatat(id: any) {
       return 0;
     }
     return this.datalistdetail.reduce((sum: number, item: any) => sum + (parseFloat(item.FEREIMREC_MONEY) || 0), 0);
+  }
+
+  getTotalHistoryMoney(): number {
+    if (!this.datalisthistory || this.datalisthistory.length === 0) {
+      return 0;
+    }
+    return this.datalisthistory.reduce((sum: number, item: any) => sum + (parseFloat(item.FEREIM_WMONEY) || 0), 0);
   }
 }

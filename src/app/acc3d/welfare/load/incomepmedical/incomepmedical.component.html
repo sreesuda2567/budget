@@ -106,7 +106,9 @@
                     <thead>
                         <tr class="bg-primary text-white text-center">
                             <td width="5%" class="align-middle"><strong>ลำดับ</strong></td>
-                            <td class="align-middle"><strong>เลขที่ใบเสร็จ</strong></td>
+                            <td class="align-middle"><strong>ชื่อ-สกุล</strong></td>
+                            <td class="align-middle"><strong>ความสัมพันธ์</strong></td>
+                            <td class="align-middle"><strong>เล่มที่/เลขที่ใบเสร็จ</strong></td>
                             <td class="align-middle"><strong>วันที่ใบเสร็จ</strong></td>
                             <td class="align-middle"><strong>จำนวนเงินใบเสร็จ</strong></td>
                             <td class="align-middle"><strong>ไฟล์แนบ</strong></td>
@@ -115,6 +117,8 @@
                     <tbody>
                         <tr *ngFor="let item of datalistdetail; let i = index ">
                             <td width="5%" align="center">{{i+1}}</td>
+                            <td>{{item.FEPIO_NAME}}</td>
+                            <td align="center">{{item.FERELE_NAME}}</td>
                             <td>{{item.FEREIMREC_NUMBER}}</td>
                             <td align="center">{{item.FEREIMREC_DATE}}</td>
                             <td align="right">{{item.FEREIMREC_MONEY| number : '1.2-2'}}</td>
@@ -197,9 +201,49 @@
     </div>
   </div>
 
-  <!-- ข้อมูลใบเสร็จรับเงิน -->
-  <div class="p-2 bg-light border-bottom" *ngIf="datalistdetail && datalistdetail.length > 0">
-    <div class="card shadow-sm border-0 mb-0">
+  <!-- ข้อมูลใบเสร็จรับเงิน และ ประวัติการเบิก -->
+  <div class="p-2 bg-light border-bottom" *ngIf="(datalistdetail && datalistdetail.length > 0) || (datalisthistory && datalisthistory.length > 0)">
+    
+    <!-- ประวัติเคยเบิกมาแล้วในงบประมาณนี้ -->
+    <div class="card shadow-sm border-0" [class.mb-2]="datalistdetail && datalistdetail.length > 0" *ngIf="datalisthistory && datalisthistory.length > 0">
+      <div class="card-header bg-warning bg-opacity-10 py-1 px-2 d-flex justify-content-between align-items-center">
+        <span class="fw-bold text-dark small">
+          <i class="fa-solid fa-clock-rotate-left me-1 text-warning"></i> ประวัติเคยเบิกมาแล้วในงบประมาณนี้ ({{datalisthistory.length}} รายการ)
+        </span>
+        <span class="badge bg-warning text-dark" *ngIf="datalisthistory.length > 0">
+          รวม {{getTotalHistoryMoney() | number : '1.2-2'}} บาท
+        </span>
+      </div>
+      <div class="table-responsive" style="max-height: 180px; overflow-y: auto;">
+        <table class="table table-sm table-bordered table-hover mb-0 text-nowrap" style="font-size: 13px;">
+          <thead class="table-warning text-dark text-center" style="position: static !important; top: auto !important;">
+            <tr>
+              <th width="8%">ที่</th>
+              <th width="25%">วันที่</th>
+              <th>โรค</th>
+              <th width="20%">จำนวนเงิน</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let hist of datalisthistory; let idx = index">
+              <td class="text-center">{{idx + 1}}</td>
+              <td class="text-center">{{hist.FEREIM_RSAVE}}</td>
+              <td>{{hist.FEREIM_DISS}}</td>
+              <td class="text-end fw-bold">{{hist.FEREIM_WMONEY | number : '1.2-2'}}</td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="datalisthistory.length > 1" class="table-light fw-bold">
+            <tr>
+              <td colspan="3" class="text-end">รวมทั้งสิ้น</td>
+              <td class="text-end text-danger">{{getTotalHistoryMoney() | number : '1.2-2'}}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- ข้อมูลใบเสร็จรับเงิน -->
+    <div class="card shadow-sm border-0 mb-0" *ngIf="datalistdetail && datalistdetail.length > 0">
       <div class="card-header bg-primary bg-opacity-10 py-1 px-2 d-flex justify-content-between align-items-center">
         <span class="fw-bold text-primary small">
           <i class="fa-solid fa-receipt me-1"></i> ข้อมูลใบเสร็จรับเงิน ({{datalistdetail.length}} รายการ)
@@ -210,6 +254,8 @@
           <thead class="table-primary text-center" style="position: static !important; top: auto !important;">
             <tr>
               <th width="8%">ที่</th>
+              <th>ชื่อ-สกุล</th>
+              <th>ความสัมพันธ์</th>
               <th>เลขที่ใบเสร็จ</th>
               <th>วันที่ใบเสร็จ</th>
               <th>จำนวนเงินใบเสร็จ</th>
@@ -219,6 +265,8 @@
           <tbody>
             <tr *ngFor="let rec of datalistdetail; let idx = index">
               <td class="text-center">{{idx + 1}}</td>
+              <td>{{rec.FEPIO_NAME}}</td>
+              <td class="text-center">{{rec.FERELE_NAME}}</td>
               <td>{{rec.FEREIMREC_NUMBER}}</td>
               <td class="text-center">{{rec.FEREIMREC_DATE}}</td>
               <td class="text-end fw-bold">{{rec.FEREIMREC_MONEY | number : '1.2-2'}}</td>
@@ -231,7 +279,7 @@
           </tbody>
           <tfoot *ngIf="datalistdetail.length > 1" class="table-light fw-bold">
             <tr>
-              <td colspan="3" class="text-end">รวมทั้งสิ้น</td>
+              <td colspan="5" class="text-end">รวมทั้งสิ้น</td>
               <td class="text-end text-primary">{{getTotalReceiptMoney() | number : '1.2-2'}}</td>
               <td *ngIf="datalistdetail[0]?.FEREIMREC_LINK"></td>
             </tr>

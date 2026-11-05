@@ -1275,7 +1275,7 @@
                         <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>ประเภทอัตราเบิกจ่าย</strong>
                         </label>
                         <select name="PLPROJECTESTTYPE_CODE" id="PLPROJECTESTTYPE_CODE" class="form-select"
-                          [(ngModel)]="dataAdd.PLPROJECTESTTYPE_CODE" >
+                          [(ngModel)]="dataAdd.PLPROJECTESTTYPE_CODE" (change)="showestimate()" >
                           <option [value]="1">อัตราเบิกจ่ายตามระเบียบ</option>
                           <option [value]="2">อัตราเบิกจ่ายตามมาตรการประหยัด</option>
                         </select>
