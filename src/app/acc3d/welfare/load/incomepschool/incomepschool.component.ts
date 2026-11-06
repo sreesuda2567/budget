@@ -218,11 +218,25 @@ export class IncomepschoolComponent implements OnInit {
     return this.datalistdetail.reduce((sum: number, item: any) => sum + (parseFloat(item.FEREIMREC_MONEY || item.FEDUCREC_MONEY || item.REC_MONEY) || 0), 0);
   }
 
+  getTotalReceiptRMoney(): number {
+    if (!this.datalistdetail || this.datalistdetail.length === 0) {
+      return 0;
+    }
+    return this.datalistdetail.reduce((sum: number, item: any) => sum + (parseFloat(item.FEDUCAPIO_RMONEY) || 0), 0);
+  }
+
   getTotalHistoryMoney(): number {
     if (!this.datalisthistory || this.datalisthistory.length === 0) {
       return 0;
     }
     return this.datalisthistory.reduce((sum: number, item: any) => sum + (parseFloat(item.FEREIMREC_MONEY || item.FEDUCREC_MONEY || item.REC_MONEY || item.FEREIM_WMONEY) || 0), 0);
+  }
+
+  getTotalHistoryRMoney(): number {
+    if (!this.datalisthistory || this.datalisthistory.length === 0) {
+      return 0;
+    }
+    return this.datalisthistory.reduce((sum: number, item: any) => sum + (parseFloat(item.FEDUCAPIO_RMONEY) || 0), 0);
   }
 
   hasReceiptLink(): boolean {

@@ -268,8 +268,9 @@
           </tbody>
           <tfoot *ngIf="datalisthistory.length > 1" class="table-light fw-bold">
             <tr>
-              <td colspan="6" class="text-end">รวมทั้งสิ้น</td>
+              <td colspan="7" class="text-end">รวมทั้งสิ้น</td>
               <td class="text-end text-danger">{{getTotalHistoryMoney() | number : '1.2-2'}}</td>
+              <td class="text-end text-danger">{{getTotalHistoryRMoney() | number : '1.2-2'}}</td>
               <td *ngIf="hasHistoryLink()"></td>
             </tr>
           </tfoot>
@@ -321,8 +322,9 @@
           </tbody>
           <tfoot *ngIf="datalistdetail.length > 1" class="table-light fw-bold">
             <tr>
-              <td colspan="6" class="text-end">รวมทั้งสิ้น</td>
+              <td colspan="7" class="text-end">รวมทั้งสิ้น</td>
               <td class="text-end text-primary">{{getTotalReceiptMoney() | number : '1.2-2'}}</td>
+              <td class="text-end text-primary">{{getTotalReceiptRMoney() | number : '1.2-2'}}</td>
               <td *ngIf="hasReceiptLink()"></td>
             </tr>
           </tfoot>

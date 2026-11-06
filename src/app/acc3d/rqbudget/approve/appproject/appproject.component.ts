@@ -834,6 +834,7 @@ export class AppprojectComponent implements OnInit {
       this.toastr.warning("แจ้งเตือน:กรุณากรอกข้อมูลประมาณการให้ครบถ้วน");
 
     } else {
+      const isMaterial = this.isMaterialItem(this.dataAdd.PLPROJECTGROUPDT_CODE);
       this.dataAdd.opt = "insertdt";
       this.apiService
         .getupdate(this.dataAdd, this.url)
@@ -842,7 +843,7 @@ export class AppprojectComponent implements OnInit {
 
           if (data.status == 1) {
             this.cleardat();
-            this.fetchdatadt();
+            this.fetchdatadt(isMaterial);
           } else {
             this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
           }
@@ -966,6 +967,7 @@ export class AppprojectComponent implements OnInit {
   }
   //แก้ไขข้อมูล
   updatedatadt() {
+    const isMaterial = this.isMaterialItem(this.dataAdd.PLPROJECTGROUPDT_CODE);
     this.dataAdd.opt = "updatedt";
     this.apiService
       .getupdate(this.dataAdd, this.url)
@@ -974,7 +976,7 @@ export class AppprojectComponent implements OnInit {
         this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
         this.rowpbi = true;
         this.rowpbu = null;
-        this.fetchdatadt();
+        this.fetchdatadt(isMaterial);
         this.cleardat();
       });
   }
@@ -991,7 +993,7 @@ export class AppprojectComponent implements OnInit {
     this.dataAdd.PLPROJECTGROUPDT_MONEY = '';
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลประมาณการ
-  fetchdatadt() {
+  fetchdatadt(isSaveAction: boolean = false) {
     //console.log(1);
     this.dataProjectexd = null;
     this.dataAdd.opt = "readdt";
@@ -1003,11 +1005,18 @@ export class AppprojectComponent implements OnInit {
           this.dataProjectexd = data.data;
           this.processDataProjectexd();
           let sum = 0;
+          let materialSum = 0;
           if (data.data) {
             for (var j = 0; j < data.data.length; j++) {
               // console.log(1);
               if (data.data[j].PLPROJECTGROUPDT_NUM == 0) {
-                sum += data.data[j].PLPROJECTGROUPDT_MONEY;
+                const money = parseFloat(data.data[j].PLPROJECTGROUPDT_MONEY) || 0;
+                sum += money;
+                const code = String(data.data[j].PLPROJECTGROUPDT_CODE || '');
+                const groupName = String(data.data[j].PLPROJECTGROUP_NAME || '');
+                if (this.isMaterialItem(code) || groupName === 'ค่าวัสดุ') {
+                  materialSum += money;
+                }
               }
             }
           }
@@ -1020,6 +1029,10 @@ export class AppprojectComponent implements OnInit {
             if (this.dataAdd.PRPLPROJECTM_YEAR[i] == this.dataAdd.PRYEARASSET_CODE) {
               this.dataAdd.PRPLPROJECTM_MONEY[i] = this.dataAdd.PLPROJECT_MONEYT;
             }
+          }
+
+          if (isSaveAction) {
+            this.checkMaterialLimitAfterSave(materialSum, sum);
           }
         }
       });
@@ -2136,7 +2149,137 @@ export class AppprojectComponent implements OnInit {
   getTotalAllParticipants(): number {
     return this.getTotalPersons() + this.getTotalPersonp() + this.getTotalPersono();
   }
-  showestimate() {
+  isMealItem(code: any): boolean {
+    const mealCodes = ['0207', '0213', '0214', '0205', '0218', '0243'];
+    return mealCodes.includes(String(code));
+  }
+
+  alertMealLimit() {
+    Swal.fire({
+      title: '<span style="font-size: 20px; font-weight: bold; color: #212529;">ข้อกำหนดอัตราค่าอาหารสำหรับผู้เข้าร่วมโครงการ</span>',
+      html: `
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 15px; border: 1px solid #c0c0c0; margin-top: 10px;">
+          <tbody>
+            <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 8px 14px; color: #000;">จัดภายใน</td>
+            </tr>
+            <tr style="background-color: #ffffff; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 10px 14px; line-height: 1.8; color: #000;">
+                <div>กำหนด 1. จัดครบทุกมื้อ ไม่เกิน 750 บาท</div>
+                <div style="padding-left: 45px;">2. จัดไม่ครบทุกมื้อ ไม่เกิน 500 บาท</div>
+              </td>
+            </tr>
+            <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 8px 14px; color: #000;">จัดภายนอก</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 14px; line-height: 1.8; color: #000;">
+                <div>กำหนด 1. จัดครบทุกมื้อ ไม่เกิน 1,200 บาท</div>
+                <div style="padding-left: 45px;">2. จัดไม่ครบทุกมื้อ ไม่เกิน 900 บาท</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      `,
+      icon: 'info',
+      confirmButtonText: 'รับทราบ',
+      confirmButtonColor: '#0d6efd'
+    });
+  }
+
+  isMaterialItem(code: any): boolean {
+    const sCode = String(code || '').trim();
+    return sCode.startsWith('03');
+  }
+
+  getMaterialTotal(): number {
+    if (!this.dataProjectexd || !Array.isArray(this.dataProjectexd)) return 0;
+    let sum = 0;
+    for (let i = 0; i < this.dataProjectexd.length; i++) {
+      const p = this.dataProjectexd[i];
+      if (p.PLPROJECTGROUPDT_NUM == 0) {
+        const code = String(p.PLPROJECTGROUPDT_CODE || '');
+        const groupName = String(p.PLPROJECTGROUP_NAME || '');
+        if (this.isMaterialItem(code) || groupName === 'ค่าวัสดุ') {
+          sum += parseFloat(p.PLPROJECTGROUPDT_MONEY) || 0;
+        }
+      }
+    }
+    return sum;
+  }
+
+  getTotalProjectBudget(): number {
+    let mSum = 0;
+    if (this.dataAdd?.PRPLPROJECTM_MONEY && Array.isArray(this.dataAdd.PRPLPROJECTM_MONEY)) {
+      mSum = this.dataAdd.PRPLPROJECTM_MONEY.reduce((s: number, v: any) => s + (parseFloat(v) || 0), 0);
+    }
+    const expSum = parseFloat(this.dataAdd?.PLPROJECT_MONEYT) || parseFloat(this.dataAdd?.PLPROJECT_MONEY) || 0;
+    return Math.max(mSum, expSum);
+  }
+
+  getMaterialPercent(): number {
+    const total = this.getTotalProjectBudget();
+    if (total <= 0) return 0;
+    return (this.getMaterialTotal() / total) * 100;
+  }
+
+  getMaxMaterialAllowed(): number {
+    return this.getTotalProjectBudget() * 0.20;
+  }
+
+  checkMaterialLimitAfterSave(materialSum: number, sum: number) {
+    let frameworkBudget = 0;
+    if (this.dataAdd?.PRPLPROJECTM_MONEY && Array.isArray(this.dataAdd.PRPLPROJECTM_MONEY)) {
+      frameworkBudget = this.dataAdd.PRPLPROJECTM_MONEY.reduce((s: number, v: any) => s + (parseFloat(v) || 0), 0);
+    }
+    const totalBudget = Math.max(frameworkBudget, sum);
+    if (totalBudget > 0) {
+      const percent = (materialSum / totalBudget) * 100;
+      if (percent > 20) {
+        this.alertMaterialLimit(materialSum, totalBudget, percent);
+      }
+    }
+  }
+
+  alertMaterialLimit(materialSum: number, totalBudget: number, percent: number) {
+    const maxAllowed = totalBudget * 0.20;
+    Swal.fire({
+      icon: 'warning',
+      title: '<span style="font-size: 20px; font-weight: bold; color: #d9534f;">แจ้งเตือนงบประมาณค่าวัสดุ</span>',
+      html: `
+        <div style="font-size: 15px; text-align: left; line-height: 1.8; color: #212529;">
+          <div style="background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; color: #856404;">
+            <strong><i class="fa-solid fa-triangle-exclamation me-1"></i>ค่าวัสดุเกินร้อยละ 20 ของงบประมาณโครงการ</strong>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 8px;">
+            <tr>
+              <td style="padding: 6px 0; color: #555;">รวมค่าวัสดุทั้งหมด:</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #dc3545;">${materialSum.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #555;">งบประมาณโครงการ:</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #212529;">${totalBudget.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท</td>
+            </tr>
+            <tr style="border-top: 1px dashed #dee2e6;">
+              <td style="padding: 6px 0; color: #555;">สัดส่วนค่าวัสดุ:</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #dc3545;">${percent.toFixed(2)}%</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #555;">เกณฑ์ที่กำหนด (ไม่เกิน 20%):</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #28a745;">ไม่เกิน ${maxAllowed.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท</td>
+            </tr>
+          </table>
+          <div style="font-size: 13px; color: #6c757d; border-top: 1px solid #dee2e6; padding-top: 8px; margin-top: 8px;">
+            * ข้อกำหนด: งบประมาณค่าวัสดุต้องไม่เกินร้อยละ 20 ของงบประมาณโครงการทั้งหมด
+          </div>
+        </div>
+      `,
+      confirmButtonText: 'รับทราบ',
+      confirmButtonColor: '#d9534f'
+    });
+  }
+
+  showestimate(showAlert: boolean = false) {
 
     this.dataAdd.PLPT1 = '';
     this.dataAdd.PLPT2 = '';
@@ -2152,6 +2295,7 @@ export class AppprojectComponent implements OnInit {
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0207' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0213'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0214' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0205'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0212' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0204'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0218' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0243'
       ) {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'V04';
@@ -2167,7 +2311,8 @@ export class AppprojectComponent implements OnInit {
     }else//ค่าตอบแทน
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0103' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0102'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0101'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0105'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0106'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0104') {
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0106'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0104'
+    || this.dataAdd.PLPROJECTGROUPDT_CODE == '0107') {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'V04';
       this.dataAdd.GCUNIT_CCODE = 'Z19';
@@ -2298,6 +2443,9 @@ export class AppprojectComponent implements OnInit {
           }
         }
       }
+    }
+    if (showAlert && this.isMealItem(this.dataAdd.PLPROJECTGROUPDT_CODE)) {
+      this.alertMealLimit();
     }
   }
   showasset() {

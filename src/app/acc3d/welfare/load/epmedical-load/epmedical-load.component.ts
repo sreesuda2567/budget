@@ -161,6 +161,7 @@ export class EpmedicalLoadComponent implements OnInit {
         if (data.status == '1') {
           this.datalistdetail = data.data;
           this.datalistlink = data.data2;
+          
           for (let i = 0; i < this.datalistdetail.length; i++) {
             this.dataAdd.FEREIM_CODE[i] = this.datalistdetail[i].FEREIM_CODE;
             this.dataAdd.FEREIMDT_WMONEY[i] = this.datalistdetail[i].FEREIMDT_WMONEY;

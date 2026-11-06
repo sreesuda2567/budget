@@ -1028,7 +1028,7 @@
                               class="fa-solid fa-list-check me-2 text-danger"></i>ประเภทอัตราเบิกจ่าย</strong>
                         </label>
                         <select name="PLPROJECTESTTYPE_CODE" id="PLPROJECTESTTYPE_CODE" class="form-select"
-                          [(ngModel)]="dataAdd.PLPROJECTESTTYPE_CODE" (change)="showestimate()">
+                          [(ngModel)]="dataAdd.PLPROJECTESTTYPE_CODE" (change)="showestimate(false)">
                           <option [value]="1">อัตราเบิกจ่ายตามระเบียบ</option>
                           <option [value]="2">อัตราเบิกจ่ายตามมาตรการประหยัด</option>
                         </select>
@@ -1037,11 +1037,17 @@
                         <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>รายการ</strong>
                         </label>
                         <select name="PLPROJECTGROUPDT_CODE" id="PLPROJECTGROUPDT_CODE" class="form-select"
-                          [(ngModel)]="dataAdd.PLPROJECTGROUPDT_CODE" (change)="showestimate()">
+                          [(ngModel)]="dataAdd.PLPROJECTGROUPDT_CODE" (change)="showestimate(true)">
                           <option [value]="d.PLPROJECTGROUPDT_CODE" *ngFor="let d of dataProjectdt">
                             {{d.PLPROJECTGROUPDT_NAME}}
                           </option>
                         </select>
+                        <div *ngIf="isMealItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="text-danger small mt-1 fw-bold">
+                          <i class="fa-solid fa-circle-info me-1"></i>(จัดภายใน: ครบทุกมื้อ &le; 750 บ. / ไม่ครบทุกมื้อ &le; 500 บ. | จัดภายนอก: ครบทุกมื้อ &le; 1,200 บ. / ไม่ครบทุกมื้อ &le; 900 บ.)
+                        </div>
+                        <div *ngIf="isMaterialItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="text-primary small mt-1 fw-bold">
+                          <i class="fa-solid fa-circle-info me-1"></i>(ข้อกำหนด: ค่าวัสดุรวมต้องไม่เกินร้อยละ 20 ของงบประมาณโครงการ)
+                        </div>
                       </div>
                       <div *ngIf="dataAdd.PLPROJECTGROUPDT_CODE=='0401'" class="col-md-12">
                         <label for="name"><strong>ครุภัณฑ์</strong> </label>
@@ -1129,6 +1135,12 @@
                       </div>
                     </div>
                   </div>
+                  <div *ngIf="getMaterialPercent() > 20" class="alert alert-warning border-warning shadow-sm mt-2 mb-3 d-flex align-items-center" role="alert">
+                    <i class="fa-solid fa-triangle-exclamation text-warning fs-3 me-3"></i>
+                    <div>
+                      <strong>แจ้งเตือน:</strong> ค่าวัสดุรวม <strong>{{getMaterialTotal() | number : '1.2-2'}} บาท</strong> คิดเป็น <strong>{{getMaterialPercent() | number : '1.2-2'}}%</strong> ของงบประมาณโครงการ ซึ่ง<strong>เกินเกณฑ์ร้อยละ 20</strong> (เกณฑ์กำหนดไม่เกิน {{getMaxMaterialAllowed() | number : '1.2-2'}} บาท)
+                    </div>
+                  </div>
                   <table width="100%" id="example" class="table table-bordered btn-font3">
                     <thead>
                       <tr style="background-color:rgb(147, 193, 239);">
@@ -1184,6 +1196,17 @@
                           </td>
                         </tr>
                       </ng-container>
+                      <tr *ngIf="getMaterialTotal() > 0" [class.table-warning]="getMaterialPercent() > 20">
+                        <td align="right" colspan="2">
+                          <strong>รวมค่าวัสดุ (กลุ่ม 03)</strong>
+                          <span *ngIf="getMaterialPercent() > 20" class="badge bg-danger ms-2">เกิน 20%</span>
+                        </td>
+                        <td align="right" [class.text-danger]="getMaterialPercent() > 20" class="fw-bold">
+                          {{getMaterialTotal() | number : '1.2-2'}}
+                          <small class="d-block text-muted">({{getMaterialPercent() | number : '1.2-2'}}% ของงบประมาณ)</small>
+                        </td>
+                        <td align="right"></td>
+                      </tr>
                       <tr>
                         <td align="right" colspan="2"><strong>รวมทั้งหมด</strong></td>
                         <td align="right" class="text-danger" style="background-color:rgb(242, 225, 211);">
