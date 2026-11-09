@@ -108,8 +108,12 @@
                     <div align="center">ชื่อสิ่งก่อสร้าง</div>
                   </th>
                   <th>
+                  <div align="center">ประเภท</div>
+                </th>
+                  <th>
                     <div align="center">จำนวนเงิน</div>
                   </th>
+                  
                   <th>
                     <div align="center">สถานะ</div>
                   </th>
@@ -144,6 +148,7 @@
                       เปลี่ยนแปลง:{{p.PRREGISBUILDING_NAMEC}}
                     </span>
                   </td>
+                  <td align="center">{{p.PLPROJECTST_NAME}}</td>
                   <td width="15%" align="right">{{p.PRBUILDING_MONEY*p.PRBUILDING_NUMBER| number : '1.2-2'}}
                     <span *ngIf="p.PRBUILDING_MONEY !=p.PRBUILDING_MONEYA && p.PRBUILDING_MONEYA!=null"
                       class="text-danger">
@@ -207,6 +212,9 @@
                     <div align="center">จำนวนเงิน</div>
                   </th>
                   <th>
+                  <div align="center">ประเภท</div>
+                </th>
+                  <th>
                     <div align="center">สถานะ</div>
                   </th>
                   <th>
@@ -247,6 +255,7 @@
                       เปลี่ยนแปลง:{{p.PRBUILDING_MONEYA*p.PRBUILDING_NUMBERA| number : '1.2-2'}}
                     </span>
                   </td>
+                  <td align="center">{{p.PLPROJECTST_NAME}}</td>
                   <td align="center">{{p.PRSTATUS_NAME}}</td>
                   <td>
                     <div class="dropdown">
