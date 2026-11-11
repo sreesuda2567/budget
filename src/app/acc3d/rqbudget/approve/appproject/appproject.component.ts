@@ -1160,6 +1160,7 @@ export class AppprojectComponent implements OnInit {
                 this.dataAdd.SUB_DISTRICT_ID[i] = data.data[i].SUB_DISTRICT_ID;
               }
             }
+            this.updateProjectActList();
           }
         }
 
@@ -1665,7 +1666,10 @@ export class AppprojectComponent implements OnInit {
         // this.dataAdd.PRPLPROJECT_CODE = data.data[0].PRPLPROJECT_CODE;
         this.dataAdd.PLSUBMONEYPAY_CODE1 = data.data[0].PLSUBMONEYPAY_CODE1;
         this.dataAdd.PRPLPROJECT_NAME = data.data[0].PRREGISPROJECT_NAME;
-        this.dataAdd.PRPLPROJECT_TIME = data.data[0].PRPLPROJECT_TIME;
+        this.dataAdd.PRPLPROJECT_TIME = data.data[0].PRPLPROJECT_TIME ? parseInt(data.data[0].PRPLPROJECT_TIME, 10) : 1;
+        if (!this.dataAdd.PRPLPROJECT_TIME || this.dataAdd.PRPLPROJECT_TIME < 1) {
+          this.dataAdd.PRPLPROJECT_TIME = 1;
+        }
         this.dataAdd.PRPLPROJECTACT_CODE = 1;
         this.showact();
         this.dataAdd.RPLPROJECTACT_CODE = 1;
@@ -2091,7 +2095,113 @@ export class AppprojectComponent implements OnInit {
         this.onChangesubdistrict(i, this.dataAdd.DISTRICT_ID[i]);
       }
     }
+    this.updateProjectActList();
+  }
 
+  updateProjectActList() {
+    if (!this.dataAdd || !this.dataAdd.PRPLPROJECT_TIME || this.dataAdd.PRPLPROJECT_TIME <= 1) {
+      this.dataProjectact = [];
+      return;
+    }
+
+    const list: any[] = [];
+    const count = parseInt(this.dataAdd.PRPLPROJECT_TIME, 10) || 0;
+    for (let i = 0; i < count; i++) {
+      const actNum = i + 1;
+      const customName = this.dataAdd.PRPLPROJECTACT_NAME && this.dataAdd.PRPLPROJECTACT_NAME[i]
+        ? String(this.dataAdd.PRPLPROJECTACT_NAME[i]).trim()
+        : '';
+      const actName = customName
+        ? (customName.startsWith('กิจกรรมที่') ? customName : `กิจกรรมที่ ${actNum} : ${customName}`)
+        : `กิจกรรมที่ ${actNum}`;
+
+      list.push({
+        PRPLPROJECTM_NUMBER: actNum,
+        PRPLPROJECTACT_NAME: actName
+      });
+    }
+    this.dataProjectact = list;
+
+    if (!this.dataAdd.PRPLPROJECTACT_CODE || !list.some(x => x.PRPLPROJECTM_NUMBER == this.dataAdd.PRPLPROJECTACT_CODE)) {
+      if (list.length > 0) {
+        this.dataAdd.PRPLPROJECTACT_CODE = list[0].PRPLPROJECTM_NUMBER;
+      }
+    }
+  }
+
+  getActivityDisplayName(actNum: any): string {
+    if (!actNum) return '';
+    const num = parseInt(actNum, 10);
+    const idx = !isNaN(num) ? num - 1 : -1;
+    if (idx >= 0 && this.dataAdd?.PRPLPROJECTACT_NAME && this.dataAdd.PRPLPROJECTACT_NAME[idx]) {
+      const name = String(this.dataAdd.PRPLPROJECTACT_NAME[idx]).trim();
+      if (name.startsWith('กิจกรรมที่')) return name;
+      return `กิจกรรมที่ ${actNum} : ${name}`;
+    }
+    if (this.dataProjectact && Array.isArray(this.dataProjectact)) {
+      const found = this.dataProjectact.find((x: any) => x.PRPLPROJECTM_NUMBER == actNum);
+      if (found && found.PRPLPROJECTACT_NAME) return found.PRPLPROJECTACT_NAME;
+    }
+    if (!isNaN(num)) return `กิจกรรมที่ ${actNum}`;
+    return String(actNum);
+  }
+
+  addActivity() {
+    const current = parseInt(this.dataAdd?.PRPLPROJECT_TIME, 10) || 1;
+    if (current <= 1) {
+      this.dataAdd.PRPLPROJECT_TIME = 2;
+    } else {
+      this.dataAdd.PRPLPROJECT_TIME = current + 1;
+    }
+    this.showact();
+  }
+
+  removeActivity() {
+    const current = parseInt(this.dataAdd?.PRPLPROJECT_TIME, 10) || 1;
+    if (current <= 2) {
+      this.resetActivity();
+    } else {
+      this.dataAdd.PRPLPROJECT_TIME = current - 1;
+      this.showact();
+    }
+  }
+
+  resetActivity() {
+    this.dataAdd.PRPLPROJECT_TIME = 1;
+    if (Array.isArray(this.dataAdd.PRPLPROJECTACT_NAME)) this.dataAdd.PRPLPROJECTACT_NAME = [];
+    if (Array.isArray(this.dataAdd.PRPLPROJECTACT_ACT)) this.dataAdd.PRPLPROJECTACT_ACT = [];
+    this.showact();
+  }
+
+  removeActivityAt(index: number) {
+    const current = parseInt(this.dataAdd?.PRPLPROJECT_TIME, 10) || 1;
+    if (current <= 1) return;
+
+    const spliceIfArray = (arr: any) => {
+      if (Array.isArray(arr) && index >= 0 && index < arr.length) {
+        arr.splice(index, 1);
+      }
+    };
+
+    spliceIfArray(this.dataAdd.PRPLPROJECTACT_NAME);
+    spliceIfArray(this.dataAdd.PRPLPROJECTACT_ACT);
+    spliceIfArray(this.dataAdd.PRPLPROJECT_PERSONS);
+    spliceIfArray(this.dataAdd.PRPLPROJECT_PERSONP);
+    spliceIfArray(this.dataAdd.PRPLPROJECT_PERSONO);
+    spliceIfArray(this.dataAdd.PRPLPROJECT_SDATE);
+    spliceIfArray(this.dataAdd.PRPLPROJECT_EDATE);
+    spliceIfArray(this.dataAdd.PRPLPROJECT_AT);
+    spliceIfArray(this.dataAdd.PRPLPROJECT_LOCATION);
+    spliceIfArray(this.dataAdd.PROVINCE_ID);
+    spliceIfArray(this.dataAdd.DISTRICT_ID);
+    spliceIfArray(this.dataAdd.SUB_DISTRICT_ID);
+
+    if (current <= 2) {
+      this.resetActivity();
+    } else {
+      this.dataAdd.PRPLPROJECT_TIME = current - 1;
+      this.showact();
+    }
   }
 
   copyLocationToAll() {
@@ -2335,6 +2445,20 @@ export class AppprojectComponent implements OnInit {
       this.dataAdd.PLPDT2 = '';
       this.dataAdd.PLPT1 = 'คน';
       this.dataAdd.PLPT2 = 'วัน';
+      this.dataAdd.PLPT3 = '';
+      this.dataAdd.PLPT4 = '';
+      this.dataAdd.moneydt = 1;
+    }else
+    //สมนาคุณ
+    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0312') {
+       this.dataAdd.GCUNIT_ACODE = 'Z29';
+      this.dataAdd.GCUNIT_BCODE = '';
+      this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
+      this.dataAdd.PLPDT1 = '';
+      this.dataAdd.PLPDT2 = '';
+      this.dataAdd.PLPT1 = 'แห่ง';
+      this.dataAdd.PLPT2 = '';
       this.dataAdd.PLPT3 = '';
       this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = 1;

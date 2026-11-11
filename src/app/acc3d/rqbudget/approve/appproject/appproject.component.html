@@ -479,7 +479,7 @@
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button (click)="fetchdataact()" (click)="updatedata()" class="nav-link" id="contact-tab" data-bs-toggle="tab"
+            <button (click)="updateProjectActList()" class="nav-link" id="contact-tab" data-bs-toggle="tab"
               data-bs-target="#details" type="button" role="tab" aria-controls="contact" aria-selected="false">
               <i class="fa-solid fa-file-invoice-dollar me-2"></i>ส่วนที่ 4 ประมาณการค่าใช้จ่าย
             </button>
@@ -630,48 +630,59 @@
                       </select>
                     </div>
 
-                    <div class="col-md-12 mb-2" *ngIf="ptype">
-                      <label for="name"><strong><i
-                            class="fa-solid fa-list-ol me-2 text-danger"></i>จำนวนกิจกรรมย่อย</strong></label>
-                      <select name="cr_code" id="cr_code" class="form-select" [(ngModel)]="dataAdd.PRPLPROJECT_TIME"
-                        (change)="showact()">
-                        <option [value]="1">ไม่มีกิจกรรมย่อย</option>
-                        <option [value]="2">2 กิจกรรมย่อย</option>
-                        <option [value]="3">3 กิจกรรมย่อย</option>
-                        <option [value]="4">4 กิจกรรมย่อย</option>
-                        <option [value]="5">5 กิจกรรมย่อย</option>
-                        <option [value]="6">6 กิจกรรมย่อย</option>
-                        <option [value]="7">7 กิจกรรมย่อย</option>
-                        <option [value]="8">8 กิจกรรมย่อย</option>
-                        <option [value]="9">9 กิจกรรมย่อย</option>
-                        <option [value]="10">10 กิจกรรมย่อย</option>
-                        <option [value]="11">11 กิจกรรมย่อย</option>
-                        <option [value]="12">12 กิจกรรมย่อย</option>
-                        <option [value]="13">13 กิจกรรมย่อย</option>
-                        <option [value]="14">14 กิจกรรมย่อย</option>
-                        <option [value]="15">15 กิจกรรมย่อย</option>
-                        <option [value]="16">16 กิจกรรมย่อย</option>
-                        <option [value]="17">17 กิจกรรมย่อย</option>
-                        <option [value]="18">18 กิจกรรมย่อย</option>
-                        <option [value]="19">19 กิจกรรมย่อย</option>
-                        <option [value]="20">20 กิจกรรมย่อย</option>
-                        <option [value]="21">21 กิจกรรมย่อย</option>
-                        <option [value]="22">22 กิจกรรมย่อย</option>
-                        <option [value]="23">23 กิจกรรมย่อย</option>
-                        <option [value]="24">24 กิจกรรมย่อย</option>
-                        <option [value]="25">25 กิจกรรมย่อย</option>
-                        <option [value]="26">26 กิจกรรมย่อย</option>
-                        <option [value]="27">27 กิจกรรมย่อย</option>
-                        <option [value]="28">28 กิจกรรมย่อย</option>
-                        <option [value]="29">29 กิจกรรมย่อย</option>
-                        <option [value]="30">30 กิจกรรมย่อย</option>
-                      </select>
-                    </div>
-                    <div class="col-md-12 mb-2" *ngFor="let p of number1;let i = index">
-                      <label *ngIf="dataAdd.PRPLPROJECT_TIME>1" for="name"><strong>ชื่อกิจกรรมที่
-                          {{i+1}}</strong></label>
-                      <input *ngIf="dataAdd.PRPLPROJECT_TIME>1" type="text" name="FRACCDATEC[0]" class="form-control"
-                        placeholder="ชื่อกิจกรรมที่ {{i+1}}" [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]">
+                    <div class="col-md-12 mb-3" *ngIf="ptype">
+                      <input type="hidden" name="PRPLPROJECT_TIME" [(ngModel)]="dataAdd.PRPLPROJECT_TIME">
+
+                      <div class="d-flex align-items-center justify-content-between p-2 px-3 border rounded-3 bg-light">
+                        <div class="d-flex align-items-center flex-wrap gap-2">
+                          <label class="mb-0 fw-bold">
+                            <i class="fa-solid fa-list-ol me-2 text-danger"></i>จำนวนกิจกรรมย่อย:
+                          </label>
+                          <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-3 py-2 rounded-pill"
+                            *ngIf="!dataAdd.PRPLPROJECT_TIME || dataAdd.PRPLPROJECT_TIME <= 1">
+                            <i class="fa-solid fa-circle-check text-muted me-1"></i>ไม่มีกิจกรรมย่อย (ดำเนินโครงการหลัก)
+                          </span>
+                          <span class="badge bg-danger px-3 py-2 rounded-pill"
+                            *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                            <i class="fa-solid fa-layer-group me-1"></i>มี {{ dataAdd.PRPLPROJECT_TIME }} กิจกรรมย่อย
+                          </span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                          <button type="button" class="btn btn-sm btn-success text-white shadow-sm" (click)="addActivity()">
+                            <i class="fa-solid fa-plus-circle me-1"></i> เพิ่มกิจกรรมย่อย
+                          </button>
+                          <button type="button" class="btn btn-sm btn-outline-danger" *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="resetActivity()" title="ยกเลิกกิจกรรมย่อยทั้งหมด">
+                            <i class="fa-solid fa-trash-can me-1"></i> ยกเลิกกิจกรรมย่อย
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- รายชื่อกิจกรรมย่อยเมื่อมีกิจกรรมย่อย > 1 -->
+                      <div class="mt-3 p-3 bg-light bg-opacity-50 border rounded-3" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                          <span class="fw-bold text-dark">
+                            <i class="fa-solid fa-bars-staggered me-2 text-danger"></i>รายชื่อกิจกรรมย่อย
+                            <span class="badge bg-danger ms-1">{{ dataAdd.PRPLPROJECT_TIME }} กิจกรรม</span>
+                          </span>
+                          <button type="button" class="btn btn-sm btn-outline-success" (click)="addActivity()">
+                            <i class="fa-solid fa-plus me-1"></i> เพิ่มอีก 1 กิจกรรม
+                          </button>
+                        </div>
+                        <div class="row g-2">
+                          <div class="col-md-12" *ngFor="let p of number1; let i = index">
+                            <div class="input-group">
+                              <span class="input-group-text bg-white fw-bold text-danger border-end-0" style="min-width: 125px;">
+                                <i class="fa-solid fa-cube me-2 text-primary"></i>กิจกรรมที่ {{ i + 1 }}
+                              </span>
+                              <input type="text" class="form-control" [placeholder]="'ระบุชื่อกิจกรรมที่ ' + (i + 1)"
+                                [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]" (ngModelChange)="updateProjectActList()">
+                              <button type="button" class="btn btn-outline-danger" (click)="removeActivityAt(i)" title="ลบกิจกรรมที่ {{ i + 1 }}">
+                                <i class="fa-solid fa-trash-can"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <div class="col-md-3">
@@ -1019,8 +1030,8 @@
                               <td class="py-2 px-2">
                                 <select name="PRPLPROJECT_AT_{{i}}" id="PRPLPROJECT_AT_{{i}}" class="form-select form-select-sm"
                                   [(ngModel)]="dataAdd.PRPLPROJECT_AT[i]">
-                                  <option value="1">ภายใน</option>
-                                  <option value="2">ภายนอก</option>
+                                  <option value="1">สถานที่ราชการ/รัฐวิสาหกิจ/หน่วยงานอื่นของรัฐ</option>
+                                  <option value="2">สถานที่เอกชน</option>
                                 </select>
                               </td>
 
@@ -1144,7 +1155,7 @@
                 <div class="card-body">
                   <table width="100%" border="0">
                     <tr>
-                      <td align="center">ปีที่เริ่ม</td>
+                      <td align="center">ปีที่เริ่ม พ.ศ.</td>
                       <td>
                         <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRPLPROJECTM_SYEAR"
                           (change)="showbuid()">
@@ -1152,7 +1163,7 @@
                             {{year.PLYEARBUDGET_CODE}}</option>
                         </select>
                       </td>
-                      <td align="right">ปีที่สิ้นสุด</td>
+                      <td align="right">ปีที่สิ้นสุด พ.ศ.</td>
                       <td>
                         <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRPLPROJECTM_EYEAR"
                           (change)="showbuid()">
@@ -1162,7 +1173,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td align="center">ปี</td>
+                      <td align="center">ปี พ.ศ.</td>
                       <td>
                         <select name="y_code" id="y_code" class="form-select" [(ngModel)]="dataAdd.PRPLPROJECTM_YEAR[0]"
                           [disabled]="dataAdd.money1">
@@ -1409,7 +1420,7 @@
                       <ng-container *ngFor="let p of dataProjectexd; let i = index">
                         <tr *ngIf="shouldShowAct(p, i)">
                           <td align="left" style="background-color:rgb(167, 166, 166); font-weight: bold; padding: 8px 12px;" colspan="4">
-                            {{p.PRPLPROJECTM_NUMBER}}</td>
+                            <i class="fa-solid fa-cube me-1"></i>{{ getActivityDisplayName(p.PRPLPROJECTM_NUMBER) }}</td>
                         </tr>
                         <tr *ngIf="shouldShowGtype(p, i)">
                           <td align="left" style="background-color:rgb(147, 193, 239); font-weight: bold; color: #000; padding: 8px 12px;" colspan="4">
