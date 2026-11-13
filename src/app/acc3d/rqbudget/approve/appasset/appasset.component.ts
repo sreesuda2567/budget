@@ -1756,6 +1756,7 @@ export class AppassetComponent implements OnInit {
         this.dataAdd.PLPLAND_CODE = data[0].PLPLAND_CODE;
         this.dataAdd.PLASSETTYPE_CODE = data[0].PLASSETTYPE_CODE;
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
+         this.dataAdd.PRPLPROJECT_TYPE = data.data[0].PRPLPROJECT_TYPE;
         this.dataAdd.PRASSET_MONEY = this.numberWithCommas(parseFloat(data[0].PRASSET_MONEY).toFixed(2));
         this.dataAdd.sum = data[0].PRASSET_NUMBER * data[0].PRASSET_MONEY;
         this.dataAdd.PRASSET_NAME = data[0].PRREGISASSET_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;

@@ -150,7 +150,17 @@
                     เปลี่ยนแปลง:{{p.PRBUILDING_MONEYA*p.PRBUILDING_NUMBERA| number : '1.2-2'}}
                   </span>
                 </td>
-                <td align="center">{{p.PRSTATUS_NAME}}</td>
+                <td align="center">
+                  <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
+                    [ngClass]="{
+                      'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
+                      'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
+                      'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
+                    }"
+                    style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                    {{p.PRSTATUS_NAME}}
+                  </span>
+                </td>
                 <td width="3%">
                   <a *ngIf="(p.PRBUILDING_RSTATUS=='1'  || p.PRBUILDING_RSTATUS=='3'|| (p.PRBUILDING_RSTATUS=='7' && p.PRBUILDING_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)"
                     role="button" title="spec" class="btn btn-primary text-white"><i
@@ -1341,7 +1351,17 @@
                 <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
                 <td width="15%" align="right">{{p.PRBUILDING_MONEY| number : '1.2-2'}}
                 </td>
-                <td align="center">{{p.PRSTATUS_NAME}}</td>
+                <td align="center">
+                  <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
+                    [ngClass]="{
+                      'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
+                      'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
+                      'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
+                    }"
+                    style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                    {{p.PRSTATUS_NAME}}
+                  </span>
+                </td>
                 <td width="10%">
                   <span *ngIf="p.PRBUILDING_PRICE"> <a role="button" title="รายงาน" class="btn btn-success text-white"
                       href="{{p.PRBUILDING_PRICE}}" target="_blank">ราคากลาง</a>&nbsp; </span>

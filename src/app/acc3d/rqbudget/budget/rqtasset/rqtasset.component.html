@@ -147,7 +147,17 @@
                     เปลี่ยนแปลง:{{p.PRASSET_NUMBERA*p.PRASSET_MONEYA| number : '1.2-2'}}
                   </span>
                 </td>
-                <td align="center">{{p.PRSTATUS_NAME}}</td>
+                <td align="center">
+                  <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
+                    [ngClass]="{
+                      'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
+                      'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
+                      'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
+                    }"
+                    style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                    {{p.PRSTATUS_NAME}}
+                  </span>
+                </td>
                 <td width="4%">
                   <a *ngIf="(p.PRASSET_RSTATUS=='1' || p.PRASSET_RSTATUS=='3' || (p.PRASSET_RSTATUS=='7' && p.PRASSET_SSTATUS=='1'))&&(dataAdd.CITIZEN_ID== p.CITIZEN_ID)"
                     role="button" title="spec" class="btn btn-primary text-white"><i (click)="deliver(p.PRASSET_CODE)"
@@ -1135,7 +1145,17 @@
                 <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
                 <td align="right">{{p.PRASSET_MONEY*p.PRASSET_NUMBER| number : '1.2-2'}}
                 </td>
-                <td align="center">{{p.PRSTATUS_NAME}}</td>
+                <td align="center">
+                  <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
+                    [ngClass]="{
+                      'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
+                      'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
+                      'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
+                    }"
+                    style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                    {{p.PRSTATUS_NAME}}
+                  </span>
+                </td>
                 <td width="10%">
                   <span *ngIf="p.PRASSET_SLINK2"> <a role="button" title="รายงาน" class="btn btn-success text-white"
                       href="{{p.PRASSET_SLINK2}}" target="_blank">ICT</a>&nbsp;</span>

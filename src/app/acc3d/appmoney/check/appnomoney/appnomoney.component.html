@@ -1,4 +1,4 @@
-<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
+﻿<div class="shadow alert border bg-white mx-4 mt-4" role="alert">
     <div class="row mb-3">
         <div class="col-md-10">
             <h5 class="fw-bold"><i class="fa-solid fa-file-medical me-2 text-primary"></i>ออกใบปะหน้าเบิก</h5>
@@ -83,6 +83,9 @@
                             <div align="center">วันที่ทำรายการ</div>
                         </th>
                         <th>
+                            <div align="center">ชื่อ-สุกล</div>
+                        </th>
+                        <th>
                             <div align="center">ฏีกา</div>
                         </th>
                         <th>
@@ -106,6 +109,7 @@
                       } ; let i = index">
                         <td width="5%" align="center">{{(page*tableSize)-tableSize+i+1}}</td>
                         <td align="center">{{p.FEDUCATION_RDATE}}</td>
+                        <td>{{p.STAFF_NAMES}}</td>
                         <td>{{p.FNANNALSMAP_DEKA}}</td>
                         <td>{{p.PLINCOME_NAME}}</td>
                         <td align="right">{{p.FEPSTATE_TMONEY| number : '1.2-2'}}</td>

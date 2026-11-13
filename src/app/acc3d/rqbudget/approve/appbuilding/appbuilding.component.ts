@@ -1296,6 +1296,7 @@ export class AppbuildingComponent implements OnInit {
         this.dataAdd.PLPLAND_CODE = data[0].PLPLAND_CODE;
         this.dataAdd.PLBUILDINGTYPE_CODE = data[0].PLBUILDINGTYPE_CODE;
         this.dataAdd.GCUNIT_CODE = data[0].GCUNIT_CODE;
+        this.dataAdd.PRPLPROJECT_TYPE = data.data[0].PRPLPROJECT_TYPE;
         this.dataAdd.PRASSET_NAME = data[0].PRREGISBUILDING_NAME + ' ตำบล' + data[0].SUB_DISTRICT_NAME_TH + ' อำเภอ' + data[0].DISTRICT_NAME_TH + ' จังหวัด' + data[0].PROVINCE_TNAME;
         this.dataAdd.PLMONEYPAY_CODE = '23';
         this.dataAdd.sum = data[0].PRBUILDING_NUMBER * data[0].PRBUILDING_MONEY;

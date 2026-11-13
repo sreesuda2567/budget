@@ -50,7 +50,7 @@ export class TokenStorageService {
     if (user) {
       const parsedUser = JSON.parse(user);
 
-     /*  const mockCitizen = '1909900286804';
+      /* const mockCitizen = '1961100054821';
         parsedUser.citizen = mockCitizen;*/
 
       if (parsedUser) {

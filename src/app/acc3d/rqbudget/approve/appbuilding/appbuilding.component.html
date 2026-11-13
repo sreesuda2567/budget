@@ -107,14 +107,14 @@
                   <th>
                     <div align="center">ชื่อสิ่งก่อสร้าง</div>
                   </th>
-                  <th>
-                  <div align="center">ประเภท</div>
-                </th>
+                  <th class="text-nowrap">
+                    <div align="center">ประเภท</div>
+                  </th>
                   <th>
                     <div align="center">จำนวนเงิน</div>
                   </th>
                   
-                  <th>
+                  <th class="text-nowrap">
                     <div align="center">สถานะ</div>
                   </th>
                   <th>
@@ -148,7 +148,17 @@
                       เปลี่ยนแปลง:{{p.PRREGISBUILDING_NAMEC}}
                     </span>
                   </td>
-                  <td align="center">{{p.PLPROJECTST_NAME}}</td>
+                  <td align="center">
+                    <span *ngIf="p.PLPROJECTST_NAME" class="badge text-nowrap"
+                      [ngClass]="{
+                        'bg-info text-dark': p.PLPROJECTST_NAME?.indexOf('ประจำปี') !== -1,
+                        'bg-warning text-dark': p.PLPROJECTST_NAME?.indexOf('ระหว่างปี') !== -1,
+                        'bg-secondary text-white': p.PLPROJECTST_NAME?.indexOf('ประจำปี') === -1 && p.PLPROJECTST_NAME?.indexOf('ระหว่างปี') === -1
+                      }"
+                      style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                      {{p.PLPROJECTST_NAME}}
+                    </span>
+                  </td>
                   <td width="15%" align="right">{{p.PRBUILDING_MONEY*p.PRBUILDING_NUMBER| number : '1.2-2'}}
                     <span *ngIf="p.PRBUILDING_MONEY !=p.PRBUILDING_MONEYA && p.PRBUILDING_MONEYA!=null"
                       class="text-danger">
@@ -156,7 +166,17 @@
                       เปลี่ยนแปลง:{{p.PRBUILDING_MONEYA*p.PRBUILDING_NUMBERA| number : '1.2-2'}}
                     </span>
                   </td>
-                  <td align="center">{{p.PRSTATUS_NAME}}</td>
+                  <td align="center">
+                    <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
+                      [ngClass]="{
+                        'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
+                        'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
+                        'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
+                      }"
+                      style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                      {{p.PRSTATUS_NAME}}
+                    </span>
+                  </td>
                   <td>
                     <div class="dropdown">
                       <button class="btn btn-success dropdown-toggle text-white" type="button" data-bs-toggle="dropdown"
@@ -211,10 +231,10 @@
                   <th>
                     <div align="center">จำนวนเงิน</div>
                   </th>
-                  <th>
-                  <div align="center">ประเภท</div>
-                </th>
-                  <th>
+                  <th class="text-nowrap">
+                    <div align="center">ประเภท</div>
+                  </th>
+                  <th class="text-nowrap">
                     <div align="center">สถานะ</div>
                   </th>
                   <th>
@@ -255,8 +275,28 @@
                       เปลี่ยนแปลง:{{p.PRBUILDING_MONEYA*p.PRBUILDING_NUMBERA| number : '1.2-2'}}
                     </span>
                   </td>
-                  <td align="center">{{p.PLPROJECTST_NAME}}</td>
-                  <td align="center">{{p.PRSTATUS_NAME}}</td>
+                  <td align="center">
+                    <span *ngIf="p.PLPROJECTST_NAME" class="badge text-nowrap"
+                      [ngClass]="{
+                        'bg-info text-dark': p.PLPROJECTST_NAME?.indexOf('ประจำปี') !== -1,
+                        'bg-warning text-dark': p.PLPROJECTST_NAME?.indexOf('ระหว่างปี') !== -1,
+                        'bg-secondary text-white': p.PLPROJECTST_NAME?.indexOf('ประจำปี') === -1 && p.PLPROJECTST_NAME?.indexOf('ระหว่างปี') === -1
+                      }"
+                      style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                      {{p.PLPROJECTST_NAME}}
+                    </span>
+                  </td>
+                  <td align="center">
+                    <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
+                      [ngClass]="{
+                        'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
+                        'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
+                        'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
+                      }"
+                      style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                      {{p.PRSTATUS_NAME}}
+                    </span>
+                  </td>
                   <td>
                     <div class="dropdown">
                       <button class="btn btn-success dropdown-toggle text-white" type="button" data-bs-toggle="dropdown"

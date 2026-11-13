@@ -835,6 +835,7 @@ export class AppprojectComponent implements OnInit {
 
     } else {
       const isMaterial = this.isMaterialItem(this.dataAdd.PLPROJECTGROUPDT_CODE);
+      const isMeal = this.isMealItem(this.dataAdd.PLPROJECTGROUPDT_CODE);
       this.dataAdd.opt = "insertdt";
       this.apiService
         .getupdate(this.dataAdd, this.url)
@@ -843,7 +844,7 @@ export class AppprojectComponent implements OnInit {
 
           if (data.status == 1) {
             this.cleardat();
-            this.fetchdatadt(isMaterial);
+            this.fetchdatadt(isMaterial, isMeal);
           } else {
             this.toastr.warning("แจ้งเตือน:ไม่สามารถเพิ่มข้อมูลได้");
           }
@@ -968,6 +969,7 @@ export class AppprojectComponent implements OnInit {
   //แก้ไขข้อมูล
   updatedatadt() {
     const isMaterial = this.isMaterialItem(this.dataAdd.PLPROJECTGROUPDT_CODE);
+    const isMeal = this.isMealItem(this.dataAdd.PLPROJECTGROUPDT_CODE);
     this.dataAdd.opt = "updatedt";
     this.apiService
       .getupdate(this.dataAdd, this.url)
@@ -976,7 +978,7 @@ export class AppprojectComponent implements OnInit {
         this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
         this.rowpbi = true;
         this.rowpbu = null;
-        this.fetchdatadt(isMaterial);
+        this.fetchdatadt(isMaterial, isMeal);
         this.cleardat();
       });
   }
@@ -993,7 +995,7 @@ export class AppprojectComponent implements OnInit {
     this.dataAdd.PLPROJECTGROUPDT_MONEY = '';
   }
   // ฟังก์ขันสำหรับการดึงข้อมูลประมาณการ
-  fetchdatadt(isSaveAction: boolean = false) {
+  fetchdatadt(isSaveAction: boolean = false, isMealAction: boolean = false) {
     //console.log(1);
     this.dataProjectexd = null;
     this.dataAdd.opt = "readdt";
@@ -1034,6 +1036,9 @@ export class AppprojectComponent implements OnInit {
           if (isSaveAction) {
             this.checkMaterialLimitAfterSave(materialSum, sum);
           }
+          if (isMealAction) {
+            this.checkMealLimitAfterSave();
+          }
         }
       });
 
@@ -1044,6 +1049,7 @@ export class AppprojectComponent implements OnInit {
       let lastAct = '';
       let lastGtype = '';
       let lastGroup = '';
+      let currentActNum = '1';
       for (let i = 0; i < this.dataProjectexd.length; i++) {
         const p = this.dataProjectexd[i];
         p._showAct = false;
@@ -1056,6 +1062,12 @@ export class AppprojectComponent implements OnInit {
           lastGtype = '';
           lastGroup = '';
         }
+        if (p.PLPROJECTEXPENSES_NUM) {
+          currentActNum = String(p.PLPROJECTEXPENSES_NUM);
+        } else if (p.PRPLPROJECTM_NUMBER) {
+          currentActNum = String(p.PRPLPROJECTM_NUMBER);
+        }
+        p._actNum = p.PLPROJECTEXPENSES_NUM ? String(p.PLPROJECTEXPENSES_NUM) : currentActNum;
 
         if (p.PLPROJECTGROUPDT_NUM == 0 && p.PLPROJECTGROUPDT_MONEY) {
           if (p.PLPROJECTGTYPE_NAME && p.PLPROJECTGTYPE_NAME.trim() && p.PLPROJECTGTYPE_NAME !== lastGtype) {
@@ -1365,6 +1377,7 @@ export class AppprojectComponent implements OnInit {
         this.dataAdd.PLPLAND_CODE = data.data[0].PLPLAND_CODE;
         this.dataAdd.PLPROJECT_TIME = data.data[0].PRPLPROJECT_TIME;
         this.dataAdd.PLPROJECTTYPE_CODE = data.data[0].PLPROJECTTYPE_CODE;
+        this.dataAdd.PRPLPROJECT_TYPE = data.data[0].PRPLPROJECT_TYPE;
         if (!Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) {
           this.dataAdd.PRPLPROJECT_SDATE = [];
           this.dataAdd.PRPLPROJECT_EDATE = [];
@@ -2262,6 +2275,220 @@ export class AppprojectComponent implements OnInit {
   isMealItem(code: any): boolean {
     const mealCodes = ['0207', '0213', '0214', '0205', '0218', '0243'];
     return mealCodes.includes(String(code));
+  }
+
+  getMealBadge(code: any): { label: string; class: string } | null {
+    const sCode = String(code || '');
+    if (['0218', '0243'].includes(sCode)) {
+      return { label: 'มื้อเช้า', class: 'bg-info text-dark' };
+    } else if (['0207', '0213'].includes(sCode)) {
+      return { label: 'มื้อกลางวัน', class: 'bg-warning text-dark' };
+    } else if (['0205', '0214'].includes(sCode)) {
+      return { label: 'มื้อเย็น', class: 'bg-primary text-white' };
+    }
+    return null;
+  }
+
+  getCurrentLocationType(): string {
+    if (!this.dataAdd) return '1';
+    if (this.dataAdd.PRPLPROJECT_TIME > 1 && this.dataAdd.PRPLPROJECTACT_CODE) {
+      const actIdx = Math.max(0, parseInt(this.dataAdd.PRPLPROJECTACT_CODE) - 1);
+      if (Array.isArray(this.dataAdd.PRPLPROJECT_AT)) {
+        return this.dataAdd.PRPLPROJECT_AT[actIdx] || this.dataAdd.PRPLPROJECT_AT[0] || '1';
+      }
+    }
+    if (Array.isArray(this.dataAdd.PRPLPROJECT_AT)) {
+      return this.dataAdd.PRPLPROJECT_AT[0] || '1';
+    }
+    return String(this.dataAdd.PRPLPROJECT_AT || '1');
+  }
+
+  getMealSummaryForAct(actNum: any): any | null {
+    if (!this.dataProjectexd || !Array.isArray(this.dataProjectexd)) return null;
+
+    const mealGovCodes = ['0205', '0207', '0218'];
+    const mealPrivCodes = ['0213', '0214', '0243'];
+    const allMealCodes = [...mealGovCodes, ...mealPrivCodes];
+
+    const targetAct = String(actNum || '1');
+    const isMultiAct = this.dataAdd && this.dataAdd.PRPLPROJECT_TIME > 1;
+
+    // Filter meal items for this activity
+    const mealRows = this.dataProjectexd.filter((p: any) => {
+      if (p.PLPROJECTGROUPDT_NUM != 0 || !p.PLPROJECTGROUPDT_MONEY) return false;
+      const code = String(p.PLPROJECTGROUPDT_CODE || '');
+      if (!allMealCodes.includes(code)) return false;
+      if (isMultiAct) {
+        const itemAct = String(p.PLPROJECTEXPENSES_NUM || p._actNum || '1');
+        return itemAct === targetAct;
+      }
+      return true;
+    });
+
+    if (mealRows.length === 0) return null;
+
+    // Determine location for this activity
+    let locationType = '1';
+    const actIdx = Math.max(0, parseInt(targetAct) - 1);
+    if (this.dataAdd && this.dataAdd.PRPLPROJECT_AT) {
+      if (Array.isArray(this.dataAdd.PRPLPROJECT_AT)) {
+        locationType = this.dataAdd.PRPLPROJECT_AT[actIdx] || this.dataAdd.PRPLPROJECT_AT[0] || '1';
+      } else {
+        locationType = String(this.dataAdd.PRPLPROJECT_AT || '1');
+      }
+    }
+
+    const isGov = (locationType !== '2');
+    const locationName = isGov ? 'สถานที่ราชการ/รัฐวิสาหกิจ' : 'สถานที่เอกชน';
+
+    let hasBreakfast = false;
+    let hasLunch = false;
+    let hasDinner = false;
+    let totalRate = 0;
+    let totalMoney = 0;
+    const mealsDetail: any[] = [];
+
+    mealRows.forEach((p: any) => {
+      const code = String(p.PLPROJECTGROUPDT_CODE || '');
+      let rate = parseFloat(p.PLPROJECTGROUPDT_TMONEY) || 0;
+      if (!rate) {
+        const persons = parseFloat(p.PLPROJECTGROUPDT_NUMA) || 1;
+        const days = parseFloat(p.PLPROJECTGROUPDT_NUMB) || 1;
+        const rowMoney = parseFloat(p.PLPROJECTGROUPDT_MONEY) || 0;
+        rate = (persons * days > 0) ? (rowMoney / (persons * days)) : rowMoney;
+      }
+      const mealsPerDay = parseFloat(p.PLPROJECTGROUPDT_NUMC) || 1;
+      const itemDailyRate = rate * mealsPerDay;
+      totalRate += itemDailyRate;
+      totalMoney += parseFloat(p.PLPROJECTGROUPDT_MONEY) || 0;
+
+      let name = '';
+      if (['0218', '0243'].includes(code)) {
+        hasBreakfast = true;
+        name = 'มื้อเช้า';
+      } else if (['0207', '0213'].includes(code)) {
+        hasLunch = true;
+        name = 'มื้อกลางวัน';
+      } else if (['0205', '0214'].includes(code)) {
+        hasDinner = true;
+        name = 'มื้อเย็น';
+      } else {
+        name = p.PLPROJECTGROUPDT_NAME || 'ค่าอาหาร';
+      }
+      mealsDetail.push({ name, rate: itemDailyRate, code });
+    });
+
+    const mealNames: string[] = [];
+    if (hasBreakfast) mealNames.push('เช้า');
+    if (hasLunch) mealNames.push('กลางวัน');
+    if (hasDinner) mealNames.push('เย็น');
+    const mealCount = mealNames.length;
+    const isFull = (mealCount === 3);
+
+    let maxLimit = 0;
+    if (isGov) {
+      maxLimit = isFull ? 750 : 500;
+    } else {
+      maxLimit = isFull ? 1200 : 900;
+    }
+
+    const isOver = totalRate > maxLimit;
+    const overAmount = isOver ? (totalRate - maxLimit) : 0;
+
+    let actName = '';
+    if (isMultiAct) {
+      actName = this.getActivityDisplayName(targetAct);
+    }
+
+    return {
+      actKey: targetAct,
+      actName,
+      locationType,
+      locationName,
+      hasBreakfast,
+      hasLunch,
+      hasDinner,
+      mealNames,
+      mealCount,
+      isFull,
+      maxLimit,
+      totalRate,
+      totalMoney,
+      isOver,
+      overAmount,
+      mealsDetail
+    };
+  }
+
+  getMealSummaryList(): any[] {
+    if (!this.dataProjectexd || !Array.isArray(this.dataProjectexd)) return [];
+    const isMultiAct = this.dataAdd && this.dataAdd.PRPLPROJECT_TIME > 1;
+    const list: any[] = [];
+    if (isMultiAct) {
+      const actCount = this.dataAdd.PRPLPROJECT_TIME || 1;
+      for (let a = 1; a <= actCount; a++) {
+        const ms = this.getMealSummaryForAct(a);
+        if (ms) list.push(ms);
+      }
+    } else {
+      const ms = this.getMealSummaryForAct('1');
+      if (ms) list.push(ms);
+    }
+    return list;
+  }
+
+  checkMealLimitAfterSave() {
+    const list = this.getMealSummaryList();
+    if (!list || list.length === 0) return;
+    const overItem = list.find((ms: any) => ms.isOver);
+    if (overItem) {
+      this.alertMealOverLimit(overItem);
+    }
+  }
+
+  alertMealOverLimit(ms: any) {
+    const mealListHtml = ms.mealsDetail.map((m: any) => `<li>${m.name}: <b>${m.rate.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b> บาท/คน/วัน</li>`).join('');
+    Swal.fire({
+      icon: 'warning',
+      title: '<span style="font-size: 20px; font-weight: bold; color: #d9534f;">แจ้งเตือนอัตราค่าอาหารเกินเกณฑ์</span>',
+      html: `
+        <div style="font-size: 15px; text-align: left; line-height: 1.8; color: #212529;">
+          <div style="background-color: #f8d7da; border: 1px solid #f5c2c7; border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; color: #842029;">
+            <strong><i class="fa-solid fa-triangle-exclamation me-1"></i>อัตราค่าอาหารเกินเกณฑ์ที่กำหนด</strong>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 8px;">
+            <tr>
+              <td style="padding: 6px 0; color: #555;">สถานที่จัดโครงการ:</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #212529;">${ms.locationName}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #555;">สถานะการจัดมื้อ:</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: ${ms.isFull ? '#198754' : '#fd7e14'};">
+                ${ms.isFull ? 'จัดครบทุกมื้อ (3 มื้อ)' : `จัดไม่ครบทุกมื้อ (${ms.mealCount} มื้อ)`}
+              </td>
+            </tr>
+            <tr style="border-top: 1px dashed #dee2e6;">
+              <td style="padding: 6px 0; color: #555;">อัตราค่าอาหารที่ระบุรวม:</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #dc3545;">${ms.totalRate.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท/คน/วัน</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #555;">เกณฑ์อัตราที่กำหนด:</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #198754;">ไม่เกิน ${ms.maxLimit.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท/คน/วัน</td>
+            </tr>
+            <tr style="border-top: 1px dashed #dee2e6;">
+              <td style="padding: 6px 0; color: #555;">เกินอัตราที่กำหนด:</td>
+              <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #dc3545;">+${ms.overAmount.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท/คน/วัน</td>
+            </tr>
+          </table>
+          <div style="font-size: 13px; color: #6c757d; margin-top: 6px;">
+            <u>รายการมื้อที่ระบุ:</u>
+            <ul style="margin: 4px 0 0 16px; padding: 0;">${mealListHtml}</ul>
+          </div>
+        </div>
+      `,
+      confirmButtonText: 'รับทราบ',
+      confirmButtonColor: '#0d6efd'
+    });
   }
 
   alertMealLimit() {
