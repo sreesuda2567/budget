@@ -594,44 +594,53 @@ export class AppepmedicalComponent implements OnInit {
     Swal.fire({ title: 'กำลังเตรียมไฟล์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
 
     try {
-      const mainLink = p.link3 || p.link;
-      
       const data: any = await this.apiService.getById(p.FNANNALSMAP_CODE, this.url).pipe(first()).toPromise();
       if (data && data.data && data.data.length > 0) {
           this.dataAdd.FACULTY_CODE = data.data[0].FACULTY_CODE;
-      }
-      
-      this.dataAdd.FNANNALSMAP_CODE = p.FNANNALSMAP_CODE;
-      this.dataAdd.opt = "viewepmedicalapp";
-      const dataLoad: any = await this.apiService.getdata(this.dataAdd, this.url1).pipe(first()).toPromise();
-      
-      let linkArray: any[] = [];
-      if (dataLoad.status == '1' && dataLoad.data2) {
-         linkArray = dataLoad.data2.map((item: any) => item.link);
+          if (data.data[0].PLYEARBUDGET_CODE) {
+            this.dataAdd.PLYEARBUDGET_CODE = data.data[0].PLYEARBUDGET_CODE;
+          }
       }
 
-      const pdf1Bytes = await fetch(mainLink).then(res => res.arrayBuffer());
-      const pdf1 = await PDFDocument.load(pdf1Bytes);
-      const mergedPdf = await PDFDocument.create();
+      if (p.link) {
+        const cacheBuster = new Date().getTime();
+        finalPdfUrl = p.link + (p.link.includes('?') ? '&' : '?') + 't=' + cacheBuster;
+        Swal.close();
+      } else {
+        const mainLink = p.link3;
+        
+        this.dataAdd.FNANNALSMAP_CODE = p.FNANNALSMAP_CODE;
+        this.dataAdd.opt = "viewepmedicalapp";
+        const dataLoad: any = await this.apiService.getdata(this.dataAdd, this.url1).pipe(first()).toPromise();
+        
+        let linkArray: any[] = [];
+        if (dataLoad.status == '1' && dataLoad.data2) {
+           linkArray = dataLoad.data2.map((item: any) => item.link);
+        }
 
-      const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
-      copiedPages1.forEach((page) => mergedPdf.addPage(page));
+        const pdf1Bytes = await fetch(mainLink).then(res => res.arrayBuffer());
+        const pdf1 = await PDFDocument.load(pdf1Bytes);
+        const mergedPdf = await PDFDocument.create();
 
-      if (linkArray && linkArray.length > 0) {
-        for (let i = 0; i < linkArray.length; i++) {
-          if (linkArray[i]) {
-            const pdfBytes = await fetch(linkArray[i]).then(res => res.arrayBuffer());
-            const pdfDoc = await PDFDocument.load(pdfBytes);
-            const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-            copiedPages.forEach((page) => mergedPdf.addPage(page));
+        const copiedPages1 = await mergedPdf.copyPages(pdf1, pdf1.getPageIndices());
+        copiedPages1.forEach((page) => mergedPdf.addPage(page));
+
+        if (linkArray && linkArray.length > 0) {
+          for (let i = 0; i < linkArray.length; i++) {
+            if (linkArray[i]) {
+              const pdfBytes = await fetch(linkArray[i]).then(res => res.arrayBuffer());
+              const pdfDoc = await PDFDocument.load(pdfBytes);
+              const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+              copiedPages.forEach((page) => mergedPdf.addPage(page));
+            }
           }
         }
-      }
 
-      const finalPdfBytes = await mergedPdf.save();
-      const blob = new Blob([finalPdfBytes as any], { type: 'application/pdf' });
-      finalPdfUrl = URL.createObjectURL(blob);
-      Swal.close();
+        const finalPdfBytes = await mergedPdf.save();
+        const blob = new Blob([finalPdfBytes as any], { type: 'application/pdf' });
+        finalPdfUrl = URL.createObjectURL(blob);
+        Swal.close();
+      }
 
     } catch (error) {
       console.error("Error merging PDFs:", error);

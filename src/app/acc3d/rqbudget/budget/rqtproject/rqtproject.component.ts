@@ -2411,6 +2411,20 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT3 = 'ชั่วโมง';
       this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = 1;
+    }else//ค่าตอบแทน
+    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0109' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0110'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0111'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0112') {
+      this.dataAdd.GCUNIT_ACODE = 'Z21';
+      this.dataAdd.GCUNIT_BCODE = 'Z19';
+      this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
+      this.dataAdd.PLPDT1 = 1;
+      this.dataAdd.PLPDT2 = '';
+      this.dataAdd.PLPT1 = 'คน';
+      this.dataAdd.PLPT2 = 'ชั่วโมง';
+      this.dataAdd.PLPT3 = '';
+      this.dataAdd.PLPT4 = '';
+      this.dataAdd.moneydt = 1;
     }else
     //ค่าเบี้ยเลี้ยง
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0201') {
@@ -2645,16 +2659,37 @@ export class RqtprojectComponent implements OnInit {
   }
   
 
+  // ฟังก์ชั่นสำหรับการดึงปีการนำเข้า
+  onChangeyearimport() {
+    this.dataAdd.searchimport = '';
+    // รายการปี
+    this.dataAdd.opt = "viewyearingimportp";
+    this.dataAdd.PLYEARBUDGET_CODE = this.dataAdd.PRYEARASSET_CODE;
+    this.dataYearimport = null;
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataYearimport = data;
+        if (data && data.length > 0) {
+          this.dataAdd.IMPRYEARASSET_CODE = data[0].PLYEARBUDGET_CODE;
+        }
+        this.fetchdatalistimport();
+      });
+  }
+
   fetchdatalistimport() {
     this.dataAdd.opt = "readAllimport";
     this.loadingimport = true;
     this.datalistimport = null;
     this.rownumimport = null;
+    this.dataAdd.IMPORTASSET_CODE = [];
+    this.dataAdd.checkimport = [];
     this.apiService
       .getdata(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
-        if (data.status == 1) {
+        if (data && data.status == 1) {
           this.datalistimport = data.data;
           this.loadingimport = null;
           this.rownumimport = true;
@@ -2663,33 +2698,43 @@ export class RqtprojectComponent implements OnInit {
             this.dataAdd.checkimport[i] = false;
           }
         } else {
-          this.datalistimport = data.data;
+          this.datalistimport = data ? data.data : null;
           this.loadingimport = null;
           this.rownumimport = null;
           this.toastr.warning("แจ้งเตือน:ไม่มีข้อมูล");
         }
       });
   }
-insertdataimport(){  
-  //console.log(this.dataAdd.PRASSET_COURSET );
-  this.loadingimport=true;
-  if(this.dataAdd.checkimport.length ==0){
-      this.toastr.warning("แจ้งเตือน:กรุณาเลือกรายการครุภัณฑ์");
-  }else{
-    this.dataAdd.opt = "insertimport"; 
+
+  insertdataimport() {
+    let hasChecked = false;
+    if (this.dataAdd.checkimport && this.dataAdd.checkimport.length > 0) {
+      for (let c of this.dataAdd.checkimport) {
+        if (c === true || c === 'true') {
+          hasChecked = true;
+          break;
+        }
+      }
+    }
+    if (!hasChecked) {
+      this.toastr.warning("แจ้งเตือน:กรุณาเลือกรายการโครงการ");
+      return;
+    }
+    this.loadingimport = true;
+    this.dataAdd.opt = "insertimport";
     this.apiService
-     .getupdate(this.dataAdd,this.url)
-     .pipe(first())
-     .subscribe((data: any) => {
-       //console.log(data.status);       
-     if (data.status == 1) {
-      this.loadingimport=null;
-       this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
-       this.fetchdatalist();
-       document.getElementById("ModalClose")?.click();
-     } 
-     });
-   }
+      .getupdate(this.dataAdd, this.url)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.loadingimport = null;
+        if (data && data.status == 1) {
+          this.toastr.success("แจ้งเตือน:เพิ่มข้อมูลเรียบร้อยแล้ว");
+          this.fetchdatalist();
+          document.getElementById("ModalClose")?.click();
+        } else {
+          this.toastr.error("แจ้งเตือน:ไม่สามารถนำเข้าข้อมูลได้");
+        }
+      });
   }
   previewPdf(url: string) {
     this.previewPdfUrl = url;
