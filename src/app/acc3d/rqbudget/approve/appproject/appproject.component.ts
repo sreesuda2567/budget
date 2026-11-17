@@ -291,7 +291,6 @@ export class AppprojectComponent implements OnInit {
             this.dataFac = data;
             // console.log(data);
             this.dataAdd.FACULTY_CODE = data[0].FACULTY_CODE;
-             this.dataAdd.FFACULTY_CODE = data[0].FACULTY_CODE;
             this.dataAdd.FACULTY_CODE1 = data[0].FACULTY_CODE;
             this.fetchdatalistapp();
           });
@@ -1369,6 +1368,7 @@ export class AppprojectComponent implements OnInit {
         this.onChangecrpartrister();
         this.fetchdatalistimportall();
         this.dataAdd.RCRPART_ID = data.data[0].CRPART_ID;
+        this.dataAdd.FACULTY_CODE1 = data.data[0].FACULTY_CODE;
         this.dataAdd.PLGPRODUCT_CODE = data.data[0].PLGPRODUCT_CODE;
         this.dataAdd.PLSTRATEGY_CODE = data.data[0].PLSTRATEGY_CODE;
         this.dataAdd.PLESTIMATEPLAN_CODE = data.data[0].PLESTIMATEPLAN_CODE;
@@ -2306,8 +2306,8 @@ export class AppprojectComponent implements OnInit {
   getMealSummaryForAct(actNum: any): any | null {
     if (!this.dataProjectexd || !Array.isArray(this.dataProjectexd)) return null;
 
-    const mealGovCodes = ['0205', '0207', '0218'];
-    const mealPrivCodes = ['0213', '0214', '0243'];
+    const mealGovCodes = ['0205', '0207', '0218', '0246', '0248', '0250'];
+    const mealPrivCodes = ['0213', '0214', '0243', '0247', '0249', '0251'];
     const allMealCodes = [...mealGovCodes, ...mealPrivCodes];
 
     const targetAct = String(actNum || '1');
@@ -2326,6 +2326,9 @@ export class AppprojectComponent implements OnInit {
     });
 
     if (mealRows.length === 0) return null;
+
+    const isTypeA = mealRows.some((p: any) => String(p.PLPROJECTGTYPE_CODE || '') === '04' || String(p.PLPROJECTGTYPE_CODE || '') === '4')
+      || (this.dataAdd && (String(this.dataAdd.PLPROJECTGTYPE_CODE) === '04' || String(this.dataAdd.PLPROJECTGTYPE_CODE) === '4'));
 
     // Determine location for this activity
     let locationType = '1';
@@ -2363,13 +2366,13 @@ export class AppprojectComponent implements OnInit {
       totalMoney += parseFloat(p.PLPROJECTGROUPDT_MONEY) || 0;
 
       let name = '';
-      if (['0218', '0243'].includes(code)) {
+      if (['0218', '0243', '0246', '0247'].includes(code)) {
         hasBreakfast = true;
         name = 'มื้อเช้า';
-      } else if (['0207', '0213'].includes(code)) {
+      } else if (['0207', '0213', '0248', '0249'].includes(code)) {
         hasLunch = true;
         name = 'มื้อกลางวัน';
-      } else if (['0205', '0214'].includes(code)) {
+      } else if (['0205', '0214', '0250', '0251'].includes(code)) {
         hasDinner = true;
         name = 'มื้อเย็น';
       } else {
@@ -2386,10 +2389,18 @@ export class AppprojectComponent implements OnInit {
     const isFull = (mealCount === 3);
 
     let maxLimit = 0;
-    if (isGov) {
-      maxLimit = isFull ? 750 : 500;
+    if (isTypeA) {
+      if (isGov) {
+        maxLimit = isFull ? 1100 : 750;
+      } else {
+        maxLimit = isFull ? 1500 : 1100;
+      }
     } else {
-      maxLimit = isFull ? 1200 : 900;
+      if (isGov) {
+        maxLimit = isFull ? 750 : 500;
+      } else {
+        maxLimit = isFull ? 1200 : 900;
+      }
     }
 
     const isOver = totalRate > maxLimit;
@@ -2403,6 +2414,7 @@ export class AppprojectComponent implements OnInit {
     return {
       actKey: targetAct,
       actName,
+      isTypeA,
       locationType,
       locationName,
       hasBreakfast,
@@ -2492,13 +2504,37 @@ export class AppprojectComponent implements OnInit {
   }
 
   alertMealLimit() {
+    const isTypeA = (this.dataAdd && (String(this.dataAdd.PLPROJECTGTYPE_CODE) === '04' || String(this.dataAdd.PLPROJECTGTYPE_CODE) === '4'));
     Swal.fire({
-      title: '<span style="font-size: 20px; font-weight: bold; color: #212529;">ข้อกำหนดอัตราค่าอาหารสำหรับผู้เข้าร่วมโครงการ</span>',
-      html: `
+      title: '<span style="font-size: 20px; font-weight: bold; color: #212529;">ข้อกำหนดอัตราค่าอาหารสำหรับผู้เข้าร่วมโครงการ' + (isTypeA ? ' (ประเภท ก)' : '') + '</span>',
+      html: isTypeA ? `
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 15px; border: 1px solid #c0c0c0; margin-top: 10px;">
           <tbody>
             <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
-              <td style="padding: 8px 14px; color: #000;">จัดภายใน</td>
+              <td style="padding: 8px 14px; color: #000;">สถานที่ราชการ/รัฐวิสาหกิจ/หน่วยงานอื่นภาครัฐ</td>
+            </tr>
+            <tr style="background-color: #ffffff; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 10px 14px; line-height: 1.8; color: #000;">
+                <div>กำหนด 1. จัดครบทุกมื้อ ไม่เกิน 1,100 บาท</div>
+                <div style="padding-left: 45px;">2. จัดไม่ครบทุกมื้อ ไม่เกิน 750 บาท</div>
+              </td>
+            </tr>
+            <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 8px 14px; color: #000;">สถานที่เอกชน</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 14px; line-height: 1.8; color: #000;">
+                <div>กำหนด 1. จัดครบทุกมื้อ ไม่เกิน 1,500 บาท</div>
+                <div style="padding-left: 45px;">2. จัดไม่ครบทุกมื้อ ไม่เกิน 1,100 บาท</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      ` : `
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 15px; border: 1px solid #c0c0c0; margin-top: 10px;">
+          <tbody>
+            <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 8px 14px; color: #000;">สถานที่ราชการ/รัฐวิสาหกิจ/หน่วยงานอื่นของรัฐ</td>
             </tr>
             <tr style="background-color: #ffffff; border-bottom: 1px solid #c0c0c0;">
               <td style="padding: 10px 14px; line-height: 1.8; color: #000;">
@@ -2507,7 +2543,7 @@ export class AppprojectComponent implements OnInit {
               </td>
             </tr>
             <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
-              <td style="padding: 8px 14px; color: #000;">จัดภายนอก</td>
+              <td style="padding: 8px 14px; color: #000;">สถานที่เอกชน</td>
             </tr>
             <tr style="background-color: #ffffff;">
               <td style="padding: 10px 14px; line-height: 1.8; color: #000;">

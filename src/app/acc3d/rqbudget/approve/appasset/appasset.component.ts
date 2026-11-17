@@ -1747,6 +1747,7 @@ export class AppassetComponent implements OnInit {
         this.fetchdatalistimportall();
         this.onChangecrpartrister();
         this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+        this.dataAdd.FACULTY_CODE1 = data.data[0].FACULTY_CODE;
         this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
         this.dataAdd.PRASSET_NUMBER = data[0].PRASSET_NUMBER;
         this.dataAdd.PLSTRATEGY_CODE = data[0].PLSTRATEGY_CODE;

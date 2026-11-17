@@ -1383,14 +1383,28 @@
                           <div class="fw-bold">
                             <i class="fa-solid fa-circle-info me-1 text-primary"></i>
                             ข้อกำหนดอัตราค่าอาหาร (สถานที่ปัจจุบัน: <u>{{ getCurrentLocationType() == '2' ? 'สถานที่เอกชน' : 'สถานที่ราชการ/รัฐวิสาหกิจ' }}</u>)
+                            <span *ngIf="dataAdd.PLPROJECTGTYPE_CODE == '04' || dataAdd.PLPROJECTGTYPE_CODE == '4'" class="badge bg-primary ms-1">การฝึกอบรมประเภท ก</span>
                           </div>
                           <div class="mt-1">
-                            <span *ngIf="getCurrentLocationType() != '2'">
-                              • <strong>สถานที่ราชการ:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>750</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>500</strong> บาท/คน/วัน
-                            </span>
-                            <span *ngIf="getCurrentLocationType() == '2'">
-                              • <strong>สถานที่เอกชน:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,200</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>900</strong> บาท/คน/วัน
-                            </span>
+                            <!-- กรณี การฝึกอบรมประเภท ก (PLPROJECTGTYPE_CODE = 04) -->
+                            <ng-container *ngIf="dataAdd.PLPROJECTGTYPE_CODE == '04' || dataAdd.PLPROJECTGTYPE_CODE == '4'">
+                              <span *ngIf="getCurrentLocationType() != '2'">
+                                • <strong>สถานที่ราชการ/รัฐวิสาหกิจ/หน่วยงานอื่นภาครัฐ:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,100</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>750</strong> บาท/คน/วัน
+                              </span>
+                              <span *ngIf="getCurrentLocationType() == '2'">
+                                • <strong>สถานที่เอกชน:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,500</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>1,100</strong> บาท/คน/วัน
+                              </span>
+                            </ng-container>
+
+                            <!-- กรณี ประเภท ข หรือประเภทอื่นทั่วไป -->
+                            <ng-container *ngIf="dataAdd.PLPROJECTGTYPE_CODE != '04' && dataAdd.PLPROJECTGTYPE_CODE != '4'">
+                              <span *ngIf="getCurrentLocationType() != '2'">
+                                • <strong>สถานที่ราชการ:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>750</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>500</strong> บาท/คน/วัน
+                              </span>
+                              <span *ngIf="getCurrentLocationType() == '2'">
+                                • <strong>สถานที่เอกชน:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,200</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>900</strong> บาท/คน/วัน
+                              </span>
+                            </ng-container>
                           </div>
                         </div>
                         <div *ngIf="isMaterialItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="text-primary small mt-1 fw-bold">
@@ -1560,6 +1574,9 @@
                                   </strong>
                                   <span class="badge bg-light text-dark border">
                                     <i class="fa-solid fa-location-dot me-1 text-secondary"></i>{{ ms.locationName }}
+                                  </span>
+                                  <span *ngIf="ms.isTypeA" class="badge bg-primary">
+                                    การฝึกอบรมประเภท ก
                                   </span>
                                   <span *ngIf="ms.isFull" class="badge bg-success">
                                     <i class="fa-solid fa-circle-check me-1"></i>จัดครบทุกมื้อ (3 มื้อ)

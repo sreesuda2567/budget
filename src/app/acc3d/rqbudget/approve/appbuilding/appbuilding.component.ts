@@ -1286,6 +1286,7 @@ export class AppbuildingComponent implements OnInit {
         this.onChangecrpartrister();
         this.fetchdatalistimportall();
         this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+        this.dataAdd.FACULTY_CODE1 = data.data[0].FACULTY_CODE;
         this.dataAdd.PLGPRODUCT_CODE = data[0].PLGPRODUCT_CODE;
         this.dataAdd.PRASSET_MONEY =  this.numberWithCommas(parseFloat(data[0].PRBUILDING_MONEY).toFixed(2));
          this.dataAdd.PRASSET_NUMBER = data[0].PRBUILDING_NUMBER;

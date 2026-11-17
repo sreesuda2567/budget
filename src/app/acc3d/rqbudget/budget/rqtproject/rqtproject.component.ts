@@ -928,6 +928,9 @@ export class RqtprojectComponent implements OnInit {
         this.dataAdd.PLPROJECTGROUPDT_NUMA = data[0].PLPROJECTGROUPDT_NUMA;
         this.dataAdd.PLPROJECTGROUPDT_NUMC = data[0].PLPROJECTGROUPDT_NUMC;
         this.dataAdd.PLPROJECTGROUPDT_DETAIL = data[0].PLPROJECTGROUPDT_DETAIL;
+        if (this.isMealOrSnackItem(this.dataAdd.PLPROJECTGROUPDT_CODE)) {
+          this.syncMealTargetsFromDetail();
+        }
         this.dataAdd.PLPROJECTEXPENSES_CODE = data[0].PLPROJECTEXPENSES_CODE;
         this.dataAdd.PLPROJECTGROUPDT_MONEY = (parseFloat(data[0].PLPROJECTGROUPDT_MONEY).toFixed(2));
         this.dataAdd.PRASSET_CODE = data[0].PRASSET_CODE;
@@ -955,6 +958,7 @@ export class RqtprojectComponent implements OnInit {
       });
   }
   cleardat() {
+    this.selectedMealTargetIds = [];
     this.dataAdd.GCUNIT_ACODE = '';
     this.dataAdd.GCUNIT_BCODE = '';
     this.dataAdd.GCUNIT_CCODE = '';
@@ -1441,7 +1445,7 @@ export class RqtprojectComponent implements OnInit {
         }
         this.showact();
         this.dataAdd.RPLPROJECTACT_CODE = 1;
-        this.dataAdd.PLPROJECTGROUPDT_CODE = '0207';
+        this.dataAdd.PLPROJECTGROUPDT_CODE = '';
         this.showestimate();
         this.dataAdd.FPLPROJECTTYPE = data.data[0].PRREGISTYPE;
         this.dataAdd.PLPROJECTTYPE_CODE = data.data[0].PLPROJECTTYPE_CODE;
@@ -2019,22 +2023,113 @@ export class RqtprojectComponent implements OnInit {
     return Number(val) || 0;
   }
 
+  mealTargetOptions: Array<{ id: string; title: string; text: string }> = [
+    { id: '4.1', title: 'ประธานในพิธีเปิดหรือพิธีปิดการฝึกอบรม', text: 'ประธานในพิธีเปิดหรือพิธีปิดการฝึกอบรม' },
+    //{ id: '4.1_close', title: 'ประธานในพิธีปิดการฝึกอบรม', text: 'ประธานในพิธีปิดการฝึกอบรม' },
+    { id: '4.2', title: 'แขกผู้มีเกียรติและผู้ติดตาม', text: 'แขกผู้มีเกียรติและผู้ติดตาม' },
+    { id: '4.3', title: 'วิทยากร', text: 'วิทยากร' },
+    { id: '4.4', title: 'เจ้าหน้าที่', text: 'เจ้าหน้าที่' },
+    { id: '4.5', title: 'ผู้เข้ารับการฝึกอบรม', text: 'ผู้เข้ารับการฝึกอบรม' },
+    { id: '4.6', title: 'ผู้สังเกตการณ์', text: 'ผู้สังเกตการณ์' },
+  //  { id: 'general', title: 'ผู้เข้าร่วมโครงการ', text: 'ผู้เข้าร่วมโครงการ' }
+  ];
+  selectedMealTargetIds: string[] = [];
+  mealDetailConfig = {
+    usePrefix: true
+  };
+
+  isMealOrSnackItem(code?: any): boolean {
+    const c = String(code !== undefined && code !== null ? code : (this.dataAdd ? this.dataAdd.PLPROJECTGROUPDT_CODE : ''));
+    const mealSnackCodes = [
+      '0204', '0205', '0207', '0212', '0213', '0214', '0218', '0243',
+      '0246', '0247', '0248', '0249', '0250', '0251', '0252', '0253'
+    ];
+    if (mealSnackCodes.includes(c)) {
+      return true;
+    }
+    if (this.dataProjectdt && Array.isArray(this.dataProjectdt)) {
+      const item = this.dataProjectdt.find((d: any) => String(d.PLPROJECTGROUPDT_CODE) === c);
+      if (item && item.PLPROJECTGROUPDT_NAME) {
+        const name = item.PLPROJECTGROUPDT_NAME;
+        if (name.includes('อาหาร') || name.includes('อาหารเช้า') || name.includes('อาหารกลาง') || 
+            name.includes('อาหารเย็น') || name.includes('อาหารว่าง')|| name.includes('พักเดี่ยว')|| name.includes('พักคู่')) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  isMealTargetSelected(id: string): boolean {
+    return this.selectedMealTargetIds.includes(id);
+  }
+
+  toggleMealTarget(id: string, event: any) {
+    const checked = event && event.target ? event.target.checked : false;
+    if (checked) {
+      if (!this.selectedMealTargetIds.includes(id)) {
+        this.selectedMealTargetIds.push(id);
+      }
+    } else {
+      this.selectedMealTargetIds = this.selectedMealTargetIds.filter(x => x !== id);
+    }
+    this.onMealTargetChange();
+  }
+
+  onMealTargetChange() {
+    if (this.selectedMealTargetIds.length === 0) {
+      this.dataAdd.PLPROJECTGROUPDT_DETAIL = '';
+      return;
+    }
+
+    const selectedTexts = this.mealTargetOptions
+      .filter(opt => this.selectedMealTargetIds.includes(opt.id))
+      .map(opt => opt.text);
+
+    if (selectedTexts.length === 0) return;
+
+    const joined = selectedTexts.join(', ');
+    if (this.mealDetailConfig.usePrefix) {
+      this.dataAdd.PLPROJECTGROUPDT_DETAIL = 'สำหรับ' + joined;
+    } else {
+      this.dataAdd.PLPROJECTGROUPDT_DETAIL = joined;
+    }
+  }
+
+  clearMealTargets() {
+    this.selectedMealTargetIds = [];
+    this.dataAdd.PLPROJECTGROUPDT_DETAIL = '';
+  }
+
+  syncMealTargetsFromDetail() {
+    const detail = this.dataAdd && this.dataAdd.PLPROJECTGROUPDT_DETAIL ? String(this.dataAdd.PLPROJECTGROUPDT_DETAIL) : '';
+    this.selectedMealTargetIds = [];
+    if (!detail) return;
+    for (const opt of this.mealTargetOptions) {
+      if (detail.includes(opt.text)) {
+        this.selectedMealTargetIds.push(opt.id);
+      }
+    }
+  }
+
   getTotalAllParticipants(): number {
     return this.getTotalPersons() + this.getTotalPersonp() + this.getTotalPersono();
   }
   isMealItem(code: any): boolean {
-    const mealCodes = ['0207', '0213', '0214', '0205', '0218', '0243'];
+    const mealCodes = ['0207', '0213', '0214', '0205', '0218', '0243', '0246', '0247', '0248', '0249', '0250', '0251'];
     return mealCodes.includes(String(code));
   }
 
   getMealBadge(code: any): { label: string; class: string } | null {
     const sCode = String(code || '');
-    if (['0218', '0243'].includes(sCode)) {
+    if (['0218', '0243', '0246', '0247'].includes(sCode)) {
       return { label: 'มื้อเช้า', class: 'bg-info text-dark' };
-    } else if (['0207', '0213'].includes(sCode)) {
+    } else if (['0207', '0213', '0248', '0249'].includes(sCode)) {
       return { label: 'มื้อกลางวัน', class: 'bg-warning text-dark' };
-    } else if (['0205', '0214'].includes(sCode)) {
+    } else if (['0205', '0214', '0250', '0251'].includes(sCode)) {
       return { label: 'มื้อเย็น', class: 'bg-primary text-white' };
+    } else if (['0204', '0212', '0252', '0253'].includes(sCode)) {
+      return { label: 'อาหารว่าง', class: 'bg-secondary text-white' };
     }
     return null;
   }
@@ -2056,8 +2151,8 @@ export class RqtprojectComponent implements OnInit {
   getMealSummaryForAct(actNum: any): any | null {
     if (!this.dataProjectexd || !Array.isArray(this.dataProjectexd)) return null;
 
-    const mealGovCodes = ['0205', '0207', '0218'];
-    const mealPrivCodes = ['0213', '0214', '0243'];
+    const mealGovCodes = ['0205', '0207', '0218', '0246', '0248', '0250'];
+    const mealPrivCodes = ['0213', '0214', '0243', '0247', '0249', '0251'];
     const allMealCodes = [...mealGovCodes, ...mealPrivCodes];
 
     const targetAct = String(actNum || '1');
@@ -2076,6 +2171,9 @@ export class RqtprojectComponent implements OnInit {
     });
 
     if (mealRows.length === 0) return null;
+
+    const isTypeA = mealRows.some((p: any) => String(p.PLPROJECTGTYPE_CODE || '') === '04' || String(p.PLPROJECTGTYPE_CODE || '') === '4')
+      || (this.dataAdd && (String(this.dataAdd.PLPROJECTGTYPE_CODE) === '04' || String(this.dataAdd.PLPROJECTGTYPE_CODE) === '4'));
 
     // Determine location for this activity
     let locationType = '1';
@@ -2113,13 +2211,13 @@ export class RqtprojectComponent implements OnInit {
       totalMoney += parseFloat(p.PLPROJECTGROUPDT_MONEY) || 0;
 
       let name = '';
-      if (['0218', '0243'].includes(code)) {
+      if (['0218', '0243', '0246', '0247'].includes(code)) {
         hasBreakfast = true;
         name = 'มื้อเช้า';
-      } else if (['0207', '0213'].includes(code)) {
+      } else if (['0207', '0213', '0248', '0249'].includes(code)) {
         hasLunch = true;
         name = 'มื้อกลางวัน';
-      } else if (['0205', '0214'].includes(code)) {
+      } else if (['0205', '0214', '0250', '0251'].includes(code)) {
         hasDinner = true;
         name = 'มื้อเย็น';
       } else {
@@ -2136,10 +2234,18 @@ export class RqtprojectComponent implements OnInit {
     const isFull = (mealCount === 3);
 
     let maxLimit = 0;
-    if (isGov) {
-      maxLimit = isFull ? 750 : 500;
+    if (isTypeA) {
+      if (isGov) {
+        maxLimit = isFull ? 1100 : 750;
+      } else {
+        maxLimit = isFull ? 1500 : 1100;
+      }
     } else {
-      maxLimit = isFull ? 1200 : 900;
+      if (isGov) {
+        maxLimit = isFull ? 750 : 500;
+      } else {
+        maxLimit = isFull ? 1200 : 900;
+      }
     }
 
     const isOver = totalRate > maxLimit;
@@ -2153,6 +2259,7 @@ export class RqtprojectComponent implements OnInit {
     return {
       actKey: targetAct,
       actName,
+      isTypeA,
       locationType,
       locationName,
       hasBreakfast,
@@ -2242,9 +2349,33 @@ export class RqtprojectComponent implements OnInit {
   }
 
   alertMealLimit() {
+    const isTypeA = (this.dataAdd && (String(this.dataAdd.PLPROJECTGTYPE_CODE) === '04' || String(this.dataAdd.PLPROJECTGTYPE_CODE) === '4'));
     Swal.fire({
-      title: '<span style="font-size: 20px; font-weight: bold; color: #212529;">ข้อกำหนดอัตราค่าอาหารสำหรับผู้เข้าร่วมโครงการ</span>',
-      html: `
+      title: '<span style="font-size: 20px; font-weight: bold; color: #212529;">ข้อกำหนดอัตราค่าอาหารสำหรับผู้เข้าร่วมโครงการ' + (isTypeA ? ' (ประเภท ก)' : '') + '</span>',
+      html: isTypeA ? `
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 15px; border: 1px solid #c0c0c0; margin-top: 10px;">
+          <tbody>
+            <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 8px 14px; color: #000;">สถานที่ราชการ/รัฐวิสาหกิจ/หน่วยงานอื่นภาครัฐ</td>
+            </tr>
+            <tr style="background-color: #ffffff; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 10px 14px; line-height: 1.8; color: #000;">
+                <div>กำหนด 1. จัดครบทุกมื้อ ไม่เกิน 1,100 บาท</div>
+                <div style="padding-left: 45px;">2. จัดไม่ครบทุกมื้อ ไม่เกิน 750 บาท</div>
+              </td>
+            </tr>
+            <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
+              <td style="padding: 8px 14px; color: #000;">สถานที่เอกชน</td>
+            </tr>
+            <tr style="background-color: #ffffff;">
+              <td style="padding: 10px 14px; line-height: 1.8; color: #000;">
+                <div>กำหนด 1. จัดครบทุกมื้อ ไม่เกิน 1,500 บาท</div>
+                <div style="padding-left: 45px;">2. จัดไม่ครบทุกมื้อ ไม่เกิน 1,100 บาท</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      ` : `
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 15px; border: 1px solid #c0c0c0; margin-top: 10px;">
           <tbody>
             <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
@@ -2257,7 +2388,7 @@ export class RqtprojectComponent implements OnInit {
               </td>
             </tr>
             <tr style="background-color: #fce5cd; font-weight: bold; border-bottom: 1px solid #c0c0c0;">
-              <td style="padding: 8px 14px; color: #000;">สถานที่เอกชน </td>
+              <td style="padding: 8px 14px; color: #000;">สถานที่เอกชน</td>
             </tr>
             <tr style="background-color: #ffffff;">
               <td style="padding: 10px 14px; line-height: 1.8; color: #000;">
@@ -2383,6 +2514,10 @@ export class RqtprojectComponent implements OnInit {
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0214' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0205'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0212' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0204'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0218' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0243'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0246' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0247'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0248' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0249'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0250' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0251'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0252' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0253'
       ) {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'V04';
@@ -2393,7 +2528,7 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT1 = 'คน';
       this.dataAdd.PLPT2 = 'วัน';
       this.dataAdd.PLPT3 = 'มื้อ';
-      this.dataAdd.PLPT4 = '';
+      this.dataAdd.PLPT4 = 1;
       this.dataAdd.moneydt = 1;
     }else//ค่าตอบแทน
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0103' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0102'
@@ -2552,15 +2687,17 @@ export class RqtprojectComponent implements OnInit {
       for (let i = 0; i < this.dataProjectdt.length; i++) {
         if (this.dataProjectdt[i].PLPROJECTGROUPDT_CODE == this.dataAdd.PLPROJECTGROUPDT_CODE) {
           if(this.dataAdd.PLPROJECTESTTYPE_CODE=='1'){
-          this.dataAdd.PLPROJECTGROUPDT_MONEY = this.dataProjectdt[i].PLPROJECTGROUPDT_MONEYE;
+          this.dataAdd.PLPROJECTGROUPDT_MONEY = this.dataProjectdt[i].PLPROJECTGROUPDT_MONEY;
           }else{
-          this.dataAdd.PLPROJECTGROUPDT_MONEY = this.dataProjectdt[i].PLPROJECTGROUPDT_MONEYO;  
+          this.dataAdd.PLPROJECTGROUPDT_MONEY = this.dataProjectdt[i].PLPROJECTGROUPDT_MONEYS;  
           }
         }
       }
     }
-    if (showAlert && this.isMealItem(this.dataAdd.PLPROJECTGROUPDT_CODE)) {
-      this.alertMealLimit();
+    if (this.isMealOrSnackItem(this.dataAdd.PLPROJECTGROUPDT_CODE)) {
+      this.syncMealTargetsFromDetail();
+    } else {
+      this.selectedMealTargetIds = [];
     }
   }
   showasset() {

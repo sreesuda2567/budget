@@ -2,12 +2,19 @@
   <div class="row mb-3">
     <div class="col-md-8">
       <h5 class="fw-bold"><i
-          class="fa-solid fa-diagram-project me-2 text-primary"></i>คำขอรายการโครงการทั่วไป/โครงการวิจัย <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle ms-2 rounded-pill px-2 py-1 fs-6 fw-normal" *ngIf="(dataAdd.PRPLPROJECT_TYPE == 0 || PRPLPROJECT_TYPE == 0) && dataAdd.PRPLPROJECT_TYPE != 1 && PRPLPROJECT_TYPE != 1"><i class="fa-solid fa-calendar-check me-1"></i>ประจำปี</span>
-        <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle ms-2 rounded-pill px-2 py-1 fs-6 fw-normal" *ngIf="dataAdd.PRPLPROJECT_TYPE == 1 || PRPLPROJECT_TYPE == 1"><i class="fa-solid fa-circle-plus me-1"></i>อนุมัติเพิ่มระหว่างปี</span></h5>
+          class="fa-solid fa-diagram-project me-2 text-primary"></i>คำขอรายการโครงการทั่วไป/โครงการวิจัย <span
+          class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle ms-2 rounded-pill px-2 py-1 fs-6 fw-normal"
+          *ngIf="(dataAdd.PRPLPROJECT_TYPE == 0 || PRPLPROJECT_TYPE == 0) && dataAdd.PRPLPROJECT_TYPE != 1 && PRPLPROJECT_TYPE != 1"><i
+            class="fa-solid fa-calendar-check me-1"></i>ประจำปี</span>
+        <span
+          class="badge bg-success bg-opacity-10 text-success border border-success-subtle ms-2 rounded-pill px-2 py-1 fs-6 fw-normal"
+          *ngIf="dataAdd.PRPLPROJECT_TYPE == 1 || PRPLPROJECT_TYPE == 1"><i
+            class="fa-solid fa-circle-plus me-1"></i>อนุมัติเพิ่มระหว่างปี</span>
+      </h5>
     </div>
     <div class="col-md-4" align="right">
-      <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-danger text-white rounded-pill px-3 shadow-sm" data-bs-toggle="modal"
-        data-bs-target="#exampleModalimport" (click)="onChangeyearimport()">
+      <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-danger text-white rounded-pill px-3 shadow-sm"
+        data-bs-toggle="modal" data-bs-target="#exampleModalimport" (click)="onChangeyearimport()">
         <i class="fa fa-repeat" aria-hidden="true"></i> นำเข้าข้อมูล</a>&nbsp;
       <a *ngIf="dataAdd.turnoff=='1'" class="btn btn-primary text-white rounded-pill px-3 shadow-sm"
         data-bs-toggle="modal" data-bs-target="#modalEditregister" (click)=" setshowbti()" (click)="onChangerister()">
@@ -144,13 +151,11 @@
                     </span>
                   </td>
                   <td align="center">
-                    <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
-                      [ngClass]="{
+                    <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap" [ngClass]="{
                         'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
                         'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
                         'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
-                      }"
-                      style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                      }" style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
                       {{p.PRSTATUS_NAME}}
                     </span>
                   </td>
@@ -184,13 +189,11 @@
                   <td>{{p.PRREGISPROJECT_NAME}}</td>
                   <td align="right">{{p.PLPROJECT_MONEY| number : '1.2-2'}}</td>
                   <td align="center">
-                    <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
-                      [ngClass]="{
+                    <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap" [ngClass]="{
                         'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
                         'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
                         'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
-                      }"
-                      style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                      }" style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
                       {{p.PRSTATUS_NAME}}
                     </span>
                   </td>
@@ -280,8 +283,10 @@
                       <label for="name"><strong><i
                             class="fa-solid fa-money-bill-wave me-2 text-danger"></i>แหล่งเงิน/ภาค</strong> </label>
                       <div class="row">
-                        <div class="col-md-4 text-secondary" style="font-size: 10pt">แหล่งเงิน: <span class="text-danger">*</span></div>
-                        <div class="col-md-4 text-secondary" style="font-size: 10pt">ภาค: <span class="text-danger">*</span></div>
+                        <div class="col-md-4 text-secondary" style="font-size: 10pt">แหล่งเงิน: <span
+                            class="text-danger">*</span></div>
+                        <div class="col-md-4 text-secondary" style="font-size: 10pt">ภาค: <span
+                            class="text-danger">*</span></div>
                       </div>
                       <div class="row">
                         <div class="col-md-4">
@@ -410,27 +415,31 @@
                           <label class="mb-0 fw-bold">
                             <i class="fa-solid fa-list-ol me-2 text-danger"></i>จำนวนกิจกรรมย่อย:
                           </label>
-                          <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-3 py-2 rounded-pill"
+                          <span
+                            class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-3 py-2 rounded-pill"
                             *ngIf="!dataAdd.PRPLPROJECT_TIME || dataAdd.PRPLPROJECT_TIME <= 1">
                             <i class="fa-solid fa-circle-check text-muted me-1"></i>ไม่มีกิจกรรมย่อย (ดำเนินโครงการหลัก)
                           </span>
-                          <span class="badge bg-danger px-3 py-2 rounded-pill"
-                            *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                          <span class="badge bg-danger px-3 py-2 rounded-pill" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
                             <i class="fa-solid fa-layer-group me-1"></i>มี {{ dataAdd.PRPLPROJECT_TIME }} กิจกรรมย่อย
                           </span>
                         </div>
                         <div class="d-flex align-items-center gap-2">
-                          <button type="button" class="btn btn-sm btn-success text-white shadow-sm" (click)="addActivity()">
+                          <button type="button" class="btn btn-sm btn-success text-white shadow-sm"
+                            (click)="addActivity()">
                             <i class="fa-solid fa-plus-circle me-1"></i> เพิ่มกิจกรรมย่อย
                           </button>
-                          <button type="button" class="btn btn-sm btn-outline-danger" *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="resetActivity()" title="ยกเลิกกิจกรรมย่อยทั้งหมด">
+                          <button type="button" class="btn btn-sm btn-outline-danger"
+                            *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="resetActivity()"
+                            title="ยกเลิกกิจกรรมย่อยทั้งหมด">
                             <i class="fa-solid fa-trash-can me-1"></i> ยกเลิกกิจกรรมย่อย
                           </button>
                         </div>
                       </div>
 
                       <!-- รายชื่อกิจกรรมย่อยเมื่อมีกิจกรรมย่อย > 1 -->
-                      <div class="mt-3 p-3 bg-light bg-opacity-50 border rounded-3" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                      <div class="mt-3 p-3 bg-light bg-opacity-50 border rounded-3"
+                        *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                           <span class="fw-bold text-dark">
                             <i class="fa-solid fa-bars-staggered me-2 text-danger"></i>รายชื่อกิจกรรมย่อย
@@ -443,12 +452,14 @@
                         <div class="row g-2">
                           <div class="col-md-12" *ngFor="let p of number1; let i = index">
                             <div class="input-group">
-                              <span class="input-group-text bg-white fw-bold text-danger border-end-0" style="min-width: 125px;">
+                              <span class="input-group-text bg-white fw-bold text-danger border-end-0"
+                                style="min-width: 125px;">
                                 <i class="fa-solid fa-cube me-2 text-primary"></i>กิจกรรมที่ {{ i + 1 }}
                               </span>
                               <input type="text" class="form-control" [placeholder]="'ระบุชื่อกิจกรรมที่ ' + (i + 1)"
                                 [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]" (ngModelChange)="updateProjectActList()">
-                              <button type="button" class="btn btn-outline-danger" (click)="removeActivityAt(i)" title="ลบกิจกรรมที่ {{ i + 1 }}">
+                              <button type="button" class="btn btn-outline-danger" (click)="removeActivityAt(i)"
+                                title="ลบกิจกรรมที่ {{ i + 1 }}">
                                 <i class="fa-solid fa-trash-can"></i>
                               </button>
                             </div>
@@ -507,8 +518,8 @@
                   <div class="shadow alert " role="alert">
                     <div class="row">
                       <div class="col-md-3">
-                        <label for="name"><strong><i
-                              class="fa-solid fa-user-tie me-2 text-danger"></i>ชื่อ-สกุล </strong></label>
+                        <label for="name"><strong><i class="fa-solid fa-user-tie me-2 text-danger"></i>ชื่อ-สกุล
+                          </strong></label>
                         <input name="PRPLPROJECT_HEADER" type="hidden" id="PRPLPROJECT_HEADER"
                           [(ngModel)]="dataAdd.PRPLPROJECT_HEADER" />
                         <input name="PRPLPROJECT_HCITIZEN" type="hidden" id="PRPLPROJECT_HCITIZEN"
@@ -572,7 +583,8 @@
                         </span>
                         <div>
                           <strong class="text-dark"
-                            style="font-size: 15px;">ระยะเวลาดำเนินโครงการและจำนวนผู้เข้าร่วม<span class="text-danger">*</span></strong>
+                            style="font-size: 15px;">ระยะเวลาดำเนินโครงการและจำนวนผู้เข้าร่วม<span
+                              class="text-danger">*</span></strong>
                           <span
                             class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle ms-2 rounded-pill px-2 py-1"
                             *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
@@ -732,22 +744,28 @@
                     </div>
                   </div>
 
-                                    <!-- ตารางสถานที่ดำเนินโครงการตามกิจกรรมย่อย -->
+                  <!-- ตารางสถานที่ดำเนินโครงการตามกิจกรรมย่อย -->
                   <div class="activity-location-card card border shadow-sm rounded-3 my-3">
-                    <div class="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div
+                      class="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
                       <div class="d-flex align-items-center">
                         <span class="activity-icon-badge-location me-2">
                           <i class="fa-solid fa-map-location-dot text-danger"></i>
                         </span>
                         <div>
-                          <strong class="text-dark" style="font-size: 15px;">สถานที่ดำเนินโครงการ<span class="text-danger">*</span></strong>
-                          <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle ms-2 rounded-pill px-2 py-1" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                          <strong class="text-dark" style="font-size: 15px;">สถานที่ดำเนินโครงการ<span
+                              class="text-danger">*</span></strong>
+                          <span
+                            class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle ms-2 rounded-pill px-2 py-1"
+                            *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
                             ตาม {{ dataAdd.PRPLPROJECT_TIME }} กิจกรรมย่อย
                           </span>
                         </div>
                       </div>
                       <div class="d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="copyLocationToAll()" title="คัดลอกสถานที่จากกิจกรรมที่ 1 ไปยังทุกกิจกรรม">
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                          *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="copyLocationToAll()"
+                          title="คัดลอกสถานที่จากกิจกรรมที่ 1 ไปยังทุกกิจกรรม">
                           <i class="fa-solid fa-clone me-1"></i> ใช้สถานที่เดียวกันทุกกิจกรรม
                         </button>
                         <span class="text-muted small d-none d-md-inline">
@@ -789,10 +807,13 @@
                                   <span class="badge rounded-pill badge-activity" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
                                     กิจกรรมที่ {{ i + 1 }}
                                   </span>
-                                  <span class="badge rounded-pill badge-single-activity" *ngIf="!(dataAdd.PRPLPROJECT_TIME > 1)">
+                                  <span class="badge rounded-pill badge-single-activity"
+                                    *ngIf="!(dataAdd.PRPLPROJECT_TIME > 1)">
                                     โครงการหลัก
                                   </span>
-                                  <span class="activity-subname text-truncate mt-1" *ngIf="dataAdd.PRPLPROJECTACT_NAME && dataAdd.PRPLPROJECTACT_NAME[i]" [title]="dataAdd.PRPLPROJECTACT_NAME[i]">
+                                  <span class="activity-subname text-truncate mt-1"
+                                    *ngIf="dataAdd.PRPLPROJECTACT_NAME && dataAdd.PRPLPROJECTACT_NAME[i]"
+                                    [title]="dataAdd.PRPLPROJECTACT_NAME[i]">
                                     {{ dataAdd.PRPLPROJECTACT_NAME[i] }}
                                   </span>
                                 </div>
@@ -800,8 +821,8 @@
 
                               <!-- สถานที่ (ภายใน/ภายนอก) -->
                               <td class="py-2 px-2">
-                                <select name="PRPLPROJECT_AT_{{i}}" id="PRPLPROJECT_AT_{{i}}" class="form-select form-select-sm"
-                                  [(ngModel)]="dataAdd.PRPLPROJECT_AT[i]">
+                                <select name="PRPLPROJECT_AT_{{i}}" id="PRPLPROJECT_AT_{{i}}"
+                                  class="form-select form-select-sm" [(ngModel)]="dataAdd.PRPLPROJECT_AT[i]">
                                   <option value="1">สถานที่ราชการ/รัฐวิสาหกิจ/หน่วยงานอื่นของรัฐ</option>
                                   <option value="2">สถานที่เอกชน</option>
                                 </select>
@@ -809,14 +830,16 @@
 
                               <!-- ระบุสถานที่ -->
                               <td class="py-2 px-2">
-                                <input type="text" name="PRPLPROJECT_LOCATION_{{i}}" id="PRPLPROJECT_LOCATION_{{i}}" class="form-control form-control-sm"
-                                  placeholder="ระบุสถานที่ ณ..." [(ngModel)]="dataAdd.PRPLPROJECT_LOCATION[i]">
+                                <input type="text" name="PRPLPROJECT_LOCATION_{{i}}" id="PRPLPROJECT_LOCATION_{{i}}"
+                                  class="form-control form-control-sm" placeholder="ระบุสถานที่ ณ..."
+                                  [(ngModel)]="dataAdd.PRPLPROJECT_LOCATION[i]">
                               </td>
 
                               <!-- จังหวัด -->
                               <td class="py-2 px-2">
-                                <select name="PROVINCE_ID_{{i}}" id="PROVINCE_ID_{{i}}" class="form-select form-select-sm"
-                                  (change)="onChangedistrict(i)" [(ngModel)]="dataAdd.PROVINCE_ID[i]">
+                                <select name="PROVINCE_ID_{{i}}" id="PROVINCE_ID_{{i}}"
+                                  class="form-select form-select-sm" (change)="onChangedistrict(i)"
+                                  [(ngModel)]="dataAdd.PROVINCE_ID[i]">
                                   <option value="">เลือกจังหวัด</option>
                                   <option [value]="provice.PROVINCE_ID" *ngFor="let provice of dataProvince">
                                     {{ provice.PROVINCE_TNAME }}
@@ -826,10 +849,12 @@
 
                               <!-- อำเภอ -->
                               <td class="py-2 px-2">
-                                <select name="DISTRICT_ID_{{i}}" id="DISTRICT_ID_{{i}}" class="form-select form-select-sm"
-                                  (change)="onChangesubdistrict(i)" [(ngModel)]="dataAdd.DISTRICT_ID[i]">
+                                <select name="DISTRICT_ID_{{i}}" id="DISTRICT_ID_{{i}}"
+                                  class="form-select form-select-sm" (change)="onChangesubdistrict(i)"
+                                  [(ngModel)]="dataAdd.DISTRICT_ID[i]">
                                   <option value="">เลือกอำเภอ</option>
-                                  <option [value]="district.DISTRICT_ID" *ngFor="let district of (dataDistrictList && dataDistrictList[i] ? dataDistrictList[i] : dataDistrict)">
+                                  <option [value]="district.DISTRICT_ID"
+                                    *ngFor="let district of (dataDistrictList && dataDistrictList[i] ? dataDistrictList[i] : dataDistrict)">
                                     {{ district.DISTRICT_NAME_TH }}
                                   </option>
                                 </select>
@@ -837,10 +862,11 @@
 
                               <!-- ตำบล -->
                               <td class="py-2 px-2">
-                                <select name="SUB_DISTRICT_ID_{{i}}" id="SUB_DISTRICT_ID_{{i}}" class="form-select form-select-sm"
-                                  [(ngModel)]="dataAdd.SUB_DISTRICT_ID[i]">
+                                <select name="SUB_DISTRICT_ID_{{i}}" id="SUB_DISTRICT_ID_{{i}}"
+                                  class="form-select form-select-sm" [(ngModel)]="dataAdd.SUB_DISTRICT_ID[i]">
                                   <option value="">เลือกตำบล</option>
-                                  <option [value]="subdistrict.SUB_DISTRICT_ID" *ngFor="let subdistrict of (dataSubdistrictList && dataSubdistrictList[i] ? dataSubdistrictList[i] : dataSubdistrict)">
+                                  <option [value]="subdistrict.SUB_DISTRICT_ID"
+                                    *ngFor="let subdistrict of (dataSubdistrictList && dataSubdistrictList[i] ? dataSubdistrictList[i] : dataSubdistrict)">
                                     {{ subdistrict.SUB_DISTRICT_NAME_TH }}
                                   </option>
                                 </select>
@@ -865,8 +891,8 @@
                   <div class="row">
                     <div class="col-md-12 mb-2" *ngFor="let p of number1;let i = index">
                       <label for="name"><strong><i
-                            class="fa-solid fa-chart-line me-2 text-danger"></i>แนวทาง/กิจกรรมในการดำเนินโครงการ <span class="text-danger">*</span><span
-                            *ngIf="dataAdd.PRPLPROJECT_TIME>1"><strong>กิจกรรมที่
+                            class="fa-solid fa-chart-line me-2 text-danger"></i>แนวทาง/กิจกรรมในการดำเนินโครงการ <span
+                            class="text-danger">*</span><span *ngIf="dataAdd.PRPLPROJECT_TIME>1"><strong>กิจกรรมที่
                               {{i+1}}</strong></span></strong></label>
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PRPLPROJECTACT_ACT[i]">
                       </ckeditor>
@@ -880,8 +906,8 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <label for="name"><strong><i
-                            class="fa-solid fa-bullseye me-2 text-danger"></i>วัตถุประสงค์<span class="text-danger">*</span></strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-bullseye me-2 text-danger"></i>วัตถุประสงค์<span
+                            class="text-danger">*</span></strong></label>
                       <!--  <angular-editor [(ngModel)]="dataAdd.PRPLPROJECT_OBJECT" [config]="config"></angular-editor>-->
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PRPLPROJECT_OBJECT">
                       </ckeditor>
@@ -890,7 +916,8 @@
                   <div class="row">
                     <div class="col-md-12">
                       <label for="name"><strong><i
-                            class="fa-solid fa-award me-2 text-danger"></i>ผลที่คาดว่าจะได้รับ<span class="text-danger">*</span></strong></label>
+                            class="fa-solid fa-award me-2 text-danger"></i>ผลที่คาดว่าจะได้รับ<span
+                            class="text-danger">*</span></strong></label>
                       <!--  <angular-editor [(ngModel)]="dataAdd.PLPROJECTMORE_RESULT" [config]="config"></angular-editor>-->
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PLPROJECTMORE_RESULT">
                       </ckeditor>
@@ -899,7 +926,8 @@
                   <div class="row">
                     <div class="col-md-12">
                       <label for="name"><strong><i
-                            class="fa-solid fa-square-poll-vertical me-2 text-danger"></i>การประเมินผลโครงการ<span class="text-danger">*</span></strong></label>
+                            class="fa-solid fa-square-poll-vertical me-2 text-danger"></i>การประเมินผลโครงการ<span
+                            class="text-danger">*</span></strong></label>
                       <!--<angular-editor [(ngModel)]="dataAdd.PLPROJECTMORE_ESTIMATE" [config]="config"></angular-editor>-->
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PLPROJECTMORE_ESTIMATE">
                       </ckeditor>
@@ -1068,7 +1096,8 @@
                         <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>รายการ</strong>
                         </label>
                         <select name="PLPROJECTGROUPDT_CODE" id="PLPROJECTGROUPDT_CODE" class="form-select"
-                          [(ngModel)]="dataAdd.PLPROJECTGROUPDT_CODE" (change)="showestimate(true)">
+                          [(ngModel)]="dataAdd.PLPROJECTGROUPDT_CODE" (change)="showestimate()">
+                          <option value="">-- กรุณาเลือกรายการ --</option>
                           <option [value]="d.PLPROJECTGROUPDT_CODE" *ngFor="let d of dataProjectdt">
                             {{d.PLPROJECTGROUPDT_NAME}}
                           </option>
@@ -1077,110 +1106,177 @@
                           <div class="fw-bold">
                             <i class="fa-solid fa-circle-info me-1 text-primary"></i>
                             ข้อกำหนดอัตราค่าอาหาร (สถานที่ปัจจุบัน: <u>{{ getCurrentLocationType() == '2' ? 'สถานที่เอกชน' : 'สถานที่ราชการ/รัฐวิสาหกิจ' }}</u>)
+                            <span *ngIf="dataAdd.PLPROJECTGTYPE_CODE == '04' || dataAdd.PLPROJECTGTYPE_CODE == '4'" class="badge bg-primary ms-1">การฝึกอบรมประเภท ก</span>
                           </div>
                           <div class="mt-1">
-                            <span *ngIf="getCurrentLocationType() != '2'">
-                              • <strong>สถานที่ราชการ:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>750</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>500</strong> บาท/คน/วัน
-                            </span>
-                            <span *ngIf="getCurrentLocationType() == '2'">
-                              • <strong>สถานที่เอกชน:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,200</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>900</strong> บาท/คน/วัน
-                            </span>
+                            <!-- กรณี การฝึกอบรมประเภท ก (PLPROJECTGTYPE_CODE = 04) -->
+                            <ng-container *ngIf="dataAdd.PLPROJECTGTYPE_CODE == '04' || dataAdd.PLPROJECTGTYPE_CODE == '4'">
+                              <span *ngIf="getCurrentLocationType() != '2'">
+                                • <strong>สถานที่ราชการ/รัฐวิสาหกิจ/หน่วยงานอื่นภาครัฐ:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,100</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>750</strong> บาท/คน/วัน
+                              </span>
+                              <span *ngIf="getCurrentLocationType() == '2'">
+                                • <strong>สถานที่เอกชน:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,500</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>1,100</strong> บาท/คน/วัน
+                              </span>
+                            </ng-container>
+
+                            <!-- กรณี ประเภท ข หรือประเภทอื่นทั่วไป -->
+                            <ng-container *ngIf="dataAdd.PLPROJECTGTYPE_CODE != '04' && dataAdd.PLPROJECTGTYPE_CODE != '4'">
+                              <span *ngIf="getCurrentLocationType() != '2'">
+                                • <strong>สถานที่ราชการ:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>750</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>500</strong> บาท/คน/วัน
+                              </span>
+                              <span *ngIf="getCurrentLocationType() == '2'">
+                                • <strong>สถานที่เอกชน:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,200</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>900</strong> บาท/คน/วัน
+                              </span>
+                            </ng-container>
                           </div>
                         </div>
-                        <div *ngIf="isMaterialItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="text-primary small mt-1 fw-bold">
-                          <i class="fa-solid fa-circle-info me-1"></i>(ข้อกำหนด: ค่าวัสดุรวมต้องไม่เกินร้อยละ 20 ของงบประมาณโครงการ)
+                        <div *ngIf="isMaterialItem(dataAdd.PLPROJECTGROUPDT_CODE)"
+                          class="text-primary small mt-1 fw-bold">
+                          <i class="fa-solid fa-circle-info me-1"></i>(ข้อกำหนด: ค่าวัสดุรวมต้องไม่เกินร้อยละ 20
+                          ของงบประมาณโครงการ)
                         </div>
                       </div>
-                      <div *ngIf="dataAdd.PLPROJECTGROUPDT_CODE=='0401'" class="col-md-12">
-                        <label for="name"><strong>ครุภัณฑ์</strong> </label>
-                        <select name="PRASSET_CODE" id="PRASSET_CODE" class="form-select"
-                          [(ngModel)]="dataAdd.PRASSET_CODE" (change)="showasset()">
-                          <option [value]="d.PRASSET_CODE" *ngFor="let d of dataProjectasset">
-                            {{d.PRREGISASSET_NAME}}
-                          </option>
-                        </select>
-                      </div>
-                      <div class="col-md-12" *ngIf="dataAdd.PLPT4 ">
-                        <label for="name"><strong>รายละเอียด</strong> </label>
-                        <input type="text" name="PLPROJECTGROUPDT_DETAIL" id="PLPROJECTGROUPDT_DETAIL"
-                          class="form-control" placeholder="รายละเอียด" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_DETAIL">
-                      </div>
-                      <div class="col-md-12">
-                        <div class="row">
-                          <div class="col-md-1" *ngIf="dataAdd.PLPDT3">
-                            <label for="name"><strong><i
-                                  class="fa-solid fa-users me-2 text-danger"></i>จำนวน{{dataAdd.PLPT1}}</strong>
-                            </label>
-                            <input type="text" name="PLPROJECTGROUPDT_NUMA" id="PLPROJECTGROUPDT_NUMA"
-                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMA"
-                              (keypress)="CheckNum($event)">
+
+                      <!-- แสดงส่วนกรอกข้อมูลเฉพาะเมื่อเลือกรายการแล้วเท่านั้น -->
+                      <ng-container *ngIf="dataAdd.PLPROJECTGROUPDT_CODE">
+                        <div *ngIf="dataAdd.PLPROJECTGROUPDT_CODE=='0401'" class="col-md-12">
+                          <label for="name"><strong>ครุภัณฑ์</strong> </label>
+                          <select name="PRASSET_CODE" id="PRASSET_CODE" class="form-select"
+                            [(ngModel)]="dataAdd.PRASSET_CODE" (change)="showasset()">
+                            <option [value]="d.PRASSET_CODE" *ngFor="let d of dataProjectasset">
+                              {{d.PRREGISASSET_NAME}}
+                            </option>
+                          </select>
+                        </div>
+                        <div class="col-md-12" *ngIf="dataAdd.PLPT4 ">
+                          <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="PLPROJECTGROUPDT_DETAIL"><strong>รายละเอียด</strong> </label>
+                            <div *ngIf="isMealOrSnackItem(dataAdd.PLPROJECTGROUPDT_CODE)"
+                              class="d-flex align-items-center gap-2">
+                              <div class="form-check form-check-inline mb-0">
+                                <input class="form-check-input" type="checkbox" id="mealPrefixFor"
+                                  [(ngModel)]="mealDetailConfig.usePrefix" (change)="onMealTargetChange()">
+                                <label class="form-check-label small text-muted" for="mealPrefixFor">นำหน้าด้วยคำว่า
+                                  "สำหรับ"</label>
+                              </div>
+                              <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                style="font-size: 11px;" (click)="clearMealTargets()" title="ล้างค่าที่เลือก">
+                                <i class="fa-solid fa-rotate-left me-1"></i>ล้างที่เลือก
+                              </button>
+                            </div>
                           </div>
-                          <div class="col-md-1" *ngIf="dataAdd.PLPDT3">
-                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
-                            </label>
-                            <select name="GCUNIT_ACODE" id="GCUNIT_ACODE" class="form-select"
-                              [(ngModel)]="dataAdd.GCUNIT_ACODE">
-                              <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
-                              </option>
-                            </select>
+
+                          <!-- ตัวเลือกกลุ่มเป้าหมาย (มีปุ่มให้ติ๊ก) สำหรับค่าอาหารและค่าอาหารว่าง -->
+                          <div *ngIf="isMealOrSnackItem(dataAdd.PLPROJECTGROUPDT_CODE)"
+                            class="p-2 mb-2 rounded border bg-light shadow-sm"
+                            style="border-left: 4px solid #0dcaf0 !important;">
+                            <div class="small fw-bold text-primary mb-2 d-flex align-items-center">
+                              <i class="fa-solid fa-square-check me-2 text-info fs-6"></i>
+                              <span>กลุ่มเป้าหมาย</span>
+                            </div>
+                            <div class="row g-2">
+                              <div class="col-md-4 col-sm-6" *ngFor="let opt of mealTargetOptions">
+                                <div class="form-check p-2 rounded border bg-white d-flex align-items-center shadow-xs">
+                                  <input class="form-check-input ms-1 me-2" type="checkbox" [id]="'tgt_' + opt.id"
+                                    [checked]="isMealTargetSelected(opt.id)"
+                                    (change)="toggleMealTarget(opt.id, $event)">
+                                  <label class="form-check-label small cursor-pointer flex-grow-1"
+                                    [for]="'tgt_' + opt.id">
+                                    {{opt.title}}
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div class="col-md-1" *ngIf="dataAdd.PLPDT1">
-                            <label for="name"><strong><i
-                                  class="fa-regular fa-clock me-2 text-danger"></i>จำนวน{{dataAdd.PLPT2}}</strong>
-                            </label>
-                            <input type="text" name="PLPROJECTGROUPDT_NUMB" id="PLPROJECTGROUPDT_NUMB"
-                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMB"
-                              (keypress)="CheckNum($event)">
-                          </div>
-                          <div class="col-md-1" *ngIf="dataAdd.PLPDT1">
-                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
-                            </label>
-                            <select name="GCUNIT_BCODE" id="GCUNIT_BCODE" class="form-select"
-                              [(ngModel)]="dataAdd.GCUNIT_BCODE">
-                              <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
-                              </option>
-                            </select>
-                          </div>
-                          <div class="col-md-1" *ngIf="dataAdd.PLPDT2">
-                            <label for="name"><strong><i
-                                  class="fa-solid fa-utensils me-2 text-danger"></i>จำนวน{{dataAdd.PLPT3}}</strong>
-                            </label>
-                            <input type="text" name="PLPROJECTGROUPDT_NUMC" id="PLPROJECTGROUPDT_NUMC"
-                              class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMC"
-                              (keypress)="CheckNum($event)">
-                          </div>
-                          <div class="col-md-1" *ngIf="dataAdd.PLPDT2">
-                            <label for="name"><strong><i class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
-                            </label>
-                            <select name="GCUNIT_CCODE" id="GCUNIT_CCODE" class="form-select"
-                              [(ngModel)]="dataAdd.GCUNIT_CCODE">
-                              <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
-                              </option>
-                            </select>
-                          </div>
-                          <div class="col-md-2">
-                            <label for="name"><strong><i
-                                  class="fa-solid fa-coins me-2 text-danger"></i>จำนวนเงิน</strong> </label>
-                            <input type="text" name="PLPROJECTGROUPDT_MONEY" id="PLPROJECTGROUPDT_MONEY"
-                              class="form-control" placeholder="จำนวน" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_MONEY"
-                              (keypress)="CheckNum($event)">
-                          </div>
-                          <div class="col-md-2">
-                            <br>
-                            <a *ngIf="rowpbi==1" id="insertdt" class="btn btn-success text-white"
-                              (click)="insertdatadt()"><i class="fa fa-plus-circle"></i> เพิ่ม</a>
-                            <a *ngIf="rowpbu==1" id="updatedt" role="button" title="แก้ไข"
-                              class="btn btn-warning text-white" (click)="updatedatadt()"><i class="fa fa-edit"></i>
-                              แก้ไข</a>
+
+                          <input type="text" name="PLPROJECTGROUPDT_DETAIL" id="PLPROJECTGROUPDT_DETAIL"
+                            class="form-control" placeholder="รายละเอียด" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_DETAIL">
+                        </div>
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-1" *ngIf="dataAdd.PLPDT3">
+                              <label for="name"><strong><i
+                                    class="fa-solid fa-users me-2 text-danger"></i>จำนวน{{dataAdd.PLPT1}}</strong>
+                              </label>
+                              <input type="text" name="PLPROJECTGROUPDT_NUMA" id="PLPROJECTGROUPDT_NUMA"
+                                class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMA"
+                                (keypress)="CheckNum($event)">
+                            </div>
+                            <div class="col-md-1" *ngIf="dataAdd.PLPDT3">
+                              <label for="name"><strong><i
+                                    class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
+                              </label>
+                              <select name="GCUNIT_ACODE" id="GCUNIT_ACODE" class="form-select"
+                                [(ngModel)]="dataAdd.GCUNIT_ACODE">
+                                <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
+                                </option>
+                              </select>
+                            </div>
+                            <div class="col-md-1" *ngIf="dataAdd.PLPDT1">
+                              <label for="name"><strong><i
+                                    class="fa-regular fa-clock me-2 text-danger"></i>จำนวน{{dataAdd.PLPT2}}</strong>
+                              </label>
+                              <input type="text" name="PLPROJECTGROUPDT_NUMB" id="PLPROJECTGROUPDT_NUMB"
+                                class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMB"
+                                (keypress)="CheckNum($event)">
+                            </div>
+                            <div class="col-md-1" *ngIf="dataAdd.PLPDT1">
+                              <label for="name"><strong><i
+                                    class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
+                              </label>
+                              <select name="GCUNIT_BCODE" id="GCUNIT_BCODE" class="form-select"
+                                [(ngModel)]="dataAdd.GCUNIT_BCODE">
+                                <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
+                                </option>
+                              </select>
+                            </div>
+                            <div class="col-md-1" *ngIf="dataAdd.PLPDT2">
+                              <label for="name"><strong><i
+                                    class="fa-solid fa-utensils me-2 text-danger"></i>จำนวน{{dataAdd.PLPT3}}</strong>
+                              </label>
+                              <input type="text" name="PLPROJECTGROUPDT_NUMC" id="PLPROJECTGROUPDT_NUMC"
+                                class="form-control" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_NUMC"
+                                (keypress)="CheckNum($event)">
+                            </div>
+                            <div class="col-md-1" *ngIf="dataAdd.PLPDT2">
+                              <label for="name"><strong><i
+                                    class="fa-solid fa-box me-2 text-danger"></i>หน่วยนับ</strong>
+                              </label>
+                              <select name="GCUNIT_CCODE" id="GCUNIT_CCODE" class="form-select"
+                                [(ngModel)]="dataAdd.GCUNIT_CCODE">
+                                <option [value]="unit.GCUNIT_CODE" *ngFor="let unit of dataUnit">{{unit.GCUNIT_NAME}}
+                                </option>
+                              </select>
+                            </div>
+                            <div class="col-md-2">
+                              <label for="name"><strong><i
+                                    class="fa-solid fa-coins me-2 text-danger"></i>จำนวนเงิน</strong> </label>
+                              <input type="text" name="PLPROJECTGROUPDT_MONEY" id="PLPROJECTGROUPDT_MONEY"
+                                class="form-control" placeholder="จำนวน" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_MONEY"
+                                (keypress)="CheckNum($event)">
+                            </div>
+                            <div class="col-md-2">
+                              <br>
+                              <a *ngIf="rowpbi==1" id="insertdt" class="btn btn-success text-white"
+                                (click)="insertdatadt()"><i class="fa fa-plus-circle"></i> เพิ่ม</a>
+                              <a *ngIf="rowpbu==1" id="updatedt" role="button" title="แก้ไข"
+                                class="btn btn-warning text-white" (click)="updatedatadt()"><i class="fa fa-edit"></i>
+                                แก้ไข</a>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </ng-container>
                     </div>
                   </div>
-                  <div *ngIf="getMaterialPercent() > 20" class="alert alert-warning border-warning shadow-sm mt-2 mb-3 d-flex align-items-center" role="alert">
+                  <div *ngIf="getMaterialPercent() > 20"
+                    class="alert alert-warning border-warning shadow-sm mt-2 mb-3 d-flex align-items-center"
+                    role="alert">
                     <i class="fa-solid fa-triangle-exclamation text-warning fs-3 me-3"></i>
                     <div>
-                      <strong>แจ้งเตือน:</strong> ค่าวัสดุรวม <strong>{{getMaterialTotal() | number : '1.2-2'}} บาท</strong> คิดเป็น <strong>{{getMaterialPercent() | number : '1.2-2'}}%</strong> ของงบประมาณโครงการ ซึ่ง<strong>เกินเกณฑ์ร้อยละ 20</strong> (เกณฑ์กำหนดไม่เกิน {{getMaxMaterialAllowed() | number : '1.2-2'}} บาท)
+                      <strong>แจ้งเตือน:</strong> ค่าวัสดุรวม <strong>{{getMaterialTotal() | number : '1.2-2'}}
+                        บาท</strong> คิดเป็น <strong>{{getMaterialPercent() | number : '1.2-2'}}%</strong>
+                      ของงบประมาณโครงการ ซึ่ง<strong>เกินเกณฑ์ร้อยละ 20</strong> (เกณฑ์กำหนดไม่เกิน
+                      {{getMaxMaterialAllowed() | number : '1.2-2'}} บาท)
                     </div>
                   </div>
                   <table width="100%" id="example" class="table table-bordered btn-font3">
@@ -1204,15 +1300,22 @@
                     <tbody>
                       <ng-container *ngFor="let p of dataProjectexd; let i = index">
                         <tr *ngIf="shouldShowAct(p, i)">
-                          <td align="left" style="background-color:rgb(167, 166, 166); font-weight: bold; padding: 8px 12px;" colspan="4">
-                            <i class="fa-solid fa-cube me-1"></i>{{ getActivityDisplayName(p.PRPLPROJECTM_NUMBER) }}</td>
+                          <td align="left"
+                            style="background-color:rgb(167, 166, 166); font-weight: bold; padding: 8px 12px;"
+                            colspan="4">
+                            <i class="fa-solid fa-cube me-1"></i>{{ getActivityDisplayName(p.PRPLPROJECTM_NUMBER) }}
+                          </td>
                         </tr>
                         <tr *ngIf="shouldShowGtype(p, i)">
-                          <td align="left" style="background-color:rgb(147, 193, 239); font-weight: bold; color: #000; padding: 8px 12px;" colspan="4">
+                          <td align="left"
+                            style="background-color:rgb(147, 193, 239); font-weight: bold; color: #000; padding: 8px 12px;"
+                            colspan="4">
                             {{p.PLPROJECTGTYPE_NAME}}</td>
                         </tr>
                         <tr *ngIf="shouldShowGroup(p, i)">
-                          <td align="left" style="background-color:#dceaf7; font-weight: bold; color: #000; padding: 6px 12px 6px 1.5rem;" colspan="4">
+                          <td align="left"
+                            style="background-color:#dceaf7; font-weight: bold; color: #000; padding: 6px 12px 6px 1.5rem;"
+                            colspan="4">
                             {{p.PLPROJECTGROUP_NAME}}</td>
                         </tr>
                         <tr *ngIf="p.PLPROJECTGROUPDT_MONEY">
@@ -1221,7 +1324,8 @@
                             <strong *ngIf="p.PLPROJECTGROUPDT_NUM=='1'">{{p.PLPROJECTGROUPDT_NAME}}</strong>
                             <span *ngIf="p.PLPROJECTGROUPDT_NUM!='1'">
                               {{p.PLPROJECTGROUPDT_NAME}} {{p.PLPROJECTGROUPDT_DETAIL}}
-                              <span *ngIf="getMealBadge(p.PLPROJECTGROUPDT_CODE) as mb" [class]="'badge ms-1 ' + mb.class" style="font-size: 11px;">
+                              <span *ngIf="getMealBadge(p.PLPROJECTGROUPDT_CODE) as mb"
+                                [class]="'badge ms-1 ' + mb.class" style="font-size: 11px;">
                                 <i class="fa-solid fa-utensils me-1"></i>{{ mb.label }}
                               </span>
                             </span>
@@ -1230,16 +1334,19 @@
                             {{p.PLPROJECTGROUPDT_DETAILD}}
                           </td>
                           <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}" align="right">
-                            <strong *ngIf="p.PLPROJECTGROUPDT_NUM=='1'">{{p.PLPROJECTGROUPDT_MONEY | number : '1.2-2'}}</strong>
-                            <span *ngIf="p.PLPROJECTGROUPDT_NUM!='1'">{{p.PLPROJECTGROUPDT_MONEY | number : '1.2-2'}}</span>
+                            <strong *ngIf="p.PLPROJECTGROUPDT_NUM=='1'">{{p.PLPROJECTGROUPDT_MONEY | number :
+                              '1.2-2'}}</strong>
+                            <span *ngIf="p.PLPROJECTGROUPDT_NUM!='1'">{{p.PLPROJECTGROUPDT_MONEY | number :
+                              '1.2-2'}}</span>
                           </td>
-                          <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}" align="center">
+                          <td [ngStyle]="{'background-color':p.PLPROJECTGROUPDT_NUM=='1' ? '#e8fae6':''}"
+                            align="center">
                             <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="ลบข้อมูล"
-                              class="btn btn-danger text-white btn-sm" (click)="deleteDatadt(p.PLPROJECTEXPENSES_CODE)"><i
-                                class="fa fa-trash"></i> </a>&nbsp;
+                              class="btn btn-danger text-white btn-sm"
+                              (click)="deleteDatadt(p.PLPROJECTEXPENSES_CODE)"><i class="fa fa-trash"></i> </a>&nbsp;
                             <a *ngIf="p.PLPROJECTGROUPDT_NUM==0" role="button" title="แก้ไข"
-                              class="btn btn-warning text-white btn-sm" (click)="editdatadt(p.PLPROJECTEXPENSES_CODE)"><i
-                                class="fa fa-edit"></i></a>
+                              class="btn btn-warning text-white btn-sm"
+                              (click)="editdatadt(p.PLPROJECTEXPENSES_CODE)"><i class="fa fa-edit"></i></a>
                           </td>
                         </tr>
                         <!-- ถ้าเป็นแถว 'รวมทั้งสิ้น' ของกิจกรรม ให้ตรวจสอบและแสดงแถบค่าอาหารของกิจกรรมนั้นทันที -->
@@ -1248,18 +1355,23 @@
                             <tr [style.background-color]="ms.isOver ? '#fce8e6' : (!ms.isFull ? '#fff9e6' : '#e6f4ea')">
                               <td colspan="2" class="py-2 px-3">
                                 <div class="d-flex align-items-center flex-wrap gap-2">
-                                  <strong [class.text-danger]="ms.isOver" [class.text-success]="!ms.isOver && ms.isFull" [class.text-warning-emphasis]="!ms.isOver && !ms.isFull">
+                                  <strong [class.text-danger]="ms.isOver" [class.text-success]="!ms.isOver && ms.isFull"
+                                    [class.text-warning-emphasis]="!ms.isOver && !ms.isFull">
                                     <i class="fa-solid fa-utensils me-1"></i>
                                     ตรวจสอบค่าอาหาร{{ ms.actName ? ' (' + ms.actName + ')' : '' }}:
                                   </strong>
                                   <span class="badge bg-light text-dark border">
                                     <i class="fa-solid fa-location-dot me-1 text-secondary"></i>{{ ms.locationName }}
                                   </span>
+                                  <span *ngIf="ms.isTypeA" class="badge bg-primary">
+                                    การฝึกอบรมประเภท ก
+                                  </span>
                                   <span *ngIf="ms.isFull" class="badge bg-success">
                                     <i class="fa-solid fa-circle-check me-1"></i>จัดครบทุกมื้อ (3 มื้อ)
                                   </span>
                                   <span *ngIf="!ms.isFull" class="badge bg-warning text-dark">
-                                    <i class="fa-solid fa-circle-exclamation me-1"></i>จัดไม่ครบทุกมื้อ ({{ ms.mealCount }} มื้อ: {{ ms.mealNames.join(', ') }})
+                                    <i class="fa-solid fa-circle-exclamation me-1"></i>จัดไม่ครบทุกมื้อ ({{ ms.mealCount
+                                    }} มื้อ: {{ ms.mealNames.join(', ') }})
                                   </span>
                                   <span class="badge bg-secondary">
                                     เกณฑ์ไม่เกิน {{ ms.maxLimit | number : '1.2-2' }} บ./คน/วัน
@@ -1268,23 +1380,27 @@
                                 <div class="small text-muted mt-1">
                                   มื้อที่ระบุ:
                                   <ng-container *ngFor="let m of ms.mealsDetail">
-                                    <span class="badge bg-white text-dark border me-1">{{ m.name }}: {{ m.rate | number : '1.2-2' }} บ.</span>
+                                    <span class="badge bg-white text-dark border me-1">{{ m.name }}: {{ m.rate | number
+                                      : '1.2-2' }} บ.</span>
                                   </ng-container>
                                 </div>
                               </td>
                               <td align="right" class="align-middle">
-                                <div class="fw-bold" [class.text-danger]="ms.isOver" [class.text-success]="!ms.isOver && ms.isFull">
+                                <div class="fw-bold" [class.text-danger]="ms.isOver"
+                                  [class.text-success]="!ms.isOver && ms.isFull">
                                   {{ ms.totalRate | number : '1.2-2' }} <small class="text-muted">บ./คน/วัน</small>
                                 </div>
                                 <span *ngIf="!ms.isOver" class="badge bg-success mt-1">
                                   <i class="fa-solid fa-check me-1"></i>ไม่เกินอัตราที่กำหนด
                                 </span>
                                 <span *ngIf="ms.isOver" class="badge bg-danger mt-1">
-                                  <i class="fa-solid fa-triangle-exclamation me-1"></i>เกินอัตรา {{ ms.overAmount | number : '1.2-2' }} บ.
+                                  <i class="fa-solid fa-triangle-exclamation me-1"></i>เกินอัตรา {{ ms.overAmount |
+                                  number : '1.2-2' }} บ.
                                 </span>
                               </td>
                               <td align="center" class="align-middle">
-                                <button type="button" class="btn btn-outline-secondary btn-sm" (click)="alertMealLimit()" title="ดูข้อกำหนดอัตราค่าอาหาร">
+                                <button type="button" class="btn btn-outline-secondary btn-sm"
+                                  (click)="alertMealLimit()" title="ดูข้อกำหนดอัตราค่าอาหาร">
                                   <i class="fa-solid fa-circle-question"></i>
                                 </button>
                               </td>
@@ -1299,7 +1415,8 @@
                         </td>
                         <td align="right" [class.text-danger]="getMaterialPercent() > 20" class="fw-bold">
                           {{getMaterialTotal() | number : '1.2-2'}}
-                          <small class="d-block text-muted">({{getMaterialPercent() | number : '1.2-2'}}% ของงบประมาณ)</small>
+                          <small class="d-block text-muted">({{getMaterialPercent() | number : '1.2-2'}}%
+                            ของงบประมาณ)</small>
                         </td>
                         <td align="right"></td>
                       </tr>
@@ -1415,8 +1532,8 @@
                       </select>
                     </div>
                     <div class="col-md-4">
-                      <label for="name"><strong><i
-                            class="fa-solid fa-crosshairs me-2 text-danger"></i>เป้าประสงค์<span class="text-danger">*</span></strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-crosshairs me-2 text-danger"></i>เป้าประสงค์<span
+                            class="text-danger">*</span></strong></label>
                       <select name="PLESTIMATEPLAN_CODE" id="PLESTIMATEPLAN_CODE" class="form-select"
                         (change)="fetchdataPLSTRATEGIES()" [(ngModel)]="dataAdd.PLESTIMATEPLAN_CODE">
                         <option value="">กรุณาเลือก</option>
@@ -1425,8 +1542,8 @@
                       </select>
                     </div>
                     <div class="col-md-4">
-                      <label for="name"><strong><i
-                            class="fa-solid fa-lightbulb me-2 text-danger"></i>กลยุทธ์<span class="text-danger">*</span></strong></label>
+                      <label for="name"><strong><i class="fa-solid fa-lightbulb me-2 text-danger"></i>กลยุทธ์<span
+                            class="text-danger">*</span></strong></label>
                       <select name="PLSTRATEGIES_CODE" id="PLSTRATEGIES_CODE" class="form-select"
                         (change)="fetchdataPLMEASURES()" [(ngModel)]="dataAdd.PLSTRATEGIES_CODE">
                         <option value="">กรุณาเลือก</option>
@@ -1447,8 +1564,8 @@
                       </select>
                     </div>
                     <div class="col-md-6">
-                      <label for="name"><strong><i
-                            class="fa-regular fa-clipboard me-2 text-danger"></i>แผนงาน<span class="text-danger">*</span></strong></label>
+                      <label for="name"><strong><i class="fa-regular fa-clipboard me-2 text-danger"></i>แผนงาน<span
+                            class="text-danger">*</span></strong></label>
                       <select name="PLPLAND_CODE" id="PLPLAND_CODE" class="form-select" (change)="fetchdataPLMISSION()"
                         [(ngModel)]="dataAdd.PLPLAND_CODE">
                         <option value="">กรุณาเลือก</option>
@@ -2141,13 +2258,11 @@
                 <td width="15%" align="right">{{p.PRPLPROJECT_MONEY| number : '1.2-2'}}
                 </td>
                 <td align="center">
-                  <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
-                    [ngClass]="{
+                  <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap" [ngClass]="{
                       'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
                       'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
                       'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
-                    }"
-                    style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                    }" style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
                     {{p.PRSTATUS_NAME}}
                   </span>
                 </td>
