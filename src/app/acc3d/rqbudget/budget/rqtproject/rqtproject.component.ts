@@ -112,6 +112,8 @@ export class RqtprojectComponent implements OnInit {
   PRPLPROJECT_TYPE: any = 0;
   //dataAdd:any = {PRBOBJECT_NAME:[],PRBOBJECT_CODE:[],PRUSE_NAME:[],PRUSE_CODE:[]};PLPROJECTEXPENSES_CODE
   dataAdd: any = {
+    actMode: 'activity',
+    PRPLPROJECT_NUMBER: 1,
     PRPLPROJECT_TYPE: 0,
     check: [], checkregis: [], PRREGISPROJECT_CODE: [], PRASSET_CODEA: [],
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
@@ -687,6 +689,8 @@ export class RqtprojectComponent implements OnInit {
   }
   // เคลียร์ค่า textbox
   setshowbti() {
+    this.dataAdd.actMode = 'activity';
+    this.dataAdd.PRPLPROJECT_NUMBER = 1;
     this.dataAdd.PRPLPROJECT_TYPE = this.PRPLPROJECT_TYPE !== undefined ? this.PRPLPROJECT_TYPE : 0;
     this.dataAdd.PRPLPROJECTACT_NAME = [];
     this.dataAdd.PRPLPROJECTACT_ACT = [];
@@ -788,7 +792,7 @@ export class RqtprojectComponent implements OnInit {
   }
   //เช็คตัวเลข
   CheckNum(num: any) {
-    if (num.keyCode < 46 || num.keyCode > 57) {
+    if (num.keyCode !== 44 && (num.keyCode < 46 || num.keyCode > 57)) {
       alert('กรุณากรอกข้อมูล ที่เป็นตัวเลข');
       num.returnValue = false;
     }
@@ -1005,7 +1009,7 @@ export class RqtprojectComponent implements OnInit {
           this.dataAdd.PRPLPROJECTM_MONEY = [];
         }
         if (isSaveAction || sum > 0) {
-          this.dataAdd.PRPLPROJECTM_MONEY[0] = this.dataAdd.PLPROJECT_MONEYT;
+          this.dataAdd.PRPLPROJECTM_MONEY[0] = this.formatNumberWithComma(this.dataAdd.PLPROJECT_MONEYT);
         }
 
         if (isSaveAction) {
@@ -1116,6 +1120,26 @@ export class RqtprojectComponent implements OnInit {
       .pipe(first())
       .subscribe((data: any) => {
         this.dataProjectact = data.data;
+        let detectedMode = 'activity';
+        if (data && data.data && Array.isArray(data.data)) {
+          for (let i = 0; i < data.data.length; i++) {
+            const actNameStr = String(data.data[i].PRPLPROJECTACT_NAME || '');
+            if (actNameStr.includes('ครั้ง')) {
+              detectedMode = 'time';
+              break;
+            }
+          }
+        }
+        if (this.dataAdd.PRPLPROJECT_NUMBER === 0 || this.dataAdd.PRPLPROJECT_NUMBER === '0') {
+          this.dataAdd.actMode = 'time';
+          this.dataAdd.PRPLPROJECT_NUMBER = 0;
+        } else if (this.dataAdd.PRPLPROJECT_NUMBER === 1 || this.dataAdd.PRPLPROJECT_NUMBER === '1') {
+          this.dataAdd.actMode = 'activity';
+          this.dataAdd.PRPLPROJECT_NUMBER = 1;
+        } else {
+          this.dataAdd.actMode = detectedMode;
+          this.dataAdd.PRPLPROJECT_NUMBER = detectedMode === 'time' ? 0 : 1;
+        }
         if (!Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) this.dataAdd.PRPLPROJECT_SDATE = [];
         if (!Array.isArray(this.dataAdd.PRPLPROJECT_EDATE)) this.dataAdd.PRPLPROJECT_EDATE = [];
         for (let i = 0; i < data.data.length; i++) {
@@ -1443,6 +1467,13 @@ export class RqtprojectComponent implements OnInit {
         if (!this.dataAdd.PRPLPROJECT_TIME || this.dataAdd.PRPLPROJECT_TIME < 1) {
           this.dataAdd.PRPLPROJECT_TIME = 1;
         }
+        if (data.data[0].PRPLPROJECT_NUMBER !== undefined && data.data[0].PRPLPROJECT_NUMBER !== null && String(data.data[0].PRPLPROJECT_NUMBER).trim() !== '') {
+          this.dataAdd.PRPLPROJECT_NUMBER = parseInt(data.data[0].PRPLPROJECT_NUMBER, 10);
+          this.dataAdd.actMode = this.dataAdd.PRPLPROJECT_NUMBER === 0 ? 'time' : 'activity';
+        } else {
+          this.dataAdd.PRPLPROJECT_NUMBER = 1;
+          this.dataAdd.actMode = 'activity';
+        }
         this.showact();
         this.dataAdd.RPLPROJECTACT_CODE = 1;
         this.dataAdd.PLPROJECTGROUPDT_CODE = '';
@@ -1484,7 +1515,7 @@ export class RqtprojectComponent implements OnInit {
             this.dataAdd.PRPLPROJECTM_EYEAR = data.datam[i].PRPLPROJECTM_YEAR;
           }
           this.dataAdd.PRPLPROJECTM_YEAR[i] = data.datam[i].PRPLPROJECTM_YEAR;
-          this.dataAdd.PRPLPROJECTM_MONEY[i] = Number(data.datam[i].PRPLPROJECTM_MONEY).toFixed(2);
+          this.dataAdd.PRPLPROJECTM_MONEY[i] = this.formatNumberWithComma(data.datam[i].PRPLPROJECTM_MONEY);
         }
         this.showbuid();
         this.fetchdataPLMISSION();
@@ -1712,6 +1743,16 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PRPLPROJECTACT_ACT[i] = this.dataAdd.PRPLPROJECTACT_ACT[i].replaceAll("</p>", "<br/>");
       this.dataAdd.PRPLPROJECTACT_ACT[i] = this.dataAdd.PRPLPROJECTACT_ACT[i].replaceAll("&nbsp;", "");
     }
+    if (this.dataAdd.PRPLPROJECT_TIME > 1 && Array.isArray(this.dataAdd.PRPLPROJECTACT_NAME)) {
+      const isTime = this.dataAdd.actMode === 'time';
+      const prefix = isTime ? 'ครั้งที่' : 'กิจกรรมที่';
+      for (let i = 0; i < this.dataAdd.PRPLPROJECT_TIME; i++) {
+        if (!this.dataAdd.PRPLPROJECTACT_NAME[i] || !String(this.dataAdd.PRPLPROJECTACT_NAME[i]).trim()) {
+          this.dataAdd.PRPLPROJECTACT_NAME[i] = `${prefix} ${i + 1}`;
+        }
+      }
+    }
+    this.dataAdd.PRPLPROJECT_NUMBER = this.dataAdd.actMode === 'time' ? 0 : 1;
     // console.log(this.dataAdd.PLPROJECTMORE_PRINCIPLE.length );
     this.dataAdd.opt = "update";
     this.apiService
@@ -1871,16 +1912,20 @@ export class RqtprojectComponent implements OnInit {
       return;
     }
 
+    const isTime = this.dataAdd.actMode === 'time';
+    const prefix = isTime ? 'ครั้งที่' : 'กิจกรรมที่';
+
     const list: any[] = [];
     const count = parseInt(this.dataAdd.PRPLPROJECT_TIME, 10) || 0;
     for (let i = 0; i < count; i++) {
       const actNum = i + 1;
-      const customName = this.dataAdd.PRPLPROJECTACT_NAME && this.dataAdd.PRPLPROJECTACT_NAME[i]
+      const rawName = this.dataAdd.PRPLPROJECTACT_NAME && this.dataAdd.PRPLPROJECTACT_NAME[i]
         ? String(this.dataAdd.PRPLPROJECTACT_NAME[i]).trim()
         : '';
-      const actName = customName
-        ? (customName.startsWith('กิจกรรมที่') ? customName : `กิจกรรมที่ ${actNum} : ${customName}`)
-        : `กิจกรรมที่ ${actNum}`;
+      const cleanName = rawName.replace(/^(กิจกรรมที่|ครั้งที่)\s*\d+\s*(:|\-)?\s*/, '').trim();
+      const actName = cleanName
+        ? `${prefix} ${actNum} : ${cleanName}`
+        : `${prefix} ${actNum}`;
 
       list.push({
         PRPLPROJECTM_NUMBER: actNum,
@@ -1900,17 +1945,49 @@ export class RqtprojectComponent implements OnInit {
     if (!actNum) return '';
     const num = parseInt(actNum, 10);
     const idx = !isNaN(num) ? num - 1 : -1;
+    const isTime = this.dataAdd?.actMode === 'time';
+    const prefix = isTime ? 'ครั้งที่' : 'กิจกรรมที่';
+
     if (idx >= 0 && this.dataAdd?.PRPLPROJECTACT_NAME && this.dataAdd.PRPLPROJECTACT_NAME[idx]) {
-      const name = String(this.dataAdd.PRPLPROJECTACT_NAME[idx]).trim();
-      if (name.startsWith('กิจกรรมที่')) return name;
-      return `กิจกรรมที่ ${actNum} : ${name}`;
+      const rawName = String(this.dataAdd.PRPLPROJECTACT_NAME[idx]).trim();
+      const cleanName = rawName.replace(/^(กิจกรรมที่|ครั้งที่)\s*\d+\s*(:|\-)?\s*/, '').trim();
+      if (cleanName) {
+        return `${prefix} ${actNum} : ${cleanName}`;
+      }
+      return `${prefix} ${actNum}`;
     }
     if (this.dataProjectact && Array.isArray(this.dataProjectact)) {
       const found = this.dataProjectact.find((x: any) => x.PRPLPROJECTM_NUMBER == actNum);
       if (found && found.PRPLPROJECTACT_NAME) return found.PRPLPROJECTACT_NAME;
     }
-    if (!isNaN(num)) return `กิจกรรมที่ ${actNum}`;
+    if (!isNaN(num)) return `${prefix} ${actNum}`;
     return String(actNum);
+  }
+
+  onActModeChange() {
+    this.dataAdd.PRPLPROJECT_NUMBER = this.dataAdd?.actMode === 'time' ? 0 : 1;
+    const isTime = this.dataAdd?.actMode === 'time';
+    const oldPrefix = isTime ? 'กิจกรรมที่' : 'ครั้งที่';
+    const newPrefix = isTime ? 'ครั้งที่' : 'กิจกรรมที่';
+
+    if (this.dataAdd?.PRPLPROJECTACT_NAME && Array.isArray(this.dataAdd.PRPLPROJECTACT_NAME)) {
+      for (let i = 0; i < this.dataAdd.PRPLPROJECTACT_NAME.length; i++) {
+        const val = this.dataAdd.PRPLPROJECTACT_NAME[i];
+        if (typeof val === 'string' && val.trim()) {
+          const actNum = i + 1;
+          if (val.trim() === `${oldPrefix} ${actNum}`) {
+            this.dataAdd.PRPLPROJECTACT_NAME[i] = `${newPrefix} ${actNum}`;
+          } else if (val.trim().startsWith(`${oldPrefix} ${actNum} :`)) {
+            const rest = val.trim().substring(`${oldPrefix} ${actNum} :`.length).trim();
+            this.dataAdd.PRPLPROJECTACT_NAME[i] = `${newPrefix} ${actNum} : ${rest}`;
+          } else if (val.trim().startsWith(`${oldPrefix} ${actNum}`)) {
+            const rest = val.trim().substring(`${oldPrefix} ${actNum}`.length).trim();
+            this.dataAdd.PRPLPROJECTACT_NAME[i] = `${newPrefix} ${actNum} ${rest}`;
+          }
+        }
+      }
+    }
+    this.updateProjectActList();
   }
 
   addActivity() {
@@ -2031,7 +2108,7 @@ export class RqtprojectComponent implements OnInit {
     { id: '4.4', title: 'เจ้าหน้าที่', text: 'เจ้าหน้าที่' },
     { id: '4.5', title: 'ผู้เข้ารับการฝึกอบรม', text: 'ผู้เข้ารับการฝึกอบรม' },
     { id: '4.6', title: 'ผู้สังเกตการณ์', text: 'ผู้สังเกตการณ์' },
-  //  { id: 'general', title: 'ผู้เข้าร่วมโครงการ', text: 'ผู้เข้าร่วมโครงการ' }
+    { id: 'general', title: 'ผู้เข้าร่วมโครงการ', text: 'ผู้เข้าร่วมโครงการ' }
   ];
   selectedMealTargetIds: string[] = [];
   mealDetailConfig = {
@@ -2118,6 +2195,18 @@ export class RqtprojectComponent implements OnInit {
   isMealItem(code: any): boolean {
     const mealCodes = ['0207', '0213', '0214', '0205', '0218', '0243', '0246', '0247', '0248', '0249', '0250', '0251'];
     return mealCodes.includes(String(code));
+  }
+
+  isAllowanceItem(code?: any): boolean {
+    const sCode = String(code !== undefined && code !== null ? code : (this.dataAdd ? this.dataAdd.PLPROJECTGROUPDT_CODE : '')).trim();
+    if (!sCode) return false;
+    if (this.dataProjectdt && Array.isArray(this.dataProjectdt)) {
+      const item = this.dataProjectdt.find((d: any) => String(d.PLPROJECTGROUPDT_CODE).trim() === sCode);
+      if (item && item.PLPROJECTGROUPDT_NAME) {
+        return item.PLPROJECTGROUPDT_NAME.includes('เบี้ยเลี้ยง');
+      }
+    }
+    return sCode === '0201';
   }
 
   getMealBadge(code: any): { label: string; class: string } | null {
@@ -2426,12 +2515,37 @@ export class RqtprojectComponent implements OnInit {
     return sum;
   }
 
+  formatMoney(index: number) {
+    if (this.dataAdd?.PRPLPROJECTM_MONEY && this.dataAdd.PRPLPROJECTM_MONEY[index] !== undefined && this.dataAdd.PRPLPROJECTM_MONEY[index] !== '') {
+      this.dataAdd.PRPLPROJECTM_MONEY[index] = this.formatNumberWithComma(this.dataAdd.PRPLPROJECTM_MONEY[index]);
+    }
+  }
+
+  formatAllMoney() {
+    if (this.dataAdd?.PRPLPROJECTM_MONEY && Array.isArray(this.dataAdd.PRPLPROJECTM_MONEY)) {
+      for (let i = 0; i < this.dataAdd.PRPLPROJECTM_MONEY.length; i++) {
+        if (this.dataAdd.PRPLPROJECTM_MONEY[i] !== '' && this.dataAdd.PRPLPROJECTM_MONEY[i] !== null && this.dataAdd.PRPLPROJECTM_MONEY[i] !== undefined) {
+          this.dataAdd.PRPLPROJECTM_MONEY[i] = this.formatNumberWithComma(this.dataAdd.PRPLPROJECTM_MONEY[i]);
+        }
+      }
+    }
+  }
+
+  formatNumberWithComma(val: any): string {
+    if (val === null || val === undefined || val === '') return '';
+    const cleanStr = String(val).replace(/,/g, '').trim();
+    if (cleanStr === '') return '';
+    const num = parseFloat(cleanStr);
+    if (isNaN(num)) return String(val);
+    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
   getTotalProjectBudget(): number {
     let mSum = 0;
     if (this.dataAdd?.PRPLPROJECTM_MONEY && Array.isArray(this.dataAdd.PRPLPROJECTM_MONEY)) {
-      mSum = this.dataAdd.PRPLPROJECTM_MONEY.reduce((s: number, v: any) => s + (parseFloat(v) || 0), 0);
+      mSum = this.dataAdd.PRPLPROJECTM_MONEY.reduce((s: number, v: any) => s + (parseFloat(String(v || '').replace(/,/g, '')) || 0), 0);
     }
-    const expSum = parseFloat(this.dataAdd?.PLPROJECT_MONEYT) || parseFloat(this.dataAdd?.PLPROJECT_MONEY) || 0;
+    const expSum = parseFloat(String(this.dataAdd?.PLPROJECT_MONEYT || '').replace(/,/g, '')) || parseFloat(String(this.dataAdd?.PLPROJECT_MONEY || '').replace(/,/g, '')) || 0;
     return Math.max(mSum, expSum);
   }
 
@@ -2448,7 +2562,7 @@ export class RqtprojectComponent implements OnInit {
   checkMaterialLimitAfterSave(materialSum: number, sum: number) {
     let frameworkBudget = 0;
     if (this.dataAdd?.PRPLPROJECTM_MONEY && Array.isArray(this.dataAdd.PRPLPROJECTM_MONEY)) {
-      frameworkBudget = this.dataAdd.PRPLPROJECTM_MONEY.reduce((s: number, v: any) => s + (parseFloat(v) || 0), 0);
+      frameworkBudget = this.dataAdd.PRPLPROJECTM_MONEY.reduce((s: number, v: any) => s + (parseFloat(String(v || '').replace(/,/g, '')) || 0), 0);
     }
     const totalBudget = Math.max(frameworkBudget, sum);
     if (totalBudget > 0) {
@@ -2534,7 +2648,8 @@ export class RqtprojectComponent implements OnInit {
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0103' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0102'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0101'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0105'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0106'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0104'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0107') {
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0107'
+      ) {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'V04';
       this.dataAdd.GCUNIT_CCODE = 'Z19';
@@ -2548,7 +2663,8 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.moneydt = 1;
     }else//ค่าตอบแทน
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0109' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0110'
-      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0111'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0112') {
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0111'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0112'
+    || this.dataAdd.PLPROJECTGROUPDT_CODE == '0111' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0113') {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'Z19';
       this.dataAdd.GCUNIT_CCODE = '';
@@ -2607,6 +2723,7 @@ export class RqtprojectComponent implements OnInit {
     //ค่าพาหนะ
     if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0216' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0208'
       || this.dataAdd.PLPROJECTGROUPDT_CODE == '0223' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0219'
+      || this.dataAdd.PLPROJECTGROUPDT_CODE == '0258' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0220'
     ) {
       this.dataAdd.GCUNIT_ACODE = 'Z21';
       this.dataAdd.GCUNIT_BCODE = 'T00';
@@ -2617,11 +2734,26 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT1 = 'คน';
       this.dataAdd.PLPT2 = 'เที่ยว';
       this.dataAdd.PLPT3 = '';
-      this.dataAdd.PLPT4 = 1;
+      this.dataAdd.PLPT4 = '';
+      this.dataAdd.moneydt = null;
+    }else
+    //ค่าเช่าเหมายานพาหนะ
+    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0225' 
+    ) {
+      this.dataAdd.GCUNIT_ACODE = 'C07';
+      this.dataAdd.GCUNIT_BCODE = 'V04';
+      this.dataAdd.GCUNIT_CCODE = '';
+      this.dataAdd.PLPDT3 = 1;
+      this.dataAdd.PLPDT1 = 1;
+      this.dataAdd.PLPDT2 = '';
+      this.dataAdd.PLPT1 = 'คัน';
+      this.dataAdd.PLPT2 = 'วัน';
+      this.dataAdd.PLPT3 = '';
+      this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = null;
     }else
     //ค่าพาหนะส่วนตัว
-    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0215') {
+    if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0215' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0224'|| this.dataAdd.PLPROJECTGROUPDT_CODE == '0259')  {
       this.dataAdd.GCUNIT_ACODE = 'Z22';
       this.dataAdd.GCUNIT_BCODE = 'T00';
       this.dataAdd.GCUNIT_CCODE = '';
@@ -2631,7 +2763,7 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPT1 = 'กิโลเมตร';
       this.dataAdd.PLPT2 = 'เที่ยว';
       this.dataAdd.PLPT3 = '';
-      this.dataAdd.PLPT4 = 1;
+      this.dataAdd.PLPT4 = '';
       this.dataAdd.moneydt = 1;
     }else if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0228') {//ค่าลงทะเบียน
       this.dataAdd.GCUNIT_ACODE = 'Z21';

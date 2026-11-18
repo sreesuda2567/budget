@@ -554,7 +554,7 @@
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#ydetails" type="button"
-              role="tab" aria-controls="contact" aria-selected="false">
+              role="tab" aria-controls="contact" aria-selected="false" (click)="formatAllMoney()">
               <i class="fa-solid fa-wallet me-2"></i>ส่วนที่ 3 กรอบงบประมาณ
             </button>
           </li>
@@ -712,27 +712,49 @@
 
                     <div class="col-md-12 mb-3" *ngIf="ptype">
                       <input type="hidden" name="PRPLPROJECT_TIME" [(ngModel)]="dataAdd.PRPLPROJECT_TIME">
+                      <input type="hidden" name="PRPLPROJECT_NUMBER" [(ngModel)]="dataAdd.PRPLPROJECT_NUMBER">
 
-                      <div class="d-flex align-items-center justify-content-between p-2 px-3 border rounded-3 bg-light">
-                        <div class="d-flex align-items-center flex-wrap gap-2">
-                          <label class="mb-0 fw-bold">
-                            <i class="fa-solid fa-list-ol me-2 text-danger"></i>จำนวนกิจกรรมย่อย:
-                          </label>
-                          <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-3 py-2 rounded-pill"
-                            *ngIf="!dataAdd.PRPLPROJECT_TIME || dataAdd.PRPLPROJECT_TIME <= 1">
-                            <i class="fa-solid fa-circle-check text-muted me-1"></i>ไม่มีกิจกรรมย่อย (ดำเนินโครงการหลัก)
-                          </span>
-                          <span class="badge bg-danger px-3 py-2 rounded-pill"
-                            *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
-                            <i class="fa-solid fa-layer-group me-1"></i>มี {{ dataAdd.PRPLPROJECT_TIME }} กิจกรรมย่อย
-                          </span>
+                      <div class="d-flex align-items-center justify-content-between p-2 px-3 border rounded-3 bg-light flex-wrap gap-2">
+                        <div class="d-flex align-items-center flex-wrap gap-3">
+                          <!-- ตัวเลือกว่า ทำเป็นกิจกรรม หรือ ทำเป็นครั้ง -->
+                          <div class="d-flex align-items-center gap-2 border-end pe-3">
+                            <span class="fw-bold text-dark small"><i class="fa-solid fa-sliders me-1 text-primary"></i>รูปแบบ:</span>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="รูปแบบการดำเนินโครงการ">
+                              <input type="radio" class="btn-check" name="appActMode" id="appActModeActivity" value="activity"
+                                [(ngModel)]="dataAdd.actMode" (change)="onActModeChange()" autocomplete="off">
+                              <label class="btn btn-outline-primary px-3" for="appActModeActivity">
+                                <i class="fa-solid fa-layer-group me-1"></i>ทำเป็นกิจกรรม
+                              </label>
+
+                              <input type="radio" class="btn-check" name="appActMode" id="appActModeTime" value="time"
+                                [(ngModel)]="dataAdd.actMode" (change)="onActModeChange()" autocomplete="off">
+                              <label class="btn btn-outline-primary px-3" for="appActModeTime">
+                                <i class="fa-solid fa-repeat me-1"></i>ทำเป็นครั้ง
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="d-flex align-items-center flex-wrap gap-2">
+                            <label class="mb-0 fw-bold">
+                              <i class="fa-solid fa-list-ol me-2 text-danger"></i>{{ dataAdd.actMode == 'time' ? 'จำนวนครั้ง:' : 'จำนวนกิจกรรมย่อย:' }}
+                            </label>
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-3 py-2 rounded-pill"
+                              *ngIf="!dataAdd.PRPLPROJECT_TIME || dataAdd.PRPLPROJECT_TIME <= 1">
+                              <i class="fa-solid fa-circle-check text-muted me-1"></i>{{ dataAdd.actMode == 'time' ? 'ไม่มีการแบ่งครั้ง (ดำเนินโครงการหลัก)' : 'ไม่มีกิจกรรมย่อย (ดำเนินโครงการหลัก)' }}
+                            </span>
+                            <span class="badge bg-danger px-3 py-2 rounded-pill"
+                              *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
+                              <i class="fa-solid fa-layer-group me-1"></i>มี {{ dataAdd.PRPLPROJECT_TIME }} {{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรมย่อย' }}
+                            </span>
+                          </div>
                         </div>
+
                         <div class="d-flex align-items-center gap-2">
                           <button type="button" class="btn btn-sm btn-success text-white shadow-sm" (click)="addActivity()">
-                            <i class="fa-solid fa-plus-circle me-1"></i> เพิ่มกิจกรรมย่อย
+                            <i class="fa-solid fa-plus-circle me-1"></i> เพิ่ม{{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรมย่อย' }}
                           </button>
-                          <button type="button" class="btn btn-sm btn-outline-danger" *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="resetActivity()" title="ยกเลิกกิจกรรมย่อยทั้งหมด">
-                            <i class="fa-solid fa-trash-can me-1"></i> ยกเลิกกิจกรรมย่อย
+                          <button type="button" class="btn btn-sm btn-outline-danger" *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="resetActivity()" [title]="'ยกเลิก' + (dataAdd.actMode == 'time' ? 'การแบ่งครั้งทั้งหมด' : 'กิจกรรมย่อยทั้งหมด')">
+                            <i class="fa-solid fa-trash-can me-1"></i> ยกเลิก{{ dataAdd.actMode == 'time' ? 'การแบ่งครั้ง' : 'กิจกรรมย่อย' }}
                           </button>
                         </div>
                       </div>
@@ -741,22 +763,22 @@
                       <div class="mt-3 p-3 bg-light bg-opacity-50 border rounded-3" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
                         <div class="d-flex align-items-center justify-content-between mb-2">
                           <span class="fw-bold text-dark">
-                            <i class="fa-solid fa-bars-staggered me-2 text-danger"></i>รายชื่อกิจกรรมย่อย
-                            <span class="badge bg-danger ms-1">{{ dataAdd.PRPLPROJECT_TIME }} กิจกรรม</span>
+                            <i class="fa-solid fa-bars-staggered me-2 text-danger"></i>{{ dataAdd.actMode == 'time' ? 'รายชื่อครั้งในการดำเนินโครงการ' : 'รายชื่อกิจกรรมย่อย' }}
+                            <span class="badge bg-danger ms-1">{{ dataAdd.PRPLPROJECT_TIME }} {{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}</span>
                           </span>
                           <button type="button" class="btn btn-sm btn-outline-success" (click)="addActivity()">
-                            <i class="fa-solid fa-plus me-1"></i> เพิ่มอีก 1 กิจกรรม
+                            <i class="fa-solid fa-plus me-1"></i> เพิ่มอีก 1 {{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                           </button>
                         </div>
                         <div class="row g-2">
                           <div class="col-md-12" *ngFor="let p of number1; let i = index">
                             <div class="input-group">
                               <span class="input-group-text bg-white fw-bold text-danger border-end-0" style="min-width: 125px;">
-                                <i class="fa-solid fa-cube me-2 text-primary"></i>กิจกรรมที่ {{ i + 1 }}
+                                <i class="fa-solid fa-cube me-2 text-primary"></i>{{ (dataAdd.actMode == 'time' ? 'ครั้งที่ ' : 'กิจกรรมที่ ') + (i + 1) }}
                               </span>
-                              <input type="text" class="form-control" [placeholder]="'ระบุชื่อกิจกรรมที่ ' + (i + 1)"
+                              <input type="text" class="form-control" [placeholder]="'ระบุชื่อ' + (dataAdd.actMode == 'time' ? 'ครั้งที่ ' : 'กิจกรรมที่ ') + (i + 1)"
                                 [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]" (ngModelChange)="updateProjectActList()">
-                              <button type="button" class="btn btn-outline-danger" (click)="removeActivityAt(i)" title="ลบกิจกรรมที่ {{ i + 1 }}">
+                              <button type="button" class="btn btn-outline-danger" (click)="removeActivityAt(i)" [title]="'ลบ' + (dataAdd.actMode == 'time' ? 'ครั้งที่ ' : 'กิจกรรมที่ ') + (i + 1)">
                                 <i class="fa-solid fa-trash-can"></i>
                               </button>
                             </div>
@@ -884,13 +906,13 @@
                           <span
                             class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle ms-2 rounded-pill px-2 py-1"
                             *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
-                            {{ dataAdd.PRPLPROJECT_TIME }} กิจกรรม
+                            {{ dataAdd.PRPLPROJECT_TIME }} {{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                           </span>
                         </div>
                       </div>
                       <div class="text-muted small">
                         <i
-                          class="fa-solid fa-circle-info text-info me-1"></i>ระบุช่วงเวลาและจำนวนผู้เข้าร่วมแต่ละกิจกรรม
+                          class="fa-solid fa-circle-info text-info me-1"></i>ระบุช่วงเวลาและจำนวนผู้เข้าร่วมแต่ละ{{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                       </div>
                     </div>
 
@@ -900,7 +922,7 @@
                           <thead>
                             <tr class="text-center align-middle header-main">
                               <th rowspan="2" class="th-activity">
-                                <i class="fa-solid fa-list-ol text-primary me-1"></i> กิจกรรม
+                                <i class="fa-solid fa-list-ol text-primary me-1"></i> {{ dataAdd.actMode == 'time' ? 'ครั้งที่' : 'กิจกรรม' }}
                               </th>
                               <th colspan="2" class="th-date">
                                 <i class="fa-regular fa-calendar-days text-primary me-1"></i> ระยะเวลาดำเนินโครงการ
@@ -933,7 +955,7 @@
                               <td class="text-center py-2 px-3 col-activity">
                                 <div class="d-flex flex-column align-items-center justify-content-center">
                                   <span class="badge rounded-pill badge-activity" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
-                                    กิจกรรมที่ {{ i + 1 }}
+                                    {{ (dataAdd.actMode == 'time' ? 'ครั้งที่ ' : 'กิจกรรมที่ ') + (i + 1) }}
                                   </span>
                                   <span class="badge rounded-pill badge-single-activity"
                                     *ngIf="!(dataAdd.PRPLPROJECT_TIME > 1)">
@@ -1012,7 +1034,7 @@
                                 รวมแต่ละกลุ่ม
                               </td>
                               <td colspan="2" class="text-center text-muted small py-2">
-                                ทั้งหมด {{ number1.length }} กิจกรรม
+                                ทั้งหมด {{ number1.length }} {{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                               </td>
                               <td class="text-end fw-bold text-primary py-2 px-2">
                                 {{ getTotalPersons() | number }} <span class="text-muted small fw-normal">คน</span>
@@ -1050,16 +1072,16 @@
                         <div>
                           <strong class="text-dark" style="font-size: 15px;">สถานที่ดำเนินโครงการ</strong>
                           <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle ms-2 rounded-pill px-2 py-1" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
-                            ตาม {{ dataAdd.PRPLPROJECT_TIME }} กิจกรรมย่อย
+                            ตาม {{ dataAdd.PRPLPROJECT_TIME }} {{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรมย่อย' }}
                           </span>
                         </div>
                       </div>
                       <div class="d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="copyLocationToAll()" title="คัดลอกสถานที่จากกิจกรรมที่ 1 ไปยังทุกกิจกรรม">
-                          <i class="fa-solid fa-clone me-1"></i> ใช้สถานที่เดียวกันทุกกิจกรรม
+                        <button type="button" class="btn btn-sm btn-outline-primary" *ngIf="dataAdd.PRPLPROJECT_TIME > 1" (click)="copyLocationToAll()" [title]="'คัดลอกสถานที่จาก' + (dataAdd.actMode == 'time' ? 'ครั้งที่ ' : 'กิจกรรมที่ ') + '1 ไปยังทุก' + (dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม')">
+                          <i class="fa-solid fa-clone me-1"></i> ใช้สถานที่เดียวกันทุก{{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                         </button>
                         <span class="text-muted small d-none d-md-inline">
-                          <i class="fa-solid fa-circle-info text-info me-1"></i>ระบุสถานที่และพื้นที่ของแต่ละกิจกรรม
+                          <i class="fa-solid fa-circle-info text-info me-1"></i>ระบุสถานที่และพื้นที่ของแต่ละ{{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                         </span>
                       </div>
                     </div>
@@ -1070,7 +1092,7 @@
                           <thead>
                             <tr class="text-center align-middle header-location">
                               <th style="width: 15%; min-width: 140px;">
-                                <i class="fa-solid fa-list-ol text-primary me-1"></i> กิจกรรม
+                                <i class="fa-solid fa-list-ol text-primary me-1"></i> {{ dataAdd.actMode == 'time' ? 'ครั้งที่' : 'กิจกรรม' }}
                               </th>
                               <th style="width: 12%; min-width: 110px;">
                                 <i class="fa-solid fa-building-circle-check text-secondary me-1"></i> สถานที่
@@ -1095,7 +1117,7 @@
                               <td class="text-center py-2 px-3 col-activity">
                                 <div class="d-flex flex-column align-items-center justify-content-center">
                                   <span class="badge rounded-pill badge-activity" *ngIf="dataAdd.PRPLPROJECT_TIME > 1">
-                                    กิจกรรมที่ {{ i + 1 }}
+                                    {{ (dataAdd.actMode == 'time' ? 'ครั้งที่ ' : 'กิจกรรมที่ ') + (i + 1) }}
                                   </span>
                                   <span class="badge rounded-pill badge-single-activity" *ngIf="!(dataAdd.PRPLPROJECT_TIME > 1)">
                                     โครงการหลัก
@@ -1174,8 +1196,7 @@
                     <div class="col-md-12 mb-2" *ngFor="let p of number1;let i = index">
                       <label for="name"><strong><i
                             class="fa-solid fa-chart-line me-2 text-danger"></i>แนวทาง/กิจกรรมในการดำเนินโครงการ <span
-                            *ngIf="dataAdd.PRPLPROJECT_TIME>1"><strong>กิจกรรมที่
-                              {{i+1}}</strong></span></strong></label>
+                            *ngIf="dataAdd.PRPLPROJECT_TIME>1"><strong>{{ (dataAdd.actMode == 'time' ? 'ครั้งที่ ' : 'กิจกรรมที่ ') + (i + 1) }}</strong></span></strong></label>
                       <ckeditor [editor]="editor" [config]="editorConfig" [(ngModel)]="dataAdd.PRPLPROJECTACT_ACT[i]">
                       </ckeditor>
                     </div>
@@ -1264,7 +1285,7 @@
                       <td align="right">เป็นเงิน</td>
                       <td><input type="text" name="PROBJECT_CODE2" class="form-control" placeholder=""
                           [(ngModel)]="dataAdd.PRPLPROJECTM_MONEY[0]" style="text-align:right;"
-                          (keypress)="CheckNum($event)" [disabled]="dataAdd.money1"></td>
+                          (keypress)="CheckNum($event)" (blur)="formatMoney(0)" [disabled]="dataAdd.money1"></td>
                       <td>บาท</td>
                     </tr>
                     <tr>
@@ -1279,7 +1300,7 @@
                       <td align="right">เป็นเงิน</td>
                       <td><input type="text" name="PROBJECT_CODE8" class="form-control" placeholder=""
                           [(ngModel)]="dataAdd.PRPLPROJECTM_MONEY[1]" style="text-align:right;"
-                          (keypress)="CheckNum($event)" [disabled]="dataAdd.money2">
+                          (keypress)="CheckNum($event)" (blur)="formatMoney(1)" [disabled]="dataAdd.money2">
                       </td>
                       <td>บาท</td>
                     </tr>
@@ -1295,7 +1316,7 @@
                       <td width="6%" align="right">เป็นเงิน</td>
                       <td width="14%"><input type="text" name="PROBJECT_CODE9" class="form-control" placeholder=""
                           style="text-align:right;" [(ngModel)]="dataAdd.PRPLPROJECTM_MONEY[2]"
-                          (keypress)="CheckNum($event)" [disabled]="dataAdd.money3"></td>
+                          (keypress)="CheckNum($event)" (blur)="formatMoney(2)" [disabled]="dataAdd.money3"></td>
                       <td width="48%">บาท</td>
                     </tr>
                     <tr>
@@ -1310,7 +1331,7 @@
                       <td width="6%" align="right">เป็นเงิน</td>
                       <td width="14%"><input type="text" name="PROBJECT_CODE9" class="form-control" placeholder=""
                           style="text-align:right;" [(ngModel)]="dataAdd.PRPLPROJECTM_MONEY[3]"
-                          (keypress)="CheckNum($event)" [disabled]="dataAdd.money4"></td>
+                          (keypress)="CheckNum($event)" (blur)="formatMoney(3)" [disabled]="dataAdd.money4"></td>
                       <td width="48%">บาท</td>
                     </tr>
                     <tr>
@@ -1325,7 +1346,7 @@
                       <td width="6%" align="right">เป็นเงิน</td>
                       <td width="14%"><input type="text" name="PROBJECT_CODE9" class="form-control" placeholder=""
                           style="text-align:right;" [(ngModel)]="dataAdd.PRPLPROJECTM_MONEY[4]"
-                          (keypress)="CheckNum($event)" [disabled]="dataAdd.money5"></td>
+                          (keypress)="CheckNum($event)" (blur)="formatMoney(4)" [disabled]="dataAdd.money5"></td>
                       <td width="48%">บาท</td>
                     </tr>
                   </table>
@@ -1343,7 +1364,7 @@
                   <div class="shadow alert " role="alert">
                     <div class="row">
                       <div *ngIf="dataAdd.PRPLPROJECT_TIME>1" class="col-md-12">
-                        <label for="name"><strong>กิจกรรมย่อย</strong> </label>
+                        <label for="name"><strong>{{ dataAdd.actMode == 'time' ? 'ครั้งที่' : 'กิจกรรมย่อย' }}</strong> </label>
                         <select name="PRPLPROJECTACT_CODE" id="PRPLPROJECTACT_CODE" class="form-select"
                           [(ngModel)]="dataAdd.PRPLPROJECTACT_CODE">
                           <option [value]="d.PRPLPROJECTM_NUMBER" *ngFor="let d of dataProjectact">
@@ -1405,6 +1426,15 @@
                                 • <strong>สถานที่เอกชน:</strong> จัดครบทุกมื้อ (3 มื้อ: เช้า, กลางวัน, เย็น) &le; <strong>1,200</strong> บาท/คน/วัน | จัดไม่ครบทุกมื้อ &le; <strong>900</strong> บาท/คน/วัน
                               </span>
                             </ng-container>
+                          </div>
+                        </div>
+                        <div *ngIf="isAllowanceItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="alert alert-info py-2 px-3 mt-2 mb-0 small">
+                          <div class="fw-bold">
+                            <i class="fa-solid fa-circle-info me-1 text-primary"></i>
+                            ข้อกำหนดอัตราค่าเบี้ยเลี้ยง
+                          </div>
+                          <div class="mt-1">
+                            • 240 บาท หักมื้อละ 80 บาท / 270 บาท หักมื้อละ 90 บาท
                           </div>
                         </div>
                         <div *ngIf="isMaterialItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="text-primary small mt-1 fw-bold">
@@ -2598,12 +2628,12 @@
                       <div>
                         <strong class="text-dark" style="font-size: 15px;">ระยะเวลาดำเนินโครงการ จำนวนผู้เข้าร่วม และงบประมาณ</strong>
                         <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle ms-2 rounded-pill px-2 py-1">
-                          {{ dataAdd.PRPLPROJECTACT_NAME.length }} กิจกรรม
+                          {{ dataAdd.PRPLPROJECTACT_NAME.length }} {{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                         </span>
                       </div>
                     </div>
                     <div class="text-muted small">
-                      <i class="fa-solid fa-circle-info text-info me-1"></i>ระบุช่วงเวลา จำนวนผู้เข้าร่วม และงบประมาณแต่ละกิจกรรม
+                      <i class="fa-solid fa-circle-info text-info me-1"></i>ระบุช่วงเวลา จำนวนผู้เข้าร่วม และงบประมาณแต่ละ{{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                     </div>
                   </div>
 
@@ -2613,7 +2643,7 @@
                         <thead>
                           <tr class="text-center align-middle header-main">
                             <th rowspan="2" class="th-activity">
-                              <i class="fa-solid fa-list-ol text-primary me-1"></i> กิจกรรม
+                              <i class="fa-solid fa-list-ol text-primary me-1"></i> {{ dataAdd.actMode == 'time' ? 'ครั้งที่' : 'กิจกรรม' }}
                             </th>
 
                             <th colspan="2" class="th-date">
@@ -2651,13 +2681,13 @@
                               <div class="d-flex flex-column gap-1">
                                 <div>
                                   <span class="badge rounded-pill badge-activity">
-                                    กิจกรรมที่ {{ i + 1 }}
+                                    {{ (dataAdd.actMode == 'time' ? 'ครั้งที่ ' : 'กิจกรรมที่ ') + (i + 1) }}
                                   </span>
                                 </div>
                                 <textarea class="form-control form-control-sm shadow-sm"
                                   name="PRASSET_NAME_{{i}}" id="PRASSET_NAME_{{i}}" rows="2"
                                   [(ngModel)]="dataAdd.PRPLPROJECTACT_NAME[i]"
-                                  placeholder="ชื่อกิจกรรม..."></textarea>
+                                  [placeholder]="dataAdd.actMode == 'time' ? 'ชื่อครั้งที่ ' + (i + 1) + '...' : 'ชื่อกิจกรรม...'"></textarea>
                               </div>
                             </td>
 
@@ -2737,7 +2767,7 @@
                               รวมแต่ละกลุ่ม
                             </td>
                             <td colspan="2" class="text-center text-muted small py-2">
-                              ทั้งหมด {{ dataAdd.PRPLPROJECTACT_NAME.length }} กิจกรรม
+                              ทั้งหมด {{ dataAdd.PRPLPROJECTACT_NAME.length }} {{ dataAdd.actMode == 'time' ? 'ครั้ง' : 'กิจกรรม' }}
                             </td>
                             <td class="text-end fw-bold text-primary py-2 px-2">
                               {{ getTotalPersons() | number }} <span class="text-muted small fw-normal">คน</span>
