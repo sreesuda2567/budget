@@ -36,9 +36,11 @@
             <li
               *ngIf="datastatus=='A'||datastatusma=='1'|| datastatusbg=='3' || datastatusbg=='4' || datastatusbg=='2'">
               <a class="dropdown-item" routerLink="listexpenses"><i
-                  class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ขอเบิกเงิน</a></li>
-            <li *ngIf="datastatus=='A'||datastatusma=='1'||datastatusbg=='3'||datastatusbg=='1' || datastatusbg=='2'|| datastatusbg=='4'"><a
-                class="dropdown-item" routerLink="showexpenses"><i
+                  class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>ขอเบิกเงิน</a>
+            </li>
+            <li
+              *ngIf="datastatus=='A'||datastatusma=='1'||datastatusbg=='3'||datastatusbg=='1' || datastatusbg=='2'|| datastatusbg=='4'">
+              <a class="dropdown-item" routerLink="showexpenses"><i
                   class="fa-solid fa-list-ol me-2 text-info"></i>รายการขอเบิก</a></li>
             <li *ngIf="datastatus=='A'||datastatusma=='1'|| datastatusbg=='3' || datastatusbg=='2'"><a
                 class="dropdown-item" routerLink="creditor"><i
@@ -137,7 +139,8 @@
           </ul>
         </li>
 
-        <li *ngIf="datastatus=='A' || datastatusma=='1' || datastatusbg=='1' || datastatusbg=='4' || datastatusbg=='3'"
+        <li
+          *ngIf="datastatus=='A' || datastatusma=='1' || datastatusbg=='1' || datastatusbg=='4' || datastatusbg=='3' || datastatus=='I'"
           class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">
@@ -148,7 +151,8 @@
                   class="fa-solid fa-database me-2 text-primary"></i>ลงรายการ gf</a></li>
             <li><a class="dropdown-item" routerLink="manage_revenue" *ngIf="datastatus=='A' || datastatusma=='1'"><i
                   class="fa-solid fa-coins me-2 text-success"></i>ประมาณการรายรับ</a></li>
-            <li><a class="dropdown-item" routerLink="savemoney" *ngIf="datastatus=='A' || datastatusma=='1'"><i
+            <li><a class="dropdown-item" routerLink="savemoney"
+                *ngIf="datastatus=='A' || datastatusma=='1' || datastatus=='I'"><i
                   class="fa-solid fa-piggy-bank me-2 text-warning"></i>กันเงิน</a></li>
             <li><a class="dropdown-item" routerLink="mallocate"
                 *ngIf="datastatus=='A' || datastatusbg=='1' || datastatusbg=='4'"><i
@@ -170,7 +174,7 @@
             <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="reportpayment"><i
                   class="fa-solid fa-book-open me-2 text-primary"></i>รายงานทะเบียนคุมขอเบิกเงิน</a></li>
             <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="reportdeka"><i
-                  class="fa-solid fa-book-open me-2 text-primary"></i>รายงานทะเบียนคุมเลขฎีกา</a></li>      
+                  class="fa-solid fa-book-open me-2 text-primary"></i>รายงานทะเบียนคุมเลขฎีกา</a></li>
             <li *ngIf="datastatusbg !='2'"><a class="dropdown-item" routerLink="report_yexpenses"><i
                   class="fa-solid fa-chart-pie me-2 text-info"></i>สรุปผลการเบิกจ่ายประจำปี</a></li>
             <li *ngIf="datastatus=='A' || datastatusma=='1'|| datastatusbg=='1'|| datastatusbg=='4'"><a

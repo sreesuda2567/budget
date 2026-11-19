@@ -307,7 +307,7 @@
                       <label for="name"><strong><i
                             class="fa-solid fa-diagram-project me-2 text-danger"></i>ผลผลิต/โครงการ</strong> </label>
                       <table width="100%" border="0">
-                        <tr *ngFor="let product of dataProduct;let i = index">
+                        <tr *ngFor="let product of filteredProductList;let i = index">
                           <td width="2%" align="left" valign="top">
                             <input class="form-check-input filled-in" name="p_radio" id="radio" type="radio"
                               value="{{product.PLGPRODUCT_CODE}}" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
@@ -1178,10 +1178,10 @@
                             </option>
                           </select>
                         </div>
-                        <div class="col-md-12" *ngIf="dataAdd.PLPT4 ">
+                        <div class="col-md-12" *ngIf="dataAdd.PLPT4 || isTargetGroupItem(dataAdd.PLPROJECTGROUPDT_CODE)">
                           <div class="d-flex justify-content-between align-items-center mb-1">
                             <label for="PLPROJECTGROUPDT_DETAIL"><strong>รายละเอียด</strong> </label>
-                            <div *ngIf="isMealOrSnackItem(dataAdd.PLPROJECTGROUPDT_CODE)"
+                            <div *ngIf="isTargetGroupItem(dataAdd.PLPROJECTGROUPDT_CODE) && targetGroupOptions.length > 0"
                               class="d-flex align-items-center gap-2">
                               <div class="form-check form-check-inline mb-0">
                                 <input class="form-check-input" type="checkbox" id="mealPrefixFor"
@@ -1196,16 +1196,16 @@
                             </div>
                           </div>
 
-                          <!-- ตัวเลือกกลุ่มเป้าหมาย (มีปุ่มให้ติ๊ก) สำหรับค่าอาหารและค่าอาหารว่าง -->
-                          <div *ngIf="isMealOrSnackItem(dataAdd.PLPROJECTGROUPDT_CODE)"
+                          <!-- ตัวเลือกกลุ่มเป้าหมาย (มีปุ่มให้ติ๊ก) สำหรับค่าอาหาร ค่าอาหารว่าง หรือ ค่าที่พัก -->
+                          <div *ngIf="isTargetGroupItem(dataAdd.PLPROJECTGROUPDT_CODE) && targetGroupOptions.length > 0"
                             class="p-2 mb-2 rounded border bg-light shadow-sm"
                             style="border-left: 4px solid #0dcaf0 !important;">
                             <div class="small fw-bold text-primary mb-2 d-flex align-items-center">
                               <i class="fa-solid fa-square-check me-2 text-info fs-6"></i>
-                              <span>กลุ่มเป้าหมาย</span>
+                              <span>กลุ่มเป้าหมาย{{ isAccommodationItem(dataAdd.PLPROJECTGROUPDT_CODE) ? ' (ค่าเช่าที่พัก)' : ' (ค่าอาหาร/อาหารว่าง)' }}</span>
                             </div>
                             <div class="row g-2">
-                              <div class="col-md-4 col-sm-6" *ngFor="let opt of mealTargetOptions">
+                              <div class="col-md-4 col-sm-6" *ngFor="let opt of targetGroupOptions">
                                 <div class="form-check p-2 rounded border bg-white d-flex align-items-center shadow-xs">
                                   <input class="form-check-input ms-1 me-2" type="checkbox" [id]="'tgt_' + opt.id"
                                     [checked]="isMealTargetSelected(opt.id)"
@@ -1220,7 +1220,8 @@
                           </div>
 
                           <input type="text" name="PLPROJECTGROUPDT_DETAIL" id="PLPROJECTGROUPDT_DETAIL"
-                            class="form-control" placeholder="รายละเอียด" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_DETAIL">
+                            class="form-control" placeholder="รายละเอียด" [(ngModel)]="dataAdd.PLPROJECTGROUPDT_DETAIL"
+                            (input)="syncMealTargetsFromDetail()">
                         </div>
                         <div class="col-md-12">
                           <div class="row">

@@ -115,7 +115,7 @@ export class AppprojectComponent implements OnInit {
   //dataAdd:any = {PRBOBJECT_NAME:[],PRBOBJECT_CODE:[],PRUSE_NAME:[],PRUSE_CODE:[]};PLPROJECTEXPENSES_CODE
   dataAdd: any = {
     actMode: 'activity',
-    PRPLPROJECT_NUMBER: 1,
+    PRPLPROJECT_NUMBER: 0,
     check: [], checkregis: [], PRREGISPROJECT_CODE: [], PRASSET_CODEA: [],
     PLPROJECTD_CODE: [], PLPROJECTD_RSTATUS: [], PLPROJECTD_NAME: [], PLPROJECTD_VALUE: [], PLINDICATOR_CODE: [], PLPROJECTGROUPDT_NAME: [], PRPLPROJECTM_YEAR: [], PRPLPROJECTM_MONEY: []
     , PRPLPROJECTACT_NAME: [], PRPLPROJECTACT_ACT: [], PRPLPROJECT_PERSONS: [], PRPLPROJECT_PERSONP: [], PRPLPROJECT_PERSONO: [], checkimport: [], IMPORTASSET_CODE: []
@@ -1155,15 +1155,21 @@ export class AppprojectComponent implements OnInit {
                 }
               }
             }
-            if (this.dataAdd.PRPLPROJECT_NUMBER === 0 || this.dataAdd.PRPLPROJECT_NUMBER === '0') {
-              this.dataAdd.actMode = 'time';
-              this.dataAdd.PRPLPROJECT_NUMBER = 0;
-            } else if (this.dataAdd.PRPLPROJECT_NUMBER === 1 || this.dataAdd.PRPLPROJECT_NUMBER === '1') {
+            const timeCount = parseInt(this.dataAdd?.PRPLPROJECT_TIME, 10) || 1;
+            if (timeCount <= 1) {
+              this.dataAdd.PRPLPROJECT_NUMBER = 0; // โครงการหลัก
               this.dataAdd.actMode = 'activity';
-              this.dataAdd.PRPLPROJECT_NUMBER = 1;
             } else {
-              this.dataAdd.actMode = detectedMode;
-              this.dataAdd.PRPLPROJECT_NUMBER = detectedMode === 'time' ? 0 : 1;
+              if (this.dataAdd.PRPLPROJECT_NUMBER === 0 || this.dataAdd.PRPLPROJECT_NUMBER === '0') {
+                this.dataAdd.actMode = 'time';
+                this.dataAdd.PRPLPROJECT_NUMBER = 0;
+              } else if (this.dataAdd.PRPLPROJECT_NUMBER === 1 || this.dataAdd.PRPLPROJECT_NUMBER === '1') {
+                this.dataAdd.actMode = 'activity';
+                this.dataAdd.PRPLPROJECT_NUMBER = 1;
+              } else {
+                this.dataAdd.actMode = detectedMode;
+                this.dataAdd.PRPLPROJECT_NUMBER = detectedMode === 'time' ? 0 : 1;
+              }
             }
             if (!Array.isArray(this.dataAdd.PRPLPROJECT_SDATE)) this.dataAdd.PRPLPROJECT_SDATE = [];
             if (!Array.isArray(this.dataAdd.PRPLPROJECT_EDATE)) this.dataAdd.PRPLPROJECT_EDATE = [];
@@ -1564,6 +1570,79 @@ export class AppprojectComponent implements OnInit {
         // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         //console.log(this.dataSub);
       });
+    if (this.dataAdd.PLGPRODUCT_CODE) {
+      const allowed = this.filteredProductList.map((p: any) => String(p.PLGPRODUCT_CODE).trim());
+      if (allowed.length > 0 && !allowed.includes(String(this.dataAdd.PLGPRODUCT_CODE).trim())) {
+        this.dataAdd.PLGPRODUCT_CODE = '';
+      }
+    }
+  }
+
+  get filteredProductList(): any[] {
+    if (!this.dataProduct || !Array.isArray(this.dataProduct)) {
+      return [];
+    }
+    const incCode = String(this.dataAdd?.RPLINCOME_CODE || '').trim();
+    const incItem = this.dataIncome && Array.isArray(this.dataIncome)
+      ? this.dataIncome.find((inc: any) => String(inc.PLINCOME_CODE).trim() === incCode)
+      : null;
+    const incName = incItem ? String(incItem.PLINCOME_NAME || '').trim() : '';
+
+    // 4. งบเงินรายได้สะสม (10) - ตรวจสอบก่อนเพื่อไม่ให้ทับซ้อนกับ "งบเงินรายได้"
+    if (incCode === '10' || incName.includes('สะสม')) {
+      const allowedCodes = ['138'];
+      let list = this.dataProduct.filter((p: any) => allowedCodes.includes(String(p.PLGPRODUCT_CODE).trim()));
+      if (!list.some((p: any) => String(p.PLGPRODUCT_CODE).trim() === '138')) {
+        list.push({ PLGPRODUCT_CODE: '138', PLGPRODUCT_NAME: 'เงินรายได้สะสม' });
+      }
+      return this.sortProductsByCodes(list, allowedCodes);
+    }
+
+    // 3. งบประมาณภายนอก / งบประมาณจากภายนอก (11) - ตรวจสอบก่อนเพื่อไม่ให้ทับซ้อนกับ "งบประมาณ"
+    if (incCode === '11' || incName.includes('ภายนอก')) {
+      const allowedCodes = ['143', '144', '145'];
+      return this.sortProductsByCodes(
+        this.dataProduct.filter((p: any) => allowedCodes.includes(String(p.PLGPRODUCT_CODE).trim())),
+        allowedCodes
+      );
+    }
+
+    // 1. งบประมาณแผ่นดิน / งบประมาณ (01)
+    if (incCode === '01' || incCode === '1' || incName === 'งบประมาณ' || incName.includes('งบประมาณแผ่นดิน')) {
+      const allowedCodes = ['103', '101', '146', '127'];
+      return this.sortProductsByCodes(
+        this.dataProduct.filter((p: any) => allowedCodes.includes(String(p.PLGPRODUCT_CODE).trim())),
+        allowedCodes
+      );
+    }
+
+    // 2. งบประมาณเงินรายได้ / งบเงินรายได้ (02, 14)
+    if (
+      incCode === '02' || incCode === '2' || incCode === '14' || 
+      incName === 'งบเงินรายได้' || incName.includes('งบประมาณเงินรายได้') || incName.includes('เงินรายได้ (ก่อให้เกิดรายได้)') ||
+      (incName.includes('เงินรายได้') && !incName.includes('สะสม'))
+    ) {
+      const allowedCodes = ['103', '101', '104', '107', '137'];
+      let list = this.dataProduct.filter((p: any) => allowedCodes.includes(String(p.PLGPRODUCT_CODE).trim()));
+      if (!list.some((p: any) => String(p.PLGPRODUCT_CODE).trim() === '137')) {
+        list.push({ PLGPRODUCT_CODE: '137', PLGPRODUCT_NAME: 'วิจัยและนวัตกรรม' });
+      }
+      return this.sortProductsByCodes(list, allowedCodes);
+    }
+
+    // กรณีอื่นๆ หรือยังไม่ได้เลือกแหล่งเงิน ให้แสดงรายการทั้งหมด
+    return this.dataProduct;
+  }
+
+  sortProductsByCodes(products: any[], codeOrder: string[]): any[] {
+    return products.slice().sort((a: any, b: any) => {
+      const idxA = codeOrder.indexOf(String(a.PLGPRODUCT_CODE).trim());
+      const idxB = codeOrder.indexOf(String(b.PLGPRODUCT_CODE).trim());
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return 0;
+    });
   }
   onChangedistrict(indexOrValue: any = '', deviceValue: any = '') {
     if (typeof indexOrValue === 'number') {
@@ -1705,7 +1784,10 @@ export class AppprojectComponent implements OnInit {
         if (!this.dataAdd.PRPLPROJECT_TIME || this.dataAdd.PRPLPROJECT_TIME < 1) {
           this.dataAdd.PRPLPROJECT_TIME = 1;
         }
-        if (data.data[0].PRPLPROJECT_NUMBER !== undefined && data.data[0].PRPLPROJECT_NUMBER !== null && String(data.data[0].PRPLPROJECT_NUMBER).trim() !== '') {
+        if (this.dataAdd.PRPLPROJECT_TIME <= 1) {
+          this.dataAdd.PRPLPROJECT_NUMBER = 0; // โครงการหลัก
+          this.dataAdd.actMode = 'activity';
+        } else if (data.data[0].PRPLPROJECT_NUMBER !== undefined && data.data[0].PRPLPROJECT_NUMBER !== null && String(data.data[0].PRPLPROJECT_NUMBER).trim() !== '') {
           this.dataAdd.PRPLPROJECT_NUMBER = parseInt(data.data[0].PRPLPROJECT_NUMBER, 10);
           this.dataAdd.actMode = this.dataAdd.PRPLPROJECT_NUMBER === 0 ? 'time' : 'activity';
         } else {
@@ -1993,7 +2075,7 @@ export class AppprojectComponent implements OnInit {
         }
       }
     }
-    this.dataAdd.PRPLPROJECT_NUMBER = this.dataAdd.actMode === 'time' ? 0 : 1;
+    this.dataAdd.PRPLPROJECT_NUMBER = this.getProjectNumber();
     // console.log(this.dataAdd.PLPROJECTMORE_PRINCIPLE.length );
     this.dataAdd.opt = "update";
     this.apiService
@@ -2147,7 +2229,16 @@ export class AppprojectComponent implements OnInit {
         this.onChangesubdistrict(i, this.dataAdd.DISTRICT_ID[i]);
       }
     }
+    this.dataAdd.PRPLPROJECT_NUMBER = this.getProjectNumber();
     this.updateProjectActList();
+  }
+
+  getProjectNumber(): number {
+    const time = parseInt(this.dataAdd?.PRPLPROJECT_TIME, 10) || 1;
+    if (time <= 1) {
+      return 0; // ถ้าเป็นโครงการหลัก ก็ให้ PRPLPROJECT_NUMBER=0
+    }
+    return this.dataAdd?.actMode === 'time' ? 0 : 1;
   }
 
   updateProjectActList() {
@@ -2209,7 +2300,7 @@ export class AppprojectComponent implements OnInit {
   }
 
   onActModeChange() {
-    this.dataAdd.PRPLPROJECT_NUMBER = this.dataAdd?.actMode === 'time' ? 0 : 1;
+    this.dataAdd.PRPLPROJECT_NUMBER = this.getProjectNumber();
     const isTime = this.dataAdd?.actMode === 'time';
     const oldPrefix = isTime ? 'กิจกรรมที่' : 'ครั้งที่';
     const newPrefix = isTime ? 'ครั้งที่' : 'กิจกรรมที่';

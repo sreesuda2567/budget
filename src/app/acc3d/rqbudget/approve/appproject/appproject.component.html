@@ -606,7 +606,7 @@
                       <label for="name"><strong><i
                             class="fa-solid fa-diagram-project me-2 text-danger"></i>ผลผลิต/โครงการ</strong> </label>
                       <table width="100%" border="0">
-                        <tr *ngFor="let product of dataProduct;let i = index">
+                        <tr *ngFor="let product of filteredProductList;let i = index">
                           <td width="2%" align="left" valign="top">
                             <input class="form-check-input filled-in" name="p_radio" id="radio" type="radio"
                               value="{{product.PLGPRODUCT_CODE}}" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
