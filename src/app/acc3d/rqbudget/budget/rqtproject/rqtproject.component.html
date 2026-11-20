@@ -307,7 +307,7 @@
                       <label for="name"><strong><i
                             class="fa-solid fa-diagram-project me-2 text-danger"></i>ผลผลิต/โครงการ</strong> </label>
                       <table width="100%" border="0">
-                        <tr *ngFor="let product of filteredProductList;let i = index">
+                        <tr *ngFor="let product of dataProduct;let i = index">
                           <td width="2%" align="left" valign="top">
                             <input class="form-check-input filled-in" name="p_radio" id="radio" type="radio"
                               value="{{product.PLGPRODUCT_CODE}}" [(ngModel)]="dataAdd.PLGPRODUCT_CODE">
@@ -1092,7 +1092,7 @@
                           </option>
                         </select>
                       </div>
-                      <div class="col-md-2">
+                      <div class="col-md-3">
                         <label for="name"><strong><i
                               class="fa-solid fa-list-check me-2 text-danger"></i>ประเภทโครงการ</strong>
                         </label>
@@ -1110,10 +1110,10 @@
                         <select name="PLPROJECTESTTYPE_CODE" id="PLPROJECTESTTYPE_CODE" class="form-select"
                           [(ngModel)]="dataAdd.PLPROJECTESTTYPE_CODE" (change)="showestimate(false)">
                           <option [value]="1">อัตราเบิกจ่ายตามระเบียบ</option>
-                          <option [value]="2">อัตราเบิกจ่ายตามมาตรการประหยัด</option>
+                          <option [value]="2" *ngIf="isEconomyRateAvailable">อัตราเบิกจ่ายตามมาตรการประหยัด</option>
                         </select>
                       </div>
-                      <div class="col-md-8">
+                      <div class="col-md-7">
                         <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>รายการ</strong>
                         </label>
                         <select name="PLPROJECTGROUPDT_CODE" id="PLPROJECTGROUPDT_CODE" class="form-select"
@@ -1202,18 +1202,24 @@
                             style="border-left: 4px solid #0dcaf0 !important;">
                             <div class="small fw-bold text-primary mb-2 d-flex align-items-center">
                               <i class="fa-solid fa-square-check me-2 text-info fs-6"></i>
-                              <span>กลุ่มเป้าหมาย{{ isAccommodationItem(dataAdd.PLPROJECTGROUPDT_CODE) ? ' (ค่าเช่าที่พัก)' : ' (ค่าอาหาร/อาหารว่าง)' }}</span>
+                              <span>กลุ่มเป้าหมาย{{ isAccommodationItem(dataAdd.PLPROJECTGROUPDT_CODE) ? ' (ค่าเช่าที่พัก)' : (isAllowanceItem(dataAdd.PLPROJECTGROUPDT_CODE) ? ' (ค่าเบี้ยเลี้ยง)' : ' (ค่าอาหาร/อาหารว่าง)') }}</span>
                             </div>
                             <div class="row g-2">
-                              <div class="col-md-4 col-sm-6" *ngFor="let opt of targetGroupOptions">
-                                <div class="form-check p-2 rounded border bg-white d-flex align-items-center shadow-xs">
-                                  <input class="form-check-input ms-1 me-2" type="checkbox" [id]="'tgt_' + opt.id"
+                              <div class="col-md-4 col-sm-6" *ngFor="let opt of targetGroupOptions; trackBy: trackByTargetOption">
+                                <div class="p-2 rounded border d-flex align-items-center shadow-xs target-opt-card"
+                                  [class.bg-white]="!isMealTargetSelected(opt.id)"
+                                  [class.bg-primary-subtle]="isMealTargetSelected(opt.id)"
+                                  [class.border-primary]="isMealTargetSelected(opt.id)"
+                                  [class.text-primary]="isMealTargetSelected(opt.id)"
+                                  style="cursor: pointer; user-select: none;"
+                                  (click)="toggleMealTarget(opt.id, $event)">
+                                  <input class="form-check-input ms-1 me-2 my-0" type="checkbox"
                                     [checked]="isMealTargetSelected(opt.id)"
-                                    (change)="toggleMealTarget(opt.id, $event)">
-                                  <label class="form-check-label small cursor-pointer flex-grow-1"
-                                    [for]="'tgt_' + opt.id">
+                                    style="pointer-events: none; cursor: pointer;">
+                                  <span class="small flex-grow-1 my-0" [class.fw-bold]="isMealTargetSelected(opt.id)"
+                                    style="cursor: pointer;">
                                     {{opt.title}}
-                                  </label>
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -1394,7 +1400,10 @@
                                   <span class="badge bg-light text-dark border">
                                     <i class="fa-solid fa-location-dot me-1 text-secondary"></i>{{ ms.locationName }}
                                   </span>
-                                  <span *ngIf="ms.isTypeA" class="badge bg-primary">
+                                  <span *ngIf="ms.gtypeBadge" class="badge" [ngClass]="ms.gtypeBadgeClass || 'bg-primary'">
+                                    {{ ms.gtypeBadge }}
+                                  </span>
+                                  <span *ngIf="!ms.gtypeBadge && ms.isTypeA" class="badge bg-primary">
                                     การฝึกอบรมประเภท ก
                                   </span>
                                   <span *ngIf="ms.isFull" class="badge bg-success">
@@ -1431,7 +1440,7 @@
                               </td>
                               <td align="center" class="align-middle">
                                 <button type="button" class="btn btn-outline-secondary btn-sm"
-                                  (click)="alertMealLimit()" title="ดูข้อกำหนดอัตราค่าอาหาร">
+                                  (click)="alertMealLimit(ms)" title="ดูข้อกำหนดอัตราค่าอาหาร">
                                   <i class="fa-solid fa-circle-question"></i>
                                 </button>
                               </td>
