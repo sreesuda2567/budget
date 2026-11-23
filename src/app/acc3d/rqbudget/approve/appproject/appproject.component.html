@@ -1131,7 +1131,8 @@
                               <!-- สถานที่ (ภายใน/ภายนอก) -->
                               <td class="py-2 px-2">
                                 <select name="PRPLPROJECT_AT_{{i}}" id="PRPLPROJECT_AT_{{i}}" class="form-select form-select-sm"
-                                  [(ngModel)]="dataAdd.PRPLPROJECT_AT[i]">
+                                  [(ngModel)]="dataAdd.PRPLPROJECT_AT[i]"
+                                  (change)="fetchdataPLPROJECTGROUPDTT(getCurrentLocationType())">
                                   <option value="1">สถานที่ราชการ/รัฐวิสาหกิจ/หน่วยงานอื่นของรัฐ</option>
                                   <option value="2">สถานที่เอกชน</option>
                                 </select>
@@ -1366,7 +1367,7 @@
                       <div *ngIf="dataAdd.PRPLPROJECT_TIME>1" class="col-md-12">
                         <label for="name"><strong>{{ dataAdd.actMode == 'time' ? 'ครั้งที่' : 'กิจกรรมย่อย' }}</strong> </label>
                         <select name="PRPLPROJECTACT_CODE" id="PRPLPROJECTACT_CODE" class="form-select"
-                          [(ngModel)]="dataAdd.PRPLPROJECTACT_CODE" (change)="fetchdataPLPROJECTGROUPDTT()">
+                          [(ngModel)]="dataAdd.PRPLPROJECTACT_CODE" (change)="fetchdataPLPROJECTGROUPDTT(getCurrentLocationType())">
                           <option [value]="d.PRPLPROJECTM_NUMBER" *ngFor="let d of dataProjectact">
                             {{d.PRPLPROJECTACT_NAME}}
                           </option>
@@ -1376,7 +1377,7 @@
                         <label for="name"><strong><i class="fa-solid fa-list-check me-2 text-danger"></i>ประเภทโครงการ</strong>
                         </label>
                         <select name="PLPROJECTGTYPE_CODE" id="PLPROJECTGTYPE_CODE" class="form-select"
-                          [(ngModel)]="dataAdd.PLPROJECTGTYPE_CODE" (change)="fetchdataPLPROJECTGROUPDTT()">
+                          [(ngModel)]="dataAdd.PLPROJECTGTYPE_CODE" (change)="fetchdataPLPROJECTGROUPDTT(getCurrentLocationType())">
                           <option [value]="d.PLPROJECTGTYPE_CODE" *ngFor="let d of dataGtype">
                             {{d.PLPROJECTGTYPE_NAME}}
                           </option>
@@ -1429,6 +1430,23 @@
                             </ng-container>
                           </div>
                         </div>
+                        <div *ngIf="isFoodExpenseItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="alert alert-info py-2 px-3 mt-2 mb-0 small">
+                          <div class="fw-bold">
+                            <i class="fa-solid fa-circle-info me-1 text-primary"></i>
+                            ข้อกำหนดอัตราค่าอาหาร
+                          </div>
+                          <div class="mt-1">
+                            <div class="d-flex align-items-start">
+                              <span class="me-1">•</span>
+                              <span class="me-2">กำหนด</span>
+                              <div>
+                                <div>1. ไม่จัดอาหารให้ 3 มื้อ 240 บาท</div>
+                                <div>2. ไม่จัดอาหารให้ 2 มื้อ 80 บาท</div>
+                                <div>3. ไม่จัดอาหารให้ 1 มื้อ 160 บาท</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                         <div *ngIf="isAllowanceItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="alert alert-info py-2 px-3 mt-2 mb-0 small">
                           <div class="fw-bold">
                             <i class="fa-solid fa-circle-info me-1 text-primary"></i>
@@ -1436,6 +1454,48 @@
                           </div>
                           <div class="mt-1">
                             • 240 บาท หักมื้อละ 80 บาท / 270 บาท หักมื้อละ 90 บาท
+                          </div>
+                        </div>
+                        <div *ngIf="isAccommodationItem(dataAdd.PLPROJECTGROUPDT_CODE) && (dataAdd.PLPROJECTGTYPE_CODE == '04' || dataAdd.PLPROJECTGTYPE_CODE == '4' || dataAdd.PLPROJECTGTYPE_CODE == '05' || dataAdd.PLPROJECTGTYPE_CODE == '5')" class="alert alert-info py-2 px-3 mt-2 mb-0 small">
+                          <div class="fw-bold">
+                            <i class="fa-solid fa-circle-info me-1 text-primary"></i>
+                            ข้อกำหนดอัตราค่าเช่าที่พัก{{ isSingleRoomAccommodation(dataAdd.PLPROJECTGROUPDT_CODE) ? ' (พักเดี่ยว)' : (isDoubleRoomAccommodation(dataAdd.PLPROJECTGROUPDT_CODE) ? ' (พักคู่)' : '') }}
+                            <span *ngIf="dataAdd.PLPROJECTGTYPE_CODE == '04' || dataAdd.PLPROJECTGTYPE_CODE == '4'" class="badge bg-primary ms-1">การฝึกอบรมประเภท ก</span>
+                            <span *ngIf="dataAdd.PLPROJECTGTYPE_CODE == '05' || dataAdd.PLPROJECTGTYPE_CODE == '5'" class="badge bg-success ms-1">การฝึกอบรมประเภท ข</span>
+                          </div>
+                          <div class="mt-1">
+                            <ng-container *ngIf="isSingleRoomAccommodation(dataAdd.PLPROJECTGROUPDT_CODE)">
+                              <div class="d-flex align-items-start mb-1">
+                                <span class="me-1">•</span>
+                                <div><strong>ประธานในพิธีเปิดหรือพิธีปิดการฝึกอบรม, แขกผู้มีเกียรติและผู้ติดตาม, วิทยากร:</strong> ไม่กำหนดอัตรา (เบิกจ่ายจริง)</div>
+                              </div>
+                              <div class="d-flex align-items-start">
+                                <span class="me-1">•</span>
+                                <div><strong>เจ้าหน้าที่, ผู้เข้ารับการฝึกอบรม, ผู้สังเกตการณ์:</strong> กำหนด ไม่เกิน {{ (dataAdd.PLPROJECTGTYPE_CODE == '05' || dataAdd.PLPROJECTGTYPE_CODE == '5') ? '1,600 บาท' : '2,700 บาท' }}</div>
+                              </div>
+                            </ng-container>
+                            <ng-container *ngIf="isDoubleRoomAccommodation(dataAdd.PLPROJECTGROUPDT_CODE)">
+                              <div class="d-flex align-items-start mb-1">
+                                <span class="me-1">•</span>
+                                <div><strong>ประธานในพิธีเปิดหรือพิธีปิดการฝึกอบรม, แขกผู้มีเกียรติและผู้ติดตาม, วิทยากร:</strong> ไม่กำหนดอัตรา (เบิกจ่ายจริง)</div>
+                              </div>
+                              <div class="d-flex align-items-start">
+                                <span class="me-1">•</span>
+                                <div><strong>เจ้าหน้าที่, ผู้เข้ารับการฝึกอบรม, ผู้สังเกตการณ์:</strong> กำหนด ไม่เกิน {{ (dataAdd.PLPROJECTGTYPE_CODE == '05' || dataAdd.PLPROJECTGTYPE_CODE == '5') ? '2,000 บาท (ห้อง)' : '3,000 บาท (ห้อง)' }}</div>
+                              </div>
+                            </ng-container>
+                            <ng-container *ngIf="!isSingleRoomAccommodation(dataAdd.PLPROJECTGROUPDT_CODE) && !isDoubleRoomAccommodation(dataAdd.PLPROJECTGROUPDT_CODE)">
+                              <div class="mb-1">
+                                <strong>พักเดี่ยว:</strong>
+                                <span class="ms-1">• ประธานฯ / แขกผู้มีเกียรติ / วิทยากร: ไม่กำหนดอัตรา (เบิกจ่ายจริง)</span>
+                                <span class="ms-1">| • เจ้าหน้าที่ / ผู้เข้ารับการฝึกอบรม / ผู้สังเกตการณ์: กำหนด ไม่เกิน {{ (dataAdd.PLPROJECTGTYPE_CODE == '05' || dataAdd.PLPROJECTGTYPE_CODE == '5') ? '1,600 บาท' : '2,700 บาท' }}</span>
+                              </div>
+                              <div>
+                                <strong>พักคู่:</strong>
+                                <span class="ms-1">• ประธานฯ / แขกผู้มีเกียรติ / วิทยากร: ไม่กำหนดอัตรา (เบิกจ่ายจริง)</span>
+                                <span class="ms-1">| • เจ้าหน้าที่ / ผู้เข้ารับการฝึกอบรม / ผู้สังเกตการณ์: กำหนด ไม่เกิน {{ (dataAdd.PLPROJECTGTYPE_CODE == '05' || dataAdd.PLPROJECTGTYPE_CODE == '5') ? '2,000 บาท (ห้อง)' : '3,000 บาท (ห้อง)' }}</span>
+                              </div>
+                            </ng-container>
                           </div>
                         </div>
                         <div *ngIf="isMaterialItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="text-primary small mt-1 fw-bold">

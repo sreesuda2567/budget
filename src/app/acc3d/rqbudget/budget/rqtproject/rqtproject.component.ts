@@ -513,7 +513,7 @@ export class RqtprojectComponent implements OnInit {
 
   }
   //ประเภทรายจ่าย
-  fetchdataPLPROJECTGROUPDTT() {
+  fetchdataPLPROJECTGROUPDTT(locationType?: any) {
     if (!this.dataAdd || !this.dataAdd.PLPROJECTGTYPE_CODE) {
       this.dataProjectdt = [];
       return;
@@ -522,12 +522,24 @@ export class RqtprojectComponent implements OnInit {
       this.dataAdd.PLPROJECTESTTYPE_CODE = 1;
     }
     this.dataProjectdt = [];
-    this.dataAdd.opt = "viewPLPROJECTGROUPDTT";
+    const loc = (locationType !== undefined && locationType !== null && locationType !== '') ? String(locationType) : this.getCurrentLocationType();
+    const payload = {
+      ...this.dataAdd,
+      opt: "viewPLPROJECTGROUPDTT",
+      PRPLPROJECT_AT: loc,
+      PRPLPROJECT_AT_CURR: loc
+    };
     this.apiService
-      .getdata(this.dataAdd, this.url1)
+      .getdata(payload, this.url1)
       .pipe(first())
       .subscribe((data: any) => {
         this.dataProjectdt = data || [];
+        if (this.dataAdd.PLPROJECTGROUPDT_CODE && this.dataProjectdt.length > 0) {
+          const exists = this.dataProjectdt.some((item: any) => item.PLPROJECTGROUPDT_CODE == this.dataAdd.PLPROJECTGROUPDT_CODE);
+          if (!exists) {
+            this.dataAdd.PLPROJECTGROUPDT_CODE = '';
+          }
+        }
         if (this.isTargetGroupItem(this.dataAdd.PLPROJECTGROUPDT_CODE)) {
           this.syncMealTargetsFromDetail();
         } else {
@@ -940,7 +952,7 @@ export class RqtprojectComponent implements OnInit {
 
         this.dataAdd.PLPROJECTGTYPE_CODE = data[0].PLPROJECTGTYPE_CODE;
         this.dataAdd.PLPROJECTGROUPDT_CODE = data[0].PLPROJECTGROUPDT_CODE;
-        this.fetchdataPLPROJECTGROUPDTT();
+       // this.fetchdataPLPROJECTGROUPDTT();
         this.showestimate();
         this.dataAdd.PLPROJECTESTTYPE_CODE = (data[0].PLPROJECTGTYPE_CODE === '05' || data[0].PLPROJECTGTYPE_CODE === '5') ? data[0].PLPROJECTESTTYPE_CODE : 1;
         this.dataAdd.GCUNIT_ACODE = data[0].GCUNIT_ACODE;
@@ -1382,19 +1394,18 @@ export class RqtprojectComponent implements OnInit {
       : null;
     const incName = incItem ? String(incItem.PLINCOME_NAME || '').trim() : '';
 
-    // 4. งบเงินรายได้สะสม (10) - ตรวจสอบก่อนเพื่อไม่ให้ทับซ้อนกับ "งบเงินรายได้"
-    if (incCode === '10' || incName.includes('สะสม')) {
-      const allowedCodes = ['138'];
-      let list = this.dataProduct.filter((p: any) => allowedCodes.includes(String(p.PLGPRODUCT_CODE).trim()));
-      if (!list.some((p: any) => String(p.PLGPRODUCT_CODE).trim() === '138')) {
-        list.push({ PLGPRODUCT_CODE: '138', PLGPRODUCT_NAME: 'เงินรายได้สะสม' });
-      }
-      return this.sortProductsByCodes(list, allowedCodes);
-    }
+
 
     // 3. งบประมาณภายนอก / งบประมาณจากภายนอก (11) - ตรวจสอบก่อนเพื่อไม่ให้ทับซ้อนกับ "งบประมาณ"
-    if (incCode === '11' || incName.includes('ภายนอก')) {
+    if (incCode === '11' || incCode === '13' || incCode === '10' || incName.includes('ภายนอก') || incName.includes('สะสม')) {
       const allowedCodes = [ '145'];
+      this.dataAdd.PRPLPROJECT_ANOTHER='';
+      if(incCode === '10'){
+      this.dataAdd.PRPLPROJECT_ANOTHER='เงินรายได้สะสม';
+      }
+      if(incCode === '13'){
+      this.dataAdd.PRPLPROJECT_ANOTHER='ไม่ใช้งบประมาณ';
+      }
       return this.sortProductsByCodes(
         this.dataProduct.filter((p: any) => allowedCodes.includes(String(p.PLGPRODUCT_CODE).trim())),
         allowedCodes
@@ -2344,13 +2355,15 @@ export class RqtprojectComponent implements OnInit {
 
     // กรณีโครงการประเภทอื่นๆ (เช่น 04 การฝึกอบรมประเภท ก, 05 ประเภท ข, ฯลฯ)
     if (isAccom) {
+      const isSingle = this.isSingleRoomAccommodation(this.dataAdd?.PLPROJECTGROUPDT_CODE);
+      const prefix = isSingle ? '6' : '7';
       return [
-        { id: '7.1', title: 'ประธานในพิธีเปิดหรือพิธีปิดการฝึกอบรม', text: 'ประธานในพิธีเปิดหรือพิธีปิดการฝึกอบรม' },
-        { id: '7.2', title: 'แขกผู้มีเกียรติและผู้ติดตาม', text: 'แขกผู้มีเกียรติและผู้ติดตาม' },
-        { id: '7.3', title: 'วิทยากร', text: 'วิทยากร' },
-        { id: '7.4', title: 'เจ้าหน้าที่', text: 'เจ้าหน้าที่' },
-        { id: '7.5', title: 'ผู้เข้ารับการฝึกอบรม', text: 'ผู้เข้ารับการฝึกอบรม' },
-        { id: '7.6', title: 'ผู้สังเกตการณ์', text: 'ผู้สังเกตการณ์' },
+        { id: prefix + '.1', title: 'ประธานในพิธีเปิดหรือพิธีปิดการฝึกอบรม', text: 'ประธานในพิธีเปิดหรือพิธีปิดการฝึกอบรม' },
+        { id: prefix + '.2', title: 'แขกผู้มีเกียรติและผู้ติดตาม', text: 'แขกผู้มีเกียรติและผู้ติดตาม' },
+        { id: prefix + '.3', title: 'วิทยากร', text: 'วิทยากร' },
+        { id: prefix + '.4', title: 'เจ้าหน้าที่', text: 'เจ้าหน้าที่' },
+        { id: prefix + '.5', title: 'ผู้เข้ารับการฝึกอบรม', text: 'ผู้เข้ารับการฝึกอบรม' },
+        { id: prefix + '.6', title: 'ผู้สังเกตการณ์', text: 'ผู้สังเกตการณ์' },
       ];
     }
 
@@ -2432,6 +2445,48 @@ export class RqtprojectComponent implements OnInit {
   isMealItem(code: any): boolean {
     const mealCodes = ['0207', '0213', '0214', '0205', '0218', '0243', '0246', '0247', '0248', '0249', '0250', '0251'];
     return mealCodes.includes(String(code));
+  }
+
+  isFoodExpenseItem(code?: any): boolean {
+    const sCode = String(code !== undefined && code !== null ? code : (this.dataAdd ? this.dataAdd.PLPROJECTGROUPDT_CODE : '')).trim();
+    if (!sCode) return false;
+    if (sCode === '0256') return true;
+    if (this.dataProjectdt && Array.isArray(this.dataProjectdt)) {
+      const item = this.dataProjectdt.find((d: any) => String(d.PLPROJECTGROUPDT_CODE).trim() === sCode);
+      if (item && item.PLPROJECTGROUPDT_NAME) {
+        return item.PLPROJECTGROUPDT_NAME.trim() === 'ค่าอาหาร';
+      }
+    }
+    return false;
+  }
+
+  isSingleRoomAccommodation(code?: any): boolean {
+    const c = String(code !== undefined && code !== null ? code : (this.dataAdd ? this.dataAdd.PLPROJECTGROUPDT_CODE : '')).trim();
+    if (!c) return false;
+    if (this.dataProjectdt && Array.isArray(this.dataProjectdt)) {
+      const item = this.dataProjectdt.find((d: any) => String(d.PLPROJECTGROUPDT_CODE).trim() === c);
+      if (item && item.PLPROJECTGROUPDT_NAME) {
+        return item.PLPROJECTGROUPDT_NAME.includes('พักเดี่ยว');
+      }
+    }
+    return c === '0203' || c === '0211' || c === '0255';
+  }
+
+  isDoubleRoomAccommodation(code?: any): boolean {
+    const c = String(code !== undefined && code !== null ? code : (this.dataAdd ? this.dataAdd.PLPROJECTGROUPDT_CODE : '')).trim();
+    if (!c) return false;
+    if (this.dataProjectdt && Array.isArray(this.dataProjectdt)) {
+      const item = this.dataProjectdt.find((d: any) => String(d.PLPROJECTGROUPDT_CODE).trim() === c);
+      if (item && item.PLPROJECTGROUPDT_NAME) {
+        return item.PLPROJECTGROUPDT_NAME.includes('พักคู่');
+      }
+    }
+    return c === '0202' || c === '0210' || c === '0254';
+  }
+
+  isRegularEstimateRate(): boolean {
+    const est = String(this.dataAdd?.PLPROJECTESTTYPE_CODE || '').trim();
+    return est === '1' || est === '01' || !est;
   }
 
   isAllowanceItem(code?: any): boolean {
@@ -3013,7 +3068,9 @@ export class RqtprojectComponent implements OnInit {
           this.dataAdd.moneydt = 1;
         } else
           //ค่าเบี้ยเลี้ยง
-          if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0201' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0257') {
+          if (this.dataAdd.PLPROJECTGROUPDT_CODE == '0201' || this.dataAdd.PLPROJECTGROUPDT_CODE == '0257'
+            || this.dataAdd.PLPROJECTGROUPDT_CODE == '0256'
+          ) {
             this.dataAdd.GCUNIT_ACODE = 'Z21';
             this.dataAdd.GCUNIT_BCODE = 'V04';
             this.dataAdd.GCUNIT_CCODE = '';
