@@ -524,10 +524,13 @@ export class RqtprojectComponent implements OnInit {
     this.dataProjectdt = [];
     const loc = (locationType !== undefined && locationType !== null && locationType !== '') ? String(locationType) : this.getCurrentLocationType();
     const payload = {
-      ...this.dataAdd,
       opt: "viewPLPROJECTGROUPDTT",
+      PLPROJECTGTYPE_CODE: this.dataAdd.PLPROJECTGTYPE_CODE,
       PRPLPROJECT_AT: loc,
-      PRPLPROJECT_AT_CURR: loc
+      PRPLPROJECT_AT_CURR: loc,
+      PRPLPROJECTACT_CODE: this.dataAdd.PRPLPROJECTACT_CODE || '',
+      PRPLPROJECT_CODE: this.dataAdd.PRPLPROJECT_CODE || '',
+      PLPROJECTESTTYPE_CODE: this.dataAdd.PLPROJECTESTTYPE_CODE || ''
     };
     this.apiService
       .getdata(payload, this.url1)
@@ -1057,6 +1060,12 @@ export class RqtprojectComponent implements OnInit {
 
   processDataProjectexd() {
     if (this.dataProjectexd && Array.isArray(this.dataProjectexd)) {
+      this.dataProjectexd = this.dataProjectexd.filter((p: any) => {
+        if (p.PLPROJECTGROUPDT_NUM == 1 && (!p.PLPROJECTEXPENSES_NUM || p.PLPROJECTEXPENSES_NUM === '' || !p.PLPROJECTGROUPDT_MONEY || p.PLPROJECTGROUPDT_MONEY == 0)) {
+          return false;
+        }
+        return true;
+      });
       let lastAct = '';
       let lastGtype = '';
       let lastGroup = '';
@@ -2447,6 +2456,16 @@ export class RqtprojectComponent implements OnInit {
     return mealCodes.includes(String(code));
   }
 
+  shouldShowMealItemRule(): boolean {
+    if (!this.dataAdd) return false;
+    const isEconomy = this.dataAdd.PLPROJECTESTTYPE_CODE == 2 || this.dataAdd.PLPROJECTESTTYPE_CODE == '2';
+    const isGtype05 = this.dataAdd.PLPROJECTGTYPE_CODE === '05' || this.dataAdd.PLPROJECTGTYPE_CODE === '5';
+    if (isGtype05 && isEconomy) {
+      return false;
+    }
+    return true;
+  }
+
   isFoodExpenseItem(code?: any): boolean {
     const sCode = String(code !== undefined && code !== null ? code : (this.dataAdd ? this.dataAdd.PLPROJECTGROUPDT_CODE : '')).trim();
     if (!sCode) return false;
@@ -2565,6 +2584,21 @@ export class RqtprojectComponent implements OnInit {
     });
 
     if (mealRows.length === 0) return null;
+
+    // ตรวจสอบค่าอาหาร แสดงเฉพาะ PLPROJECTESTTYPE_CODE = 1 (อัตราเบิกจ่ายตามระเบียบ)
+    // หากเป็นอัตราประหยัด (PLPROJECTESTTYPE_CODE == 2 หรือ 02) จะไม่แสดงการตรวจสอบค่าอาหาร
+    const mealWithEstType = mealRows.find((p: any) => p.PLPROJECTESTTYPE_CODE !== undefined && p.PLPROJECTESTTYPE_CODE !== null && String(p.PLPROJECTESTTYPE_CODE).trim() !== '');
+    const estTypeCode = mealWithEstType
+      ? String(mealWithEstType.PLPROJECTESTTYPE_CODE).trim()
+      : (this.dataAdd?.PLPROJECTESTTYPE_CODE !== undefined && this.dataAdd?.PLPROJECTESTTYPE_CODE !== null ? String(this.dataAdd.PLPROJECTESTTYPE_CODE).trim() : '1');
+
+    if (estTypeCode !== '1' && estTypeCode !== '01') {
+      return null;
+    }
+    const hasEconomyMeal = mealRows.some((p: any) => String(p.PLPROJECTESTTYPE_CODE).trim() === '2' || String(p.PLPROJECTESTTYPE_CODE).trim() === '02');
+    if (hasEconomyMeal) {
+      return null;
+    }
 
     // เช็ครหัสประเภทโครงการจากรายการที่เพิ่มไปแล้วในกิจกรรมนี้
     let actGtypeCode = '';
@@ -2719,6 +2753,7 @@ export class RqtprojectComponent implements OnInit {
 
     return {
       actKey: targetAct,
+      estTypeCode,
       actName,
       actGtypeCode,
       actGtypeName,

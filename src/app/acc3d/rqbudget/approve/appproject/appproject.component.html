@@ -1402,7 +1402,7 @@
                             {{d.PLPROJECTGROUPDT_NAME}}
                           </option>
                         </select>
-                        <div *ngIf="isMealItem(dataAdd.PLPROJECTGROUPDT_CODE)" class="alert alert-info py-2 px-3 mt-2 mb-0 small">
+                        <div *ngIf="isMealItem(dataAdd.PLPROJECTGROUPDT_CODE) && shouldShowMealItemRule()" class="alert alert-info py-2 px-3 mt-2 mb-0 small">
                           <div class="fw-bold">
                             <i class="fa-solid fa-circle-info me-1 text-primary"></i>
                             ข้อกำหนดอัตราค่าอาหาร (สถานที่ปัจจุบัน: <u>{{ getCurrentLocationType() == '2' ? 'สถานที่เอกชน' : 'สถานที่ราชการ/รัฐวิสาหกิจ' }}</u>)
@@ -1704,9 +1704,9 @@
                           </td>
                         </tr>
                         <!-- ถ้าเป็นแถว 'รวมทั้งสิ้น' ของกิจกรรม ให้ตรวจสอบและแสดงแถบค่าอาหารของกิจกรรมนั้นทันที -->
-                        <ng-container *ngIf="p.PLPROJECTGROUPDT_NUM=='1' && p.PLPROJECTGROUPDT_NAME=='รวมทั้งสิ้น'">
+                        <ng-container *ngIf="p.PLPROJECTGROUPDT_NUM=='1' && p.PLPROJECTGROUPDT_NAME=='รวมทั้งสิ้น' && p.PLPROJECTGROUPDT_MONEY && p.PLPROJECTEXPENSES_NUM">
                           <ng-container *ngIf="getMealSummaryForAct(p.PLPROJECTEXPENSES_NUM || p._actNum) as ms">
-                            <tr [style.background-color]="ms.isOver ? '#fce8e6' : (!ms.isFull ? '#fff9e6' : '#e6f4ea')">
+                            <tr *ngIf="ms && ms.estTypeCode == '1'" [style.background-color]="ms.isOver ? '#fce8e6' : (!ms.isFull ? '#fff9e6' : '#e6f4ea')">
                               <td colspan="2" class="py-2 px-3">
                                 <div class="d-flex align-items-center flex-wrap gap-2">
                                   <strong [class.text-danger]="ms.isOver" [class.text-success]="!ms.isOver && ms.isFull" [class.text-warning-emphasis]="!ms.isOver && !ms.isFull">
