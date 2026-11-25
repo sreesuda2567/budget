@@ -1988,8 +1988,8 @@
               <!-- Row 3 -->
                <div class="col-md-12">
                   <label for="name"><strong>คณะ /หน่วยงาน</strong> </label>
-                  <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE"
-                    (change)="dataAdd.FACULTY_CODE1 = dataAdd.FACULTY_CODE; fetchDataByTab()">
+                  <select name="f_code" id="f_code" class="form-select" [(ngModel)]="dataAdd.FACULTY_CODE1"
+                    (change)="onChangecrpartrister1()">
                     <option [value]="fac.FACULTY_CODE" *ngFor="let fac of dataFac">{{fac.FACULTY_TNAME}}</option>
                   </select>
                 </div>
@@ -1997,7 +1997,7 @@
                 <label class="form-label fw-bold text-secondary mb-1">
                   <i class="fa-solid fa-sack-dollar text-success me-2"></i>แหล่งเงิน
                 </label>
-                <select class="form-select text-dark" [(ngModel)]="dataAdd.RPLINCOME_CODE" (change)="dataCrpartregis()">
+                <select class="form-select text-dark" [(ngModel)]="dataAdd.RPLINCOME_CODE" (change)="onChangecrpartrister1()">
                   <option [value]="inc.PLINCOME_CODE" *ngFor="let inc of dataIncome">{{inc.PLINCOME_NAME}}</option>
                 </select>
               </div>

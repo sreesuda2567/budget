@@ -696,6 +696,20 @@ export class AppassetComponent implements OnInit {
         //console.log(this.dataSub);
       });
   }
+      onChangecrpartrister1() {
+  
+      this.dataCrpartregis = null;
+      this.dataAdd.opt = "viewcrpartregis1";
+      this.apiService
+        .getdata(this.dataAdd, this.url1)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.dataCrpartregis = data;
+          // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+          //console.log(this.dataSub);
+        });
+  
+    }
   Passetsearch() {
     //รายการวิชา
     this.dataAdd.opt = "viewsubject";

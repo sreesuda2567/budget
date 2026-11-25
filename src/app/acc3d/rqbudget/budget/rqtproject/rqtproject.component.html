@@ -376,7 +376,7 @@
                                   placeholder="โครงการ" [(ngModel)]="dataAdd.PRPLPROJECT_PEXCELL"></div>
                             </div>
                             <div class="row" *ngIf="product.PLGPRODUCT_CODE==145">
-                              <div class="col-md-12"><input type="text" name="p_name" id="p_name" class="form-control"
+                              <div class="col-md-12"><input type="text" name="p_another" id="p_another" class="form-control"
                                   placeholder="ระบุ" [(ngModel)]="dataAdd.PRPLPROJECT_ANOTHER"></div>
                             </div>
                             <div class="row" *ngIf="product.PLGPRODUCT_CODE==146">
@@ -1178,7 +1178,7 @@
                             • 240 บาท หักมื้อละ 80 บาท / 270 บาท หักมื้อละ 90 บาท
                           </div>
                         </div>
-                        <div *ngIf="isAccommodationItem(dataAdd.PLPROJECTGROUPDT_CODE) && (dataAdd.PLPROJECTGTYPE_CODE == '04' || dataAdd.PLPROJECTGTYPE_CODE == '4' || dataAdd.PLPROJECTGTYPE_CODE == '05' || dataAdd.PLPROJECTGTYPE_CODE == '5')" class="alert alert-info py-2 px-3 mt-2 mb-0 small">
+                        <div *ngIf="isAccommodationItem(dataAdd.PLPROJECTGROUPDT_CODE) && shouldShowAccommodationRule() && (dataAdd.PLPROJECTGTYPE_CODE == '04' || dataAdd.PLPROJECTGTYPE_CODE == '4' || dataAdd.PLPROJECTGTYPE_CODE == '05' || dataAdd.PLPROJECTGTYPE_CODE == '5')" class="alert alert-info py-2 px-3 mt-2 mb-0 small">
                           <div class="fw-bold">
                             <i class="fa-solid fa-circle-info me-1 text-primary"></i>
                             ข้อกำหนดอัตราค่าเช่าที่พัก{{ isSingleRoomAccommodation(dataAdd.PLPROJECTGROUPDT_CODE) ? ' (พักเดี่ยว)' : (isDoubleRoomAccommodation(dataAdd.PLPROJECTGROUPDT_CODE) ? ' (พักคู่)' : '') }}

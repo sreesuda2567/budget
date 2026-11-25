@@ -46,7 +46,7 @@ export class ContractotherComponent implements OnInit {
   count = 0;
   number = 0;
   tableSize = 20;
-  tableSizes = [20, 30,40,100,200];
+  tableSizes = [20, 30, 40, 100, 200];
   searchTerm: any;
   dataSeq: any;
   datacampus: any;
@@ -81,7 +81,7 @@ export class ContractotherComponent implements OnInit {
     this.dataAdd.DATENOWD = '';
     this.dataAdd.DATENOWR = '';
   }
- fetchdata() {
+  fetchdata() {
     var varP = {
       "opt": "viewp",
       "citizen": this.tokenStorage.getUser().citizen
@@ -120,24 +120,24 @@ export class ContractotherComponent implements OnInit {
                 if (dataf && dataf.length > 0) {
                   this.dataAdd.FACULTY_CODE = dataf[0].FACULTY_CODE;
                 }
-                    var Tablein = {
-          "opt": "viewCAMPUS",
-          "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS,
-          "citizen": this.tokenStorage.getUser().citizen
-        }
-        this.apiService
-          .getdata(Tablein, this.url1)
-          .pipe(first())
-          .subscribe((data: any) => {
-            this.datacampus = data;
-            //this.dataAdd.CAMPUS_CODE = data[0].CAMPUS_CODE;
-          });
-                this.fetchdatalist();                
+                var Tablein = {
+                  "opt": "viewCAMPUS",
+                  "PRIVILEGE_RSTATUS": this.dataAdd.PRIVILEGE_RSTATUS,
+                  "citizen": this.tokenStorage.getUser().citizen
+                }
+                this.apiService
+                  .getdata(Tablein, this.url1)
+                  .pipe(first())
+                  .subscribe((data: any) => {
+                    this.datacampus = data;
+                    //this.dataAdd.CAMPUS_CODE = data[0].CAMPUS_CODE;
+                  });
+                this.fetchdatalist();
               });
           });
 
       });
-       //รายการประเภทเงิน
+    //รายการประเภทเงิน
     var Tablein = {
       "opt": "viewPLINCOME"
     }
@@ -258,24 +258,26 @@ export class ContractotherComponent implements OnInit {
     this.dataAdd.FNANNALS_NUMBER = '';
     this.dataAdd.DATENOWE = '';
     this.dataAdd.DATENOWR = '';
-    this.dataAdd.FNANNALS_MONEYC= '';
+    this.dataAdd.FNANNALS_MONEYC = '';
     this.dataAdd.CAMPUS_CODE = '';
     this.dataAdd.PLINCOME_CODE = '';
     this.dataAdd.PLGPRODUCT_CODE = '';
+    this.dataAdd.FNANNALSMAP_DEKA = '';
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdata(id: any, money: any, link: any,campus: any,income: any,product: any) {
-     this.setshowbti();
+  editdata(id: any, money: any, link: any, campus: any, income: any, product: any, deka: any) {
+    this.setshowbti();
     this.dataAdd.FNANNALS_CODE = id;
     this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
     this.dataAdd.EBOOKREQ_LINK = link;
     this.dataAdd.CAMPUS_CODE = campus;
     this.dataAdd.PLINCOME_CODE = income;
     this.dataAdd.PLGPRODUCT_CODE = product;
+    this.dataAdd.FNANNALSMAP_DEKA = deka;
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, link: any, ciz: any, number: any, date1: any, date2: any, code: any, money: any,campus: any,income: any,product: any) {
+  editdatapp(id: any, link: any, ciz: any, number: any, date1: any, date2: any, code: any, money: any, campus: any, income: any, product: any) {
     this.setshowbti();
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.EBOOKREQ_LINK = link;
@@ -285,12 +287,12 @@ export class ContractotherComponent implements OnInit {
     this.dataAdd.CAMPUS_CODE = campus;
     this.dataAdd.PLINCOME_CODE = income;
     this.dataAdd.PLGPRODUCT_CODE = product;
-     this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
-    if(date1 !=null){
-    this.dataAdd.DATENOWE =  new Date(date1)
-    this.dataAdd.DATENOWR = new Date(date2);
+    this.dataAdd.FNANNALS_MONEYC = parseFloat(money).toFixed(2);
+    if (date1 != null) {
+      this.dataAdd.DATENOWE = new Date(date1)
+      this.dataAdd.DATENOWR = new Date(date2);
     }
-   // console.log(date1);
+    // console.log(date1);
     this.rowpbi = '';
     this.rowpbu = 1;
   }
@@ -320,7 +322,7 @@ export class ContractotherComponent implements OnInit {
         .subscribe((data: any) => {
           //console.log(data.status);   uploadbook    
           if (data.status == 1) {
-            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen,'26')
+            this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '26')
               .subscribe((event: any) => {
                 // 
                 if (event.type == 4) {
@@ -343,33 +345,33 @@ export class ContractotherComponent implements OnInit {
 
     this.dataAdd.opt = "update";
     if (this.dataAdd.DATENOWR == '') {
-        this.dataAdd.DATENOWR1 = '';
-        this.dataAdd.DATENOWE1 = '';
-      } else {
-        this.dataAdd.DATENOWR1 = this.datenow(this.dataAdd.DATENOWR);
-        this.dataAdd.DATENOWE1 = this.datenow(this.dataAdd.DATENOWE);
-      }
+      this.dataAdd.DATENOWR1 = '';
+      this.dataAdd.DATENOWE1 = '';
+    } else {
+      this.dataAdd.DATENOWR1 = this.datenow(this.dataAdd.DATENOWR);
+      this.dataAdd.DATENOWE1 = this.datenow(this.dataAdd.DATENOWE);
+    }
     this.apiService
       .getupdate(this.dataAdd, this.url)
       .pipe(first())
       .subscribe((data: any) => {
         //console.log(data.status);       
         if (data.status == 1) {
-           this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen,'26')
-              .subscribe((event: any) => {
-                // 
-                if (event.type == 4) {
-                  this.fetchdatalistapp();
-                }
+          this.Uploadfiles.uploadcontract(this.file, this.dataAdd.FACULTY_CODE, this.dataAdd.PLYEARBUDGET_CODE, this.dataAdd.FNANNALS_CODE, this.dataAdd.citizen, '26')
+            .subscribe((event: any) => {
+              // 
+              if (event.type == 4) {
+                this.fetchdatalistapp();
               }
-              );
+            }
+            );
           this.fetchdatalistapp();
           this.toastr.success("แจ้งเตือน:แก้ไขข้อมูลเรียบร้อยแล้ว");
           document.getElementById("ModalClose")?.click();
         }
       });
   }
-    fetchdataloadshow(id: any) {
+  fetchdataloadshow(id: any) {
     this.dataAdd.FNANNALSMAP_CODE = id;
     this.dataAdd.opt = "viewshow";
 
@@ -382,11 +384,11 @@ export class ContractotherComponent implements OnInit {
         }
       });
   }
-   exportpdf(link: any) {
+  exportpdf(link: any) {
     let url = link;
     window.open(url, '_blank');
   }
-        // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
+  // ฟังก์ชัน การแสดงข้อมูลตามต้องการ
   onTableDataChange(event: any) {
     this.page = event;
     if (this.rownum1) {
@@ -403,8 +405,8 @@ export class ContractotherComponent implements OnInit {
     } else {
       this.fetchdatalist();
     }
-  } 
-    previewPdf(url: string) {
+  }
+  previewPdf(url: string) {
     this.previewPdfUrl = url;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url + '#navpanes=0');
   }
@@ -412,8 +414,8 @@ export class ContractotherComponent implements OnInit {
     this.previewPdfUrl = '';
     this.safePdfUrl = '';
   }
-   async openPdfAnnotator(p: any) {
-      console.log(p.EBOOKREQ_LINK);
+  async openPdfAnnotator(p: any) {
+    console.log(p.EBOOKREQ_LINK);
     const cacheBuster = new Date().getTime();
     const reportLink = p.EBOOKREQ_LINK + (p.EBOOKREQ_LINK.includes('?') ? '&' : '?') + 't=' + cacheBuster;
     const user = this.tokenStorage.getUser();
@@ -433,10 +435,10 @@ export class ContractotherComponent implements OnInit {
     if (data && data.saved && data.blob) {
       // Create a File object from the blob
       const file = new File([data.blob], 'signed_document.pdf', { type: 'application/pdf' });
-      
+
       this.file = file;
       this.dataAdd.EBOOKREQ_FILE = 'signed_document.pdf';
-      
+
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
       if (fileInput) {
         const dataTransfer = new DataTransfer();

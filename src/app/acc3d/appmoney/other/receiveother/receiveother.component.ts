@@ -67,6 +67,7 @@ datalist: any;
   ) { }
 
   ngOnInit(): void {
+    this.localeService.use('th');
     this.dataAdd.citizen = this.tokenStorage.getUser().citizen;
     this.dataAdd.search = "";
     this.dataAdd.FNANNALSSEQREQ_DETAIL = "";
@@ -280,7 +281,7 @@ fetchdata() {
     this.rowpbi = true;
   }
   // ฟังก์ขันสำหรับการนำข้อมูลมาแสดงเพื่อแก้ไข
-  editdatapp(id: any, ciz1: any, ciz2: any, link: any, edoc: any, chief: any) {
+  editdatapp(id: any, ciz1: any, ciz2: any, link: any, edoc: any, chief: any, datek: any) {
     this.setshowbti();
     this.onChangeedoc();
     this.onChangechief();
@@ -291,6 +292,7 @@ fetchdata() {
     this.dataAdd.EBOOKREQ_LINK = link
     this.dataAdd.DEPARTMENT_CODE = edoc;
     this.dataAdd.CHIEF_CODE = chief;
+    this.dataAdd.DATENOWT = new Date(datek);
     this.rowpbi = '';
     this.rowpbu = 1;
   }
@@ -309,6 +311,11 @@ fetchdata() {
       }
 
     } else {
+      if (this.dataAdd.DATENOWT != '') {
+        this.dataAdd.DATENOWT1 = this.datenow(this.dataAdd.DATENOWT);
+      } else {
+        this.dataAdd.DATENOWT = '';
+      }
       this.dataAdd.opt = "insert";
       this.apiService
         .getupdate(this.dataAdd, this.url)

@@ -564,6 +564,20 @@ export class AppbuildingComponent implements OnInit {
         //console.log(this.dataSub);
       });
   }
+      onChangecrpartrister1() {
+  
+      this.dataCrpartregis = null;
+      this.dataAdd.opt = "viewcrpartregis1";
+      this.apiService
+        .getdata(this.dataAdd, this.url1)
+        .pipe(first())
+        .subscribe((data: any) => {
+          this.dataCrpartregis = data;
+          // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+          //console.log(this.dataSub);
+        });
+  
+    }
   // ฟังก์ขันสำหรับการเพิ่มข้อมูล/และแก้ไขข้อมูล
   insertdata() {
     // console.log(1);

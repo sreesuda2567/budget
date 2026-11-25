@@ -1615,12 +1615,43 @@ export class AppprojectComponent implements OnInit {
         // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
         //console.log(this.dataSub);
       });
+    const incCode = String(this.dataAdd?.RPLINCOME_CODE || '').trim();
+    if (incCode === '10') {
+      if (!this.dataAdd.PRPLPROJECT_ANOTHER || this.dataAdd.PRPLPROJECT_ANOTHER === 'ไม่ใช้งบประมาณ') {
+        this.dataAdd.PRPLPROJECT_ANOTHER = 'เงินรายได้สะสม';
+      }
+      this.dataAdd.PLGPRODUCT_CODE = '145';
+    } else if (incCode === '13') {
+      if (!this.dataAdd.PRPLPROJECT_ANOTHER || this.dataAdd.PRPLPROJECT_ANOTHER === 'เงินรายได้สะสม') {
+        this.dataAdd.PRPLPROJECT_ANOTHER = 'ไม่ใช้งบประมาณ';
+      }
+      this.dataAdd.PLGPRODUCT_CODE = '145';
+    } else if (incCode === '11') {
+      if (this.dataAdd.PRPLPROJECT_ANOTHER === 'เงินรายได้สะสม' || this.dataAdd.PRPLPROJECT_ANOTHER === 'ไม่ใช้งบประมาณ') {
+        this.dataAdd.PRPLPROJECT_ANOTHER = '';
+      }
+      this.dataAdd.PLGPRODUCT_CODE = '145';
+    }
     if (this.dataAdd.PLGPRODUCT_CODE) {
       const allowed = this.filteredProductList.map((p: any) => String(p.PLGPRODUCT_CODE).trim());
       if (allowed.length > 0 && !allowed.includes(String(this.dataAdd.PLGPRODUCT_CODE).trim())) {
         this.dataAdd.PLGPRODUCT_CODE = '';
       }
     }
+  }
+    onChangecrpartrister1() {
+
+    this.dataCrpartregis = null;
+    this.dataAdd.opt = "viewcrpartregis1";
+    this.apiService
+      .getdata(this.dataAdd, this.url1)
+      .pipe(first())
+      .subscribe((data: any) => {
+        this.dataCrpartregis = data;
+        // this.dataAdd.RCRPART_ID = data[0].CRPART_ID;
+        //console.log(this.dataSub);
+      });
+
   }
 
  get filteredProductList(): any[] {
@@ -1638,13 +1669,6 @@ export class AppprojectComponent implements OnInit {
     // 3. งบประมาณภายนอก / งบประมาณจากภายนอก (11) - ตรวจสอบก่อนเพื่อไม่ให้ทับซ้อนกับ "งบประมาณ"
     if (incCode === '11' || incCode === '13' || incCode === '10' || incName.includes('ภายนอก') || incName.includes('สะสม')) {
       const allowedCodes = [ '145'];
-      this.dataAdd.PRPLPROJECT_ANOTHER='';
-      if(incCode === '10'){
-      this.dataAdd.PRPLPROJECT_ANOTHER='เงินรายได้สะสม';
-      }
-      if(incCode === '13'){
-      this.dataAdd.PRPLPROJECT_ANOTHER='ไม่ใช้งบประมาณ';
-      }
       return this.sortProductsByCodes(
         this.dataProduct.filter((p: any) => allowedCodes.includes(String(p.PLGPRODUCT_CODE).trim())),
         allowedCodes
@@ -1861,7 +1885,13 @@ export class AppprojectComponent implements OnInit {
         this.dataAdd.PRPLPROJECT_T1 = data.data[0].PRPLPROJECT_T1;
         this.dataAdd.PRPLPROJECT_T2 = data.data[0].PRPLPROJECT_T2;
         this.dataAdd.PRPLPROJECT_PEXCELL = data.data[0].PRPLPROJECT_PEXCELL;
-        this.dataAdd.PRPLPROJECT_ANOTHER = data.data[0].PRPLPROJECT_ANOTHER;
+        this.dataAdd.PRPLPROJECT_ANOTHER = data.data[0].PRPLPROJECT_ANOTHER || '';
+        if (this.dataAdd.RPLINCOME_CODE === '10' && !this.dataAdd.PRPLPROJECT_ANOTHER) {
+          this.dataAdd.PRPLPROJECT_ANOTHER = 'เงินรายได้สะสม';
+        }
+        if (this.dataAdd.RPLINCOME_CODE === '13' && !this.dataAdd.PRPLPROJECT_ANOTHER) {
+          this.dataAdd.PRPLPROJECT_ANOTHER = 'ไม่ใช้งบประมาณ';
+        }
         this.dataAdd.PRPLPROJECT_SUPPORT = data.data[0].PRPLPROJECT_SUPPORT;
         this.dataAdd.PRPLPROJECT_PDEVELOP = data.data[0].PRPLPROJECT_PDEVELOP;
         this.fetchdatadt();
@@ -2694,6 +2724,16 @@ export class AppprojectComponent implements OnInit {
   }
 
   shouldShowMealItemRule(): boolean {
+    if (!this.dataAdd) return false;
+    const isEconomy = this.dataAdd.PLPROJECTESTTYPE_CODE == 2 || this.dataAdd.PLPROJECTESTTYPE_CODE == '2';
+    const isGtype05 = this.dataAdd.PLPROJECTGTYPE_CODE === '05' || this.dataAdd.PLPROJECTGTYPE_CODE === '5';
+    if (isGtype05 && isEconomy) {
+      return false;
+    }
+    return true;
+  }
+
+  shouldShowAccommodationRule(): boolean {
     if (!this.dataAdd) return false;
     const isEconomy = this.dataAdd.PLPROJECTESTTYPE_CODE == 2 || this.dataAdd.PLPROJECTESTTYPE_CODE == '2';
     const isGtype05 = this.dataAdd.PLPROJECTGTYPE_CODE === '05' || this.dataAdd.PLPROJECTGTYPE_CODE === '5';
