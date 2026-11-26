@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ViewChild, AfterViewInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { listLocales } from 'ngx-bootstrap/chronos';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { thBeLocale } from 'ngx-bootstrap/locale';
 defineLocale('th', thBeLocale);
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx-js-style';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,7 +18,14 @@ import Swal from 'sweetalert2';
   templateUrl: './fregiscontrol.component.html',
   styleUrls: ['./fregiscontrol.component.scss']
 })
-export class FregiscontrolComponent implements OnInit {
+export class FregiscontrolComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+  @ViewChild('topScrollContainer') topScrollContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('tableContainer') tableContainer!: ElementRef<HTMLDivElement>;
+
+  private isSyncingScroll: boolean = false;
+  private resizeObserver?: ResizeObserver;
+  tableScrollWidth: number = 3300;
+
   title = 'angular-app';
   fileName = 'report.xlsx';
   userList = [{}]
@@ -39,6 +46,17 @@ export class FregiscontrolComponent implements OnInit {
       }
       return sum;
     }, 0);
+  }
+  isAllChecked(): boolean {
+    if (!this.datalist || this.datalist.length === 0) return false;
+    return this.datalist.every((_: any, index: number) => !!this.dataAdd.check[index]);
+  }
+  toggleCheckAll(event: any): void {
+    const isChecked = event.target.checked;
+    if (!this.datalist) return;
+    this.datalist.forEach((_: any, index: number) => {
+      this.dataAdd.check[index] = isChecked;
+    });
   }
   clickshow: any;
   datalistdetailmoney: any;
@@ -274,6 +292,10 @@ export class FregiscontrolComponent implements OnInit {
 
           this.loading = null;
           this.rownum1 = 1;
+          setTimeout(() => {
+            this.resetScroll();
+            this.updateScrollWidth();
+          }, 50);
           //this.fetchdataSubplmoneypay();
           //this.showdata();  
           for (let i = 0; i < this.datalist.length; i++) {
@@ -327,6 +349,10 @@ export class FregiscontrolComponent implements OnInit {
 
           this.loading = null;
           this.rownum = 1;
+          setTimeout(() => {
+            this.resetScroll();
+            this.updateScrollWidth();
+          }, 50);
         } else {
           this.rownum = null;
           this.loading = null;
@@ -598,17 +624,151 @@ export class FregiscontrolComponent implements OnInit {
     this.dataAdd.FNEXACREGIS_DOC = '';
   }
   exportexcel(): void {
-    /* pass here the table id */
-    let element = document.getElementById('excel-table');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+    const tableEl = document.getElementById('excel-table');
+    if (!tableEl) {
+      this.toastr.warning("ไม่พบตารางข้อมูลสำหรับส่งออก");
+      return;
+    }
 
-    /* generate workbook and add the worksheet */
+    // โคลนตารางเพื่อตัดคอลัมน์จัดการข้อมูล / Checkbox และดึงค่าจาก input ออกมาเป็นข้อความ
+    const clonedTable = tableEl.cloneNode(true) as HTMLTableElement;
+
+    // แทนที่ input ในตารางด้วยค่า value จริง
+    clonedTable.querySelectorAll('input').forEach((input: HTMLInputElement) => {
+      if (input.type === 'text' || input.type === 'number') {
+        const textNode = document.createTextNode(input.value || '');
+        input.parentNode?.replaceChild(textNode, input);
+      }
+    });
+
+    // ตัดคอลัมน์ที่ไม่จำเป็นใน Excel ออก (เช่น จัดการข้อมูล, เลือก)
+    const thead = clonedTable.querySelector('thead');
+    if (thead) {
+      const headerRow = thead.querySelector('tr');
+      if (headerRow) {
+        const ths = Array.from(headerRow.querySelectorAll('th'));
+        const removeIndices: number[] = [];
+        ths.forEach((th, idx) => {
+          const txt = th.innerText.trim();
+          if (txt.includes('จัดการข้อมูล') || txt === 'เลือก' || txt.includes('เลือก')) {
+            removeIndices.push(idx);
+          }
+        });
+
+        // ลบจากขวาไปซ้ายเพื่อไม่ให้ index เคลื่อน
+        removeIndices.sort((a, b) => b - a).forEach(colIdx => {
+          headerRow.children[colIdx]?.remove();
+          clonedTable.querySelectorAll('tbody tr').forEach(row => {
+            row.children[colIdx]?.remove();
+          });
+        });
+      }
+    }
+
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(clonedTable, { raw: false });
+    if (!ws || !ws['!ref']) {
+      this.toastr.warning("ไม่มีข้อมูลสำหรับส่งออก");
+      return;
+    }
+
+    const range = XLSX.utils.decode_range(ws['!ref']);
+
+    // คำนวณความกว้างคอลัมน์อัตโนมัติ
+    const colWidths: { wch: number }[] = [];
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      let maxWidth = 10;
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        const cell = ws[XLSX.utils.encode_cell({ c: C, r: R })];
+        if (cell && cell.v != null) {
+          const len = String(cell.v).trim().length;
+          if (len > maxWidth) maxWidth = len;
+        }
+      }
+      colWidths.push({ wch: Math.min(Math.max(maxWidth + 4, 10), 65) });
+    }
+    ws['!cols'] = colWidths;
+
+    // ตรวจสอบคอลัมน์การเงินและคอลัมน์กึ่งกลางจากชื่อหัวตาราง
+    const moneyCols: number[] = [];
+    const centerCols: number[] = [];
+    for (let C = range.s.c; C <= range.e.c; ++C) {
+      const headerCell = ws[XLSX.utils.encode_cell({ c: C, r: 0 })];
+      const headerText = headerCell ? String(headerCell.v).trim() : '';
+      if (headerText.includes('จำนวนเงิน') || headerText.includes('ภาษี') || headerText.includes('ค่าปรับ') || headerText.includes('ยอดเงิน')) {
+        moneyCols.push(C);
+      } else if (
+        headerText === 'ที่' ||
+        headerText.includes('วันที่') ||
+        headerText.includes('ประเภทเอกสาร') ||
+        headerText.includes('เลข') ||
+        headerText.includes('รหัส') ||
+        headerText.includes('ผลผลิต') ||
+        headerText.includes('ภาค') ||
+        headerText.includes('เงิน')
+      ) {
+        centerCols.push(C);
+      }
+    }
+
+    // จัดสไตล์เซลล์ทั้งหมดให้เหมือนกับหน้าเว็บ
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      const isHeader = (R === 0);
+
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellRef = XLSX.utils.encode_cell({ c: C, r: R });
+        let cell = ws[cellRef];
+        if (!cell) {
+          ws[cellRef] = { t: 's', v: '' };
+          cell = ws[cellRef];
+        }
+
+        const isMoney = moneyCols.includes(C);
+        const isCenter = centerCols.includes(C);
+
+        // แปลงค่าเงินเป็น Number สำหรับการคำนวณใน Excel
+        if (isMoney && !isHeader) {
+          if (cell.v != null && typeof cell.v === 'string') {
+            const cleanNum = parseFloat(cell.v.replace(/,/g, ''));
+            if (!isNaN(cleanNum)) {
+              cell.v = cleanNum;
+              cell.t = 'n';
+            }
+          }
+        }
+
+        const horizontalAlign = isHeader ? 'center' : (isMoney ? 'right' : (isCenter ? 'center' : 'left'));
+
+        cell.s = {
+          fill: isHeader
+            ? { patternType: 'solid', fgColor: { rgb: 'CFF4FC' } } // สีฟ้าเดียวกับหัวตาราง alert-info
+            : undefined,
+          font: {
+            name: 'Prompt',
+            sz: isHeader ? 11 : 10,
+            bold: isHeader,
+            color: { rgb: isHeader ? '055160' : '000000' }
+          },
+          alignment: {
+            horizontal: horizontalAlign,
+            vertical: 'center',
+            wrapText: true
+          },
+          border: {
+            top: { style: 'thin', color: { rgb: isHeader ? 'B6EFFB' : 'CBD5E1' } },
+            bottom: { style: 'thin', color: { rgb: isHeader ? 'B6EFFB' : 'CBD5E1' } },
+            left: { style: 'thin', color: { rgb: isHeader ? 'B6EFFB' : 'CBD5E1' } },
+            right: { style: 'thin', color: { rgb: isHeader ? 'B6EFFB' : 'CBD5E1' } }
+          },
+          ...(cell.t === 'n' && isMoney ? { numFmt: '#,##0.00' } : {})
+        };
+      }
+    }
+
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-    /* save to file */
-    XLSX.writeFile(wb, this.fileName);
-
+    const sheetName = this.rownum ? 'รายการลงทะเบียนคุม' : 'ลงทะเบียนคุม';
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    const exportFileName = this.rownum ? 'รายการลงทะเบียนคุม.xlsx' : 'ลงทะเบียนคุม.xlsx';
+    XLSX.writeFile(wb, exportFileName);
   }
   onTableDataChange(event: any) {
     this.page = event;
@@ -620,5 +780,74 @@ export class FregiscontrolComponent implements OnInit {
     this.tableSize = event.target.value;
     this.page = 1;
     this.fetchdatalist();
+  }
+
+  ngAfterViewInit(): void {
+    this.updateScrollWidth();
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.updateScrollWidth();
+      });
+      if (this.tableContainer && this.tableContainer.nativeElement) {
+        this.resizeObserver.observe(this.tableContainer.nativeElement);
+      }
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    this.updateScrollWidth();
+  }
+
+  ngOnDestroy(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateScrollWidth();
+  }
+
+  onTopScroll(): void {
+    if (this.isSyncingScroll) return;
+    this.isSyncingScroll = true;
+    if (this.tableContainer && this.topScrollContainer) {
+      this.tableContainer.nativeElement.scrollLeft = this.topScrollContainer.nativeElement.scrollLeft;
+    }
+    requestAnimationFrame(() => {
+      this.isSyncingScroll = false;
+    });
+  }
+
+  onTableScroll(): void {
+    if (this.isSyncingScroll) return;
+    this.isSyncingScroll = true;
+    if (this.topScrollContainer && this.tableContainer) {
+      this.topScrollContainer.nativeElement.scrollLeft = this.tableContainer.nativeElement.scrollLeft;
+    }
+    requestAnimationFrame(() => {
+      this.isSyncingScroll = false;
+    });
+  }
+
+  updateScrollWidth(): void {
+    if (this.tableContainer && this.tableContainer.nativeElement) {
+      const container = this.tableContainer.nativeElement;
+      const table = container.querySelector('table');
+      const width = table ? Math.max(table.scrollWidth, container.scrollWidth) : container.scrollWidth;
+      if (width > 0 && Math.abs(this.tableScrollWidth - width) > 2) {
+        this.tableScrollWidth = width;
+      }
+    }
+  }
+
+  resetScroll(): void {
+    if (this.topScrollContainer && this.topScrollContainer.nativeElement) {
+      this.topScrollContainer.nativeElement.scrollLeft = 0;
+    }
+    if (this.tableContainer && this.tableContainer.nativeElement) {
+      this.tableContainer.nativeElement.scrollLeft = 0;
+    }
   }
 }

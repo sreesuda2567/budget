@@ -5,49 +5,41 @@
 
 .icon-box {
   border: 3px solid rgb(236, 146, 28);
-  width:120px;
+  width: 120px;
   height: 100px;
   padding-top: 6px;
   background: white;
-
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 10px;
-
   cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
   border-radius: 10px;
+
+  a {
+    display: inline-block;
+  }
+
+  &:hover {
+    background: #fdb913;
+    color: #fff;
+  }
 }
-.icon-box a {
-  display: inline-block;
- // text-decoration: none;
-}
-.icon-box:hover {
-  background: #fdb913;
-  color: #fff;
-}
-/*.icon_bt {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}*/
+
 p.a-half {
   cursor: pointer;
 }
 
 @media (min-width: 1px) and (max-width: 650px) {
   .display_sm_hide {
-      display:none;
+    display: none;
   }
 }
 
 .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 48;
-  font-size:75px;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  font-size: 75px;
   margin-top: 3px;
 }
 
@@ -56,19 +48,20 @@ p.a-half {
   font-size: 18px;
   text-align: center;
 }
+
 .txt-font2 {
   font-family: 'Prompt-Regular', sans-serif;
   font-size: 20px;
   text-align: center;
 }
+
 .btn-font3 {
   margin-top: 5px;
   font-family: 'Prompt-Regular', sans-serif;
   font-size: 14px;
-
 }
+
 .center-screen {
-  //color:  #FFFF00;
   color: #0176f3;
   position: absolute;
   top: 50%;
@@ -78,52 +71,331 @@ p.a-half {
   width: 100px;
   height: 100px;
   z-index: 100;
+}
 
+.txt-font3 {
+  font-family: 'Prompt-Regular', sans-serif;
+  font-size: 12px;
+}
+
+.tableFixHead {
+  overflow: auto;
+  thead {
+    position: sticky;
+    top: -17px;
+    z-index: 1;
+  }
+}
+
+/* ==============================================
+   MODERN MODAL & TABLE STYLES (uexpenses)
+   ============================================== */
+
+/* Main Fullscreen Modal Customization */
+#exampleModal {
+  .modal-dialog.modal-fullscreen {
+    .modal-content {
+      border: none;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
   }
 
-  .outer{
-        //margin:0 auto;
-        display: table;
-        top: 30px;
-        left: 50%;
-        transform: translate(-50%, 5%);
-        //top: 0;
-      //  margin-top: 100px;
-        height: 90%;
-        width:90%;
-        position:fixed; /* หรือจะใช้ absolute ถ้าต้องการให้มันไม่เลื่อนตามหน้าจอ*/
-        overflow-y: scroll;
-        scrollbar-color: rebeccapurple green;
-        scrollbar-width: thin;
-        z-index: 100; /* ถ้ายังไม่อยู่บนสุดก็เพิ่มค่านี้ */         
-        box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  .modal-header {
+    background: linear-gradient(to right, #f8fafc, #ffffff);
+    border-bottom: 1px solid #e2e8f0;
   }
-  .scroller {
-    width: 100%;
-    height:550px;
-    overflow-y: scroll;
-    scrollbar-color: rebeccapurple green;
-    scrollbar-width: thin;
+
+  .modal-body {
+    background: #f8fafc;
   }
-  
-  .txt-font3 {
+
+  .modal-footer {
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+  }
+}
+
+/* Modal Table Container */
+.modal-table-container {
+  width: 100%;
+  max-height: calc(100vh - 215px);
+  overflow: auto;
+  position: relative;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+  /* Modern Slim Scrollbars */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 12px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #0284c7;
+    border-radius: 6px;
+    border: 2px solid #f1f5f9;
+    &:hover {
+      background: #0369a1;
+    }
+  }
+  scrollbar-width: thin;
+  scrollbar-color: #0284c7 #f1f5f9;
+}
+
+/* Custom Activity Table */
+.custom-activity-table {
+  width: 100%;
+  min-width: 2500px;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: 'Prompt-Regular', sans-serif;
+  font-size: 13px;
+  color: #1e293b;
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    /* Banner Row */
+    tr.activity-banner-row td {
+      background-color: #0284c7 !important;
+      color: #ffffff !important;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 8px 12px;
+      text-align: center;
+      border: 1px solid #0369a1;
+      letter-spacing: 0.3px;
+    }
+
+    /* Main Header Row */
+    tr.activity-header-row td {
+      background-color: #cff4fc !important;
+      color: #055160 !important;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 6px;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid #b6effb;
+      letter-spacing: 0.2px;
+
+      &.sticky-col-first {
+        position: sticky;
+        left: 0;
+        z-index: 20;
+        background-color: #bdecf7 !important;
+        box-shadow: 2px 0 4px -1px rgba(0, 0, 0, 0.12);
+      }
+    }
+
+    /* Sub Header Row */
+    tr.activity-sub-row td {
+      background-color: #e0f2fe !important;
+      color: #0369a1 !important;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 6px 4px;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px solid #bae6fd;
+    }
+  }
+
+  tbody {
+    tr {
+      background-color: #ffffff;
+      transition: background-color 0.15s ease-in-out;
+
+      &:hover {
+        background-color: #f0f9ff !important;
+
+        td.sticky-col-first {
+          background-color: #f0f9ff !important;
+        }
+      }
+
+      td {
+        padding: 6px 8px;
+        vertical-align: middle;
+        border: 1px solid #e2e8f0;
+        font-size: 12.5px;
+        line-height: 1.4;
+
+        &.sticky-col-first {
+          position: sticky;
+          left: 0;
+          z-index: 5;
+          background-color: #ffffff;
+          box-shadow: 2px 0 4px -1px rgba(0, 0, 0, 0.08);
+          font-weight: 500;
+        }
+      }
+
+      /* Hierarchy Groups */
+      td.type-faculty-row {
+        background-color: #e0f7fa !important;
+        color: #006064 !important;
+        font-weight: bold;
+        font-size: 13.5px;
+        padding: 8px 12px;
+        border: 1px solid #b2ebf2;
+      }
+
+      td.faculty-name-row {
+        background-color: #fef9c3 !important;
+        color: #713f12 !important;
+        font-weight: 600;
+        font-size: 13px;
+        padding: 7px 12px 7px 24px;
+        border: 1px solid #fef08a;
+      }
+
+      /* Product Levels */
+      .product-level-1 {
+        background-color: #ede9fe !important;
+        color: #5b21b6;
+        font-weight: 600;
+      }
+
+      .product-level-2 {
+        background-color: #ffedd5 !important;
+        color: #9a3412;
+        font-weight: 600;
+      }
+
+      /* Number Styling */
+      .clickable-amount {
+        color: #0284c7;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-color: #bae6fd;
+        text-underline-offset: 3px;
+        transition: all 0.15s ease-in-out;
+
+        &:hover {
+          color: #0369a1;
+          text-decoration-color: #0369a1;
+        }
+      }
+
+      .zero-amount {
+        color: #94a3b8;
+        font-size: 11.5px;
+      }
+
+      .col-summary {
+        background-color: #f8fafc;
+        font-weight: 600;
+      }
+
+      .col-grand-total {
+        background-color: #f1f5f9;
+        font-weight: bold;
+        color: #0f172a;
+      }
+    }
+  }
+}
+
+/* Detail Modal Overlay & Card (clickshow) */
+.detail-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1060;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+
+  .detail-modal-card {
+    width: 95%;
+    max-width: 1250px;
+    max-height: 90vh;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+
+    .detail-modal-header {
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-bottom: 1px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .detail-modal-body {
+      padding: 1.25rem;
+      overflow-y: auto;
+      flex: 1 1 auto;
+      max-height: calc(90vh - 140px);
+
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      &::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #0284c7;
+        border-radius: 4px;
+        &:hover {
+          background: #0369a1;
+        }
+      }
+      scrollbar-width: thin;
+      scrollbar-color: #0284c7 #f1f5f9;
+    }
+
+    .detail-modal-footer {
+      padding: 0.75rem 1.5rem;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  /* Detail Table inside popup */
+  .detail-table {
     font-family: 'Prompt-Regular', sans-serif;
-    font-size: 12px;
-    
-  }
-  .tableFixHead          { overflow: auto; }
-  .tableFixHead thead { position: sticky; top: -17px; z-index: 1; }
-  
-  /* Just common table stuff. Really. */
-  table  { border-collapse: collapse; width: 100%; }
-  th, td { padding: 8px 16px; }
-  th     { background:#b2e3fa; }
-  #container{
-    margin: 15px;
-    padding: 3px;
-    border: solid black 1px;
-    overflow: auto;
-    height: 500px;
-  }
+    font-size: 13px;
 
-  
+    thead th {
+      background-color: #cff4fc !important;
+      color: #055160 !important;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 8px;
+      border-bottom: 2px solid #b6effb;
+      vertical-align: middle;
+    }
+
+    tbody td {
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+  }
+}

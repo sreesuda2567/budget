@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
@@ -17,7 +17,14 @@ import * as XLSX from 'xlsx-js-style';
   templateUrl: './reportsubmoneyacc.component.html',
   styleUrls: ['./reportsubmoneyacc.component.scss']
 })
-export class ReportsubmoneyaccComponent implements OnInit {
+export class ReportsubmoneyaccComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+  @ViewChild('topScrollContainer') topScrollContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('tableContainer') tableContainer!: ElementRef<HTMLDivElement>;
+
+  private isSyncingScroll: boolean = false;
+  private resizeObserver?: ResizeObserver;
+  tableScrollWidth: number = 3200;
+
   title = 'angular-app';
   fileName = 'report.xlsx';
   userList = [{}]
@@ -268,6 +275,7 @@ export class ReportsubmoneyaccComponent implements OnInit {
 
           this.loading = null;
           this.rownum = 1;
+          this.resetScroll();
          // this.fetchdataSubplmoneypay();
           //this.showdata();  
           let omoney = 0; let amoney = 0; let cmoney = 0; let rmoney = 0;
@@ -385,5 +393,74 @@ export class ReportsubmoneyaccComponent implements OnInit {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, this.fileName || 'รายงาน.xlsx');
+  }
+
+  ngAfterViewInit(): void {
+    this.updateScrollWidth();
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.updateScrollWidth();
+      });
+      if (this.tableContainer && this.tableContainer.nativeElement) {
+        this.resizeObserver.observe(this.tableContainer.nativeElement);
+      }
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    this.updateScrollWidth();
+  }
+
+  ngOnDestroy(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateScrollWidth();
+  }
+
+  onTopScroll(): void {
+    if (this.isSyncingScroll) return;
+    this.isSyncingScroll = true;
+    if (this.tableContainer && this.topScrollContainer) {
+      this.tableContainer.nativeElement.scrollLeft = this.topScrollContainer.nativeElement.scrollLeft;
+    }
+    requestAnimationFrame(() => {
+      this.isSyncingScroll = false;
+    });
+  }
+
+  onTableScroll(): void {
+    if (this.isSyncingScroll) return;
+    this.isSyncingScroll = true;
+    if (this.topScrollContainer && this.tableContainer) {
+      this.topScrollContainer.nativeElement.scrollLeft = this.tableContainer.nativeElement.scrollLeft;
+    }
+    requestAnimationFrame(() => {
+      this.isSyncingScroll = false;
+    });
+  }
+
+  updateScrollWidth(): void {
+    if (this.tableContainer && this.tableContainer.nativeElement) {
+      const container = this.tableContainer.nativeElement;
+      const table = container.querySelector('table');
+      const width = table ? Math.max(table.scrollWidth, container.scrollWidth) : container.scrollWidth;
+      if (width > 0 && Math.abs(this.tableScrollWidth - width) > 2) {
+        this.tableScrollWidth = width;
+      }
+    }
+  }
+
+  resetScroll(): void {
+    if (this.topScrollContainer && this.topScrollContainer.nativeElement) {
+      this.topScrollContainer.nativeElement.scrollLeft = 0;
+    }
+    if (this.tableContainer && this.tableContainer.nativeElement) {
+      this.tableContainer.nativeElement.scrollLeft = 0;
+    }
   }
 }

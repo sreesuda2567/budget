@@ -127,159 +127,127 @@
       <div class="row justify-content-center center-screen" *ngIf="loading">
         <div class="spinner-border " role="status" id="loading"></div>
       </div>
-      <div *ngIf="rownum" class="row">
-        <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()">
-            <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export Excel</button></div>
-        <div class="col-md-7"></div>
-        <div class="col-md-3">
-          <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+      <div *ngIf="rownum" class="shadow alert alert-secondary" role="alert">
+        <div class="row align-items-center g-2">
+          <div class="col-auto">
+            <button *ngIf="datalist && datalist.length > 0" type="button" class="btn btn-success" (click)="exportexcel()">
+              <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export Excel
+            </button>
+          </div>
+          <div class="col">
+            <h5 *ngIf="Mrmoney > 0" class="text-primary mb-0 fw-bold">
+              ยอดรวมจ่ายจริงทั้งหมด: {{ Mrmoney | number : '1.2-2' }} บาท
+            </h5>
+          </div>
+          <div class="col-auto">
+            <div class="input-group" style="min-width: 250px;">
+              <input type="search" class="form-control border-end-0 border" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+              <span class="input-group-append">
+                <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5" type="button">
+                  <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-      <div style="width:100%; height:700px; overflow:auto;">
-        <table *ngIf="rownum" id="excel-table" class="table btn-font3" width="100%"
-          class="table table-bordered table-striped table-hover  btn-font3 tableFixHead">
+
+      <!-- แถบเลื่อนหัวตาราง (Top Horizontal Scrollbar) -->
+      <div *ngIf="rownum" class="table-top-scrollbar" #topScrollContainer (scroll)="onTopScroll()" title="เลื่อนตารางแนวนอน">
+        <div class="top-scrollbar-dummy" [style.width.px]="tableScrollWidth"></div>
+      </div>
+      <div class="custom-table-container" #tableContainer (scroll)="onTableScroll()">
+        <table *ngIf="rownum" id="excel-table" class="table custom-regis-table">
           <thead>
-            <tr class="btn-font2">
-              <th colspan="26">
-                <div align="center">รายงานแยกตามหมวดรายจ่าย(บัญชีแยกประเภท) {{dataAdd.CAMPUS_NAME}}</div>
+            <tr class="report-title-row">
+              <th [attr.colspan]="dataAdd.PLINCOME_CODE=='' ? 27 : 26">
+                <div align="center" class="fw-bold fs-6">รายงานแยกตามหมวดรายจ่าย(บัญชีแยกประเภท) {{dataAdd.CAMPUS_NAME}}</div>
               </th>
             </tr>
-            <tr class="btn-font2">
-              <th colspan="26">
-                <div align="center">{{dataAdd.PLINCOME_NAME}}</div>
+            <tr class="report-subtitle-row">
+              <th [attr.colspan]="dataAdd.PLINCOME_CODE=='' ? 27 : 26">
+                <div align="center" class="fw-semibold">{{dataAdd.PLINCOME_NAME}}</div>
               </th>
             </tr>
-            <tr class="btn-font2">
-              <th colspan="26">
-                <div align="right">{{dataAdd.datenow}}</div>
+            <tr class="report-date-row">
+              <th [attr.colspan]="dataAdd.PLINCOME_CODE=='' ? 27 : 26">
+                <div align="right" class="text-secondary small">{{dataAdd.datenow}}</div>
               </th>
             </tr>
-            <tr class="bg-info">
-              <th>
-                <div align="center">ที่</div>
-              </th>
-              <th>
-                <div align="center">คณะ/หน่วยงาน</div>
-              </th>
-              <th *ngIf="dataAdd.PLINCOME_CODE==''">
-                <div align="center">ประเภทเงิน</div>
-              </th>
-              <th>
-                <div align="center">ชื่อโครงการ/ชื่อเรื่อง</div>
-              </th>
-              <th>
-                <div align="center">หมวดรายจ่าย</div>
-              </th>
-              <th>
-                <div align="center">หมวดรายจ่ายย่อย</div>
-              </th>
-              <th>
-                <div align="center">ภาค</div>
-              </th>
-              <th>
-                <div align="center">ผลผลิต</div>
-              </th>
-              <th>
-                <div align="center">จำนวนเงิน</div>
-              </th>
-              <th>
-                <div align="center">รหัสบัญชีแยกประเภท</div>
-              </th>
-              <th>
-                <div align="center">ชื่อบัญชีแยกประเภท</div>
-              </th>
-              <th>
-                <div align="center">เลข3ดี</div>
-              </th>
-              <th>
-                <div align="center">เลขฎีกา</div>
-              </th>
-              <th>
-                <div align="center">วันที่ผ่านรายการเบิก</div>
-              </th>
-              <th>
-                <div align="center">ประเภทเอกสาร</div>
-              </th>
-              <th>
-                <div align="center">เลขเอกสารเบิก</div>
-              </th>
-              <th>
-                <div align="center">วันที่เงินเข้า</div>
-              </th>
-              <th>
-                <div align="center">เลขเอกสารเข้า</div>
-              </th>
-              <th>
-                <div align="center">วันที่จ่าย</div>
-              </th>
-              <th>
-                <div align="center">เลขเอกสารจ่าย</div>
-              </th>
-              <th>
-                <div align="center">ชื่อผู้ทำรายการ</div>
-              </th>
-              <th>
-                <div align="center">หมายเหตุ</div>
-              </th>
-              <th>
-                <div align="center">ชื่อผู้อนุมัติ(การเงิน)</div>
-              </th>
-              <th>
-                <div align="center">วันที่อนุมัติ</div>
-              </th>
-              <th>
-                <div align="center">ชื่อผู้อนุมัติ(บัญชี)</div>
-              </th>
-              <th>
-                <div align="center">วันที่อนุมัติ</div>
-              </th>
-              <th>
-                <div align="center">การแก้ไขข้อมูล</div>
-              </th>
+            <tr class="table-header-row">
+              <th class="sticky-col-first" style="width: 50px;">ที่</th>
+              <th class="sticky-col-second" style="width: 180px; min-width: 180px; max-width: 180px;">คณะ/หน่วยงาน</th>
+              <th class="sticky-col-third" style="min-width: 280px;">ชื่อโครงการ/ชื่อเรื่อง</th>
+              <th *ngIf="dataAdd.PLINCOME_CODE==''" style="min-width: 120px;">ประเภทเงิน</th>
+              <th style="min-width: 130px;">หมวดรายจ่าย</th>
+              <th style="min-width: 200px;">หมวดรายจ่ายย่อย</th>
+              <th style="min-width: 110px;">ภาค</th>
+              <th style="min-width: 110px;">ผลผลิต</th>
+              <th style="min-width: 130px;">จำนวนเงิน</th>
+              <th style="min-width: 130px;">รหัสบัญชีแยกประเภท</th>
+              <th style="min-width: 180px;">ชื่อบัญชีแยกประเภท</th>
+              <th style="min-width: 105px;">เลข3ดี</th>
+              <th style="min-width: 105px;">เลขฎีกา</th>
+              <th style="min-width: 130px;">วันที่ผ่านรายการเบิก</th>
+              <th style="min-width: 90px;">ประเภทเอกสาร</th>
+              <th style="min-width: 130px;">เลขเอกสารเบิก</th>
+              <th style="min-width: 120px;">วันที่เงินเข้า</th>
+              <th style="min-width: 120px;">เลขเอกสารเข้า</th>
+              <th style="min-width: 120px;">วันที่จ่าย</th>
+              <th style="min-width: 120px;">เลขเอกสารจ่าย</th>
+              <th style="min-width: 140px;">ชื่อผู้ทำรายการ</th>
+              <th style="min-width: 160px;">หมายเหตุ</th>
+              <th style="min-width: 140px;">ชื่อผู้อนุมัติ(การเงิน)</th>
+              <th style="min-width: 120px;">วันที่อนุมัติ</th>
+              <th style="min-width: 140px;">ชื่อผู้อนุมัติ(บัญชี)</th>
+              <th style="min-width: 120px;">วันที่อนุมัติ</th>
+              <th style="min-width: 140px;">การแก้ไขข้อมูล</th>
             </tr>
           </thead>
           <tbody>
-            <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
-
-            <tr class="btn-font2" *ngFor="let p of datalist|filter:searchTerm ; let i = index">
-              <td width="5%" align="center">{{+i+1}}</td>
-              <td>{{p.FACULTY_TNAME}}</td>
-              <td *ngIf="dataAdd.PLINCOME_CODE==''">
+            <tr *ngFor="let p of datalist|filter:searchTerm ; let i = index">
+              <td class="text-center sticky-col-first">{{+i+1}}</td>
+              <td class="fw-semibold text-dark sticky-col-second" style="width: 180px; min-width: 180px; max-width: 180px;">{{p.FACULTY_TNAME}}</td>
+              <td class="text-secondary-emphasis sticky-col-third" style="min-width: 280px;">{{p.FNEXPENSES_TITLE}}</td>
+              <td *ngIf="dataAdd.PLINCOME_CODE==''" class="text-center text-nowrap">
                 {{p.PLINCOME_NAME}}
               </td>
-              <td>{{p.FNEXPENSES_TITLE}}</td>
-              <td>{{p.PLMONEYPAY_NAME}}</td>
+              <td class="text-center text-nowrap">{{p.PLMONEYPAY_NAME}}</td>
               <td>{{p.PLSUBMONEYPAY_NAME}}</td>
-              <td>{{p.CRPART_TNAME}}</td>
-              <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
-              <td align="right">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
-              <td align="center">{{p.FRACC_CODE}}</td>
-              <td align="center">{{p.FRACC_TNAME}}</td>
-              <td>{{p.FNEXPENSES_STEP}}</td>
-              <td>{{p.FNEXACC_DEKA}}</td>
-              <td>{{p.FNEXPENSES_MDATE1}}</td>
-              <td>{{p.FNEXACC_TYPE}}&nbsp;</td>
-              <td>{{p.FNEXACC_NUMBER}}&nbsp;</td>
-              <td>{{p.FNEXACCMONEYDATE_DATEPD1}}&nbsp;</td>
-              <td>{{p.FNEXACCMONEYDATE_NUMBER}}&nbsp;</td>
-              <td>{{p.FNEXACCPAYDATE_DATEPD1}}&nbsp;</td>
-              <td>{{p.FNEXACCPAYDATE_NUMBER}}&nbsp;</td>
-              <td>{{p.STF_FNAME}}&nbsp;</td>
-              <td>{{p.FNEXPENSES_EXTEND}}&nbsp;</td>
-              <td>{{p.STF_FNAMEFI}}&nbsp;</td>
-              <td>{{p.FNEXACC_FIDATE}}&nbsp;</td>
+              <td class="text-center text-nowrap">{{p.CRPART_TNAME}}</td>
+              <td class="text-center text-nowrap">{{p.PLGPRODUCT_SHORTNAME}}</td>
+              <td class="text-end fw-bold text-success text-nowrap">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+              <td class="text-center text-nowrap font-monospace fw-semibold text-secondary">{{p.FRACC_CODE}}</td>
+              <td>{{p.FRACC_TNAME}}</td>
+              <td class="text-center text-nowrap fw-bold text-primary">{{p.FNEXPENSES_STEP}}</td>
+              <td class="text-center text-nowrap font-monospace">{{p.FNEXACC_DEKA}}</td>
+              <td class="text-center text-nowrap">{{p.FNEXPENSES_MDATE1}}</td>
+              <td class="text-center text-nowrap">
+                <span *ngIf="p.FNEXACC_TYPE" class="badge-doc-type" [class.type-kg]="p.FNEXACC_TYPE === 'KG'">{{p.FNEXACC_TYPE}}</span>
+              </td>
+              <td class="text-center text-nowrap font-monospace">{{p.FNEXACC_NUMBER}}</td>
+              <td class="text-center text-nowrap">{{p.FNEXACCMONEYDATE_DATEPD1}}</td>
+              <td class="text-center text-nowrap font-monospace">{{p.FNEXACCMONEYDATE_NUMBER}}</td>
+              <td class="text-center text-nowrap">{{p.FNEXACCPAYDATE_DATEPD1}}</td>
+              <td class="text-center text-nowrap font-monospace">{{p.FNEXACCPAYDATE_NUMBER}}</td>
+              <td>{{p.STF_FNAME}}</td>
+              <td class="text-secondary">{{p.FNEXPENSES_EXTEND}}</td>
+              <td>{{p.STF_FNAMEFI}}</td>
+              <td class="text-center text-nowrap">{{p.FNEXACC_FIDATE}}</td>
               <td>{{p.STF_FNAMEAP}}</td>
-              <td>{{p.FNEXACC_ADATE1}}</td>
-              <td>{{p.FNEXACCTD_NOTE}}&nbsp;</td>
-
+              <td class="text-center text-nowrap">{{p.FNEXACC_ADATE1}}</td>
+              <td class="text-secondary">{{p.FNEXACCTD_NOTE}}</td>
             </tr>
-            <tr>
-              <td colspan="7" align="right">รวมทั้งหมด</td>
+            <tr class="table-total-row" *ngIf="datalist && datalist.length > 0">
+              <td [attr.colspan]="dataAdd.PLINCOME_CODE=='' ? 8 : 7" align="right">รวมทั้งหมด</td>
               <td align="right">{{Mrmoney| number : '1.2-2'}}</td>
-              <td colspan="18" align="center">&nbsp;</td>
-
+              <td [attr.colspan]="18" align="center">&nbsp;</td>
             </tr>
-
+            <tr *ngIf="!datalist || datalist.length === 0">
+              <td [attr.colspan]="dataAdd.PLINCOME_CODE=='' ? 27 : 26" class="text-center py-4 text-muted">
+                <i class="fa-solid fa-folder-open me-2 fs-5"></i>ไม่มีข้อมูลรายการ
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

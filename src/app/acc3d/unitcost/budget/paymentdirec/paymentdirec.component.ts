@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ViewChild, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
 import { ApiPdoService } from '../../../../_services/api-pui.service';
 import { TokenStorageService } from '../../../../_services/token-storage.service';
 import { first, map, startWith } from 'rxjs/operators';
@@ -18,7 +18,14 @@ import Swal from 'sweetalert2';
   templateUrl: './paymentdirec.component.html',
   styleUrls: ['./paymentdirec.component.scss']
 })
-export class PaymentdirecComponent implements OnInit {
+export class PaymentdirecComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+  @ViewChild('topScrollContainer') topScrollContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('tableContainer') tableContainer!: ElementRef<HTMLDivElement>;
+
+  private isSyncingScroll: boolean = false;
+  private resizeObserver?: ResizeObserver;
+  tableScrollWidth: number = 2600;
+
   title = 'angular-app';
   fileName = 'report.xlsx';
   userList = [{}]
@@ -39,6 +46,17 @@ export class PaymentdirecComponent implements OnInit {
       }
       return sum;
     }, 0);
+  }
+  isAllChecked(): boolean {
+    if (!this.datalist || this.datalist.length === 0) return false;
+    return this.datalist.every((_: any, index: number) => !!this.dataAdd.check[index]);
+  }
+  toggleCheckAll(event: any): void {
+    const isChecked = event.target.checked;
+    if (!this.datalist) return;
+    this.datalist.forEach((_: any, index: number) => {
+      this.dataAdd.check[index] = isChecked;
+    });
   }
   clickshow: any;
   datalistdetailmoney: any;
@@ -288,6 +306,7 @@ export class PaymentdirecComponent implements OnInit {
           this.loadingdetail = null;
           this.rownum1 = 1;
           this.fetchdataSubplmoneypay();
+          this.resetScroll();
           //this.showdata();  
           for (let i = 0; i < this.datalist.length; i++) {
             this.dataAdd.FNEXACC_CODE[i] = this.datalist[i].FNEXACC_CODE;
@@ -340,6 +359,7 @@ export class PaymentdirecComponent implements OnInit {
 
           this.loading = null;
           this.rownum = 1;
+          this.resetScroll();
         } else {
           this.rownum = null;
           this.loading = null;
@@ -546,5 +566,74 @@ export class PaymentdirecComponent implements OnInit {
     this.tableSize = event.target.value;
     this.page = 1;
     this.fetchdatalist();
+  }
+
+  ngAfterViewInit(): void {
+    this.updateScrollWidth();
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.updateScrollWidth();
+      });
+      if (this.tableContainer && this.tableContainer.nativeElement) {
+        this.resizeObserver.observe(this.tableContainer.nativeElement);
+      }
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    this.updateScrollWidth();
+  }
+
+  ngOnDestroy(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateScrollWidth();
+  }
+
+  onTopScroll(): void {
+    if (this.isSyncingScroll) return;
+    this.isSyncingScroll = true;
+    if (this.tableContainer && this.topScrollContainer) {
+      this.tableContainer.nativeElement.scrollLeft = this.topScrollContainer.nativeElement.scrollLeft;
+    }
+    requestAnimationFrame(() => {
+      this.isSyncingScroll = false;
+    });
+  }
+
+  onTableScroll(): void {
+    if (this.isSyncingScroll) return;
+    this.isSyncingScroll = true;
+    if (this.topScrollContainer && this.tableContainer) {
+      this.topScrollContainer.nativeElement.scrollLeft = this.tableContainer.nativeElement.scrollLeft;
+    }
+    requestAnimationFrame(() => {
+      this.isSyncingScroll = false;
+    });
+  }
+
+  updateScrollWidth(): void {
+    if (this.tableContainer && this.tableContainer.nativeElement) {
+      const container = this.tableContainer.nativeElement;
+      const table = container.querySelector('table');
+      const width = table ? Math.max(table.scrollWidth, container.scrollWidth) : container.scrollWidth;
+      if (width > 0 && Math.abs(this.tableScrollWidth - width) > 2) {
+        this.tableScrollWidth = width;
+      }
+    }
+  }
+
+  resetScroll(): void {
+    if (this.topScrollContainer && this.topScrollContainer.nativeElement) {
+      this.topScrollContainer.nativeElement.scrollLeft = 0;
+    }
+    if (this.tableContainer && this.tableContainer.nativeElement) {
+      this.tableContainer.nativeElement.scrollLeft = 0;
+    }
   }
 }

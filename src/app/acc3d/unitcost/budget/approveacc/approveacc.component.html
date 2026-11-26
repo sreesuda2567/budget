@@ -103,12 +103,12 @@
         </div>
       </div>
     </div>
-    <div style="width:100%; height:500px; overflow:auto;">
+    <div class="custom-table-container">
       <table *ngIf="rownum" id="excel-table" width="100%"
         class="table table-bordered table-striped table-hover tableFixHead btn-font3 align-middle">
         <thead>
-          <tr class="bg-primary text-white">
-            <th class="text-nowrap">
+          <tr>
+            <th class="text-nowrap sticky-col-first">
               <div align="center">ที่</div>
             </th>
             <th>
@@ -169,7 +169,7 @@
           <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
 
           <tr class="btn-font2 align-middle" *ngFor="let p of datalist; let i = index">
-            <td align="center">{{+i+1}}</td>
+            <td align="center" class="sticky-col-first">{{+i+1}}</td>
             <td>{{p.FACULTY_TNAME}}</td>
             <td>{{p.FNEXPENSES_TITLE}}</td>
             <td>{{p.PLINCOME_NAME}}
@@ -215,6 +215,11 @@
                 [(ngModel)]="dataAdd.FNEXACC_DETAIL[i]" />
               <input name="USERNAME_CISCO_{{i}}" type="hidden" id="USERNAME_CISCO_{{i}}" size="10"
                 [(ngModel)]="dataAdd.USERNAME_CISCO[i]" />
+            </td>
+          </tr>
+          <tr *ngIf="!datalist || datalist.length === 0">
+            <td colspan="18" class="text-center py-4 text-muted">
+              <i class="fa-solid fa-folder-open me-2 fs-5"></i>ไม่มีข้อมูลรายการ
             </td>
           </tr>
         </tbody>

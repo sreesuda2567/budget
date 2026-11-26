@@ -103,118 +103,109 @@
                         <div class="row justify-content-center center-screen" *ngIf="loading">
                             <div class="spinner-border " role="status" id="loading"></div>
                           </div>
-                          <div class="row">
-                            <div class="col-md-2"><button *ngIf="this.numrow" type="button" class="btn btn-success" (click)="exportexcel()"> <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export
-                                Excel</button></div>
-                            <div class="col-md-5"></div>
-                            <div class="col-md-5">
-                              <input *ngIf="this.numrow" type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+                          <!-- Toolbar -->
+                          <div *ngIf="this.numrow" class="alert alert-secondary d-flex justify-content-between align-items-center mb-2 py-2 px-3">
+                            <div>
+                              <button type="button" class="btn btn-success" (click)="exportexcel()">
+                                <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export Excel
+                              </button>
+                            </div>
+                            <div style="width: 300px; max-width: 100%;">
+                              <div class="input-group">
+                                <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                              </div>
                             </div>
                           </div>
-                        <table *ngIf="this.numrow" id="excel-table" width="100%" border="1" cellspacing="0" cellpadding="0"  class="table card-table table-bordered  table-vcenter tableFixHead">
-                            <thead>
-                                <tr bgcolor="#9BC5EE">
-                                    <td colspan="12" align="right"><strong>วันที่เรียกเอกสาร:{{dataAdd.DATENOW}}</strong></td>
-                                </tr>    
-                             <tr bgcolor="#9BC5EE">
-                                <td colspan="12" align="center"><strong>รายงานการเบิกเงิน รม.4 {{dataAdd.CAMPUS_NAME}}</strong></td>
-                            </tr>
-                            <tr bgcolor="#9BC5EE">
-                                <td colspan="12" align="center"><strong>{{dataAdd.PLINCOME_NAME}} {{dataAdd.PLGPRODUCT_SHORTNAME}}</strong></td>
-                            </tr>
-                            <tr bgcolor="#9BC5EE">
-                                <td width="15%" rowspan="2" align="center"  class="label-danger">รายการ</td>
-                                <td colspan="6" align="center" class="label-danger">รายรับ</td>
-                                <td colspan="4" align="center"  class="label-danger">รายจ่าย</td>
-                                <td align="center"  class="label-danger">&nbsp;</td>
-                              </tr>
-                              <tr bgcolor="#9BC5EE">
-                                <td width="8%" align="center"  class="label-danger">รับจริง<br>
-                                  1</td>
-                                <td width="8%" align="center"  class="label-danger">รายรับตามจัดสรร<br>
-                                <br>
-                                2</td>
-                                <td width="8%" align="center"  class="label-danger">โอนเปลี่ยนแปลง<br>
-                                  <br>
-                                3<br></td>
-                                <td width="8%" align="center"  class="label-danger">รายได้ภายในกรมฯ<br>
-                                  <span style="font-size: 9pt">(หน่วยงานรับโอนเงินฝากคลัง)</span>      <span style="font-size: 9pt"></span><br>
-                                4    <br></td>
-                                <td width="8%" align="center"  class="label-danger">ค่าใช้จ่ายในกรมฯ<br>
-                                   <span style="font-size: 9pt"> (หน่วยงานโอนเงินฝากคลัง)</span><br>
-                                  5</td>
-                                <td width="8%" align="center" class="label-danger">รายรับตามจัดสรร<br>
-                                  หลังเปลี่ยนแปลง<br>
-                                  <br>
-                                  6=2+3+4-5</td>
-                                <td width="8%" align="center"  class="label-danger"><p>รวมประจำปี<br>
-                                  7</p></td>
-                                <td width="8%" align="center"  class="label-danger">ลูกหนี้คงเหลือ<br>
-                                  <br>
-                                  8</td>
-                                <td width="8%" align="center"  class="label-danger">เงินกันไว้<br>
-                                  เบิกจ่ายสิ้นปี
-                                  <br>
-                                <br>
-                                9</td>
-                                <td width="8%" align="center"  class="label-danger">รวม<br>
-                                  10=(7+8+9)</td>
-                                <td width="8%" align="center"  class="label-danger">งบประมาณ<br>
-                                  ที่ได้รับจัดสรร<br>
-                                  คงเหลือ<br>
-                                  11=6-10</td>
-                              </tr>
-                              </thead> 
+
+                          <!-- Top Horizontal Scrollbar -->
+                          <div *ngIf="this.numrow" class="table-top-scrollbar" #topScrollContainer (scroll)="onTopScroll()" title="เลื่อนตารางแนวนอน">
+                            <div class="top-scrollbar-dummy" [style.width.px]="tableScrollWidth"></div>
+                          </div>
+
+                          <!-- Table Container -->
+                          <div class="custom-table-container" #tableContainer (scroll)="onTableScroll()">
+                            <table *ngIf="this.numrow" id="excel-table" class="table custom-regis-table">
+                              <thead>
+                                <tr class="report-banner-row">
+                                  <td colspan="12" align="right"><strong>วันที่เรียกเอกสาร:{{dataAdd.DATENOW}}</strong></td>
+                                </tr>
+                                <tr class="report-banner-row">
+                                  <td colspan="12" align="center"><strong>รายงานการเบิกเงิน รม.4 {{dataAdd.CAMPUS_NAME}}</strong></td>
+                                </tr>
+                                <tr class="report-banner-row">
+                                  <td colspan="12" align="center"><strong>{{dataAdd.PLINCOME_NAME}} {{dataAdd.PLGPRODUCT_SHORTNAME}}</strong></td>
+                                </tr>
+                                <tr class="table-header-row">
+                                  <td width="15%" rowspan="2" align="center" class="sticky-col-first">รายการ</td>
+                                  <td colspan="6" align="center">รายรับ</td>
+                                  <td colspan="4" align="center">รายจ่าย</td>
+                                  <td align="center">&nbsp;</td>
+                                </tr>
+                                <tr class="table-header-row">
+                                  <td width="8%" align="center">รับจริง<br>1</td>
+                                  <td width="8%" align="center">รายรับตามจัดสรร<br><br>2</td>
+                                  <td width="8%" align="center">โอนเปลี่ยนแปลง<br><br>3<br></td>
+                                  <td width="8%" align="center">รายได้ภายในกรมฯ<br><span style="font-size: 9pt">(หน่วยงานรับโอนเงินฝากคลัง)</span><br>4<br></td>
+                                  <td width="8%" align="center">ค่าใช้จ่ายในกรมฯ<br><span style="font-size: 9pt">(หน่วยงานโอนเงินฝากคลัง)</span><br>5</td>
+                                  <td width="8%" align="center">รายรับตามจัดสรร<br>หลังเปลี่ยนแปลง<br><br>6=2+3+4-5</td>
+                                  <td width="8%" align="center"><p class="mb-0">รวมประจำปี<br>7</p></td>
+                                  <td width="8%" align="center">ลูกหนี้คงเหลือ<br><br>8</td>
+                                  <td width="8%" align="center">เงินกันไว้<br>เบิกจ่ายสิ้นปี<br><br>9</td>
+                                  <td width="8%" align="center">รวม<br>10=(7+8+9)</td>
+                                  <td width="8%" align="center">งบประมาณ<br>ที่ได้รับจัดสรร<br>คงเหลือ<br>11=6-10</td>
+                                </tr>
+                              </thead>
                               <tbody>
                                 <tr *ngFor="let p of datalistde|filter:searchTerm; let i = index">
-                                    <td *ngIf="p.PLMONEYPAY_NAME" style="background-color:rgb(195, 227, 249);" align="left" colspan="12" >{{p.PLMONEYPAY_NAME}}</td>
+                                  <td *ngIf="p.PLMONEYPAY_NAME" style="background-color:rgb(195, 227, 249);" align="left" colspan="12">{{p.PLMONEYPAY_NAME}}</td>
 
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="left" >{{p.PLSUBMONEYPAY_NAME}}</td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME !='' && p.PLTRBUDGET_MONEYACC==''"  align="left" >&nbsp;</td>
-                                    <td *ngIf="p.PLTRBUDGET_MONEYACC !='' && p.NAME==''"  align="right" >{{p.PLTRBUDGET_MONEYACC| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="right" >{{p.PLTRBUDGET_MONEY| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="right" class="text-primary">
-                                      <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModaltransfer"
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="left" class="sticky-col-first">{{p.PLSUBMONEYPAY_NAME}}</td>
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME !='' && p.PLTRBUDGET_MONEYACC==''" align="left">&nbsp;</td>
+                                  <td *ngIf="p.PLTRBUDGET_MONEYACC !='' && p.NAME==''" align="right">{{p.PLTRBUDGET_MONEYACC| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right">{{p.PLTRBUDGET_MONEY| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right" class="text-primary">
+                                    <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModaltransfer"
                                       (click)="fetchdataexpen('reportexpentransfer',p.PLSUBMONEYPAY_CODE,p.PLSUBMONEYPAY_NAME,p.PLMONEYPAY_CODE,1)">
                                       {{p.PLTRBUDGET_MONEY1| number : '1.2-2'}}</a></td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="right"class="text-primary" >
-                                      <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModaltransfer"
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right" class="text-primary">
+                                    <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModaltransfer"
                                       (click)="fetchdataexpen('reportexpentransfer',p.PLSUBMONEYPAY_CODE,p.PLSUBMONEYPAY_NAME,p.PLMONEYPAY_CODE,2)">
                                       &nbsp;{{p.PLTRBUDGET_MONEY2| number : '1.2-2'}}</a></td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="right" class="text-primary">
-                                      <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModaltransfer"
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right" class="text-primary">
+                                    <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModaltransfer"
                                       (click)="fetchdataexpen('reportexpentransfer',p.PLSUBMONEYPAY_CODE,p.PLSUBMONEYPAY_NAME,p.PLMONEYPAY_CODE,3)">
                                       &nbsp; {{p.PLTRBUDGET_MONEY3| number : '1.2-2'}}</a></td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="right" >{{p.PLTRBUDGET_MONEY4| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME" class="text-primary"  align="right" >
-                                      <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModal"
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right">{{p.PLTRBUDGET_MONEY4| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" class="text-primary" align="right">
+                                    <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModal"
                                       (click)="fetchdataexpen('reportexpen',p.PLSUBMONEYPAY_CODE,p.PLSUBMONEYPAY_NAME,p.PLMONEYPAY_CODE,1)">
                                       {{p.PLTRBUDGET_MONEY5| number : '1.2-2'}}</a></td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"   align="right" class="text-primary" >
-                                      <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModal"
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right" class="text-primary">
+                                    <a data-bs-toggle="modal" style="cursor:pointer" data-bs-target="#exampleModal"
                                       (click)="fetchdataexpen('reportexpen',p.PLSUBMONEYPAY_CODE,p.PLSUBMONEYPAY_NAME,p.PLMONEYPAY_CODE,2)">
                                       &nbsp; {{p.PLTRBUDGET_MONEY6| number : '1.2-2'}}</a>
+                                  </td>
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right">&nbsp;{{p.PLTRBUDGET_MONEY7| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right">{{p.PLTRBUDGET_MONEY8| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.PLSUBMONEYPAY_NAME" align="right">{{p.PLTRBUDGET_MONEY9| number : '1.2-2'}}</td>
 
-                                    </td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="right" >&nbsp;{{p.PLTRBUDGET_MONEY7| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="right" >{{p.PLTRBUDGET_MONEY8| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.PLSUBMONEYPAY_NAME"  align="right" >{{p.PLTRBUDGET_MONEY9| number : '1.2-2'}}</td>
-    
-                                    <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);"   align="right" >{{p.NAME}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEYACC| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY1| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY2| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY3| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY4| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY5| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY6| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY7| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY8| number : '1.2-2'}}</td>
-                                    <td *ngIf="p.NAME"  style="background-color:rgb(251, 134, 61);"  align="right" >{{p.PLTRBUDGET_MONEY9| number : '1.2-2'}}</td>
-                                </tr>     
-                              </tbody>  
-                        </table>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right" class="sticky-col-first">{{p.NAME}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEYACC| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY1| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY2| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY3| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY4| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY5| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY6| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY7| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY8| number : '1.2-2'}}</td>
+                                  <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.PLTRBUDGET_MONEY9| number : '1.2-2'}}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
                     </div>
 
                 </div>

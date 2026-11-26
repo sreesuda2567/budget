@@ -63,152 +63,117 @@
       <div class="spinner-border " role="status" id="loading"></div>
     </div>
     <div *ngIf="rownum" class="shadow alert alert-secondary" role="alert">
-      <div class="row">
-        <div class="col-md-3">
-          <button type="button" class="btn btn-success" (click)="exportexcel()">
-            <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export
-            Excel</button>
+      <div class="row align-items-center g-2">
+        <div class="col-auto">
+          <button *ngIf="datalist && datalist.length > 0" type="button" class="btn btn-success" (click)="exportexcel()">
+            <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export Excel
+          </button>
         </div>
-        <div class="col-md-5 d-flex align-items-center">
+        <div class="col">
           <h4 *ngIf="totalAmount > 0" class="text-danger mb-0" style="font-weight: bold;">
             รวมยอดเงินที่เลือก: {{ totalAmount | number : '1.2-2' }} บาท
           </h4>
         </div>
-        <div class="col-md-3">
-          <div class="input-group">
+        <div class="col-auto">
+          <div class="input-group" style="min-width: 250px;">
             <input class="form-control border-end-0 border" type="search" placeholder="ค้นหาเลข3ดี/เลขฎีกา"
               id="example-search-input" [(ngModel)]="dataAdd.FNEXPENSES_STEP" (keyup)="fetchdatalist()">
             <span class="input-group-append">
               <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5"
-                type="button">
+                type="button" (click)="fetchdatalist()">
                 <i class="fa fa-search"></i>
               </button>
             </span>
           </div>
         </div>
-        <!--  <div class="col-md-1" *ngIf="rownum" align="right">
-            <button type="submit" class="btn btn-danger" id="submitupdate" data-bs-toggle="modal"
-              data-bs-target="#modalEdit"><i class="fa-solid fa-arrow-rotate-left"></i>&nbsp;ส่งกลับ</button>
-          </div>-->
-        <div class="col-md-1" *ngIf="rownum" align="left">
-          <button type="submit" class="btn btn-success" id="submitupdate" (click)="submitData('1')"><i
-              class="fa fa-edit"></i>&nbsp;อนุมัติ</button>
+        <div class="col-auto" *ngIf="rownum && datalist && datalist.length > 0">
+          <button type="submit" class="btn btn-success" id="submitupdate" (click)="submitData('1')">
+            <i class="fa fa-check-circle me-1"></i>&nbsp;อนุมัติ
+          </button>
         </div>
       </div>
     </div>
-    <div style="width:100%; height:500px; overflow:auto;">
-      <table *ngIf="rownum" id="excel-table" class="table btn-font3" width="100%"
-        class="table table-bordered table-striped table-hover  btn-font3">
-        <thead>
-          <tr class="bg-info">
-            <th>
-              <div align="center">ที่</div>
-            </th>
-            <th>
-              <div align="center">คณะ/หน่วยงาน</div>
-            </th>
-            <th>
-              <div align="center">ชื่อโครงการ/ชื่อเรื่อง</div>
-            </th>
-            <th>
-              <div align="center">เงิน</div>
-            </th>
-            <th>
-              <div align="center">หมวดรายจ่าย</div>
-            </th>
-            <th>
-              <div align="center">หมวดรายจ่ายย่อย</div>
-            </th>
-            <th>
-              <div align="center">ผลผลิต</div>
-            </th>
-            <th>
-              <div align="center">จำนวนเงิน</div>
-            </th>
-            <th>
-              <div align="center">จำนวนเงินที่จ่าย</div>
-            </th>
-            <th>
-              <div align="center">รหัสบัญชีแยกประเภท</div>
-            </th>
-            <th>
-              <div align="center">ชื่อบัญชีแยกประเภท</div>
-            </th>
-            <th>
-              <div align="center">วันที่ผ่านเอกสารเบิก</div>
-            </th>
-            <th>
-              <div align="center">เลข3ดี</div>
-            </th>
-            <th>
-              <div align="center">เลขฎีกา</div>
-            </th>
-            <th>
-              <div align="center">วันที่เงินเข้า</div>
-            </th>
-            <th>
-              <div align="center">เลขเอกสาร</div>
-            </th>
-            <th>
-              <div align="center">วันที่จ่าย</div>
-            </th>
-            <th>
-              <div align="center">ประเภทเอกสาร</div>
-            </th>
-            <th>
-              <div align="center">เลขเอกสารจ่าย</div>
-            </th>
 
-            <th>
-              <div align="center">ชื่อผู้ทำรายการ</div>
+    <!-- แถบเลื่อนหัวตาราง (Top Horizontal Scrollbar) -->
+    <div *ngIf="rownum" class="table-top-scrollbar" #topScrollContainer (scroll)="onTopScroll()" title="เลื่อนตารางแนวนอน">
+      <div class="top-scrollbar-dummy" [style.width.px]="tableScrollWidth"></div>
+    </div>
+    <div class="custom-table-container" #tableContainer (scroll)="onTableScroll()">
+      <table *ngIf="rownum" id="excel-table" class="table custom-regis-table">
+        <thead>
+          <tr>
+            <th class="sticky-col-first" style="width: 50px;">ที่</th>
+            <th class="sticky-col-second" style="width: 180px; min-width: 180px; max-width: 180px;">คณะ/หน่วยงาน</th>
+            <th class="sticky-col-third" style="min-width: 280px;">ชื่อโครงการ/ชื่อเรื่อง</th>
+            <th style="min-width: 110px;">เงิน</th>
+            <th style="min-width: 130px;">หมวดรายจ่าย</th>
+            <th style="min-width: 200px;">หมวดรายจ่ายย่อย</th>
+            <th style="min-width: 110px;">ผลผลิต</th>
+            <th style="min-width: 130px;">จำนวนเงิน</th>
+            <th style="min-width: 130px;">จำนวนเงินที่จ่าย</th>
+            <th style="min-width: 130px;">รหัสบัญชีแยกประเภท</th>
+            <th style="min-width: 180px;">ชื่อบัญชีแยกประเภท</th>
+            <th style="min-width: 130px;">วันที่ผ่านเอกสารเบิก</th>
+            <th style="min-width: 105px;">เลข3ดี</th>
+            <th style="min-width: 105px;">เลขฎีกา</th>
+            <th style="min-width: 120px;">วันที่เงินเข้า</th>
+            <th style="min-width: 120px;">เลขเอกสาร</th>
+            <th style="min-width: 120px;">วันที่จ่าย</th>
+            <th style="min-width: 90px;">ประเภทเอกสาร</th>
+            <th style="min-width: 120px;">เลขเอกสารจ่าย</th>
+            <th style="min-width: 140px;">ชื่อผู้ทำรายการ</th>
+            <th style="min-width: 75px;" class="text-center">
+              <div>เลือก</div>
+              <input type="checkbox" class="form-check-input table-checkbox mt-1" [checked]="isAllChecked()"
+                (change)="toggleCheckAll($event)" title="เลือกทั้งหมด">
             </th>
-            <th>
-              <div align="center">เลือก(ทั้งหมด)<input class="form-check-input filled-in" name="cnk_code" id="cnk_code4"
-                  type="checkbox" [(ngModel)]="dataAdd.checkall" (click)="checkall()"></div>
-            </th>
-            <th>
-              <div align="center">จัดการข้อมูล</div>
-            </th>
+            <th style="min-width: 90px;" class="text-center">จัดการข้อมูล</th>
           </tr>
         </thead>
         <tbody>
-          <!--  <tr *ngFor="let p of dataYear ; index as i" >-->
-
-          <tr class="btn-font2" *ngFor="let p of datalist; let i = index">
-            <td width="5%" align="center">{{+i+1}}</td>
-            <td>{{p.FACULTY_TNAME}}</td>
-            <td>{{p.FNEXPENSES_TITLE}}</td>
-            <td>{{p.PLINCOME_NAME}}</td>
-            <td>{{p.PLMONEYPAY_NAME}}</td>
+          <tr class="btn-font2" *ngFor="let p of datalist; let i = index" [class.row-selected]="dataAdd.check[i]">
+            <td class="text-center sticky-col-first">{{+i+1}}</td>
+            <td class="fw-semibold text-dark sticky-col-second" style="width: 180px; min-width: 180px; max-width: 180px;">{{p.FACULTY_TNAME}}</td>
+            <td class="text-secondary-emphasis sticky-col-third" style="min-width: 280px;">{{p.FNEXPENSES_TITLE}}</td>
+            <td class="text-center text-nowrap">{{p.PLINCOME_NAME}}</td>
+            <td class="text-center text-nowrap">{{p.PLMONEYPAY_NAME}}</td>
             <td>{{p.PLSUBMONEYPAY_NAME}}</td>
-            <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
-            <td align="right">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
-             <td align="right">{{p.FNEXACCPAYDATE_MONEY| number : '1.2-2'}}</td>
-            <td align="center">{{p.FRACC_CODE}}</td>
-            <td align="center">{{p.FRACC_TNAME}}</td>
-            <td>{{p.FNEXPENSES_MDATE1}}</td>
-            <td>{{p.FNEXPENSES_STEP}}</td>
-            <td>{{p.FNEXACC_DEKA}}</td>
-            <td>{{p.FNEXACCMONEYDATE_DATEPD1}}</td>
-            <td>{{p.FNEXACCMONEYDATE_NUMBER}}</td>
-            <td>{{p.FNEXACCPAYDATE_DATEPD}}</td>
-            <td>{{p.FNEXACCPAYDATE_TYPE}}</td>
-            <td>{{p.FNEXACCPAYDATE_NUMBER}}</td>
+            <td class="text-center text-nowrap">{{p.PLGPRODUCT_SHORTNAME}}</td>
+            <td class="text-end fw-bold text-success text-nowrap">{{p.FNEXPENSES_RMONEY| number : '1.2-2'}}</td>
+            <td class="text-end fw-bold text-primary text-nowrap">{{p.FNEXACCPAYDATE_MONEY| number : '1.2-2'}}</td>
+            <td class="text-center text-nowrap font-monospace fw-semibold text-secondary">{{p.FRACC_CODE}}</td>
+            <td>{{p.FRACC_TNAME}}</td>
+            <td class="text-center text-nowrap">{{p.FNEXPENSES_MDATE1}}</td>
+            <td class="text-center text-nowrap fw-bold text-primary">{{p.FNEXPENSES_STEP}}</td>
+            <td class="text-center text-nowrap font-monospace">{{p.FNEXACC_DEKA}}</td>
+            <td class="text-center text-nowrap">{{p.FNEXACCMONEYDATE_DATEPD1}}</td>
+            <td class="text-center text-nowrap font-monospace">{{p.FNEXACCMONEYDATE_NUMBER}}</td>
+            <td class="text-center text-nowrap">{{p.FNEXACCPAYDATE_DATEPD}}</td>
+            <td class="text-center text-nowrap">
+              <span *ngIf="p.FNEXACCPAYDATE_TYPE" class="badge-doc-type" [class.type-kg]="p.FNEXACCPAYDATE_TYPE === 'KG'">{{p.FNEXACCPAYDATE_TYPE}}</span>
+            </td>
+            <td class="text-center text-nowrap font-monospace">{{p.FNEXACCPAYDATE_NUMBER}}</td>
             <td>{{p.STF_FNAME}}</td>
-            <td align="center">
-              <input class="form-check-input filled-in" name="cnk_code" id="cnk_code4" type="checkbox"
+            <td class="text-center">
+              <input class="form-check-input table-checkbox" name="cnk_code_{{i}}" id="cnk_code_{{i}}" type="checkbox"
                 [(ngModel)]="dataAdd.check[i]">
-              <input name="VMREQUEST_CODE" type="hidden" id="VMREQUEST_CODE" size="10"
+              <input name="VMREQUEST_CODE_{{i}}" type="hidden" id="VMREQUEST_CODE_{{i}}"
                 [(ngModel)]="dataAdd.FNEXACC_CODE[i]" />
-              <input name="FNEXACC_DETAIL" type="hidden" id="FNEXACC_DETAIL" size="10"
+              <input name="FNEXACC_DETAIL_{{i}}" type="hidden" id="FNEXACC_DETAIL_{{i}}"
                 [(ngModel)]="dataAdd.FNEXACC_DETAIL[i]" />
-              <input name="USERNAME_CISCO" type="hidden" id="USERNAME_CISCO" size="10"
+              <input name="USERNAME_CISCO_{{i}}" type="hidden" id="USERNAME_CISCO_{{i}}"
                 [(ngModel)]="dataAdd.USERNAME_CISCO[i]" />
             </td>
-            <td align="center">
+            <td class="text-center text-nowrap">
               <a role="button" title="แก้ไข" data-bs-toggle="modal" data-bs-target="#modalEdit"
-                class="btn btn-warning text-white" (click)="editdata(p.FNEXACC_CODE,p.FNEXACCPAYDATE_NUMBER)"><i
-                  class="fa fa-edit"></i></a>
+                class="btn btn-sm btn-outline-warning shadow-sm" (click)="editdata(p.FNEXACC_CODE,p.FNEXACCPAYDATE_NUMBER)">
+                <i class="fa fa-edit"></i>
+              </a>
+            </td>
+          </tr>
+          <tr *ngIf="!datalist || datalist.length === 0">
+            <td colspan="22" class="text-center py-4 text-muted">
+              <i class="fa-solid fa-folder-open me-2 fs-5"></i>ไม่มีข้อมูลรายการ
             </td>
           </tr>
         </tbody>

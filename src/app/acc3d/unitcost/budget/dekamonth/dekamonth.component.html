@@ -120,32 +120,47 @@
         <div class="row justify-content-center center-screen" *ngIf="loading">
             <div class="spinner-border " role="status" id="loading"></div>
         </div>
-        <div *ngIf="numrow" class="row">
-            <div class="col-md-2"><button type="button" class="btn btn-success" (click)="exportexcel()"> <i
-                        class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export
-                    Excel</button></div>
-            <div class="col-md-7"></div>
-            <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+        <div *ngIf="numrow" class="shadow alert alert-secondary" role="alert">
+            <div class="row align-items-center g-2">
+                <div class="col-auto">
+                    <button *ngIf="datalistde && datalistde.length > 0" type="button" class="btn btn-success" (click)="exportexcel()">
+                        <i class="fa-sharp fa-solid fa-file-excel"></i>&nbsp;Export Excel
+                    </button>
+                </div>
+                <div class="col"></div>
+                <div class="col-auto">
+                    <div class="input-group" style="min-width: 250px;">
+                        <input type="search" class="form-control border-end-0 border" placeholder="ค้นหาข้อมูล" [(ngModel)]="searchTerm">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary bg-white border-start-0 border-bottom-0 border ms-n5" type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
-        <div style="width:100%; height:700px; overflow:auto;">
-            <table *ngIf="numrow" id="excel-table" width="100%" border="1" cellspacing="0" cellpadding="0"
-                class="table card-table table-bordered table-striped table-vcenter tableFixHead btn-font3">
+
+        <!-- แถบเลื่อนหัวตาราง (Top Horizontal Scrollbar) -->
+        <div *ngIf="numrow" class="table-top-scrollbar" #topScrollContainer (scroll)="onTopScroll()" title="เลื่อนตารางแนวนอน">
+            <div class="top-scrollbar-dummy" [style.width.px]="tableScrollWidth"></div>
+        </div>
+        <div class="custom-table-container" #tableContainer (scroll)="onTableScroll()">
+            <table *ngIf="numrow" id="excel-table" class="table custom-regis-table">
                 <thead>
-                    <tr bgcolor="#9BC5EE">
+                    <tr class="report-banner-row">
                         <td colspan="23" align="right"><strong>วันที่:{{dataAdd.DATENOW}}</strong></td>
                     </tr>
-                    <tr bgcolor="#9BC5EE">
+                    <tr class="report-banner-row">
                         <td colspan="23" align="center"><strong>รายงานสรุปค่าใช้จ่ายประจำเดือน
                                 {{dataAdd.CAMPUS_NAME}}</strong></td>
                     </tr>
-                    <tr bgcolor="#9BC5EE">
+                    <tr class="report-banner-row">
                         <td colspan="23" align="center"><strong>{{dataAdd.PLINCOME_NAME}}</strong></td>
                     </tr>
-                    <tr bgcolor="#9BC5EE">
-                        <td width="4%" rowspan="3">
-                            <div align="center"><strong>&#3607;&#3637;&#3656;</strong></div>
+                    <tr class="table-header-row">
+                        <td class="sticky-col-first" width="4%" rowspan="3">
+                            <div align="center"><strong>ที่</strong></div>
                         </td>
                         <td width="7%" rowspan="3" align="center"><strong>เลขที่ฎีกา</strong></td>
                         <td width="7%" rowspan="3" align="center"><strong>รหัสบัญชีแยกประเภท</strong></td>
@@ -168,14 +183,14 @@
                         <td height="17" colspan="12" align="center"><strong>{{dataAdd.PLGPRODUCT_SHORTNAME}}</strong>
                         </td>
                     </tr>
-                    <tr bgcolor="#9BC5EE">
+                    <tr class="table-header-row">
                         <td height="15" colspan="1" align="center"><strong>งบบุคลากร</strong></td>
                         <td colspan="2" align="center"><strong>งบดำเนินงาน</strong></td>
                         <td colspan="2" align="center"><strong>งบลงทุน</strong></td>
                         <td colspan="6" align="center"><strong>งบอุดหนุน</strong></td>
                         <td colspan="1" align="center"><strong>งบกลาง</strong></td>
                     </tr>
-                    <tr bgcolor="#9BC5EE">
+                    <tr class="table-header-row">
                         <td>
                             <div align="center"><strong>จ่าย</strong></div>
                         </td>
@@ -212,7 +227,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let p of datalistde|filter:searchTerm; let i = index">
-                        <td *ngIf="p.FRACC_TNAME" width="1%" align="center">{{i+1}}</td>
+                        <td *ngIf="p.FRACC_TNAME" width="1%" align="center" class="sticky-col-first">{{i+1}}</td>
                         <td *ngIf="p.FRACC_TNAME">{{p.FNEXPENSES_DEKA}}</td>
                         <td *ngIf="p.FRACC_TNAME">{{p.FRACC_CODE}}</td>
                         <td *ngIf="p.FRACC_TNAME">{{p.FRACC_TNAME}}</td>
@@ -261,6 +276,11 @@
                             : '1.2-2'}}</td>
                         <td *ngIf="p.NAME" style="background-color:rgb(251, 134, 61);" align="right">{{p.MONEY12| number
                             : '1.2-2'}}</td>
+                    </tr>
+                    <tr *ngIf="!datalistde || datalistde.length === 0">
+                        <td colspan="23" class="text-center py-4 text-muted">
+                            <i class="fa-solid fa-folder-open me-2 fs-5"></i>ไม่มีข้อมูลรายการ
+                        </td>
                     </tr>
                 </tbody>
             </table>
