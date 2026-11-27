@@ -148,7 +148,17 @@
                   </td>
 
                   <td *ngIf="dataAdd.PRYEARASSET_CODE ==''" align="center">{{p.PRYEARASSET_CODE}}</td>
-                  <td >{{p.PRSTATUS_NAME}}</td>
+                  <td align="center">
+                    <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
+                      [ngClass]="{
+                        'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
+                        'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
+                        'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
+                      }"
+                      style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                      {{p.PRSTATUS_NAME}}
+                    </span>
+                  </td>
                   <td align="center">
                     <div class="dropdown">
                       <button class="btn btn-success dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">

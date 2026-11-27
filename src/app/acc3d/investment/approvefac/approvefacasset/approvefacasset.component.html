@@ -123,7 +123,17 @@
                   <td>{{p.PLGPRODUCT_SHORTNAME}}</td>
                   <td align="right">{{p.PRASSET_MONEY*p.PRASSET_NUMBER| number : '1.2-2'}}
                   </td>
-                  <td align="center">{{p.PRSTATUS_NAME}}</td>
+                  <td align="center">
+                    <span *ngIf="p.PRSTATUS_NAME" class="badge text-nowrap"
+                      [ngClass]="{
+                        'bg-success text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') !== -1,
+                        'bg-danger text-white': p.PRSTATUS_NAME?.indexOf('รอจัดสรร') !== -1,
+                        'bg-secondary text-white': p.PRSTATUS_NAME?.indexOf('จัดสรรแล้ว') === -1 && p.PRSTATUS_NAME?.indexOf('รอจัดสรร') === -1
+                      }"
+                      style="font-size: 13px; font-weight: 500; padding: 5px 10px;">
+                      {{p.PRSTATUS_NAME}}
+                    </span>
+                  </td>
                   <td width="15%">
                     <span *ngIf="p.PRASSET_SLINK2"> <a role="button" title="รายงาน" class="btn btn-success text-white"
                         (click)="previewPdf(p.PRASSET_SLINK2)">ICT</a>&nbsp;</span>
